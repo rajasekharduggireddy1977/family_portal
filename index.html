@@ -1157,7 +1157,6 @@ body::after {
   flex-direction:column;
   padding:20px 28px;
   overflow:hidden;
-  min-height:0;
 }
 
 .expiry-page-header {
@@ -1632,52 +1631,50 @@ body::after {
 .qa-btn { display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:11px;font-weight:600;color:var(--text2); }
 .qa-btn:hover { color:var(--blue2);border-color:rgba(79,127,255,.4);background:var(--blue-dim); }
 
-/* ═══════════════════════════════════════════
-   MOBILE RESPONSIVE — iOS SAFE AREAS
-═══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   MOBILE RESPONSIVE — iOS OPTIMIZED
+   KEY FIX: html/body/content overflow must
+   change on mobile for pages to scroll
+══════════════════════════════════════════ */
 * { -webkit-tap-highlight-color: transparent; }
 body { -webkit-text-size-adjust: 100%; }
 
-/* ── Mobile Bottom Nav ── */
+/* Mobile bottom nav */
 #mobile-nav {
-  display: none;
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(13,16,32,.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border2);
-  z-index: 200;
-  padding: 8px 0;
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  display:none;
+  position:fixed; bottom:0; left:0; right:0;
+  background:rgba(13,16,32,.97);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border2);
+  z-index:200;
+  padding:8px 0 max(10px, env(safe-area-inset-bottom));
 }
 .mnav-inner { display:flex; justify-content:space-around; align-items:center; }
 .mnav-item {
   display:flex; flex-direction:column; align-items:center; gap:3px;
-  padding:6px 12px; border-radius:12px; cursor:pointer;
+  padding:5px 10px; border-radius:10px; cursor:pointer;
   color:var(--text3); font-size:10px; font-weight:600;
-  font-family:'Inter',sans-serif; position:relative;
-  transition:color .2s; min-width:52px;
+  font-family:'Inter',sans-serif; position:relative; min-width:50px;
+  transition:color .18s;
 }
 .mnav-item.active { color:var(--blue2); }
 .mnav-icon { font-size:20px; line-height:1; }
 .mnav-badge {
-  position:absolute; top:2px; right:8px;
+  position:absolute; top:1px; right:6px;
   background:var(--red); color:#fff;
   font-size:8px; font-weight:700;
   padding:1px 4px; border-radius:20px;
   font-family:'DM Mono',monospace;
 }
 
-/* ── Hamburger button ── */
+/* Hamburger */
 #mobile-menu-btn {
   display:none; background:none; border:none; cursor:pointer;
   color:var(--text2); font-size:22px; padding:6px 8px;
-  border-radius:8px; line-height:1; margin-right:4px;
-  flex-shrink:0;
+  border-radius:8px; flex-shrink:0; line-height:1;
 }
 
-/* ── Sidebar overlay ── */
+/* Sidebar overlay */
 #sidebar-overlay {
   display:none; position:fixed; inset:0;
   background:rgba(0,0,0,.65); z-index:90;
@@ -1685,217 +1682,221 @@ body { -webkit-text-size-adjust: 100%; }
 }
 #sidebar-overlay.visible { display:block; }
 
-/* ── Scrollable containers need -webkit-overflow-scrolling ── */
-.expiry-list-full,
-.tab-content-area,
-#doc-list-body,
-.dash-col-left,
-.dash-col-right,
-.dash-body { -webkit-overflow-scrolling: touch; }
-
 @media (max-width: 768px) {
 
-  /* Show mobile nav + hamburger */
+  /* ── ROOT FIX: unlock overflow so pages can scroll ── */
+  html, body {
+    height:auto !important;
+    overflow:visible !important;
+    overflow-x:hidden !important;
+  }
+  body { display:block !important; }
+
+  /* Show mobile controls */
   #mobile-nav { display:block; }
   #mobile-menu-btn { display:flex; align-items:center; justify-content:center; }
 
   /* Sidebar slides in */
   #sidebar {
     transform:translateX(-100%);
-    transition:transform .3s cubic-bezier(.4,0,.2,1);
-    z-index:150;
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:150; height:100vh; position:fixed;
   }
   #sidebar.mobile-open {
     transform:translateX(0);
     box-shadow:4px 0 40px rgba(0,0,0,.7);
   }
 
-  /* Main takes full width */
-  #main { margin-left:0; }
+  /* Main: full width, block layout */
+  #main {
+    margin-left:0 !important;
+    height:auto !important;
+    overflow:visible !important;
+    display:block !important;
+  }
 
-  /* Topbar safe area + layout */
+  /* Topbar: fixed at top */
   #topbar {
-    padding: 0 14px;
-    height: auto;
-    min-height: var(--topbar-h);
-    padding-top: env(safe-area-inset-top);
+    position:sticky; top:0; z-index:50;
+    padding:0 14px;
+    padding-top:env(safe-area-inset-top);
+    height:auto; min-height:56px;
   }
   .topbar-breadcrumb { display:none; }
   .topbar-title { font-size:15px; }
-  .search-btn .search-kbd,
-  .search-btn span:first-child { display:none; }
+  .search-btn .search-kbd { display:none; }
   .search-btn { padding:7px 11px; font-size:12px; }
   .time-display { font-size:12px; padding:4px 8px; }
 
-  /* Content: bottom pad for mobile nav */
-  #content { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+  /* Content: block, natural height, scrolled by page */
+  #content {
+    overflow:visible !important;
+    height:auto !important;
+    min-height:0 !important;
+    display:block !important;
+    padding-bottom:calc(72px + env(safe-area-inset-bottom));
+  }
 
-  /* ──────────────────────────────
-     DASHBOARD
-  ────────────────────────────── */
-  .dash-page { padding:12px 12px 0; gap:10px; }
+  /* ── EXPIRY PAGE: THE MAIN FIX ── */
+  .expiry-page {
+    height:auto !important;
+    overflow:visible !important;
+    padding:14px 12px;
+    padding-bottom:calc(80px + env(safe-area-inset-bottom));
+    display:block !important;
+  }
+  .expiry-page-header {
+    flex-direction:column; align-items:flex-start;
+    gap:8px; margin-bottom:12px;
+  }
+  .expiry-summary-chips { margin-left:0; flex-wrap:wrap; gap:6px; }
+  .expiry-list-full {
+    overflow:visible !important;
+    height:auto !important;
+    min-height:0 !important;
+    flex:none !important;
+  }
+  .eli-full { padding:12px 14px; gap:12px; }
+  .eli-icon { font-size:22px; }
+  .eli-title { font-size:13px; }
+  .eli-sub { font-size:10px; }
+  .eli-days-num { font-size:18px; }
+  .eli-right { min-width:80px; }
+
+  /* ── DASHBOARD ── */
+  .dash-page {
+    height:auto !important;
+    overflow:visible !important;
+    padding:12px 12px 0;
+    gap:10px; display:flex; flex-direction:column;
+  }
   .dash-greeting { font-size:17px; }
-  .dash-date { font-size:10px; }
   .stats-row { grid-template-columns:repeat(2,1fr); gap:8px; }
   .stat-num { font-size:24px; }
   .stat-card { padding:12px 13px; }
   .alert-strip { padding:10px 14px; gap:10px; }
-  .alert-title { font-size:13px; }
   .alert-btn { padding:6px 12px; font-size:11px; }
-
-  /* Dashboard body: stack columns, allow scroll */
   .dash-body {
     flex-direction:column; gap:12px;
-    overflow-y:auto; overflow-x:hidden;
-    min-height:0; flex:1;
+    overflow:visible !important;
+    height:auto !important;
+    min-height:0;
   }
   .dash-col-left,
   .dash-col-right {
-    width:100%; overflow:visible; min-height:0;
+    width:100%;
+    overflow:visible !important;
+    height:auto !important;
   }
-
-  /* Expiry rows in dashboard */
   .expiry-row { padding:10px 12px; gap:10px; }
-  .er-icon { font-size:18px; }
   .er-days { min-width:80px; }
-  .er-days-num { font-size:14px; }
-
-  /* Coverage table: horizontal scroll */
   .coverage-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
   .cov-table { min-width:340px; }
 
-  /* Member mini cards */
-  .member-mini { padding:9px 10px; }
-
-  /* ──────────────────────────────
-     EXPIRY TRACKER — KEY FIX
-  ────────────────────────────── */
-  .expiry-page {
-    height:auto !important;
-    min-height:100%;
-    overflow-y:auto !important;
-    overflow-x:hidden;
-    padding:14px 12px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
-    /* Remove flex constraints that clip content */
-    flex:none !important;
+  /* ── MEMBER PROFILES ── */
+  .profile-page {
+    height:auto !important; overflow:visible !important;
   }
-  .expiry-list-full {
-    overflow:visible !important;
-    min-height:0;
-    flex:none;
-    height:auto;
-  }
-  .expiry-page-header {
-    flex-direction:column; align-items:flex-start; gap:8px;
-    margin-bottom:12px;
-  }
-  .expiry-summary-chips { margin-left:0; flex-wrap:wrap; gap:6px; }
-  .eli-full { padding:14px 14px; gap:12px; }
-  .eli-icon { font-size:24px; }
-  .eli-days-num { font-size:18px; }
-  .eli-right { min-width:90px; }
-  .eli-title { font-size:13px; }
-  .eli-sub { font-size:10px; }
-
-  /* ──────────────────────────────
-     MEMBER PROFILES
-  ────────────────────────────── */
   .profile-switcher-bar { padding:10px 12px; gap:6px; }
-  .profile-pill { padding:6px 11px; font-size:11px; }
-
-  /* Hero panel: horizontal compact on mobile */
-  .profile-main { flex-direction:column; }
+  .profile-pill { padding:6px 10px; font-size:11px; }
+  .profile-main {
+    flex-direction:column;
+    overflow:visible !important; height:auto !important;
+  }
   .profile-hero-panel {
     width:100%; border-right:none;
     border-bottom:1px solid var(--border);
-    height:auto; flex-shrink:0;
+    height:auto; overflow:visible;
   }
   .profile-hero-inner {
-    padding:14px;
-    display:flex; gap:14px; align-items:flex-start;
+    padding:12px;
+    display:flex; gap:12px; align-items:flex-start;
   }
   .profile-avatar-lg {
     width:46px; height:46px; font-size:16px;
     margin-bottom:0; flex-shrink:0;
   }
-  .profile-avatar-lg::after { border-radius:14px; }
   .profile-name { font-size:13px; }
-  .profile-role-badge { font-size:10px; margin-top:5px; }
-  .profile-meta-items { margin-top:6px; gap:5px; }
+  .profile-meta-items { margin-top:6px; gap:4px; }
   .pmi { font-size:10px; }
-
-  /* Tab nav: horizontal scroll row */
   .profile-vnav {
-    display:flex; flex-direction:row;
+    display:flex !important; flex-direction:row !important;
     overflow-x:auto; padding:8px 10px; gap:4px;
-    -webkit-overflow-scrolling:touch;
+    -webkit-overflow-scrolling:touch; flex:none;
   }
   .profile-vnav::-webkit-scrollbar { height:0; }
   .pvn-item {
     padding:6px 12px; border-radius:20px;
     margin-bottom:0; white-space:nowrap;
     flex-shrink:0; font-size:11px;
+    min-width:auto;
   }
   .pvn-icon { display:none; }
-
-  .profile-content-panel { flex:1; min-height:280px; }
-  .tab-content-area { padding:14px 14px 80px; }
+  .profile-content-panel {
+    flex:none; min-height:0;
+    overflow:visible !important; height:auto !important;
+  }
+  /* Tab scroll area: allow natural height on mobile */
+  #tnav-scroll, .tab-content-area {
+    overflow:visible !important;
+    height:auto !important;
+    padding:14px 14px 80px !important;
+    -webkit-overflow-scrolling:touch;
+  }
+  /* Hide the scroll navigator buttons on mobile */
+  #tnav-rail { display:none !important; }
   .doc-card { padding:14px; margin-bottom:10px; }
-  .field-key { font-size:10px; }
-  .field-val { font-size:11px; }
-  .field-highlight { font-size:12px; }
 
-  /* ──────────────────────────────
-     DOCUMENTS PAGE
-  ────────────────────────────── */
-  .docs-page { padding:12px 12px; }
+  /* ── DOCUMENTS ── */
+  .docs-page {
+    height:auto !important; overflow:visible !important;
+    padding:12px 12px;
+  }
+  .docs-grid-wrap {
+    overflow:visible !important; height:auto !important;
+  }
   .doc-list-hdr { display:none; }
   #doc-list-body .doc-row {
     display:grid;
-    grid-template-columns:28px 1fr auto;
+    grid-template-columns:26px 1fr auto;
     grid-template-rows:auto auto auto;
-    gap:3px 8px;
-    padding:10px 12px;
+    gap:3px 8px; padding:10px 12px;
   }
-  .dr-key2 { display:none; }
-  .dr-typebadge { display:none; }
+  .dr-key2, .dr-typebadge { display:none; }
   .dr-type-icon { grid-column:1; grid-row:1; }
   .dr-name { grid-column:2; grid-row:1; }
   .dr-person { grid-column:3; grid-row:1; }
   .dr-key1 { grid-column:2/4; grid-row:2; }
   .dr-actions { grid-column:1/4; grid-row:3; flex-direction:row; gap:6px; }
   .dr-doc-name { font-size:12px; }
-  .dr-src { font-size:9px; }
-  .docs-filters { gap:6px; }
-  .filter-chip { padding:5px 11px; font-size:11px; }
+  #doc-list-body {
+    overflow:visible !important; height:auto !important;
+  }
 
-  /* ──────────────────────────────
-     SEARCH MODAL
-  ────────────────────────────── */
-  #search-overlay { padding-top:30px; align-items:flex-end; padding-bottom:0; }
+  /* ── SEARCH MODAL ── */
+  #search-overlay {
+    padding-top:0; align-items:flex-end;
+    padding-bottom:0;
+  }
   #search-modal {
     width:100%; max-width:100%;
     margin:0; border-radius:20px 20px 0 0;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom:env(safe-area-inset-bottom);
   }
-  #search-input { font-size:16px; } /* prevents iOS zoom */
+  #search-input { font-size:16px; }
 
-  /* FAB: above mobile nav */
-  #fab { bottom:calc(76px + env(safe-area-inset-bottom)); right:16px; }
-
-  /* Toast: above mobile nav */
+  /* FAB + Toast above mobile nav */
+  #fab { bottom:calc(72px + env(safe-area-inset-bottom)); right:16px; }
   #toast {
-    bottom:calc(76px + env(safe-area-inset-bottom));
+    bottom:calc(72px + env(safe-area-inset-bottom));
     right:14px; left:14px; text-align:center;
   }
 }
 
 @media (max-width: 390px) {
-  .stats-row { grid-template-columns:repeat(2,1fr); gap:7px; }
-  .expiry-summary-chips { flex-wrap:wrap; }
-  .profile-pill { padding:5px 9px; font-size:10px; }
-  .exp-chip { padding:4px 9px; font-size:10px; }
+  .stats-row { gap:7px; }
+  .profile-pill { padding:5px 8px; font-size:10px; }
+  .exp-chip { padding:4px 8px; font-size:10px; }
 }
 </style>
 </head>
@@ -1984,16 +1985,16 @@ body { -webkit-text-size-adjust: 100%; }
 <!-- MOBILE BOTTOM NAV -->
 <div id="mobile-nav">
   <div class="mnav-inner">
-    <div class="mnav-item active" id="mnav-dashboard" onclick="navigate('dashboard');setMobileNav('dashboard')">
+    <div class="mnav-item active" id="mnav-dashboard" onclick="mobileNav('dashboard')">
       <span class="mnav-icon">⊞</span><span>Home</span>
     </div>
-    <div class="mnav-item" id="mnav-members" onclick="navigate('members');setMobileNav('members')">
+    <div class="mnav-item" id="mnav-members" onclick="mobileNav('members')">
       <span class="mnav-icon">👥</span><span>Members</span>
     </div>
-    <div class="mnav-item" id="mnav-documents" onclick="navigate('documents');setMobileNav('documents')">
+    <div class="mnav-item" id="mnav-documents" onclick="mobileNav('documents')">
       <span class="mnav-icon">📁</span><span>Docs</span>
     </div>
-    <div class="mnav-item" id="mnav-expiry" onclick="navigate('expiry');setMobileNav('expiry')">
+    <div class="mnav-item" id="mnav-expiry" onclick="mobileNav('expiry')">
       <span class="mnav-icon">⏳</span><span>Expiry</span>
       <span class="mnav-badge">2</span>
     </div>
@@ -2002,6 +2003,8 @@ body { -webkit-text-size-adjust: 100%; }
     </div>
   </div>
 </div>
+
+<!-- SEARCH -->
 <div id="search-overlay" onclick="closeSearch(event)">
   <div id="search-modal">
     <div class="search-top">
@@ -2022,7 +2025,7 @@ body { -webkit-text-size-adjust: 100%; }
 
 <script>
 // ══════════════════════════════════════════
-// MOBILE SIDEBAR & NAV
+// MOBILE NAV & SIDEBAR
 // ══════════════════════════════════════════
 function toggleMobileSidebar() {
   document.getElementById('sidebar').classList.toggle('mobile-open');
@@ -2036,8 +2039,15 @@ function setMobileNav(page) {
   document.querySelectorAll('.mnav-item').forEach(el => el.classList.remove('active'));
   const el = document.getElementById('mnav-' + page);
   if (el) el.classList.add('active');
-  closeMobileSidebar();
 }
+function mobileNav(page) {
+  navigate(page);
+  setMobileNav(page);
+  closeMobileSidebar();
+  // Scroll to top so user sees the page
+  window.scrollTo(0, 0);
+}
+
 // ══════════════════════════════════════════
 // CLOCK
 // ══════════════════════════════════════════
@@ -3274,27 +3284,15 @@ document.querySelectorAll('.sb-item').forEach(el => {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-
-// Wrap navigate to sync mobile nav
-(function(){
-  const _nav = navigate;
-  window.navigate = function(page, opts) {
-    _nav(page, opts);
-    setMobileNav(page);
-    // Fix expiry page: make #content scrollable on mobile
-    if (page === 'expiry' && window.innerWidth <= 768) {
-      const content = document.getElementById('content');
-      if (content) {
-        content.style.overflowY = 'auto';
-        content.style.overflowX = 'hidden';
-      }
-    } else {
-      const content = document.getElementById('content');
-      if (content) content.style.overflow = '';
-    }
-  };
-})();
-
+// Patch navigate: sync mobile nav + scroll to top
+const _navBase = navigate;
+window.navigate = function(page, opts) {
+  _navBase(page, opts);
+  setMobileNav(page);
+  if (window.innerWidth <= 768) {
+    setTimeout(function(){ window.scrollTo(0,0); }, 100);
+  }
+};
 navigate('dashboard');
 </script>
 </body>
