@@ -3,14 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Duggireddy Family Portal</title>
-<!-- iOS PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Family Portal">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#07080f">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23131626'/><text y='.9em' font-size='80' x='10'>🏛️</text></svg>">
+<title>Duggireddy Family Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1159,6 +1157,7 @@ body::after {
   flex-direction:column;
   padding:20px 28px;
   overflow:hidden;
+  min-height:0;
 }
 
 .expiry-page-header {
@@ -1357,6 +1356,140 @@ body::after {
 }
 
 /* ═══════════════════════════════════════════
+   DASHBOARD EXPIRY TABLE (matching design)
+═══════════════════════════════════════════ */
+.dash-expiry-table {
+  width:100%;
+  border-collapse:collapse;
+}
+.dash-expiry-table thead tr {
+  border-bottom:1px solid var(--border2);
+}
+.dash-expiry-table th {
+  font-family:'DM Mono', monospace;
+  font-size:9px; font-weight:600;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:8px 12px;
+  text-align:left;
+}
+.dash-expiry-table td {
+  padding:10px 12px;
+  font-size:12px;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+.dash-expiry-table tr:last-child td { border-bottom:none; }
+.dash-expiry-table tbody tr {
+  cursor:pointer;
+  transition:background .15s;
+  position:relative;
+}
+.dash-expiry-table tbody tr:hover { background:rgba(255,255,255,.03); }
+.dash-expiry-table .det-name {
+  font-size:13px; font-weight:600; color:var(--text);
+}
+.dash-expiry-table .det-sub {
+  font-size:10px; color:var(--text3); margin-top:2px;
+}
+.dash-expiry-date {
+  font-family:'DM Mono', monospace;
+  font-size:11px; color:var(--text2);
+  white-space:nowrap;
+}
+.det-status-badge {
+  display:inline-block;
+  font-family:'DM Mono', monospace;
+  font-size:11px; font-weight:700;
+  padding:4px 12px;
+  border-radius:6px;
+  white-space:nowrap;
+  min-width:90px;
+  text-align:center;
+}
+.det-action {
+  font-size:11px; color:var(--text2);
+  white-space:nowrap;
+}
+.det-action a { color:var(--blue2); text-decoration:none; }
+.det-action a:hover { text-decoration:underline; }
+.det-left-bar {
+  width:3px; height:100%;
+  position:absolute;
+  left:0; top:0; bottom:0;
+}
+
+/* ═══════════════════════════════════════════
+   SEARCH RESULT COPY BUTTON
+═══════════════════════════════════════════ */
+.sri-copy-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--surface3);
+  border:1px solid var(--border2);
+  color:var(--text3);
+  border-radius:5px;
+  padding:2px 7px;
+  font-size:11px;
+  cursor:pointer;
+  margin-left:8px;
+  font-family:'DM Mono', monospace;
+  transition:all .15s;
+  vertical-align:middle;
+}
+.sri-copy-btn:hover {
+  background:var(--blue-dim);
+  border-color:var(--blue);
+  color:var(--blue2);
+}
+
+/* ═══════════════════════════════════════════
+   DASHBOARD SECTION SCROLL NAV
+═══════════════════════════════════════════ */
+.dash-scroll-wrap {
+  flex:1; min-height:0;
+  position:relative;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.dash-scroll-inner {
+  flex:1; overflow-y:auto; min-height:0;
+  padding:4px 10px 12px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.dash-scroll-inner::-webkit-scrollbar { width:3px; }
+.dash-scroll-inner::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+.dash-scroll-nav {
+  position:absolute; bottom:8px; left:50%;
+  transform:translateX(-50%);
+  display:flex; align-items:center; gap:8px;
+  z-index:20;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:4px 12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.dash-scroll-nav button {
+  width:26px; height:26px;
+  border-radius:7px;
+  background:none;
+  border:1px solid var(--border2);
+  color:var(--text2);
+  cursor:pointer;
+  font-size:12px;
+  transition:all .15s;
+  display:flex; align-items:center; justify-content:center;
+}
+.dash-scroll-nav button:hover { background:var(--blue-dim); color:var(--blue2); border-color:var(--blue); }
+.dash-scroll-nav button.tndis { opacity:.3; cursor:default; pointer-events:none; }
+.dash-scroll-nav .nav-pct {
+  font-family:'DM Mono', monospace;
+  font-size:10px; color:var(--text3);
+  min-width:30px; text-align:center;
+}
+
+/* ═══════════════════════════════════════════
    TOAST
 ═══════════════════════════════════════════ */
 #toast {
@@ -1505,7 +1638,7 @@ body::after {
 * { -webkit-tap-highlight-color: transparent; }
 body { -webkit-text-size-adjust: 100%; }
 
-/* Mobile Bottom Nav */
+/* ── Mobile Bottom Nav ── */
 #mobile-nav {
   display: none;
   position: fixed;
@@ -1515,164 +1648,254 @@ body { -webkit-text-size-adjust: 100%; }
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border2);
   z-index: 200;
-  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
-  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
 }
-
-.mnav-inner {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
+.mnav-inner { display:flex; justify-content:space-around; align-items:center; }
 .mnav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 6px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: var(--text3);
-  font-size: 10px;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  position: relative;
-  transition: color .2s;
-  min-width: 52px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:6px 12px; border-radius:12px; cursor:pointer;
+  color:var(--text3); font-size:10px; font-weight:600;
+  font-family:'Inter',sans-serif; position:relative;
+  transition:color .2s; min-width:52px;
 }
-
-.mnav-item.active { color: var(--blue2); }
-.mnav-item .mnav-icon { font-size: 22px; line-height: 1; }
+.mnav-item.active { color:var(--blue2); }
+.mnav-icon { font-size:20px; line-height:1; }
 .mnav-badge {
-  position: absolute;
-  top: 2px; right: 10px;
-  background: var(--red);
-  color: #fff;
-  font-size: 8px; font-weight: 700;
-  padding: 1px 4px;
-  border-radius: 20px;
-  font-family: 'DM Mono', monospace;
+  position:absolute; top:2px; right:8px;
+  background:var(--red); color:#fff;
+  font-size:8px; font-weight:700;
+  padding:1px 4px; border-radius:20px;
+  font-family:'DM Mono',monospace;
 }
 
-/* Mobile Topbar Hamburger */
+/* ── Hamburger button ── */
 #mobile-menu-btn {
-  display: none;
-  background: none; border: none; cursor: pointer;
-  color: var(--text2); font-size: 20px;
-  padding: 8px; border-radius: 8px;
-  margin-right: -4px;
+  display:none; background:none; border:none; cursor:pointer;
+  color:var(--text2); font-size:22px; padding:6px 8px;
+  border-radius:8px; line-height:1; margin-right:4px;
+  flex-shrink:0;
 }
 
-/* Sidebar overlay for mobile */
+/* ── Sidebar overlay ── */
 #sidebar-overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.6);
-  z-index: 90;
-  backdrop-filter: blur(2px);
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.65); z-index:90;
+  backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
 }
+#sidebar-overlay.visible { display:block; }
+
+/* ── Scrollable containers need -webkit-overflow-scrolling ── */
+.expiry-list-full,
+.tab-content-area,
+#doc-list-body,
+.dash-col-left,
+.dash-col-right,
+.dash-body { -webkit-overflow-scrolling: touch; }
 
 @media (max-width: 768px) {
-  /* Show mobile nav */
-  #mobile-nav { display: block; }
-  #mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
 
-  /* Hide desktop sidebar */
-  #sidebar { transform: translateX(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 150; }
-  #sidebar.mobile-open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,.6); }
-  #sidebar-overlay.visible { display: block; }
+  /* Show mobile nav + hamburger */
+  #mobile-nav { display:block; }
+  #mobile-menu-btn { display:flex; align-items:center; justify-content:center; }
 
-  /* Full width main */
-  #main { margin-left: 0; }
+  /* Sidebar slides in */
+  #sidebar {
+    transform:translateX(-100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:150;
+  }
+  #sidebar.mobile-open {
+    transform:translateX(0);
+    box-shadow:4px 0 40px rgba(0,0,0,.7);
+  }
 
-  /* Topbar mobile */
-  #topbar { padding: 0 14px; padding-top: env(safe-area-inset-top); height: calc(var(--topbar-h) + env(safe-area-inset-top)); }
-  .topbar-breadcrumb { display: none; }
-  .topbar-title { font-size: 16px; }
-  .search-btn .search-kbd { display: none; }
-  .search-btn span:first-child { display: none; }
-  .search-btn { padding: 7px 12px; font-size: 12px; }
+  /* Main takes full width */
+  #main { margin-left:0; }
 
-  /* Content bottom padding for mobile nav */
-  #content { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
-
-  /* Dashboard mobile */
-  .dash-page { padding: 14px 14px 0; gap: 12px; }
-  .dash-greeting { font-size: 18px; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .stat-num { font-size: 26px; }
-  .stat-card { padding: 13px 14px; }
-
-  /* Dashboard body — stack columns */
-  .dash-body { flex-direction: column; gap: 12px; overflow-y: auto; }
-  .dash-col-left, .dash-col-right { width: 100%; overflow: visible; }
-
-  /* Expiry rows mobile */
-  .expiry-row { flex-wrap: wrap; }
-  .er-days { min-width: auto; }
-
-  /* Member profiles mobile */
-  .profile-switcher-bar { padding: 10px 14px; gap: 6px; }
-  .profile-main { flex-direction: column; }
-  .profile-hero-panel {
-    width: 100%; border-right: none;
-    border-bottom: 1px solid var(--border);
+  /* Topbar safe area + layout */
+  #topbar {
+    padding: 0 14px;
     height: auto;
+    min-height: var(--topbar-h);
+    padding-top: env(safe-area-inset-top);
   }
-  .profile-hero-inner { padding: 14px; }
-  .profile-avatar-lg { width: 48px; height: 48px; font-size: 17px; margin-bottom: 10px; }
-  .profile-name { font-size: 14px; }
-  .profile-vnav { display: flex; flex-direction: row; overflow-x: auto; padding: 8px 10px; gap: 4px; }
-  .profile-vnav::-webkit-scrollbar { height: 0; }
-  .pvn-item { padding: 7px 12px; border-radius: 20px; margin-bottom: 0; white-space: nowrap; flex-shrink: 0; font-size: 12px; }
-  .pvn-item.active { background: var(--blue-dim); }
-  .pvn-icon { display: none; }
-  .profile-content-panel { flex: 1; min-height: 300px; }
-  .tab-content-area { padding: 14px 16px 80px; }
+  .topbar-breadcrumb { display:none; }
+  .topbar-title { font-size:15px; }
+  .search-btn .search-kbd,
+  .search-btn span:first-child { display:none; }
+  .search-btn { padding:7px 11px; font-size:12px; }
+  .time-display { font-size:12px; padding:4px 8px; }
 
-  /* Documents page mobile */
-  .docs-page { padding: 12px 14px; }
-  .doc-list-hdr { display: none; }
+  /* Content: bottom pad for mobile nav */
+  #content { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+
+  /* ──────────────────────────────
+     DASHBOARD
+  ────────────────────────────── */
+  .dash-page { padding:12px 12px 0; gap:10px; }
+  .dash-greeting { font-size:17px; }
+  .dash-date { font-size:10px; }
+  .stats-row { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .stat-num { font-size:24px; }
+  .stat-card { padding:12px 13px; }
+  .alert-strip { padding:10px 14px; gap:10px; }
+  .alert-title { font-size:13px; }
+  .alert-btn { padding:6px 12px; font-size:11px; }
+
+  /* Dashboard body: stack columns, allow scroll */
+  .dash-body {
+    flex-direction:column; gap:12px;
+    overflow-y:auto; overflow-x:hidden;
+    min-height:0; flex:1;
+  }
+  .dash-col-left,
+  .dash-col-right {
+    width:100%; overflow:visible; min-height:0;
+  }
+
+  /* Expiry rows in dashboard */
+  .expiry-row { padding:10px 12px; gap:10px; }
+  .er-icon { font-size:18px; }
+  .er-days { min-width:80px; }
+  .er-days-num { font-size:14px; }
+
+  /* Coverage table: horizontal scroll */
+  .coverage-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .cov-table { min-width:340px; }
+
+  /* Member mini cards */
+  .member-mini { padding:9px 10px; }
+
+  /* ──────────────────────────────
+     EXPIRY TRACKER — KEY FIX
+  ────────────────────────────── */
+  .expiry-page {
+    height:auto !important;
+    min-height:100%;
+    overflow-y:auto !important;
+    overflow-x:hidden;
+    padding:14px 12px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    /* Remove flex constraints that clip content */
+    flex:none !important;
+  }
+  .expiry-list-full {
+    overflow:visible !important;
+    min-height:0;
+    flex:none;
+    height:auto;
+  }
+  .expiry-page-header {
+    flex-direction:column; align-items:flex-start; gap:8px;
+    margin-bottom:12px;
+  }
+  .expiry-summary-chips { margin-left:0; flex-wrap:wrap; gap:6px; }
+  .eli-full { padding:14px 14px; gap:12px; }
+  .eli-icon { font-size:24px; }
+  .eli-days-num { font-size:18px; }
+  .eli-right { min-width:90px; }
+  .eli-title { font-size:13px; }
+  .eli-sub { font-size:10px; }
+
+  /* ──────────────────────────────
+     MEMBER PROFILES
+  ────────────────────────────── */
+  .profile-switcher-bar { padding:10px 12px; gap:6px; }
+  .profile-pill { padding:6px 11px; font-size:11px; }
+
+  /* Hero panel: horizontal compact on mobile */
+  .profile-main { flex-direction:column; }
+  .profile-hero-panel {
+    width:100%; border-right:none;
+    border-bottom:1px solid var(--border);
+    height:auto; flex-shrink:0;
+  }
+  .profile-hero-inner {
+    padding:14px;
+    display:flex; gap:14px; align-items:flex-start;
+  }
+  .profile-avatar-lg {
+    width:46px; height:46px; font-size:16px;
+    margin-bottom:0; flex-shrink:0;
+  }
+  .profile-avatar-lg::after { border-radius:14px; }
+  .profile-name { font-size:13px; }
+  .profile-role-badge { font-size:10px; margin-top:5px; }
+  .profile-meta-items { margin-top:6px; gap:5px; }
+  .pmi { font-size:10px; }
+
+  /* Tab nav: horizontal scroll row */
+  .profile-vnav {
+    display:flex; flex-direction:row;
+    overflow-x:auto; padding:8px 10px; gap:4px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .profile-vnav::-webkit-scrollbar { height:0; }
+  .pvn-item {
+    padding:6px 12px; border-radius:20px;
+    margin-bottom:0; white-space:nowrap;
+    flex-shrink:0; font-size:11px;
+  }
+  .pvn-icon { display:none; }
+
+  .profile-content-panel { flex:1; min-height:280px; }
+  .tab-content-area { padding:14px 14px 80px; }
+  .doc-card { padding:14px; margin-bottom:10px; }
+  .field-key { font-size:10px; }
+  .field-val { font-size:11px; }
+  .field-highlight { font-size:12px; }
+
+  /* ──────────────────────────────
+     DOCUMENTS PAGE
+  ────────────────────────────── */
+  .docs-page { padding:12px 12px; }
+  .doc-list-hdr { display:none; }
   #doc-list-body .doc-row {
-    grid-template-columns: 28px 1fr auto;
-    grid-template-rows: auto auto auto;
-    gap: 3px 8px;
-    padding: 10px 12px;
+    display:grid;
+    grid-template-columns:28px 1fr auto;
+    grid-template-rows:auto auto auto;
+    gap:3px 8px;
+    padding:10px 12px;
   }
-  .dr-key2, .dr-typebadge { display: none; }
-  .dr-person { grid-column: 3; grid-row: 1; }
-  .dr-name { grid-column: 2; grid-row: 1; }
-  .dr-key1 { grid-column: 2 / 4; grid-row: 2; }
-  .dr-actions { grid-column: 1 / 4; grid-row: 3; flex-direction: row; gap: 6px; }
-  .dr-action-btn { padding: 4px 10px; font-size: 10px; }
+  .dr-key2 { display:none; }
+  .dr-typebadge { display:none; }
+  .dr-type-icon { grid-column:1; grid-row:1; }
+  .dr-name { grid-column:2; grid-row:1; }
+  .dr-person { grid-column:3; grid-row:1; }
+  .dr-key1 { grid-column:2/4; grid-row:2; }
+  .dr-actions { grid-column:1/4; grid-row:3; flex-direction:row; gap:6px; }
+  .dr-doc-name { font-size:12px; }
+  .dr-src { font-size:9px; }
+  .docs-filters { gap:6px; }
+  .filter-chip { padding:5px 11px; font-size:11px; }
 
-  /* Expiry tracker mobile */
-  .expiry-page { padding: 14px 14px; }
-  .expiry-page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .expiry-summary-chips { margin-left: 0; }
-  .eli-full { flex-wrap: wrap; gap: 8px; }
-  .eli-right { min-width: auto; text-align: left; }
+  /* ──────────────────────────────
+     SEARCH MODAL
+  ────────────────────────────── */
+  #search-overlay { padding-top:30px; align-items:flex-end; padding-bottom:0; }
+  #search-modal {
+    width:100%; max-width:100%;
+    margin:0; border-radius:20px 20px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  #search-input { font-size:16px; } /* prevents iOS zoom */
 
-  /* Search modal mobile */
-  #search-overlay { padding-top: 40px; }
-  #search-modal { width: 100%; max-width: 100vw; margin: 0 12px; border-radius: 20px 20px 0 0; }
+  /* FAB: above mobile nav */
+  #fab { bottom:calc(76px + env(safe-area-inset-bottom)); right:16px; }
 
-  /* Coverage table mobile — horizontal scroll */
-  .coverage-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .cov-table { min-width: 360px; }
-
-  /* FAB mobile */
-  #fab { bottom: calc(80px + env(safe-area-inset-bottom)); right: 16px; }
-
-  /* Toast mobile */
-  #toast { bottom: calc(80px + env(safe-area-inset-bottom)); right: 14px; left: 14px; text-align: center; }
+  /* Toast: above mobile nav */
+  #toast {
+    bottom:calc(76px + env(safe-area-inset-bottom));
+    right:14px; left:14px; text-align:center;
+  }
 }
 
-@media (max-width: 400px) {
-  .stats-row { grid-template-columns: repeat(2,1fr); }
-  .profile-pill { padding: 5px 10px; font-size: 11px; }
-  .expiry-summary-chips { flex-wrap: wrap; gap: 5px; }
+@media (max-width: 390px) {
+  .stats-row { grid-template-columns:repeat(2,1fr); gap:7px; }
+  .expiry-summary-chips { flex-wrap:wrap; }
+  .profile-pill { padding:5px 9px; font-size:10px; }
+  .exp-chip { padding:4px 9px; font-size:10px; }
 }
 </style>
 </head>
@@ -1762,30 +1985,23 @@ body { -webkit-text-size-adjust: 100%; }
 <div id="mobile-nav">
   <div class="mnav-inner">
     <div class="mnav-item active" id="mnav-dashboard" onclick="navigate('dashboard');setMobileNav('dashboard')">
-      <span class="mnav-icon">⊞</span>
-      <span>Home</span>
+      <span class="mnav-icon">⊞</span><span>Home</span>
     </div>
     <div class="mnav-item" id="mnav-members" onclick="navigate('members');setMobileNav('members')">
-      <span class="mnav-icon">👥</span>
-      <span>Members</span>
+      <span class="mnav-icon">👥</span><span>Members</span>
     </div>
     <div class="mnav-item" id="mnav-documents" onclick="navigate('documents');setMobileNav('documents')">
-      <span class="mnav-icon">📁</span>
-      <span>Docs</span>
+      <span class="mnav-icon">📁</span><span>Docs</span>
     </div>
     <div class="mnav-item" id="mnav-expiry" onclick="navigate('expiry');setMobileNav('expiry')">
-      <span class="mnav-icon">⏳</span>
-      <span>Expiry</span>
+      <span class="mnav-icon">⏳</span><span>Expiry</span>
       <span class="mnav-badge">2</span>
     </div>
     <div class="mnav-item" id="mnav-search" onclick="openSearch()">
-      <span class="mnav-icon">⌕</span>
-      <span>Search</span>
+      <span class="mnav-icon">⌕</span><span>Search</span>
     </div>
   </div>
 </div>
-
-<!-- SEARCH -->
 <div id="search-overlay" onclick="closeSearch(event)">
   <div id="search-modal">
     <div class="search-top">
@@ -1804,15 +2020,13 @@ body { -webkit-text-size-adjust: 100%; }
 <!-- TOAST -->
 <div id="toast">✓ Copied to clipboard</div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ══════════════════════════════════════════
-// MOBILE SIDEBAR
+// MOBILE SIDEBAR & NAV
 // ══════════════════════════════════════════
 function toggleMobileSidebar() {
-  const sb = document.getElementById('sidebar');
-  const ov = document.getElementById('sidebar-overlay');
-  sb.classList.toggle('mobile-open');
-  ov.classList.toggle('visible');
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebar-overlay').classList.toggle('visible');
 }
 function closeMobileSidebar() {
   document.getElementById('sidebar').classList.remove('mobile-open');
@@ -1824,10 +2038,6 @@ function setMobileNav(page) {
   if (el) el.classList.add('active');
   closeMobileSidebar();
 }
-
-// Patch navigate to also update mobile nav
-const _navOrig = typeof navigate !== 'undefined' ? navigate : null;
-
 // ══════════════════════════════════════════
 // CLOCK
 // ══════════════════════════════════════════
@@ -2065,7 +2275,7 @@ function navigate(page, opts = {}) {
       content.style.transform = 'translateY(0)';
     });
 
-    if (page === 'dashboard') initCountUp();
+    if (page === 'dashboard') { initCountUp(); initDashNavs(); }
     if (page === 'documents') initDocReveal();
     if (page === 'expiry') setTimeout(animateExpBars, 100);
     if (page === 'members') setTimeout(attachTabNavListeners, 150);
@@ -2180,28 +2390,38 @@ function renderDashboard() {
     +healthCells
     +'</div></div>';
 
-  // Expiry rows — ALL items, no inner scroll, flex layout expands naturally
+  // Expiry table rows — table design matching reference image
   const sorted = [...EXPIRY].sort((a,b) => daysUntil(a.date)-daysUntil(b.date));
   var expiryRows = '';
   sorted.forEach(function(e){
     var days = daysUntil(e.date);
     var col = expiryColor(days);
-    var pct = days < 0 ? 100 : Math.max(2, Math.min(100, (days/730)*100));
-    var dLabel = days < 0 ? Math.abs(days)+'d overdue' : days+' days';
-    var bc = badgeCls(days);
-    expiryRows += '<div class="expiry-row" style="border-left-color:'+col+(days<0?';background:rgba(255,79,79,.04)':'')+'" onclick="navigate(\'expiry\')">'
-      +'<span style="position:absolute;left:0;top:0;bottom:0;width:3px;background:'+col+';border-radius:0 2px 2px 0"></span>'
-      +'<span class="er-icon">'+e.icon+'</span>'
-      +'<div class="er-info">'
-      +'<div class="er-title">'+e.label+'</div>'
-      +'<div class="er-sub">'+e.sub+'</div>'
-      +'<div class="er-bar"><div class="er-fill" style="background:'+col+';width:0%" data-width="'+pct+'"></div></div>'
-      +'</div>'
-      +'<div class="er-days">'
-      +'<div class="er-days-num" style="color:'+col+'">'+dLabel+'</div>'
-      +'<div class="er-days-lbl">'+(days < 0 ? 'OVERDUE' : 'remaining')+'</div>'
-      +'<span class="er-badge '+bc+'">'+expiryBadge(days)+'</span>'
-      +'</div></div>';
+    var statusLabel, statusBg, statusColor;
+    if (days < 0) {
+      statusLabel = 'OVERDUE';
+      statusBg = 'rgba(255,79,79,.15)';
+      statusColor = 'var(--red)';
+    } else {
+      statusLabel = '~'+days+' days';
+      if (days <= 90) { statusBg='rgba(255,140,66,.15)'; statusColor='var(--orange)'; }
+      else if (days <= 180) { statusBg='rgba(240,180,41,.15)'; statusColor='var(--gold)'; }
+      else { statusBg='rgba(62,207,142,.15)'; statusColor='var(--green)'; }
+    }
+    var actionText = '';
+    if (e.id==='prop_tax_flat403'||e.id==='prop_tax_shopg5') {
+      actionText = 'Pay at <a href="https://cdma.ap.gov.in" target="_blank" onclick="event.stopPropagation()">cdma.ap.gov.in</a>';
+    } else if (e.id==='car_ins'||e.id==='bike_ins'||e.id==='health_fam'||e.id==='health_ind') {
+      actionText = 'Renew ICICI Lombard';
+    } else if (e.id==='dl') {
+      actionText = 'parivahan.gov.in';
+    }
+    expiryRows += '<tr onclick="navigate(\'expiry\')" style="border-left:3px solid '+col+(days<0?';background:rgba(255,79,79,.04)':'')+';">'
+      +'<td><div class="det-name">'+e.icon+' '+e.label+'</div>'
+      +'<div class="det-sub">'+e.sub+'</div></td>'
+      +'<td><span class="dash-expiry-date">'+fmtDate(e.date)+'</span></td>'
+      +'<td><span class="det-status-badge" style="background:'+statusBg+';color:'+statusColor+';border:1px solid '+col+'44">'+statusLabel+'</span></td>'
+      +'<td><span class="det-action">'+actionText+'</span></td>'
+      +'</tr>';
   });
 
   // Coverage matrix
@@ -2249,49 +2469,117 @@ function renderDashboard() {
 
     +'<div class="dash-body">'
 
-    // LEFT column: Doc Health + Expiry (no inner scroll)
-    +'<div class="dash-col-left" style="overflow-y:auto;min-height:0">'
-    //+healthHtml
-    +'<div class="glass-card" style="flex-shrink:0">'
-    +'<div class="card-header" style="padding:14px 18px 12px">'
+    // LEFT column: Expiry table with up/down nav
+    +'<div class="dash-col-left" style="min-height:0;display:flex;flex-direction:column;">'
+    +'<div class="glass-card" style="flex:1;min-height:0;display:flex;flex-direction:column;">'
+    +'<div class="card-header" style="padding:14px 18px 10px;flex-shrink:0;">'
     +'<div class="card-title"><span class="card-title-icon">⏳</span> Expiry Tracker'
-    +'<span style="font-size:11px;font-family:"DM Mono",monospace;color:var(--text3);font-weight:400"> '+EXPIRY.length+' items · <span style="color:var(--red)">'+overdueCount+' overdue</span></span>'
+    +'<span style="font-size:11px;font-family:\'DM Mono\',monospace;color:var(--text3);font-weight:400"> '+EXPIRY.length+' items · <span style="color:var(--red)">'+overdueCount+' overdue</span></span>'
     +'</div>'
     +'<span class="card-action" onclick="navigate(\'expiry\')">Full View →</span>'
     +'</div>'
-    +'<div style="padding:4px 10px 12px;display:flex;flex-direction:column;gap:6px">'
-    +expiryRows
-    +'</div></div>'
+    +'<div class="dash-scroll-wrap">'
+    +'<div class="dash-scroll-inner" id="expiry-scroll-inner" onscroll="updateDashNav(\'expiry\')">'
+    +'<table class="dash-expiry-table">'
+    +'<thead><tr>'
+    +'<th style="width:36%">DOCUMENT / POLICY</th>'
+    +'<th style="width:16%">EXPIRY DATE</th>'
+    +'<th style="width:18%">STATUS</th>'
+    +'<th>ACTION REQUIRED</th>'
+    +'</tr></thead>'
+    +'<tbody>'+expiryRows+'</tbody>'
+    +'</table>'
+    +'</div>'
+    +'<div class="dash-scroll-nav" id="expiry-scroll-nav" style="display:none">'
+    +'<button id="expiry-nav-up" class="tndis" onclick="dashNavScroll(\'expiry\',-1)">▲</button>'
+    +'<span class="nav-pct" id="expiry-nav-pct">↕</span>'
+    +'<button id="expiry-nav-dn" onclick="dashNavScroll(\'expiry\',1)">▼</button>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
     +'</div>'
 
-    // RIGHT column: Coverage Matrix + Family Members (no scroll, all 4 visible)
-    +'<div class="dash-col-right" style="overflow-y:auto;min-height:0">'
-    +'<div class="glass-card" style="flex-shrink:0">'
+    // RIGHT column: Coverage Matrix + Family Members (with up/down nav)
+    +'<div class="dash-col-right" style="min-height:0;display:flex;flex-direction:column;gap:14px;">'
+
+    // Coverage Matrix with scroll nav
+    +'<div class="glass-card" style="flex:0 0 auto;">'
     +'<div class="card-header" style="padding:14px 16px 10px">'
     +'<div class="card-title"><span class="card-title-icon">📊</span> Coverage Matrix</div>'
     +'</div>'
-    +'<div class="coverage-wrap">'
+    +'<div class="dash-scroll-wrap" style="max-height:220px;">'
+    +'<div class="dash-scroll-inner" id="covmatrix-scroll-inner" onscroll="updateDashNav(\'covmatrix\')" style="padding:0 0 8px;">'
+    +'<div class="coverage-wrap" style="padding:6px 14px 4px;">'
     +'<table class="cov-table"><thead><tr><th>Member</th>'
     +cats.map(function(c){ return '<th title="'+c+'">'+c.slice(0,3)+'</th>'; }).join('')
     +'</tr></thead><tbody>'+covRows+'</tbody></table>'
-      +'<div style="margin-top:8px;font-family: Syne, sans-serif;font-size:15px;color:white;display:flex;gap:12px">'
-      +'<span class="cov-yes" style= "font-family: Syne, sans-serif;font-size:15px;color:white;" >✓</span> Available '
+    +'<div style="margin-top:8px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:center">'
+    +'<span class="cov-yes">✓</span> Available '
     +'<span class="cov-partial">◐</span> Family Policy '
     +'<span class="cov-no">–</span> N/A'
-    +'</div></div></div>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div class="dash-scroll-nav" id="covmatrix-scroll-nav" style="display:none">'
+    +'<button id="covmatrix-nav-up" class="tndis" onclick="dashNavScroll(\'covmatrix\',-1)">▲</button>'
+    +'<span class="nav-pct" id="covmatrix-nav-pct">↕</span>'
+    +'<button id="covmatrix-nav-dn" onclick="dashNavScroll(\'covmatrix\',1)">▼</button>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
 
-    +'<div class="glass-card" style="flex-shrink:0">'
-    +'<div class="card-header" style="padding:14px 16px 10px">'
+    // Family Members
+    +'<div class="glass-card" style="flex:1;min-height:0;display:flex;flex-direction:column;">'
+    +'<div class="card-header" style="padding:14px 16px 10px;flex-shrink:0;">'
     +'<div class="card-title"><span class="card-title-icon">👥</span> Family Members</div>'
     +'<span class="card-action" onclick="navigate(\'members\')">View All →</span>'
     +'</div>'
-    +'<div style="padding:8px 10px 12px;display:flex;flex-direction:column;gap:6px">'
+    +'<div style="padding:8px 10px 12px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;">'
     +memberCards
     +'</div></div>'
 
     +'</div>'  // end right col
     +'</div>'  // end dash-body
     +'</div>'; // end dash-page
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD SCROLL NAV HELPERS
+// ══════════════════════════════════════════
+function dashNavScroll(id, dir) {
+  const el = document.getElementById(id+'-scroll-inner');
+  if (!el) return;
+  el.scrollBy({top: dir * el.clientHeight * 0.75, behavior:'smooth'});
+  setTimeout(function(){ updateDashNav(id); }, 350);
+}
+
+function updateDashNav(id) {
+  const el = document.getElementById(id+'-scroll-inner');
+  const nav = document.getElementById(id+'-scroll-nav');
+  const up = document.getElementById(id+'-nav-up');
+  const dn = document.getElementById(id+'-nav-dn');
+  const pct = document.getElementById(id+'-nav-pct');
+  if (!el) return;
+  if (el.scrollHeight <= el.clientHeight + 8) {
+    if (nav) nav.style.display = 'none';
+    return;
+  }
+  if (nav) nav.style.display = '';
+  const atTop = el.scrollTop <= 2;
+  const atBot = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+  if (up) up.classList.toggle('tndis', atTop);
+  if (dn) dn.classList.toggle('tndis', atBot);
+  if (pct) {
+    const p = el.scrollHeight > el.clientHeight ? Math.round(el.scrollTop/(el.scrollHeight-el.clientHeight)*100) : 0;
+    pct.textContent = p+'%';
+  }
+}
+
+function initDashNavs() {
+  setTimeout(function(){
+    updateDashNav('expiry');
+    updateDashNav('covmatrix');
+  }, 200);
 }
 
 // ══════════════════════════════════════════
@@ -2913,12 +3201,19 @@ function doSearch(q) {
   const grouped = {};
   matches.forEach(m => { if(!grouped[m.person])grouped[m.person]=[]; grouped[m.person].push(m); });
   let html = '';
+  // Sections that contain copyable identifier values
+  const copyableSections = new Set(['Identity','Finance','Employment','Education','Vehicle','Property','Insurance']);
   Object.entries(grouped).forEach(([person,items]) => {
     html += `<div class="search-sec-hdr">${person} — ${items.length} match${items.length>1?'es':''}</div>`;
     items.slice(0,8).forEach(item => {
+      const isCopyable = copyableSections.has(item.section);
+      const safeVal = item.val.replace(/'/g,"\\'");
+      const copyBtn = isCopyable
+        ? `<button class="sri-copy-btn" onclick="event.stopPropagation();copyToClipboard('${safeVal}',this)" title="Copy value">⎘</button>`
+        : '';
       html += `<div class="sri" onclick="jumpToResult('${item.memberId}','${item.tab}')">
         <div class="sri-key">${item.section} › ${item.key}</div>
-        <div class="sri-val">${hl(item.val,q)}</div>
+        <div class="sri-val">${hl(item.val,q)}${copyBtn}</div>
         <div class="sri-person">→ ${item.person} · Click to view profile</div>
       </div>`;
     });
@@ -2979,11 +3274,27 @@ document.querySelectorAll('.sb-item').forEach(el => {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-const _navigateCore = navigate;
-window.navigate = function(page, opts) {
-  _navigateCore(page, opts);
-  setMobileNav(page);
-};
+
+// Wrap navigate to sync mobile nav
+(function(){
+  const _nav = navigate;
+  window.navigate = function(page, opts) {
+    _nav(page, opts);
+    setMobileNav(page);
+    // Fix expiry page: make #content scrollable on mobile
+    if (page === 'expiry' && window.innerWidth <= 768) {
+      const content = document.getElementById('content');
+      if (content) {
+        content.style.overflowY = 'auto';
+        content.style.overflowX = 'hidden';
+      }
+    } else {
+      const content = document.getElementById('content');
+      if (content) content.style.overflow = '';
+    }
+  };
+})();
+
 navigate('dashboard');
 </script>
 </body>
