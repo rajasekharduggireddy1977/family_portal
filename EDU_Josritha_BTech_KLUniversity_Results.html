@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Academic Transcript · Josritha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --border: rgba(255,255,255,0.07);
+            --gold: #d4a853;
+            --gold2: #f0c97a;
+            --teal: #4ecdc4;
+            --rose: #ff6b8a;
+            --text: #f0f0f5;
+            --muted: #7a7a90;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans',sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: env(safe-area-inset-bottom,20px);
+        }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(ellipse 60% 50% at 20% 20%,rgba(212,168,83,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 80% 70%,rgba(78,205,196,.05) 0%,transparent 60%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .hero {
+            padding: calc(env(safe-area-inset-top,20px) + 28px) 0 24px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(212,168,83,.1);
+            border: 1px solid rgba(212,168,83,.25);
+            border-radius: 100px;
+            padding: 5px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+            animation: fadeDown .6s ease both;
+        }
+
+            .hero-badge::before {
+                content: '';
+                width: 6px;
+                height: 6px;
+                background: var(--gold);
+                border-radius: 50%;
+                box-shadow: 0 0 8px var(--gold);
+                animation: pulse 2s infinite;
+            }
+
+        @keyframes pulse {
+            0%,100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(.8);
+            }
+        }
+
+        .hero-name {
+            font-family: 'Playfair Display',serif;
+            font-size: clamp(28px,8vw,40px);
+            font-weight: 900;
+            letter-spacing: -.02em;
+            line-height: 1.1;
+            background: linear-gradient(135deg,var(--gold2) 0%,var(--gold) 50%,#c4943d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeDown .6s .1s ease both;
+            margin-bottom: 6px;
+        }
+
+        .hero-uid {
+            font-family: 'DM Mono',monospace;
+            font-size: 13px;
+            color: var(--muted);
+            letter-spacing: .08em;
+            animation: fadeDown .6s .2s ease both;
+            margin-bottom: 24px;
+        }
+
+            .hero-uid span {
+                color: var(--teal);
+                font-weight: 500;
+            }
+
+        .cgpa-card {
+            background: linear-gradient(135deg,rgba(212,168,83,.15) 0%,rgba(212,168,83,.05) 100%);
+            border: 1px solid rgba(212,168,83,.3);
+            border-radius: 20px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 auto 28px;
+            animation: fadeDown .6s .3s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .cgpa-card::after {
+                content: '';
+                position: absolute;
+                top: -30px;
+                right: -30px;
+                width: 120px;
+                height: 120px;
+                background: radial-gradient(circle,rgba(212,168,83,.12) 0%,transparent 70%);
+                pointer-events: none;
+            }
+
+        .cgpa-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .cgpa-value {
+            font-family: 'Playfair Display',serif;
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg,var(--gold2),var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cgpa-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .cgpa-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .star-row {
+            display: flex;
+            gap: 3px;
+        }
+
+        .star {
+            width: 16px;
+            height: 16px;
+            color: var(--gold);
+        }
+
+        .cgpa-rank {
+            font-size: 11px;
+            color: var(--gold);
+            font-weight: 600;
+            letter-spacing: .06em;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            animation: fadeDown .6s .4s ease both;
+        }
+
+        .stat-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 10px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'DM Mono',monospace;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-lbl {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+        }
+
+        .filter-section {
+            margin-bottom: 16px;
+            animation: fadeDown .6s .45s ease both;
+        }
+
+        .filter-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-left: 2px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s ease;
+            white-space: nowrap;
+            font-family: 'DM Sans',sans-serif;
+            -webkit-appearance: none;
+            outline: none;
+        }
+
+            .filter-chip:active {
+                transform: scale(.95);
+            }
+
+        .year-active {
+            background: rgba(212,168,83,.12) !important;
+            border-color: rgba(212,168,83,.4) !important;
+            color: var(--gold2) !important;
+        }
+
+        .sem-even-active {
+            background: rgba(78,205,196,.1) !important;
+            border-color: rgba(78,205,196,.35) !important;
+            color: var(--teal) !important;
+        }
+
+        .sem-odd-active {
+            background: rgba(255,107,138,.1) !important;
+            border-color: rgba(255,107,138,.35) !important;
+            color: var(--rose) !important;
+        }
+
+        .results-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            animation: fadeDown .6s .5s ease both;
+        }
+
+        .results-count {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+            .results-count strong {
+                color: var(--text);
+                font-weight: 600;
+            }
+
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            animation: fadeDown .6s .55s ease both;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .2s ease;
+            animation: cardIn .35s ease both;
+        }
+
+            .card:active {
+                transform: scale(.98);
+            }
+
+            .card::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                border-radius: 16px 0 0 16px;
+            }
+
+        .grade-O::before {
+            background: #4ecdc4;
+        }
+
+        .grade-Aplus::before {
+            background: #7bc8f5;
+        }
+
+        .grade-A::before {
+            background: #a8d8a8;
+        }
+
+        .grade-Bplus::before {
+            background: #f5c97a;
+        }
+
+        .grade-P::before {
+            background: #b0b0c8;
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .card-code {
+            font-family: 'DM Mono',monospace;
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: .08em;
+            margin-bottom: 4px;
+        }
+
+        .card-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.35;
+        }
+
+        .grade-badge {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display',serif;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .grade-O .grade-badge {
+            background: rgba(78,205,196,.15);
+            color: #4ecdc4;
+            border: 1px solid rgba(78,205,196,.25);
+        }
+
+        .grade-Aplus .grade-badge {
+            background: rgba(123,200,245,.12);
+            color: #7bc8f5;
+            border: 1px solid rgba(123,200,245,.25);
+        }
+
+        .grade-A .grade-badge {
+            background: rgba(168,216,168,.12);
+            color: #a8d8a8;
+            border: 1px solid rgba(168,216,168,.25);
+        }
+
+        .grade-Bplus .grade-badge {
+            background: rgba(245,201,122,.12);
+            color: #f5c97a;
+            border: 1px solid rgba(245,201,122,.25);
+        }
+
+        .grade-P .grade-badge {
+            background: rgba(176,176,200,.1);
+            color: #b0b0c8;
+            border: 1px solid rgba(176,176,200,.15);
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255,255,255,.04);
+            border-radius: 100px;
+            padding: 3px 9px;
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+            .meta-pill.credits {
+                color: var(--gold);
+            }
+
+            .meta-pill.gp {
+                color: var(--teal);
+            }
+
+        .sem-tag {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 100px;
+        }
+
+            .sem-tag.even {
+                background: rgba(78,205,196,.1);
+                color: var(--teal);
+            }
+
+            .sem-tag.odd {
+                background: rgba(255,107,138,.1);
+                color: var(--rose);
+            }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0 10px;
+        }
+
+        .section-header-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .section-header-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .legend {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            animation: fadeDown .6s .48s ease both;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            display: none;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 36px 0 16px;
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .06em;
+        }
+
+            .footer span {
+                color: var(--gold);
+            }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="hero-badge">KL University · B.Tech</div>
+            <div class="hero-name">Josritha Duggireddy</div>
+            <div class="hero-uid">University ID: <span>2420030493</span></div>
+            <div class="cgpa-card">
+                <div>
+                    <div class="cgpa-label">Overall CGPA</div>
+                    <div class="cgpa-value">9.23</div>
+                    <div class="cgpa-sub">Outstanding Performance</div>
+                </div>
+                <div class="cgpa-right">
+                    <div class="star-row">
+                        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    </div>
+                    <div class="cgpa-rank">Top Performer ✦</div>
+                </div>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-num" id="statTotal">25</div><div class="stat-lbl">Courses</div></div>
+            <div class="stat-box"><div class="stat-num" id="statCredits">—</div><div class="stat-lbl">Credits</div></div>
+            <div class="stat-box"><div class="stat-num" id="statO">—</div><div class="stat-lbl">O Grades</div></div>
+        </div>
+        <div class="filter-section">
+            <div class="filter-label">Academic Year</div>
+            <div class="filter-row" id="yearFilters"></div>
+        </div>
+        <div class="filter-section">
+            <div class="filter-label">Semester</div>
+            <div class="filter-row" id="semFilters">
+                <button class="filter-chip sem-even-active" onclick="setSem('all',this)">All</button>
+                <button class="filter-chip" onclick="setSem('Even Sem',this)">Even Sem</button>
+                <button class="filter-chip" onclick="setSem('Odd Sem',this)">Odd Sem</button>
+            </div>
+        </div>
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div>O - Outstanding</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7bc8f5"></div>A+</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#a8d8a8"></div>A</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f5c97a"></div>B+</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#b0b0c8"></div>Pass</div>
+        </div>
+        <div class="results-meta">
+            <div class="results-count">Showing <strong id="countDisplay">0</strong> courses</div>
+        </div>
+        <div class="cards-list" id="cardsList"></div>
+        <div class="empty-state" id="emptyState"><span class="empty-icon">🔍</span><p>No courses match the selected filters.</p></div>
+        <div class="footer"><span>Josritha Duggireddy</span> · Academic Transcript · KL University</div>
+    </div>
+    <script>
+        const records = [
+            { code: "22UC0021", name: "Social Immersive Learning-1", grade: "O", gp: 10, credits: 1, year: "2024-2025", sem: "Even Sem" },
+            { code: "23EC1202", name: "Digital Design & Computer Architecture", grade: "A+", gp: 9, credits: 4, year: "2024-2025", sem: "Even Sem" },
+            { code: "23EC1203", name: "Basic Electrical & Electronic Circuits", grade: "A+", gp: 9, credits: 2, year: "2024-2025", sem: "Even Sem" },
+            { code: "23FL3054", name: "French Language", grade: "O", gp: 10, credits: 3, year: "2024-2025", sem: "Even Sem" },
+            { code: "23ME1103", name: "Design Tool Workshop", grade: "O", gp: 10, credits: 2, year: "2024-2025", sem: "Even Sem" },
+            { code: "23MT1001", name: "Linear Algebra & Calculus for Engineers", grade: "A+", gp: 9, credits: 4, year: "2024-2025", sem: "Even Sem" },
+            { code: "23SC1101", name: "Computational Thinking for Structured Design", grade: "O", gp: 10, credits: 5, year: "2024-2025", sem: "Odd Sem" },
+            { code: "23UC0013", name: "Global Logic Building Contest Practicum", grade: "P", gp: 7, credits: 0, year: "2025-2026", sem: "Odd Sem" },
+            { code: "23UC0026", name: "Human Values, Gender Equity & Professional Ethics", grade: "O", gp: 10, credits: 2, year: "2024-2025", sem: "Odd Sem" },
+            { code: "23UC0027", name: "Global Logic Building Contest Practicum", grade: "P", gp: 10, credits: 0, year: "2024-2025", sem: "Even Sem" },
+            { code: "24AD2001", name: "Artificial Intelligence & Machine Learning", grade: "A+", gp: 9, credits: 4, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24AD2103", name: "Database Management Systems", grade: "A+", gp: 9, credits: 4, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24CS2101", name: "Operating Systems", grade: "A+", gp: 9, credits: 4, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24EC1101", name: "Fundamentals of IoT & Sensors", grade: "A+", gp: 9, credits: 4, year: "2024-2025", sem: "Odd Sem" },
+            { code: "24MT1002", name: "Discrete Mathematics", grade: "A+", gp: 9, credits: 4, year: "2024-2025", sem: "Odd Sem" },
+            { code: "24MT2019", name: "Probability & Statistics", grade: "B+", gp: 7, credits: 4, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24SC1203", name: "Data Structures", grade: "O", gp: 10, credits: 5, year: "2024-2025", sem: "Even Sem" },
+            { code: "24SC2006", name: "Object Oriented Programming", grade: "A", gp: 8, credits: 4.5, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24SDCS01", name: "Front End Development Frameworks", grade: "O", gp: 10, credits: 2, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24SP2116", name: "Yoga", grade: "P", gp: 9, credits: 0, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24UC0017", name: "Indian Knowledge Systems: Vedic Mathematics", grade: "P", gp: 8, credits: 0, year: "2024-2025", sem: "Odd Sem" },
+            { code: "24UC0022", name: "Social Immersive Learning", grade: "O", gp: 10, credits: 1, year: "2025-2026", sem: "Odd Sem" },
+            { code: "24UC1102", name: "Language Skills for Engineers", grade: "O", gp: 10, credits: 2, year: "2024-2025", sem: "Odd Sem" },
+            { code: "24UC1203", name: "Design Thinking & Innovation", grade: "O", gp: 10, credits: 3, year: "2024-2025", sem: "Odd Sem" },
+            { code: "24UC1204", name: "Communication Skills for Engineers", grade: "O", gp: 10, credits: 2, year: "2024-2025", sem: "Even Sem" }
+        ];
+        let activeYear = 'all', activeSem = 'all';
+        function sortRecords(arr) { return [...arr].sort((a, b) => { const yc = b.year.localeCompare(a.year); if (yc !== 0) return yc; if (a.sem === b.sem) return 0; return a.sem === 'Even Sem' ? -1 : 1; }); }
+        function gradeClass(g) { if (g === 'O') return 'grade-O'; if (g === 'A+') return 'grade-Aplus'; if (g === 'A') return 'grade-A'; if (g === 'B+') return 'grade-Bplus'; return 'grade-P'; }
+        function gradeLabel(g) { if (g === 'A+') return 'A⁺'; if (g === 'B+') return 'B⁺'; return g; }
+        function buildYearFilters() {
+            const years = [...new Set(records.map(r => r.year))].sort((a, b) => b.localeCompare(a));
+            const c = document.getElementById('yearFilters'); c.innerHTML = '';
+            const allBtn = document.createElement('button'); allBtn.className = 'filter-chip year-active'; allBtn.textContent = 'All Years'; allBtn.onclick = () => setYear('all', allBtn); c.appendChild(allBtn);
+            years.forEach(y => { const btn = document.createElement('button'); btn.className = 'filter-chip'; btn.textContent = y; btn.onclick = () => setYear(y, btn); c.appendChild(btn); });
+        }
+        function setYear(y, btn) { activeYear = y; document.querySelectorAll('#yearFilters .filter-chip').forEach(b => b.classList.remove('year-active')); btn.classList.add('year-active'); render(); }
+        function setSem(s, btn) { activeSem = s; document.querySelectorAll('#semFilters .filter-chip').forEach(b => b.classList.remove('sem-even-active', 'sem-odd-active')); if (s === 'Odd Sem') btn.classList.add('sem-odd-active'); else btn.classList.add('sem-even-active'); render(); }
+        function render() {
+            let filtered = records.filter(r => { if (activeYear !== 'all' && r.year !== activeYear) return false; if (activeSem !== 'all' && r.sem !== activeSem) return false; return true; });
+            filtered = sortRecords(filtered);
+            const list = document.getElementById('cardsList'), empty = document.getElementById('emptyState');
+            document.getElementById('countDisplay').textContent = filtered.length;
+            document.getElementById('statTotal').textContent = filtered.length;
+            document.getElementById('statCredits').textContent = filtered.reduce((s, r) => s + r.credits, 0);
+            document.getElementById('statO').textContent = filtered.filter(r => r.grade === 'O').length;
+            if (!filtered.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none'; list.innerHTML = '';
+            let lastGroup = '';
+            filtered.forEach((r, idx) => {
+                const group = r.year + ' · ' + r.sem;
+                if (group !== lastGroup) { lastGroup = group; const hdr = document.createElement('div'); hdr.className = 'section-header'; hdr.innerHTML = `<div class="section-header-line"></div><div class="section-header-label">${r.year} &middot; ${r.sem}</div><div class="section-header-line"></div>`; list.appendChild(hdr); }
+                const card = document.createElement('div'); card.className = `card ${gradeClass(r.grade)}`; card.style.animationDelay = `${idx * .025}s`;
+                const sc = r.sem === 'Even Sem' ? 'even' : 'odd', sl = r.sem === 'Even Sem' ? 'Even' : 'Odd';
+                card.innerHTML = `<div class="card-top"><div style="flex:1;min-width:0"><div class="card-code">${r.code}</div><div class="card-name">${r.name}</div></div><div class="grade-badge">${gradeLabel(r.grade)}</div></div><div class="card-meta"><div class="meta-pill gp">GP ${r.gp}</div>${r.credits > 0 ? `<div class="meta-pill credits">${r.credits} cr</div>` : `<div class="meta-pill">0 cr</div>`}<div class="meta-pill">Pass ✓</div><div class="sem-tag ${sc}">${sl}</div></div>`;
+                list.appendChild(card);
+            });
+        }
+        buildYearFilters(); render();
+    </script>
+</body>
+</html>
