@@ -2187,7 +2187,13 @@ const EXPIRY = [
   {id:'health_fam',label:'Health Insurance – Family',sub:'ICICI Lombard Family Floater',icon:'👨‍👩‍👧‍👦',date:'2026-08-04',person:'Family',policy:'4193i/APRN/400529214/00/000'},
   {id:'health_ind',label:'Health Insurance – Individual',sub:'ICICI Lombard · Rajasekhar',icon:'🏥',date:'2026-08-06',person:'Rajasekhar',policy:'4128i/HSNR/92094505/10/000'},
   {id:'dl',label:'Driving Licence',sub:'Rajasekhar · DLFAP62729122008',icon:'🪪',date:'2027-01-20',person:'Rajasekhar',policy:'DLFAP62729122008'},
-  {id:'bike_ins',label:'Bike Insurance',sub:'Honda Activa 125 · TS08HJ8438',icon:'🛵',date:'2028-02-24',person:'Vasundhara',policy:'3005/430080806/00/000'}
+  {id:'bike_ins',label:'Bike Insurance',sub:'Honda Activa 125 · TS08HJ8438',icon:'🛵',date:'2028-02-24',person:'Vasundhara',policy:'3005/430080806/00/000'},
+  {id:'att_24mt2012_l',label:'Attendance – Mathematical Optimization (Lec)',sub:'Josritha · 24MT2012 · 14/20 · 70%',icon:'🎓',date:'2026-03-03',person:'Josritha',policy:'KL Univ Even Sem 2025-26',overdue:true},
+  {id:'att_24mt2012_t',label:'Attendance – Mathematical Optimization (Tut)',sub:'Josritha · 24MT2012 · 14/20 · 70%',icon:'🎓',date:'2026-03-03',person:'Josritha',policy:'KL Univ Even Sem 2025-26',overdue:true},
+  {id:'att_24sdcs02_l',label:'Attendance – Full Stack App Dev (Lec)',sub:'Josritha · 24SDCS02 · 8/11 · 72.7%',icon:'🎓',date:'2026-03-03',person:'Josritha',policy:'KL Univ Even Sem 2025-26',overdue:true},
+  {id:'att_24cs2202_p',label:'Attendance – Computer Networks (Lab)',sub:'Josritha · 24CS2202 · 15/23 · 65.2%',icon:'🎓',date:'2026-03-03',person:'Josritha',policy:'KL Univ Even Sem 2025-26',overdue:true},
+  {id:'att_24cc3010_s',label:'Attendance – AWS Cloud Practitioner (Sem)',sub:'Josritha · 24CC3010 · 5/8 · 62.5%',icon:'🎓',date:'2026-03-03',person:'Josritha',policy:'KL Univ Even Sem 2025-26',overdue:true},
+  {id:'att_24cs2204_s',label:'Attendance – Cloud Infra & Services (Tut)',sub:'Josritha · 24CS2204 · 16/24 · 66.7%',icon:'🎓',date:'2026-03-03',person:'Josritha',policy:'KL Univ Even Sem 2025-26',overdue:true}
 ];
 
 // ══════════════════════════════════════════
@@ -2896,7 +2902,9 @@ function renderVehicleTab(vehicles) {
 // Adding a new doc: Upload to Drive, add one new line below, update both portal files + CLAUDE.md.
 const DOC_LINKS = {
   'BGV Form.docx':                                              'https://drive.google.com/file/d/GDRIVE_ID_BGV_FORM/view',
+  'EDU_Josritha_BTech_KLUniversity_Attendance_EvenSem_2025-26.pdf': 'https://drive.google.com/file/d/1Rr6XyaUzqFGbMBvIknv9KT9wLkz3Djtz/view',
   'EDU_Josritha_BTech_KLUniversity_Details.txt':                'https://drive.google.com/file/d/1PU8_LirPGFVBPSFdj9e3K6RqDlCG1Ebo/view',
+    'EDU_Josritha_BTech_KLUniversity_Results.html': 'https://drive.google.com/file/d/1Rr6XyaUzqFGbMBvIknv9KT9wLkz3Djtz/view',
   'EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf':        'https://drive.google.com/file/d/1y2bpdWAq9bFBTsfTW7l2F5MkugXUX0vP/view',
   'EDU_Josritha_SSC_CBSE_2022.pdf':                             'https://drive.google.com/file/d/1RRdofkMpd74rqpSlKWj1gZJibQQ-63lQ/view',
   'EDU_Rajasekhar_BTech_NagarjunaUniversity_1999.pdf':          'https://drive.google.com/file/d/1rj4WydrdBw9cr-WyxQewh7ndwnjfjvbs/view',
@@ -2964,6 +2972,8 @@ function buildDocs() {
   add('Josritha','Identity','Voter ID','EPIC No.','UPD3143468','Assembly','108-Ongole','ID_Josritha_VoterCard_UPD3143468.pdf');
   add('Josritha','Identity','Birth Certificate','DOB','26-February-2006','Place','Hyderabad','ID_Josritha_BirthCertificate_Hyderabad.pdf');
   add('Josritha','Education','B.Tech (Current)','Roll','2420030493','Institution','KL University – KLH','EDU_Josritha_BTech_KLUniversity_Details.txt');
+    add('Josritha', 'Education', 'B.Tech Results (Till Date)', 'Roll', '2420030493', 'Semesters', '2024-25 Odd/Even · 2025-26 Odd','EDU_Josritha_BTech_KLUniversity_Results.html');
+  add('Josritha','Education','B.Tech Attendance – Even Sem','Year','2025-2026','Critical (<75%)','6 subjects','EDU_Josritha_BTech_KLUniversity_Attendance_EvenSem_2025-26.pdf');
   add('Josritha','Education','Intermediate Certificate','Reg. No.','2417214778','Result','PASS – A GRADE 878','EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf');
   add('Josritha','Education','SSC Certificate','Roll','20164403','Board','CBSE','EDU_Josritha_SSC_CBSE_2022.pdf');
   add('Jeevan','Identity','Aadhaar Card','Aadhaar No.','6918 2946 7739','VID','9158 3149 4395 7932','ID_Jeevan_Aadhaar_6918-2946-7739.pdf');
