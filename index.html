@@ -2888,10 +2888,45 @@ function renderVehicleTab(vehicles) {
 // ══════════════════════════════════════════
 // DOCUMENTS PAGE
 // ══════════════════════════════════════════
+// ── GOOGLE DRIVE DOCUMENT LINKS ──────────────────────────────────────────────
+// Option B: Files shared with specific Gmail accounts only (restricted access).
+// How to get a File ID: Open file in Google Drive → right-click → Get link →
+//   copy the ID from the URL: drive.google.com/file/d/[FILE_ID]/view
+// Updating a doc: Use Drive "Manage versions → Upload new version" — ID stays same, no change needed here.
+// Adding a new doc: Upload to Drive, add one new line below, update both portal files + CLAUDE.md.
+const DOC_LINKS = {
+  'BGV Form.docx':                                              'https://drive.google.com/file/d/GDRIVE_ID_BGV_FORM/view',
+  'EDU_Josritha_BTech_KLUniversity_Details.txt':                'https://drive.google.com/file/d/1PU8_LirPGFVBPSFdj9e3K6RqDlCG1Ebo/view',
+  'EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf':        'https://drive.google.com/file/d/1y2bpdWAq9bFBTsfTW7l2F5MkugXUX0vP/view',
+  'EDU_Josritha_SSC_CBSE_2022.pdf':                             'https://drive.google.com/file/d/1RRdofkMpd74rqpSlKWj1gZJibQQ-63lQ/view',
+  'EDU_Rajasekhar_BTech_NagarjunaUniversity_1999.pdf':          'https://drive.google.com/file/d/1rj4WydrdBw9cr-WyxQewh7ndwnjfjvbs/view',
+  'EDU_Rajasekhar_Intermediate_BIEAndhraPradesh_1994.pdf':      'https://drive.google.com/file/d/1E5_jEsSbC8Urc8B9MXdd2R45XPq0d9K5/view',
+  'EDU_Rajasekhar_SSC_BSEAndhraPradesh_1992.pdf':               'https://drive.google.com/file/d/1f5IUWzf87i8Nq03wWUmPsV5W6Q48zjrR/view',
+  'FIN_Family_BankAccounts_Reference.txt':                      'https://drive.google.com/file/d/15iI3lgfZilTT_TTbaKcDsK3qi_YMPGqh/view',
+  'ID_Family_MarriageCertificate_2004.pdf':                     'https://drive.google.com/file/d/1MkSACFCqh9roXk2xXocN4AbNgKuq5yob/view',
+  'ID_Jeevan_Aadhaar_6918-2946-7739.pdf':                       'https://drive.google.com/file/d/1COqNeg74Jfuhfsdxvs_DAgA9sjSaXzxf/view',
+  'ID_Jeevan_BirthCertificate_Ongole.pdf':                      'https://drive.google.com/file/d/1s8CoNoYfje9MexQneumf4uR8JInIYvHj/view',
+  'ID_Josritha_Aadhaar_8316-6458-6848.pdf':                     'https://drive.google.com/file/d/1fl5nvQjsue0iJNKtNIgbl8G9RItbGjNa/view',
+  'ID_Josritha_BirthCertificate_Hyderabad.pdf':                 'https://drive.google.com/file/d/120g5n9SX2FdxC7tz3m95Up9Un8usULuB/view',
+  'ID_Josritha_VoterCard_UPD3143468.pdf':                       'https://drive.google.com/file/d/1OtXG24X-YToAmzPYU7yscu4uQGblZkaK/view',
+  'ID_Rajasekhar_Aadhaar_6106-1778-4861.pdf':                   'https://drive.google.com/file/d/1jJ4u70MRnE16xneRWqyxzoPDGFm_xrP5/view',
+  'ID_Rajasekhar_DrivingLicense_Exp2027.pdf':                   'https://drive.google.com/file/d/1EYjmbgRs6ei_vmc8BUjU3pzu_jbvthOE/view',
+  'ID_Rajasekhar_PANCard_AICPD3992N.pdf':                       'https://drive.google.com/file/d/1P6yaf6KacdlfJtPwfaHsQVlEu3eYibj-/view',
+  'ID_Rajasekhar_Passport_E8690728.pdf':                        'https://drive.google.com/file/d/1gPfmvFIZm4zApC1A7IV5T34-lLv7l9C0/view',
+  'ID_Rajasekhar_VoterCard_UPD2998482.pdf':                     'https://drive.google.com/file/d/1UUYAHdHVgS9u32QZHTp2f02eWZSas0iX/view',
+  'ID_Vasundhara_Aadhaar_3372-3106-9560.pdf':                   'https://drive.google.com/file/d/1jbejNkB-OYBX8A8BHb1aM4gE5MpobS4M/view',
+  'ID_Vasundhara_PANCard_BDXPD9514R.pdf':                       'https://drive.google.com/file/d/1ruGCkEi1yW_jSlDVnUlDHBnANdfdZjK_/view',
+  'INS_Family_HealthInsurance_ICICI_Floater_2025-26.pdf':       'https://drive.google.com/file/d/1NQkpcrCB8oO65hF0EfZ6walnxaOM3gP3/view',
+  'INS_Rajasekhar_HealthInsurance_ICICI_Individual_2025-26.pdf':'https://drive.google.com/file/d/1BSbmyuAx9gkisZTwU0z_9wzShtfCIglV/view',
+  'INS_Vasundhara_BikeInsurance_ICICI_TS08HJ8438_2025-26.pdf':  'https://drive.google.com/file/d/1aQjBIBz4Vy7g51pH5A9Vg31aN77HfHDD/view',
+  'INS_Vasundhara_CarInsurance_ICICI_AP27AK7873_2025-26.pdf':   'https://drive.google.com/file/d/146sqYJ-8X-D3YNagE9aHhS6cyDsFd0ki/view',
+  'PROP_Rajasekhar_Flat807_OneCity_Hyderabad.jpg':              'https://drive.google.com/file/d/1ODSZfHbBWP8WnKdh6cUqYiFZqKFefXv3/view',
+  'PROP_Vasundhara_Flat403_MangamuruDonka_Ongole.pdf':          'https://drive.google.com/file/d/1Y5jS9vElczc6TTEf5buzOB_WXTbbdMlk/view',
+  'PROP_Vasundhara_ShopG5_SilverSpring_Ongole.pdf':             'https://drive.google.com/file/d/1YnM3uIlGUP5N2TE7yDFAcfdiCl2v7VGf/view',
+};
 function srcPath(src) {
   if (!src) return '';
-  if (src === 'BGV Form.docx') return 'BGV Form.docx';
-  return '../projects/family-documents-index/source-docs/' + src.replace(/ /g,'%20');
+  return DOC_LINKS[src] || '';
 }
 
 const ALL_DOCS = [];
