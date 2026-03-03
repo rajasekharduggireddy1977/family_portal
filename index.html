@@ -27,7 +27,6 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{height:100%;overflow-x:hidden;}
-  
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;}
 body::before{content:'';position:fixed;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(79,127,255,.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(240,180,41,.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
@@ -272,61 +271,74 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 @keyframes copyFlash{0%{background:rgba(79,127,255,.3);}100%{background:transparent;}}
 
 /* ════════════════════════════════════════════
-   DOCUMENTS PAGE
+   DOCUMENTS PAGE — ADVANCED REDESIGN
 ════════════════════════════════════════════ */
-.docs-wrap{display:flex;flex-direction:column;padding:14px;gap:10px;}
+.docs-wrap{display:flex;flex-direction:column;padding:0;gap:0;}
+.docs-hero{padding:16px 16px 12px;background:linear-gradient(180deg,rgba(79,127,255,.08) 0%,transparent 100%);border-bottom:1px solid var(--border);}
+.docs-hero-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px;}
+.docs-hero-stats{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.dhs{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;}
+.dhs-num{font-weight:700;color:var(--text);}
+.docs-searchbar-wrap{position:sticky;top:var(--topbar-h);z-index:60;background:rgba(7,8,15,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:10px 14px 0;}
+.docs-search-row{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:12px;padding:9px 14px;transition:all .2s;margin-bottom:8px;}
+.docs-search-row:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,127,255,.1);}
+.dsr-icon{font-size:15px;color:var(--text3);flex-shrink:0;}
+.dsr-input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;caret-color:var(--blue);min-width:0;}
+.dsr-input::placeholder{color:var(--text3);}
+.dsr-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue2);background:rgba(79,127,255,.12);border:1px solid rgba(79,127,255,.2);border-radius:5px;padding:2px 7px;white-space:nowrap;flex-shrink:0;}
+.dsr-clear{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:4px;border-radius:4px;min-height:28px;display:none;align-items:center;justify-content:center;transition:color .15s;}
+.dsr-clear:hover{color:var(--red);}
+.docs-filter-tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:10px;}
+.docs-filter-tabs::-webkit-scrollbar{height:0;}
 
-/* Search bar */
-.doc-search-bar{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:12px;padding:10px 14px;transition:border-color .18s;}
-.doc-search-bar:focus-within{border-color:var(--blue);}
-.doc-search-input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;caret-color:var(--blue);min-width:0;}
-.doc-search-input::placeholder{color:var(--text3);}
-.doc-match-ct{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue2);flex-shrink:0;}
-.doc-clear-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:4px;border-radius:4px;display:none;min-height:32px;align-items:center;justify-content:center;}
-
-/* Filter sticky bar */
-.filter-sticky{position:sticky;top:var(--topbar-h);z-index:50;background:rgba(7,8,15,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:10px 14px;border-bottom:1px solid var(--border);margin:0 -14px;padding-left:14px;padding-right:14px;display:flex;flex-direction:column;gap:7px;}
-.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;}
-.filter-row::-webkit-scrollbar{height:0;}
-.fc-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1.2px;text-transform:uppercase;white-space:nowrap;align-self:center;flex-shrink:0;}
-.fc-chip{padding:5px 11px;border-radius:20px;border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);background:var(--surface2);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;font-family:'Inter',sans-serif;}
-.fc-chip:hover,.fc-chip:active{border-color:var(--border2);color:var(--text);}
+/* Filter chips */
+.fc-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;font-family:'Inter',sans-serif;user-select:none;}
+.fc-chip:hover{border-color:var(--border2);color:var(--text);background:var(--surface3);}
 .fc-chip.active{background:rgba(79,127,255,.15);color:var(--blue2);border-color:rgba(79,127,255,.35);}
-.fc-av{width:16px;height:16px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#fff;vertical-align:middle;margin-right:3px;}
-.docs-reset-btn{background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.25);color:#ff7070;font-size:10px;font-family:'DM Mono',monospace;border-radius:6px;padding:3px 10px;cursor:pointer;white-space:nowrap;transition:all .15s;display:none;flex-shrink:0;}
+.fc-av{width:16px;height:16px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;flex-shrink:0;}
 
-/* Doc list */
-.doc-list-body{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);}
+.docs-reset-bar{display:none;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(79,127,255,.06);border-bottom:1px solid rgba(79,127,255,.15);}
+.drb-info{font-size:11px;color:var(--blue2);font-weight:600;font-family:'DM Mono',monospace;}
+.drb-reset{font-size:10px;font-family:'DM Mono',monospace;color:var(--red);background:rgba(255,79,79,.1);border:1px solid rgba(255,79,79,.2);border-radius:5px;padding:3px 10px;cursor:pointer;transition:all .15s;}
+.drb-reset:hover{background:rgba(255,79,79,.2);}
+.docs-list-container{padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
 
-/* Category group headers */
-.doc-cat-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface2);border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none;}
-.doc-cat-hdr:hover,.doc-cat-hdr:active{background:var(--surface3);}
-.doc-cat-left{display:flex;align-items:center;gap:8px;}
-.doc-cat-name{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);}
-.doc-cat-ct{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
-.doc-cat-chevron{font-size:10px;color:var(--text3);transition:transform .2s;}
+/* Category headers */
+.doc-cat-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:background .15s;user-select:none;margin-bottom:4px;position:sticky;top:0;z-index:5;}
+.doc-cat-hdr:hover{background:var(--surface3);}
+.doc-cat-left{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+.doc-cat-name{font-size:13px;font-weight:700;}
+.doc-cat-ct{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);background:var(--surface3);border:1px solid var(--border);border-radius:5px;padding:2px 7px;}
+.doc-cat-chevron{font-size:11px;color:var(--text3);transition:transform .2s;}
 .doc-cat-hdr.collapsed .doc-cat-chevron{transform:rotate(-90deg);}
+.doc-cat-body{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
 
-/* Doc rows — 2-line card style */
-.doc-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);transition:background .12s;cursor:pointer;}
-.doc-row:hover,.doc-row:active{background:var(--surface2);}
-.doc-row:last-child{border-bottom:none;}
-.dr-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.dr-body{flex:1;min-width:0;}
-.dr-line1{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.dr-name{font-size:13px;font-weight:600;color:var(--text);}
-.dr-person-pill{font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;font-family:'DM Mono',monospace;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
-.dr-expiry-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.dr-line2{display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap;}
-.dr-key-val{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;cursor:pointer;display:flex;align-items:center;gap:3px;}
+/* Doc row cards */
+.doc-row{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .14s;position:relative;overflow:hidden;}
+.doc-row:hover,.doc-row:active{background:var(--surface2);border-color:var(--border2);transform:translateX(2px);}
+.dr-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.dr-body{min-width:0;}
+.dr-line1{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.dr-name{font-size:13px;font-weight:700;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dr-expiry-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dr-person-pill{font-size:8px;font-weight:800;padding:2px 6px;border-radius:5px;flex-shrink:0;font-family:'DM Mono',monospace;}
+.dr-line2{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.dr-key-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);cursor:pointer;transition:color .12s;display:inline-flex;align-items:center;gap:3px;}
 .dr-key-val:hover{color:var(--blue2);}
-.dr-copy-hint{opacity:0;font-size:9px;color:var(--blue2);transition:opacity .15s;}
+.dr-copy-hint{opacity:0;font-size:9px;transition:opacity .12s;}
 .dr-key-val:hover .dr-copy-hint{opacity:1;}
-.dr-file{font-size:10px;color:var(--text3);}
-.dr-actions{flex-shrink:0;}
-.dr-view-btn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;padding:4px 10px;border-radius:6px;text-decoration:none;background:rgba(79,127,255,.12);color:var(--blue2);border:1px solid rgba(79,127,255,.25);transition:all .15s;white-space:nowrap;min-height:32px;}
-.dr-view-btn:hover,.dr-view-btn:active{background:rgba(79,127,255,.25);border-color:rgba(79,127,255,.5);}
-.doc-no-match{padding:40px;text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;display:none;}
+.dr-file{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;}
+.dr-actions{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.dr-view-btn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;padding:6px 11px;border-radius:7px;text-decoration:none;background:var(--blue-dim);color:var(--blue2);border:1px solid rgba(79,127,255,.25);transition:all .15s;white-space:nowrap;min-height:32px;}
+.dr-view-btn:hover{background:rgba(79,127,255,.25);border-color:var(--blue);}
+
+.docs-empty{padding:48px 20px;text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;display:none;}
+.docs-empty-icon{font-size:32px;display:block;margin-bottom:8px;opacity:.4;}
+.dft{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text3);background:transparent;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:4px;}
+.dft:hover{color:var(--text);border-color:var(--border2);}
+.dft.active{background:rgba(79,127,255,.15);color:var(--blue2);border-color:rgba(79,127,255,.3);}
+.dft-sep{width:1px;height:16px;background:var(--border2);flex-shrink:0;margin:0 2px;align-self:center;}
+.dft-av{width:14px;height:14px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:6px;font-weight:800;color:#fff;flex-shrink:0;}
 
 /* ════════════════════════════════════════════
    EXPIRY PAGE
@@ -560,30 +572,39 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   <!-- ══════════ DOCUMENTS PAGE ══════════ -->
   <div class="page" id="page-documents">
     <div class="docs-wrap">
-      <div>
-        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.4px;">Documents Index</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;" id="docs-count-lbl">29 records · 8 categories · 4 members</div>
-      </div>
-      <!-- Search always visible -->
-      <div class="doc-search-bar">
-        <span style="font-size:16px;color:var(--text3);flex-shrink:0;">🔍</span>
-        <input type="text" class="doc-search-input" id="doc-search" placeholder="Search by name, number, person…" autocomplete="off" oninput="applyDocFilters()">
-        <span class="doc-match-ct" id="doc-match-ct"></span>
-        <button class="doc-clear-btn" id="doc-clr" onclick="clearDocSearch()">✕</button>
-      </div>
-      <!-- Sticky filter bar -->
-      <div class="filter-sticky" id="filter-sticky">
-        <div style="display:flex;align-items:center;gap:8px;overflow-x:auto;" class="filter-row">
-          <span class="fc-label">TYPE</span>
-          <div id="type-chips"></div>
-          <span class="fc-label" style="margin-left:4px;">MEMBER</span>
-          <div id="person-chips"></div>
-          <button class="docs-reset-btn" id="docs-reset" onclick="resetDocFilters()">✕ Reset</button>
+      <!-- Hero Header -->
+      <div class="docs-hero">
+        <div class="docs-hero-title">📁 Documents Index</div>
+        <div class="docs-hero-stats">
+          <div class="dhs"><span class="dhs-num" id="docs-total-num">36</span> docs</div>
+          <div class="dhs"><span class="dhs-num">8</span> categories</div>
+          <div class="dhs"><span class="dhs-num">4</span> members</div>
+          <div class="dhs" style="color:var(--red);border-color:rgba(255,79,79,.3);"><span class="dhs-num" style="color:var(--red);">2</span> expiring</div>
         </div>
       </div>
-      <!-- Doc list body -->
-      <div class="doc-list-body" id="doc-list-body">
-        <div class="doc-no-match" id="doc-no-match">No matching documents</div>
+      <!-- Sticky Search + Filter Bar -->
+      <div class="docs-searchbar-wrap">
+        <div class="docs-search-row">
+          <span class="dsr-icon">🔍</span>
+          <input type="text" class="dsr-input" id="doc-search" placeholder="Search by name, number, person, file…" autocomplete="off" oninput="applyDocFilters()">
+          <span class="dsr-count" id="dsr-count" style="display:none;"></span>
+          <button class="dsr-clear" id="doc-clr" onclick="clearDocSearch()">✕</button>
+        </div>
+        <!-- Type filter chips -->
+        <div class="docs-filter-tabs" id="type-chips"></div>
+        <!-- Person filter chips -->
+        <div class="docs-filter-tabs" id="person-chips"></div>
+      </div>
+      <!-- Reset bar -->
+      <div class="docs-reset-bar" id="docs-reset">
+        <span class="drb-info" id="docs-count-lbl">Filtered view</span>
+        <button class="drb-reset" onclick="resetDocFilters()">✕ Reset all</button>
+      </div>
+      <!-- Doc list body (categories + rows injected by JS) -->
+      <div class="docs-list-container" id="doc-list-body"></div>
+      <div class="docs-empty" id="doc-no-match">
+        <span class="docs-empty-icon">🔍</span>
+        No documents match your search or filters
       </div>
     </div>
   </div>
@@ -689,7 +710,7 @@ const MEMBERS = {
   josritha:{id:'josritha',color:'#db2777',gradient:'linear-gradient(135deg,#9d174d,#ec4899)',initials:'JD',name:'Josritha Duggireddy',shortName:'Josritha',role:'Daughter',dob:'2006-02-26',gender:'Female',father:'Rajasekhar Reddy Duggireddy',mother:'Vasundhara Duggireddy',
     sections:{
       identity:{aadhaar:{number:'8316 6458 6848',vid:'9124 7918 6424 2719',enrolment:'0642/40208/00414',issued:'10/01/2017',src:'ID_Josritha_Aadhaar_8316-6458-6848.pdf'},voter:{epic:'UPD3143468',assembly:'1187 · 108-Ongole · Part 98',address:'8-217, Lawyerpet, Sujathanagar, Ongole – 523002',src:'ID_Josritha_VoterCard_UPD3143468.pdf'},birthCert:{name:'Duggi Reddy Josritha',dob:'26-February-2006',placeOfBirth:'Sudha Test Tube Baby Center, Hyderabad',father:'Duggi Reddy Rajasekhar Reddy',mother:'Duggireddy Vasundhara',regNo:'791',src:'ID_Josritha_BirthCertificate_Hyderabad.pdf'}},
-      education:[{level:'B.Tech (Current)',institution:'KL Deemed to be University — KLH Campus',roll:'2420030493',email:'2420030493@klh.edu.in',src:'EDU_Josritha_BTech_KLUniversity_Details.txt'},{level:'Intermediate / 12th',field:'MPC',institution:'Sri Harshini Junior College, Ongole',board:'BIE, AP',regNo:'2417214778',exam:'March 2024',result:'PASS – A GRADE',total:'878',src:'EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf'},{level:'SSC / 10th',institution:'Global Edge School, Kukatpalli, Hyderabad',board:'CBSE',roll:'20164403',year:'2022',result:'PASS',issued:'22/07/2022',src:'EDU_Josritha_SSC_CBSE_2022.pdf'}],
+        education: [{ level: 'B.Tech (Current)', institution: 'KL Deemed to be University — KLH Campus', roll: '2420030493', email: '2420030493@klh.edu.in', src: 'EDU_Josritha_BTech_KLUniversity_Details.txt' }, { level: 'B.Tech Results (Till Date)', field: 'Semester-wise Academic Performance', institution: 'KL Deemed to be University — KLH Campus', note: 'Sem 1: SGPA 9.26 · Sem 2: SGPA 9.29 · Sem 3: SGPA 9.17 (CGPA: 9.24)', sem1: 'SGPA 9.26 (Credits: 20)', sem2: 'SGPA 9.29 (Credits: 20)', sem3: 'SGPA 9.17 (Credits: 20)', cgpa: '9.24 (Till Sem 3)', src:'EDU_Josritha_BTech_KLUniversity_Results.html'},{level:'Intermediate / 12th',field:'MPC',institution:'Sri Harshini Junior College, Ongole',board:'BIE, AP',regNo:'2417214778',exam:'March 2024',result:'PASS – A GRADE',total:'878',src:'EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf'},{level:'SSC / 10th',institution:'Global Edge School, Kukatpalli, Hyderabad',board:'CBSE',roll:'20164403',year:'2022',result:'PASS',issued:'22/07/2022',src:'EDU_Josritha_SSC_CBSE_2022.pdf'}],
       insurance:[{type:'Family Floater',note:true,policy:'4193i/APRN/400529214/00/000',sumInsured:'₹15,00,000 per member'}]
     }
   },
@@ -742,6 +763,7 @@ const DOC_LINKS = {
   'INS_Vasundhara_BikeInsurance_ICICI_TS08HJ8438_2025-26.pdf':'https://drive.google.com/file/d/1aQjBIBz4Vy7g51pH5A9Vg31aN77HfHDD/view',
   'INS_Vasundhara_CarInsurance_ICICI_AP27AK7873_2025-26.pdf':'https://drive.google.com/file/d/146sqYJ-8X-D3YNagE9aHhS6cyDsFd0ki/view',
   'EDU_Josritha_BTech_KLUniversity_Details.txt':'https://drive.google.com/file/d/1PU8_LirPGFVBPSFdj9e3K6RqDlCG1Ebo/view',
+    'EDU_Josritha_BTech_KLUniversity_Results.html':'https://rajasekharduggireddy1977.github.io/family_portal/EDU_Josritha_BTech_KLUniversity_Results.html',
   'EDU_Josritha_BTech_KLUniversity_Attendance_EvenSem_2025-26.pdf':'https://drive.google.com/file/d/1Rr6XyaUzqFGbMBvIknv9KT9wLkz3Djtz/view',
   'EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf':'https://drive.google.com/file/d/1y2bpdWAq9bFBTsfTW7l2F5MkugXUX0vP/view',
   'EDU_Josritha_SSC_CBSE_2022.pdf':'https://drive.google.com/file/d/1RRdofkMpd74rqpSlKWj1gZJibQQ-63lQ/view',
@@ -1070,7 +1092,13 @@ function renderEmploymentTab(emp) {
 
 function renderEducationTab(edu) {
   if(!edu||!edu.length) return '<div style="padding:20px;text-align:center;color:var(--text3);font-family:DM Mono,monospace;font-size:12px;">No education records</div>';
-  return edu.map(e=>docCard(e.level,'Education',EduB,fld('Institution',e.institution)+(e.university?fld('University',e.university):'')+(e.board?fld('Board',e.board):'')+fld('Roll / Reg. No.',e.roll||e.regNo,true,true)+fld('Period',e.period)+(e.exam?fld('Exam',e.exam):'')+fld('Result',e.result)+(e.total?fld('Total Marks',e.total):'')+(e.email?fld('Student Email',e.email,false,true):''),e.src)).join('');
+  return edu.map(e=>{
+    let fields = fld('Institution',e.institution)+(e.university?fld('University',e.university):'')+(e.board?fld('Board',e.board):'')+fld('Roll / Reg. No.',e.roll||e.regNo,true,true)+fld('Period',e.period)+(e.exam?fld('Exam',e.exam):'')+fld('Result',e.result)+(e.total?fld('Total Marks',e.total):'')+(e.email?fld('Student Email',e.email,false,true):'');
+    if(e.sem1||e.sem2||e.sem3) {
+      fields = fld('Institution',e.institution)+(e.sem1?fld('Semester 1',e.sem1,'',''):'')+  (e.sem2?fld('Semester 2',e.sem2,'',''):'')+  (e.sem3?fld('Semester 3',e.sem3,'',''):'')+(e.cgpa?`<div class="field-row" style="background:rgba(62,207,142,.06);border-radius:6px;"><span class="field-key">CGPA</span><span class="field-val"><span class="field-highlight" style="color:var(--green)">${e.cgpa}</span></span></div>`:'')+(e.note?`<div style="font-size:10px;color:var(--text3);padding:6px 0;font-family:'DM Mono',monospace;">${e.note}</div>`:'');
+    }
+    return docCard(e.level,'Education',EduB,fields,e.src);
+  }).join('');
 }
 
 function renderFinanceTab(fin) {
@@ -1139,6 +1167,7 @@ function buildAllDocs() {
   a('Josritha','Identity','Voter ID','EPIC No.','UPD3143468','Assembly','108-Ongole','ID_Josritha_VoterCard_UPD3143468.pdf');
   a('Josritha','Identity','Birth Certificate','DOB','26-February-2006','Place','Hyderabad','ID_Josritha_BirthCertificate_Hyderabad.pdf');
   a('Josritha','Education','B.Tech (Current)','Roll','2420030493','Institution','KL University – KLH','EDU_Josritha_BTech_KLUniversity_Details.txt');
+    a('Josritha', 'Education', 'B.Tech Results (Till Date)', 'CGPA', '9.24 (Sem 1–3)', 'Latest SGPA', '7.17 (Sem 3)','EDU_Josritha_BTech_KLUniversity_Results.html');
   a('Josritha','Education','B.Tech Attendance – Even Sem','Year','2025-2026','Critical (<75%)','6 subjects','EDU_Josritha_BTech_KLUniversity_Attendance_EvenSem_2025-26.pdf');
   a('Josritha','Education','Intermediate Certificate','Reg. No.','2417214778','Result','PASS – A GRADE 878','EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf');
   a('Josritha','Education','SSC Certificate','Roll','20164403','Board','CBSE','EDU_Josritha_SSC_CBSE_2022.pdf');
@@ -1152,24 +1181,23 @@ function initDocuments() {
   const types=['All','Identity','Finance','Insurance','Education','Property','Vehicle','Employment','Family'];
   const persons=['All','Rajasekhar','Vasundhara','Josritha','Jeevan','Family'];
 
+  // Update hero count
+  const tn=document.getElementById('docs-total-num');if(tn)tn.textContent=ALL_DOCS.length;
+
   // Type chips
   const tcWrap = document.getElementById('type-chips');
   if(tcWrap) {
-    tcWrap.innerHTML = types.map(t=>`<div class="fc-chip ${t==='All'?'active':''}" onclick="setDocType('${t}')" data-type-chip="${t}">${t!=='All'?(TYPE_ICONS[t]||'📄')+' ':''} ${t}</div>`).join('');
-    tcWrap.style.cssText='display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;';
-    tcWrap.className = '';
+    tcWrap.innerHTML = types.map(function(t){return '<div class="fc-chip '+(t==='All'?'active':'')+'" onclick="setDocType(\''+t+'\')" data-type-chip="'+t+'">'+(t!=='All'?(TYPE_ICONS[t]||'📄')+' ':'')+t+'</div>';}).join('');
   }
 
   // Person chips
   const pcWrap = document.getElementById('person-chips');
   if(pcWrap) {
     pcWrap.innerHTML = persons.map(p=>{
-      if(p==='All') return`<div class="fc-chip active" onclick="setDocPerson('All')" data-person-chip="All">All</div>`;
+      if(p==='All') return'<div class="fc-chip active" onclick="setDocPerson(\'All\')" data-person-chip="All">All</div>';
       const pg=PERSON_GRAD[p]||'linear-gradient(135deg,#374151,#6b7280)';const pi=PERSON_INIT[p]||p[0];
-      return`<div class="fc-chip" onclick="setDocPerson('${p}')" data-person-chip="${p}"><span class="fc-av" style="background:${pg}">${pi}</span>${p}</div>`;
+      return'<div class="fc-chip" onclick="setDocPerson(\''+p+'\')" data-person-chip="'+p+'"><span class="fc-av" style="background:'+pg+'">'+pi+'</span>'+p+'</div>';
     }).join('');
-    pcWrap.style.cssText='display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;';
-    pcWrap.className = '';
   }
 
   buildDocList();
@@ -1268,7 +1296,7 @@ function applyDocFilters() {
   const mc=document.getElementById('doc-match-ct');if(mc)mc.textContent=q?vis+' match'+(vis!==1?'es':''):'';
   const cl=document.getElementById('docs-count-lbl');if(cl)cl.textContent=isFiltered?vis+' / '+total+' docs':total+' records · 8 categories · 4 members';
   const nm=document.getElementById('doc-no-match');if(nm)nm.style.display=vis===0?'block':'none';
-  const rb=document.getElementById('docs-reset');if(rb)rb.style.display=isFiltered?'':'none';
+  const rb=document.getElementById('docs-reset');if(rb)rb.style.display=isFiltered?'flex':'';
   const sc=document.getElementById('doc-clr');if(sc)sc.style.display=q?'flex':'none';
 }
 
