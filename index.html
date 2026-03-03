@@ -893,7 +893,7 @@ function renderTab(m,tab){
 function field(key,val,highlight=false,copyable=false){
   if(!val)return'';
   const vH=highlight?'<span class="field-highlight">'+val+'</span>':'<span>'+val+'</span>';
-  const cH=copyable?'<button class="copy-btn" onclick="copyToClipboard(\''+val.replace(/'/g,"\\'")+'\ ',this)" title="Copy">⎘</button>':'';
+  const cH=copyable?'<button class="copy-btn" onclick="copyToClipboard(\''+val.replace(/'/g,"\\'")+'\',this)" title="Copy">⎘</button>':'';
   return'<div class="field-row"><span class="field-key">'+key+'</span><span class="field-val">'+vH+cH+'</span></div>';
 }
 
