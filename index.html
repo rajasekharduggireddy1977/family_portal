@@ -24,6 +24,7 @@
   --radius:14px;--radius-sm:8px;
   --shadow:0 4px 24px rgba(0,0,0,.4);--shadow-lg:0 8px 48px rgba(0,0,0,.6);
   --topbar-h:56px;
+  --sat: env(safe-area-inset-top, 0px); /* safe-area top shorthand */
   --nav-h:calc(60px + env(safe-area-inset-bottom));
 }
 
@@ -105,12 +106,12 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 ═══════════════════════════════════════ */
 #topbar{
   position:sticky;top:0;z-index:100;
-  height:var(--topbar-h);
+  height:calc(var(--topbar-h) + var(--sat));
   background:rgba(7,8,15,.92);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border2);
   box-shadow:0 2px 16px rgba(0,0,0,.35);
-  display:flex;align-items:center;padding:0 16px;
+  display:flex;align-items:flex-end;padding:0 16px 10px;
   padding-top:env(safe-area-inset-top);
   justify-content:space-between;
   gap:12px;
@@ -157,7 +158,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 #content{
   position:relative;z-index:1;
   padding-bottom:var(--nav-h);
-  min-height:calc(100dvh - var(--topbar-h));
+  min-height:calc(100dvh - var(--topbar-h) - var(--sat));
 }
 .page{display:none;}
 .page.active{display:block;animation:pageEnter .3s ease both;}
@@ -385,7 +386,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .dhs-num{font-weight:700;color:var(--text);}
 
 /* Sticky search + nav bar */
-.docs-searchbar-wrap{position:sticky;top:var(--topbar-h);z-index:60;background:rgba(7,8,15,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border2);padding:10px 14px 0;}
+.docs-searchbar-wrap{position:sticky;top:calc(var(--topbar-h) + var(--sat));z-index:60;background:rgba(7,8,15,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border2);padding:10px 14px 0;}
 
 /* Search input */
 .docs-search-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1.5px solid var(--border2);border-radius:14px;padding:10px 14px;transition:all .22s;margin-bottom:10px;}
@@ -663,8 +664,20 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .wp-desc{font-size:11px;color:var(--text2);margin-top:2px;}
 .wp-cancel{text-align:center;margin-top:4px;cursor:pointer;color:var(--text2);font-size:12px;padding:10px;}
 /* ════════════════════════════════════════════
-   STAGGER / ANIMATIONS
+   PWA STANDALONE (Home Screen) MODE
+   Adds extra breathing room below topbar since
+   there is no browser URL bar to create separation
 ════════════════════════════════════════════ */
+.pwa-standalone #content .dash-wrap,
+.pwa-standalone #content .docs-wrap,
+.pwa-standalone #content .expiry-wrap,
+.pwa-standalone #content .cal-wrap,
+.pwa-standalone #content .search-wrap,
+.pwa-standalone #content .members-view-toggle {
+  padding-top: max(16px, calc(var(--sat) + 8px));
+}
+/* Standalone: members page top toggle needs more space */
+.pwa-standalone .members-view-toggle { padding-top: 16px; }
 .stagger>*{animation:fadeUp .35s ease both;}
 .stagger>*:nth-child(1){animation-delay:.03s;}
 .stagger>*:nth-child(2){animation-delay:.07s;}
@@ -750,7 +763,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   body::before{width:900px;height:900px;}
 
   /* Topbar */
-  #topbar{padding:0 32px;padding-top:env(safe-area-inset-top);}
+  #topbar{padding:0 32px 10px;padding-top:env(safe-area-inset-top);align-items:flex-end;}
   .tb-title{font-size:17px;}
   .tb-clock{font-size:13px;}
 
@@ -1053,7 +1066,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* Sidebar nav item for Calendar */
 #sidebar-nav{
   display:none;
-  position:fixed;top:var(--topbar-h);left:0;bottom:0;
+  position:fixed;top:calc(var(--topbar-h) + var(--sat));left:0;bottom:0;
   width:240px;z-index:150;
   background:rgba(10,12,22,.98);
   border-right:1px solid var(--border2);
@@ -1841,17 +1854,31 @@ let calFilter = 'all'; // member filter
 let calSelectedColor = '#4f7fff';
 let calEditId = null;
 
-const CAL_SEED_VERSION = 'v2'; // bump to force re-seed with corrected names
 function getCalEvents() {
+  let events;
   try {
-    const ver = localStorage.getItem('fp_cal_version');
     const stored = localStorage.getItem('fp_cal_events');
-    if (stored && ver === CAL_SEED_VERSION) return JSON.parse(stored);
-  } catch(e) {}
-  // First run or stale version — seed fresh
-  localStorage.setItem('fp_cal_events', JSON.stringify(SEED_EVENTS));
-  localStorage.setItem('fp_cal_version', CAL_SEED_VERSION);
-  return JSON.parse(JSON.stringify(SEED_EVENTS));
+    events = stored ? JSON.parse(stored) : null;
+  } catch(e) { events = null; }
+
+  if (!events) {
+    // First run — seed with correct data
+    localStorage.setItem('fp_cal_events', JSON.stringify(SEED_EVENTS));
+    return JSON.parse(JSON.stringify(SEED_EVENTS));
+  }
+
+  // Migrate any stored events that still carry old wrong member names
+  const nameMap = { 'Sreedevi':'Vasundhara', 'Joshita':'Jeevan', 'Joshitha':'Jeevan' };
+  let migrated = false;
+  events = events.map(ev => {
+    const fixedMembers = ev.members.map(m => {
+      if (nameMap[m]) { migrated = true; return nameMap[m]; }
+      return m;
+    });
+    return { ...ev, members: fixedMembers };
+  });
+  if (migrated) localStorage.setItem('fp_cal_events', JSON.stringify(events));
+  return events;
 }
 
 function saveCalEvents(events) {
@@ -2163,9 +2190,15 @@ function loadWidgetOrder() {
   try {
     const ver = localStorage.getItem('fp_widgets_ver');
     const s = localStorage.getItem('fp_widgets');
-    if (s && ver === WIDGET_VERSION) { widgetOrder = JSON.parse(s); return; }
+    if (s && ver === WIDGET_VERSION) {
+      const stored = JSON.parse(s);
+      // Merge: add any new widgets from DEFAULT not yet in stored order
+      const merged = [...stored];
+      DEFAULT_WIDGETS.forEach(w => { if (!merged.includes(w)) merged.push(w); });
+      widgetOrder = merged;
+      return;
+    }
   } catch(e) {}
-  // Fresh or stale — use default so new widgets are visible
   widgetOrder = [...DEFAULT_WIDGETS];
   localStorage.setItem('fp_widgets_ver', WIDGET_VERSION);
 }
@@ -3312,6 +3345,18 @@ function syncSidebarNav(page) {
 // ═══════════════════════════════════════
 // INIT LOCK CHECK (PIN disabled)
 // ═══════════════════════════════════════
+// ═══════════════════════════════════════
+// PWA STANDALONE MODE DETECTION
+// Adds .pwa-standalone to <html> when running as Home Screen app
+// ═══════════════════════════════════════
+(function detectStandalone() {
+  const isStandalone = window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+  if (isStandalone) {
+    document.documentElement.classList.add('pwa-standalone');
+  }
+})();
+
 checkPinSession();
 checkPwaPrompt();
 (function initLoader() {
