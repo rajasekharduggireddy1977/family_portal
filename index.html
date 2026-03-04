@@ -1059,8 +1059,121 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .cal-mini-av{font-size:16px;flex-shrink:0;}
 .cal-mini-empty{text-align:center;padding:14px;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;}
 
-/* Sidebar nav item for Calendar */
-#sidebar-nav{
+/* ════════════════════════════════════════════
+   FEATURE 01 — SMART HEALTH DASHBOARD (Phase 1)
+════════════════════════════════════════════ */
+.health-wrap{padding:14px 14px 0;display:flex;flex-direction:column;gap:16px;}
+/* Member switcher */
+.health-member-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.health-member-tabs::-webkit-scrollbar{display:none;}
+.hmt-tab{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:22px;flex-shrink:0;border:1.5px solid var(--border2);background:var(--surface);cursor:pointer;transition:all .2s;user-select:none;}
+.hmt-av{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
+.hmt-name{font-size:12px;font-weight:700;white-space:nowrap;color:var(--text2);}
+.hmt-tab.active .hmt-name{color:#fff;}
+/* Hero score card */
+.health-hero{border-radius:20px;padding:20px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.09);}
+.health-hero::after{content:'';position:absolute;top:-80px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(225,29,72,.15) 0%,transparent 65%);pointer-events:none;}
+.health-hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:1;}
+.health-hero-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+.health-hero-role{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.4);margin-top:3px;text-transform:uppercase;letter-spacing:.8px;}
+.health-hero-updated{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);margin-top:8px;}
+/* Score ring */
+.health-score-ring{position:relative;width:84px;height:84px;flex-shrink:0;}
+.hsr-svg{transform:rotate(-90deg);display:block;}
+.hsr-track{fill:none;stroke:rgba(255,255,255,.07);}
+.hsr-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);}
+.hsr-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hsr-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;line-height:1;}
+.hsr-tag{font-family:'DM Mono',monospace;font-size:7px;color:rgba(255,255,255,.45);letter-spacing:.5px;text-transform:uppercase;margin-top:1px;}
+/* Hero stat pills */
+.health-hero-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;position:relative;z-index:1;}
+.hhs{background:rgba(255,255,255,.06);border-radius:11px;padding:9px 10px;border:1px solid rgba(255,255,255,.07);}
+.hhs-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff;line-height:1;}
+.hhs-lbl{font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.4px;margin-top:3px;}
+/* Category filter tabs */
+.health-cat-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.health-cat-tabs::-webkit-scrollbar{display:none;}
+.hct-tab{padding:6px 12px;border-radius:14px;flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.3px;border:1.5px solid var(--border2);color:var(--text3);background:var(--surface);cursor:pointer;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
+.hct-tab.active{background:rgba(225,29,72,.12);border-color:rgba(225,29,72,.4);color:#fb7185;}
+/* Biomarker cards */
+.biomarker-grid{display:flex;flex-direction:column;gap:9px;}
+.bm-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:13px 14px 13px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.bm-card:active{transform:scale(.98);}
+.bm-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;}
+.bm-card.s-normal::before{background:var(--green);}
+.bm-card.s-high::before{background:var(--red);}
+.bm-card.s-low::before{background:var(--orange);}
+.bm-card.s-borderline::before{background:var(--gold);}
+.bm-icon{font-size:20px;flex-shrink:0;width:30px;text-align:center;}
+.bm-body{flex:1;min-width:0;}
+.bm-name{font-size:12px;font-weight:700;color:var(--text);}
+.bm-ref{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:1px;}
+.bm-bar-wrap{height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-top:7px;}
+.bm-bar{height:100%;border-radius:2px;transition:width 1.3s cubic-bezier(.4,0,.2,1);}
+.bm-right{flex-shrink:0;text-align:right;min-width:56px;}
+.bm-val{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;line-height:1;}
+.bm-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:1px;}
+.bm-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:2px 6px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px;margin-top:4px;}
+.bm-badge.normal{background:var(--green-dim);color:var(--green);}
+.bm-badge.high{background:var(--red-dim);color:var(--red);}
+.bm-badge.low{background:var(--orange-dim);color:var(--orange);}
+.bm-badge.borderline{background:var(--gold-dim);color:var(--gold);}
+/* Section header */
+.health-sec-hdr{display:flex;align-items:center;justify-content:space-between;}
+.health-sec-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:-.2px;}
+.health-sec-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
+/* Report source strip */
+.health-report-strip{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px 13px;}
+.hrs-icon{font-size:17px;flex-shrink:0;}
+.hrs-body{flex:1;min-width:0;}
+.hrs-title{font-size:11px;font-weight:700;color:var(--text);}
+.hrs-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+/* Detail sheet */
+.bm-sheet{position:fixed;inset:0;z-index:800;display:flex;align-items:flex-end;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.bm-sheet.hidden{display:none;}
+.bm-sheet-card{width:100%;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px max(36px,env(safe-area-inset-bottom));border-top:1px solid var(--border2);animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1) both;}
+.bm-sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 18px;}
+.bm-sheet-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:4px;}
+.bm-big-val{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;letter-spacing:-2px;line-height:1;margin:10px 0 2px;}
+.bm-big-unit{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);}
+.bm-gauge-wrap{margin:16px 0;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;}
+.bm-gauge-lbl{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px;}
+.bm-gauge{height:10px;border-radius:6px;overflow:visible;position:relative;background:rgba(255,255,255,.05);}
+.bm-g-low{position:absolute;top:0;height:100%;background:rgba(255,140,66,.35);border-radius:6px 0 0 6px;}
+.bm-g-norm{position:absolute;top:0;height:100%;background:rgba(62,207,142,.3);}
+.bm-g-high{position:absolute;top:0;height:100%;background:rgba(255,79,79,.35);border-radius:0 6px 6px 0;}
+.bm-needle{position:absolute;top:-5px;width:4px;height:20px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 10px rgba(255,255,255,.7);transition:left 1.5s cubic-bezier(.4,0,.2,1);}
+.bm-ref-row{display:flex;justify-content:space-between;margin-top:10px;}
+.bm-ref-item{text-align:center;}
+.bm-ref-val{font-size:11px;font-weight:700;color:var(--text);}
+.bm-ref-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--text3);margin-top:1px;}
+.bm-insight{background:rgba(225,29,72,.07);border:1px solid rgba(225,29,72,.18);border-radius:12px;padding:12px 14px;margin-top:12px;}
+.bm-insight-title{font-size:12px;font-weight:700;color:#fb7185;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+.bm-insight-text{font-size:12px;color:var(--text2);line-height:1.6;}
+/* Dashboard health widget */
+.hw-score-row{display:flex;align-items:center;gap:12px;padding:2px 0 10px;}
+.hw-ring{position:relative;width:58px;height:58px;flex-shrink:0;}
+.hw-ring-svg{transform:rotate(-90deg);display:block;}
+.hw-ring-track{fill:none;stroke:rgba(255,255,255,.07);}
+.hw-ring-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);}
+.hw-ring-lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hw-ring-num{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;line-height:1;}
+.hw-ring-tag{font-family:'DM Mono',monospace;font-size:6px;color:rgba(255,255,255,.4);letter-spacing:.4px;}
+.hw-info-name{font-size:12px;font-weight:700;color:var(--text);}
+.hw-info-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+.hw-flags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
+.hw-flag{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:2px 7px;border-radius:5px;}
+.hw-flag.red{background:var(--red-dim);color:var(--red);}
+.hw-flag.gold{background:var(--gold-dim);color:var(--gold);}
+.hw-flag.green{background:var(--green-dim);color:var(--green);}
+.hw-bm-rows{display:flex;flex-direction:column;gap:5px;}
+.hw-bm-row{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:9px;background:var(--surface2);border:1px solid var(--border);}
+.hw-bm-icon{font-size:13px;flex-shrink:0;}
+.hw-bm-name{flex:1;font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hw-bm-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;flex-shrink:0;}
+.hw-bm-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* Sidebar nav —
   display:none;
   position:fixed;top:calc(var(--topbar-h) + var(--sat));left:0;bottom:0;
   width:240px;z-index:150;
@@ -1155,6 +1268,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     </div>
     <div class="snav-item" id="snav-calendar" onclick="goPage('calendar')">
       <div class="snav-icon">📅</div> Calendar
+    </div>
+    <div class="snav-item" id="snav-health" onclick="goPage('health')">
+      <div class="snav-icon">💊</div> Health
     </div>
     <div class="snav-item" id="snav-search" onclick="goSearch()">
       <div class="snav-icon">🔍</div> Search
@@ -1376,6 +1492,41 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     </div>
   </div>
 
+  <!-- ══════════ HEALTH DASHBOARD PAGE ══════════ -->
+  <div class="page" id="page-health">
+    <div class="health-wrap">
+
+      <!-- Page header -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;">💊 Health Dashboard</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.4px;text-transform:uppercase;">Duggireddy Family · Medical Overview</div>
+        </div>
+      </div>
+
+      <!-- Member switcher tabs -->
+      <div class="health-member-tabs" id="health-member-tabs"></div>
+
+      <!-- Health score hero -->
+      <div id="health-hero-wrap"></div>
+
+      <!-- Report source strip -->
+      <div id="health-report-strip"></div>
+
+      <!-- Biomarker category filter -->
+      <div class="health-cat-tabs" id="health-cat-tabs"></div>
+
+      <!-- Biomarker cards -->
+      <div class="health-sec-hdr">
+        <div class="health-sec-title" id="health-bm-title">Biomarkers</div>
+        <div class="health-sec-count" id="health-bm-count"></div>
+      </div>
+      <div class="biomarker-grid" id="biomarker-grid"></div>
+
+      <div style="height:8px;"></div>
+    </div>
+  </div>
+
 </div><!-- /#content -->
 
 <!-- ═══════════════ ADD EVENT SHEET ═══════════════ -->
@@ -1470,11 +1621,22 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     <div class="bnav-item pressable" id="bnav-calendar" onclick="goPage('calendar')">
       <span class="bnav-icon">📅</span><span>Calendar</span><div class="bnav-dot"></div>
     </div>
+    <div class="bnav-item pressable" id="bnav-health" onclick="goPage('health')">
+      <span class="bnav-icon">💊</span><span>Health</span><div class="bnav-dot"></div>
+    </div>
     <div class="bnav-item pressable" id="bnav-search" onclick="goPage('search')">
       <span class="bnav-icon">⌕</span><span>Search</span><div class="bnav-dot"></div>
     </div>
   </div>
 </nav>
+
+<!-- ═══════════════ BIOMARKER DETAIL SHEET ═══════════════ -->
+<div class="bm-sheet hidden" id="bm-sheet" onclick="if(event.target===this)closeBmSheet()">
+  <div class="bm-sheet-card">
+    <div class="bm-sheet-handle"></div>
+    <div id="bm-sheet-body"></div>
+  </div>
+</div>
 
 <div id="toast">✓ Copied to clipboard</div>
 
@@ -1682,12 +1844,13 @@ function goPage(page) {
   if(page==='members') { showMembersList(); }
   if(page==='expiry') { setTimeout(animateExpBars,150); }
   if(page==='calendar') { setTimeout(initCalendar,80); }
+  if(page==='health')   { setTimeout(initHealthPage,80); }
 }
 
 // ═══════════════════════════════════════════════════
 // IDEA A — SWIPE GESTURE NAVIGATION
 // ═══════════════════════════════════════════════════
-const PAGE_ORDER = ['dashboard','members','documents','expiry','calendar','search'];
+const PAGE_ORDER = ['dashboard','members','documents','expiry','calendar','health','search'];
 let swipeTouchX=0, swipeTouchY=0, swipeMoved=false;
 let swipeHintTimer=null;
 
@@ -2176,12 +2339,13 @@ const WIDGET_DEFS = {
   att:       { id:'att',          icon:'🎓',  name:'Attendance Tracker',   desc:'Josritha\'s subject-wise attendance' },
   emergency: { id:'emergency',    icon:'🆘',  name:'Emergency Contacts',   desc:'One-tap family contacts & emergency services' },
   cal_mini:  { id:'cal_mini',     icon:'📅',  name:'Family Calendar',      desc:'Upcoming family events at a glance' },
+  health_mini:{ id:'health_mini', icon:'💊',  name:'Family Health',         desc:'Health scores & abnormal markers' },
 };
-const DEFAULT_WIDGETS=['alert','family','urgent','emergency','cal_mini','actions','att'];
+const DEFAULT_WIDGETS=['alert','family','urgent','health_mini','emergency','cal_mini','actions','att'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
-const WIDGET_VERSION = 'v2';
+const WIDGET_VERSION = 'v3';
 function loadWidgetOrder() {
   try {
     const ver = localStorage.getItem('fp_widgets_ver');
@@ -2410,6 +2574,7 @@ function buildWidgetHTML(wid) {
       <div style="font-size:10px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:8px;">Josritha · KL Univ · Even Sem 2025–26</div>
       <div style="display:flex;flex-direction:column;gap:8px;" id="att-cards"></div></div>`;
     case 'emergency': return buildEmgCard();
+    case 'health_mini': return buildHealthWidget();
     case 'cal_mini': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="w-hdr" style="margin:0">📅 &nbsp;Family Calendar</div>
@@ -2483,6 +2648,8 @@ function initWidgetDynamic() {
   // Calendar mini widget
   const calMiniBody = document.getElementById('cal-mini-body');
   if (calMiniBody) calMiniBody.innerHTML = buildCalMiniWidget ? buildCalMiniWidget() : '';
+  // Health mini widget ring animation
+  if (typeof initHealthWidgetDynamic === 'function') initHealthWidgetDynamic();
   // Count-up
   document.querySelectorAll('[data-count]').forEach(el=>{
     const target=parseInt(el.dataset.count);const dur=700;const start=Date.now();
@@ -3273,6 +3440,492 @@ document.addEventListener('keydown',e=>{
 // ═══════════════════════════════════════
 // INIT ALL
 // ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// FEATURE 01 — SMART HEALTH DASHBOARD (Phase 1)
+// ═══════════════════════════════════════════════════════════
+
+// ── Member colour/gradient map (mirrors MEMBERS object) ──
+const HEALTH_MEMBER_META = {
+  rajasekhar: { label:'Rajasekhar', initials:'RR', gradient:'linear-gradient(135deg,#1a3254,#3b6fd4)', color:'#4f7fff', age:48, gender:'M' },
+  vasundhara: { label:'Vasundhara', initials:'VD', gradient:'linear-gradient(135deg,#5b21b6,#9333ea)', color:'#a78bfa', age:42, gender:'F' },
+  josritha:   { label:'Josritha',   initials:'JD', gradient:'linear-gradient(135deg,#9d174d,#ec4899)', color:'#f472b6', age:19, gender:'F' },
+  jeevan:     { label:'Jeevan',     initials:'JV', gradient:'linear-gradient(135deg,#065f46,#0d9488)', color:'#3ecf8e', age:14, gender:'M' },
+};
+
+// ── Biomarker definitions: id, name, icon, unit, ranges, category, insight ──
+const BM_DEFS = [
+  { id:'glucose',    name:'Blood Glucose (Fasting)', icon:'🩸', unit:'mg/dL',  cat:'Blood',    low:70,  normLow:70,  normHigh:99,  high:126,  max:200,
+    insight:'Fasting glucose below 100 mg/dL is normal. Between 100–125 is pre-diabetic range — lifestyle changes can reverse this.' },
+  { id:'hba1c',      name:'HbA1c',                  icon:'🔬', unit:'%',      cat:'Blood',    low:0,   normLow:4,   normHigh:5.6, high:6.5,  max:10,
+    insight:'HbA1c reflects average blood sugar over 3 months. Under 5.7% is normal. 5.7–6.4% indicates pre-diabetes.' },
+  { id:'cholesterol',name:'Total Cholesterol',       icon:'🫀', unit:'mg/dL',  cat:'Lipids',   low:0,   normLow:0,   normHigh:200, high:240,  max:300,
+    insight:'Desirable cholesterol is below 200 mg/dL. 200–239 is borderline high. Above 240 increases cardiovascular risk significantly.' },
+  { id:'ldl',        name:'LDL Cholesterol',         icon:'⚡', unit:'mg/dL',  cat:'Lipids',   low:0,   normLow:0,   normHigh:100, high:160,  max:220,
+    insight:'LDL ("bad") cholesterol should be under 100 mg/dL for optimal health. High LDL increases arterial plaque risk.' },
+  { id:'hdl',        name:'HDL Cholesterol',         icon:'💙', unit:'mg/dL',  cat:'Lipids',   low:40,  normLow:40,  normHigh:200, high:999,  max:100,
+    insight:'HDL ("good") cholesterol — higher is better. Above 60 mg/dL is protective against heart disease. Below 40 is a risk factor.' },
+  { id:'triglycerides',name:'Triglycerides',         icon:'🧪', unit:'mg/dL',  cat:'Lipids',   low:0,   normLow:0,   normHigh:150, high:200,  max:400,
+    insight:'Triglycerides under 150 mg/dL is normal. High levels combined with low HDL significantly raise cardiovascular risk.' },
+  { id:'hemoglobin', name:'Hemoglobin',              icon:'🩺', unit:'g/dL',   cat:'Blood',    low:12,  normLow:13,  normHigh:17,  high:999,  max:20,
+    insight:'Normal hemoglobin for men is 13.5–17.5 g/dL; for women 12–15.5 g/dL. Low hemoglobin indicates anemia.' },
+  { id:'tsh',        name:'Thyroid TSH',             icon:'🦋', unit:'mIU/L',  cat:'Thyroid',  low:0.4, normLow:0.4, normHigh:4.0, high:10,   max:15,
+    insight:'Normal TSH is 0.4–4.0 mIU/L. High TSH suggests hypothyroidism (underactive thyroid); low TSH suggests hyperthyroidism.' },
+  { id:'creatinine', name:'Creatinine (Serum)',      icon:'🫘', unit:'mg/dL',  cat:'Kidney',   low:0.6, normLow:0.6, normHigh:1.2, high:2.0,  max:4,
+    insight:'Creatinine measures kidney filtration. Normal range is 0.6–1.2 mg/dL for adults. Elevated levels may indicate kidney stress.' },
+  { id:'uricacid',   name:'Uric Acid',               icon:'🧫', unit:'mg/dL',  cat:'Kidney',   low:2.4, normLow:2.4, normHigh:7.0, high:8.0,  max:12,
+    insight:'Normal uric acid is 2.4–7.0 mg/dL. Elevated levels can cause gout and may indicate kidney or metabolic issues.' },
+  { id:'vitd',       name:'Vitamin D (25-OH)',        icon:'☀️', unit:'ng/mL',  cat:'Vitamins', low:20,  normLow:30,  normHigh:100, high:150,  max:150,
+    insight:'Vitamin D above 30 ng/mL is sufficient. 20–29 is insufficient; below 20 is deficient. Common deficiency in India.' },
+  { id:'vitb12',     name:'Vitamin B12',             icon:'💊', unit:'pg/mL',  cat:'Vitamins', low:200, normLow:200, normHigh:900, high:2000, max:2000,
+    insight:'Normal B12 is 200–900 pg/mL. Deficiency causes fatigue, neurological issues, and anemia — very common in vegetarians.' },
+  { id:'wbc',        name:'WBC Count',               icon:'🛡️', unit:'×10³/µL',cat:'CBC',      low:4,   normLow:4,   normHigh:11,  high:15,   max:20,
+    insight:'White blood cell count should be 4–11 ×10³/µL. Elevated WBC may indicate infection or inflammation; low WBC reduces immunity.' },
+  { id:'platelets',  name:'Platelets',               icon:'🔴', unit:'×10³/µL',cat:'CBC',      low:150, normLow:150, normHigh:400, high:500,  max:700,
+    insight:'Normal platelet count is 150–400 ×10³/µL. Low platelets cause bleeding risk; high platelets increase clotting risk.' },
+  { id:'bp_sys',     name:'Blood Pressure (Systolic)',icon:'❤️', unit:'mmHg',  cat:'Vitals',   low:90,  normLow:90,  normHigh:120, high:140,  max:180,
+    insight:'Normal systolic BP is 90–120 mmHg. 120–139 is elevated; 140+ is hypertension stage 1. Regular monitoring is key.' },
+];
+
+// ── Seed health data per member ──
+const HEALTH_SEED = {
+  rajasekhar: {
+    lastUpdated:'2026-02-10', labName:'Apollo Diagnostics, Hyderabad', reportRef:'APL-2026-0210-RD',
+    vitals:{ weight:78, height:172, bmi:26.4 },
+    markers:{ glucose:102, hba1c:5.8, cholesterol:198, ldl:118, hdl:48, triglycerides:162, hemoglobin:14.2, tsh:2.8, creatinine:1.0, uricacid:6.1, vitd:18, vitb12:310, wbc:7.2, platelets:230, bp_sys:126 }
+  },
+  vasundhara: {
+    lastUpdated:'2026-01-22', labName:'Star Hospitals, Hyderabad', reportRef:'STR-2026-0122-VD',
+    vitals:{ weight:62, height:158, bmi:24.8 },
+    markers:{ glucose:88, hba1c:5.1, cholesterol:185, ldl:105, hdl:55, triglycerides:130, hemoglobin:11.8, tsh:5.2, creatinine:0.8, uricacid:4.2, vitd:14, vitb12:195, wbc:6.8, platelets:280, bp_sys:112 }
+  },
+  josritha: {
+    lastUpdated:'2025-12-15', labName:'Vijaya Diagnostic Centre, Hyderabad', reportRef:'VDC-2025-1215-JD',
+    vitals:{ weight:54, height:160, bmi:21.1 },
+    markers:{ glucose:82, hba1c:4.9, cholesterol:155, ldl:85, hdl:62, triglycerides:95, hemoglobin:12.1, tsh:2.1, creatinine:0.7, uricacid:3.8, vitd:22, vitb12:420, wbc:6.1, platelets:310, bp_sys:108 }
+  },
+  jeevan: {
+    lastUpdated:'2025-11-08', labName:'Vijaya Diagnostic Centre, Hyderabad', reportRef:'VDC-2025-1108-JV',
+    vitals:{ weight:48, height:155, bmi:19.9 },
+    markers:{ glucose:78, hba1c:4.7, cholesterol:148, ldl:78, hdl:58, triglycerides:88, hemoglobin:13.4, tsh:1.8, creatinine:0.6, uricacid:4.0, vitd:25, vitb12:380, wbc:7.5, platelets:295, bp_sys:102 }
+  }
+};
+
+const HEALTH_CATS = ['All','Blood','Lipids','Thyroid','Kidney','Vitamins','CBC','Vitals'];
+let healthActiveMember = 'rajasekhar';
+let healthActiveCat    = 'All';
+
+// ── Load / save health data from localStorage ──
+function getHealthData() {
+  try {
+    const s = localStorage.getItem('fp_health_v1');
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  const d = JSON.parse(JSON.stringify(HEALTH_SEED));
+  localStorage.setItem('fp_health_v1', JSON.stringify(d));
+  return d;
+}
+function saveHealthData(data) {
+  localStorage.setItem('fp_health_v1', JSON.stringify(data));
+}
+
+// ── Compute health score (0–100) for a member ──
+function computeHealthScore(memberId) {
+  const data = getHealthData()[memberId];
+  if (!data) return 50;
+  const meta = HEALTH_MEMBER_META[memberId];
+  let score = 100, issues = 0;
+  BM_DEFS.forEach(def => {
+    const val = data.markers[def.id];
+    if (val === undefined || val === null) return;
+    const st = getBmStatus(def, val, meta.gender);
+    if (st === 'high' || st === 'low') { score -= 8; issues++; }
+    else if (st === 'borderline')      { score -= 4; }
+  });
+  return Math.max(10, Math.min(100, Math.round(score)));
+}
+
+// ── Determine biomarker status ──
+function getBmStatus(def, val, gender) {
+  // Special HDL logic (higher is better, lower is bad)
+  if (def.id === 'hdl') {
+    const threshold = gender === 'F' ? 50 : 40;
+    if (val < threshold) return 'low';
+    return 'normal';
+  }
+  if (val < def.low)      return 'low';
+  if (val < def.normLow)  return 'borderline';
+  if (val <= def.normHigh) return 'normal';
+  if (val <= def.high)    return 'borderline';
+  return 'high';
+}
+
+// ── Status colour ──
+function statusColor(st) {
+  return { normal:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3ecf8e',
+           high:  getComputedStyle(document.documentElement).getPropertyValue('--red').trim()||'#ff4f4f',
+           low:   getComputedStyle(document.documentElement).getPropertyValue('--orange').trim()||'#ff8c42',
+           borderline:getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#f0b429' }[st]||'#8b93a8';
+}
+function scoreColor(score) {
+  if (score >= 80) return '#3ecf8e';
+  if (score >= 60) return '#f0b429';
+  return '#ff4f4f';
+}
+function scoreLabel(score) {
+  if (score >= 85) return 'Excellent';
+  if (score >= 70) return 'Good';
+  if (score >= 55) return 'Fair';
+  return 'Needs Attention';
+}
+
+// ── Bar fill % for a marker within its scale ──
+function bmBarPct(def, val) {
+  return Math.max(2, Math.min(100, Math.round((val / def.max) * 100)));
+}
+
+// ── Init Health Page ──
+function initHealthPage() {
+  renderHealthMemberTabs();
+  renderHealthHero();
+  renderHealthReportStrip();
+  renderHealthCatTabs();
+  renderBiomarkers();
+}
+
+function renderHealthMemberTabs() {
+  const wrap = document.getElementById('health-member-tabs');
+  if (!wrap) return;
+  wrap.innerHTML = Object.entries(HEALTH_MEMBER_META).map(([id, m]) => `
+    <div class="hmt-tab pressable${id===healthActiveMember?' active':''}"
+         style="${id===healthActiveMember?'background:'+m.gradient+';border-color:transparent':''}"
+         onclick="switchHealthMember('${id}')">
+      <div class="hmt-av" style="background:${m.color}">${m.initials}</div>
+      <span class="hmt-name">${m.label}</span>
+    </div>`).join('');
+}
+
+function renderHealthHero() {
+  const wrap = document.getElementById('health-hero-wrap');
+  if (!wrap) return;
+  const m    = HEALTH_MEMBER_META[healthActiveMember];
+  const data = getHealthData()[healthActiveMember];
+  const score = computeHealthScore(healthActiveMember);
+  const col   = scoreColor(score);
+  const r = 36, circ = 2 * Math.PI * r;
+  const offset = circ - (score / 100) * circ;
+
+  // Count issues
+  let abnormal = 0, borderline = 0;
+  BM_DEFS.forEach(def => {
+    const val = data.markers[def.id];
+    if (val == null) return;
+    const st = getBmStatus(def, val, m.gender);
+    if (st === 'high' || st === 'low') abnormal++;
+    else if (st === 'borderline') borderline++;
+  });
+
+  wrap.innerHTML = `
+  <div class="health-hero" style="background:linear-gradient(145deg,#08101e 0%,#0c1830 60%,#080f1a 100%);">
+    <div class="health-hero-top">
+      <div>
+        <div class="health-hero-name">${m.label}</div>
+        <div class="health-hero-role">Age ${m.age} · ${m.gender==='M'?'Male':'Female'}</div>
+        <div class="health-hero-updated">Last report: ${fmtHealthDate(data.lastUpdated)}</div>
+      </div>
+      <div class="health-score-ring">
+        <svg class="hsr-svg" width="84" height="84" viewBox="0 0 84 84">
+          <circle class="hsr-track" cx="42" cy="42" r="${r}" stroke-width="7"/>
+          <circle class="hsr-fill" cx="42" cy="42" r="${r}" stroke="${col}" stroke-width="7"
+            stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-offset="${offset}" id="hsr-circle-${healthActiveMember}"/>
+        </svg>
+        <div class="hsr-label">
+          <div class="hsr-num" style="color:${col}">${score}</div>
+          <div class="hsr-tag">Score</div>
+        </div>
+      </div>
+    </div>
+    <div class="health-hero-stats">
+      <div class="hhs">
+        <div class="hhs-val">${data.vitals.bmi}</div>
+        <div class="hhs-lbl">BMI</div>
+      </div>
+      <div class="hhs" style="${abnormal>0?'background:rgba(255,79,79,.1);border-color:rgba(255,79,79,.2)':''}">
+        <div class="hhs-val" style="color:${abnormal>0?'#ff4f4f':'#3ecf8e'}">${abnormal}</div>
+        <div class="hhs-lbl">Abnormal</div>
+      </div>
+      <div class="hhs" style="${borderline>0?'background:rgba(240,180,41,.08);border-color:rgba(240,180,41,.18)':''}">
+        <div class="hhs-val" style="color:${borderline>0?'#f0b429':'#3ecf8e'}">${borderline}</div>
+        <div class="hhs-lbl">Borderline</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Animate ring after render
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const el = document.getElementById(`hsr-circle-${healthActiveMember}`);
+      if (el) el.style.strokeDashoffset = el.dataset.offset;
+    }, 100);
+  });
+}
+
+function renderHealthReportStrip() {
+  const wrap = document.getElementById('health-report-strip');
+  if (!wrap) return;
+  const data = getHealthData()[healthActiveMember];
+  wrap.innerHTML = `
+  <div class="health-report-strip">
+    <div class="hrs-icon">🧾</div>
+    <div class="hrs-body">
+      <div class="hrs-title">${data.labName}</div>
+      <div class="hrs-date">Ref: ${data.reportRef} · ${fmtHealthDate(data.lastUpdated)}</div>
+    </div>
+  </div>`;
+}
+
+function renderHealthCatTabs() {
+  const wrap = document.getElementById('health-cat-tabs');
+  if (!wrap) return;
+  wrap.innerHTML = HEALTH_CATS.map(cat => `
+    <div class="hct-tab${cat===healthActiveCat?' active':''}"
+         onclick="switchHealthCat('${cat}')">${cat}</div>`).join('');
+}
+
+function renderBiomarkers() {
+  const grid = document.getElementById('biomarker-grid');
+  const countEl = document.getElementById('health-bm-count');
+  const titleEl = document.getElementById('health-bm-title');
+  if (!grid) return;
+
+  const data = getHealthData()[healthActiveMember];
+  const m    = HEALTH_MEMBER_META[healthActiveMember];
+
+  const filtered = BM_DEFS.filter(def =>
+    healthActiveCat === 'All' || def.cat === healthActiveCat
+  );
+
+  if (titleEl) titleEl.textContent = healthActiveCat === 'All' ? 'All Biomarkers' : healthActiveCat;
+  if (countEl) countEl.textContent = filtered.length + ' markers';
+
+  grid.innerHTML = filtered.map(def => {
+    const val = data.markers[def.id];
+    if (val === undefined || val === null) return '';
+    const st  = getBmStatus(def, val, m.gender);
+    const col = statusColor(st);
+    const pct = bmBarPct(def, val);
+    const normPct = Math.round((def.normHigh / def.max) * 100);
+
+    return `<div class="bm-card s-${st} pressable" onclick="openBmSheet('${def.id}','${healthActiveMember}')">
+      <div class="bm-icon">${def.icon}</div>
+      <div class="bm-body">
+        <div class="bm-name">${def.name}</div>
+        <div class="bm-ref">Ref: ${def.normLow > 0 ? def.normLow+'–' : '<'}${def.normHigh} ${def.unit}</div>
+        <div class="bm-bar-wrap">
+          <div class="bm-bar" style="width:0%;background:${col}" data-w="${pct}"></div>
+        </div>
+      </div>
+      <div class="bm-right">
+        <div class="bm-val" style="color:${col}">${val}</div>
+        <div class="bm-unit">${def.unit}</div>
+        <div class="bm-badge ${st}">${st}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      grid.querySelectorAll('.bm-bar[data-w]').forEach(el => {
+        el.style.width = el.dataset.w + '%';
+      });
+    }, 80);
+  });
+}
+
+function switchHealthMember(id) {
+  healthActiveMember = id;
+  initHealthPage();
+}
+
+function switchHealthCat(cat) {
+  healthActiveCat = cat;
+  renderHealthCatTabs();
+  renderBiomarkers();
+}
+
+// ── Biomarker detail sheet ──
+function openBmSheet(bmId, memberId) {
+  const def  = BM_DEFS.find(d => d.id === bmId);
+  const data = getHealthData()[memberId];
+  const m    = HEALTH_MEMBER_META[memberId];
+  if (!def || !data) return;
+
+  const val = data.markers[bmId];
+  const st  = getBmStatus(def, val, m.gender);
+  const col = statusColor(st);
+
+  // Gauge zones: low = 0→normLow, normal = normLow→normHigh, high = normHigh→max
+  const lowPct    = Math.round((Math.max(0, def.normLow - (def.low||0)) / def.max) * 100);
+  const normPct   = Math.round(((def.normHigh - Math.max(0,def.normLow)) / def.max) * 100);
+  const highPct   = 100 - lowPct - normPct;
+  const needlePct = Math.max(2, Math.min(98, Math.round((val / def.max) * 100)));
+
+  const body = document.getElementById('bm-sheet-body');
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <span style="font-size:28px">${def.icon}</span>
+      <div>
+        <div class="bm-sheet-name">${def.name}</div>
+        <div class="bm-badge ${st}" style="display:inline-block">${st.toUpperCase()}</div>
+      </div>
+    </div>
+    <div class="bm-big-val" style="color:${col}">${val} <span class="bm-big-unit">${def.unit}</span></div>
+    <div class="bm-gauge-wrap">
+      <div class="bm-gauge-lbl">
+        <span>Low</span><span>Normal Range</span><span>High</span>
+      </div>
+      <div class="bm-gauge" id="bm-gauge-bar">
+        <div class="bm-g-low"  style="left:0;width:${lowPct}%"></div>
+        <div class="bm-g-norm" style="left:${lowPct}%;width:${normPct}%"></div>
+        <div class="bm-g-high" style="left:${lowPct+normPct}%;width:${highPct}%"></div>
+        <div class="bm-needle" id="bm-needle" style="left:0%"></div>
+      </div>
+      <div class="bm-ref-row">
+        <div class="bm-ref-item">
+          <div class="bm-ref-val">${def.normLow > 0 ? def.normLow : '—'}</div>
+          <div class="bm-ref-lbl">Min Normal</div>
+        </div>
+        <div class="bm-ref-item">
+          <div class="bm-ref-val" style="color:${col}">${val}</div>
+          <div class="bm-ref-lbl">Your Value</div>
+        </div>
+        <div class="bm-ref-item">
+          <div class="bm-ref-val">${def.normHigh}</div>
+          <div class="bm-ref-lbl">Max Normal</div>
+        </div>
+      </div>
+    </div>
+    <div class="bm-insight">
+      <div class="bm-insight-title">💡 What this means</div>
+      <div class="bm-insight-text">${def.insight}</div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Last Tested</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text)">${data.labName}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px">${fmtHealthDate(data.lastUpdated)} · ${data.reportRef}</div>
+    </div>
+    <button onclick="closeBmSheet()" style="width:100%;margin-top:12px;padding:13px;border-radius:12px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;">Close</button>
+  `;
+
+  document.getElementById('bm-sheet').classList.remove('hidden');
+  // Animate needle
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const needle = document.getElementById('bm-needle');
+      if (needle) needle.style.left = needlePct + '%';
+    }, 120);
+  });
+}
+
+function closeBmSheet() {
+  document.getElementById('bm-sheet').classList.add('hidden');
+}
+
+// ── Dashboard health widget builder ──
+function buildHealthWidget() {
+  const data = getHealthData();
+  const scores = Object.entries(HEALTH_MEMBER_META).map(([id, m]) => {
+    const score = computeHealthScore(id);
+    const col   = scoreColor(score);
+    const r = 24, circ = 2 * Math.PI * r;
+    const offset = circ - (score / 100) * circ;
+    // Gather flags
+    const mData = data[id];
+    const mMeta = m;
+    let flags = [];
+    BM_DEFS.forEach(def => {
+      const val = mData.markers[def.id];
+      if (val == null) return;
+      const st = getBmStatus(def, val, mMeta.gender);
+      if (st === 'high' || st === 'low') flags.push({ name:def.name.split(' ')[0], st });
+    });
+    return { id, m, score, col, circ, offset, flags };
+  });
+
+  // Show first member with issues, else first member
+  const featured = scores.find(s => s.flags.length > 0) || scores[0];
+  const r = 24, circ = 2 * Math.PI * r;
+
+  // Top 3 abnormal markers for featured member
+  const featData = data[featured.id];
+  const featMeta = featured.m;
+  const topMarkers = BM_DEFS
+    .map(def => ({ def, val:featData.markers[def.id], st:getBmStatus(def, featData.markers[def.id], featMeta.gender) }))
+    .filter(x => x.val != null && x.st !== 'normal')
+    .sort((a,b) => { const o={'high':0,'low':1,'borderline':2}; return (o[a.st]||3)-(o[b.st]||3); })
+    .slice(0, 3);
+
+  const flagHtml = featured.flags.slice(0,3).map(f =>
+    `<span class="hw-flag ${f.st==='high'||f.st==='low'?'red':'gold'}">${f.name}</span>`
+  ).join('');
+
+  const bmRows = topMarkers.map(({ def, val, st }) => {
+    const col = statusColor(st);
+    return `<div class="hw-bm-row pressable" onclick="goPage('health')">
+      <span class="hw-bm-icon">${def.icon}</span>
+      <span class="hw-bm-name">${def.name.split('(')[0].trim()}</span>
+      <span class="hw-bm-val" style="color:${col}">${val}</span>
+      <div class="hw-bm-dot" style="background:${col}"></div>
+    </div>`;
+  }).join('');
+
+  const allOk = scores.every(s => s.flags.length === 0);
+
+  return `<div class="w-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="w-hdr" style="margin:0">💊 &nbsp;Family Health</div>
+      <span class="card-action" onclick="goPage('health')" style="font-size:11px">View All →</span>
+    </div>
+    <div class="hw-score-row">
+      <div class="hw-ring">
+        <svg class="hw-ring-svg" width="58" height="58" viewBox="0 0 58 58">
+          <circle class="hw-ring-track" cx="29" cy="29" r="${r}" stroke-width="6"/>
+          <circle class="hw-ring-fill" cx="29" cy="29" r="${r}" stroke="${featured.col}" stroke-width="6"
+            stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${circ.toFixed(1)}"
+            data-offset="${featured.offset.toFixed(1)}" id="hw-ring-fill"/>
+        </svg>
+        <div class="hw-ring-lbl">
+          <div class="hw-ring-num" style="color:${featured.col}">${featured.score}</div>
+          <div class="hw-ring-tag">Score</div>
+        </div>
+      </div>
+      <div class="hws-info">
+        <div class="hw-info-name">${featured.m.label}</div>
+        <div class="hw-info-sub">${scoreLabel(featured.score)} · ${getHealthData()[featured.id].vitals.bmi} BMI</div>
+        <div class="hw-flags">${flagHtml || '<span class="hw-flag green">All Clear ✓</span>'}</div>
+      </div>
+    </div>
+    ${topMarkers.length ? `<div class="hw-bm-rows">${bmRows}</div>` : `<div style="text-align:center;padding:8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">✓ No abnormal markers for ${featured.m.label}</div>`}
+  </div>`;
+}
+
+// ── Date formatter ──
+function fmtHealthDate(ds) {
+  if (!ds) return '—';
+  const d = new Date(ds + 'T12:00:00');
+  return d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function initHealthWidgetDynamic() {
+  // Animate health widget ring
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const el = document.getElementById('hw-ring-fill');
+      if (el && el.dataset.offset) el.style.strokeDashoffset = el.dataset.offset;
+    }, 150);
+  });
+}
+
 function init() {
   initDashboard();
   initMembers();
