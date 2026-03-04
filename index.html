@@ -105,7 +105,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
    TOPBAR
 ═══════════════════════════════════════ */
 #topbar{
-  position:sticky;top:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:100;
   height:calc(var(--topbar-h) + var(--sat));
   background:rgba(7,8,15,.92);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
@@ -115,6 +115,11 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   padding-top:env(safe-area-inset-top);
   justify-content:space-between;
   gap:12px;
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+  will-change:transform;
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
 }
 #topbar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--gold));}
 .tb-brand{display:flex;align-items:center;gap:10px;}
@@ -157,8 +162,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 ═══════════════════════════════════════ */
 #content{
   position:relative;z-index:1;
+  padding-top:calc(var(--topbar-h) + var(--sat));
   padding-bottom:var(--nav-h);
-  min-height:calc(100dvh - var(--topbar-h) - var(--sat));
+  min-height:100dvh;
 }
 .page{display:none;}
 .page.active{display:block;animation:pageEnter .3s ease both;}
