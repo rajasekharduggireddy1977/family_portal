@@ -4143,12 +4143,20 @@ function saveAppt() {
 // FEATURE 01 — PHASE 3: Gemini Vision Lab Report Scanner
 // ═══════════════════════════════════════════════════════════
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODELS = [
+  'gemini-1.5-flash',
+  'gemini-1.5-flash-8b',
+  'gemini-2.0-flash-lite',
+  'gemini-2.0-flash',
+];
+function getGeminiKey() { return localStorage.getItem('fp_gemini_key') || ''; }
+function getGeminiUrl(model) {
+  return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${getGeminiKey()}`;
+}
+
 function showGeminiKeyPrompt() {
-  // Pre-fill if key already exists
-  const existing = getGeminiKey();
   const input = document.getElementById('gemini-key-input');
-  if (input) input.value = existing;
+  if (input) input.value = getGeminiKey();
   document.getElementById('gemini-key-sheet').classList.remove('hidden');
 }
 function closeGeminiKeySheet() {
@@ -4163,12 +4171,10 @@ function saveGeminiKey() {
   localStorage.setItem('fp_gemini_key', key);
   closeGeminiKeySheet();
   showToast('✓ API key saved');
-  // If scan sheet is open, clear the error and let user retry
   const errEl = document.getElementById('scan-err');
   if (errEl) errEl.classList.remove('active');
 }
 
-// Show key setup button in scan zone if no key set
 function checkGeminiKeyOnOpen() {
   if (!getGeminiKey()) {
     const zone = document.getElementById('scan-zone');
@@ -4181,13 +4187,6 @@ function checkGeminiKeyOnOpen() {
       zone.appendChild(btn);
     }
   }
-}
-
-function getGeminiKey() {
-  return localStorage.getItem('fp_gemini_key') || '';
-}
-function getGeminiUrl() {
-  return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${getGeminiKey()}`;
 }
 
 // ── Field mapping: gemini JSON key → HTML input id ──
@@ -4274,67 +4273,69 @@ function handleReportDrop(e) {
   if (file) handleReportFile(file);
 }
 
-// ── Core Gemini call ──
+// ── Core Gemini call with model fallback chain ──
 async function scanReportWithGemini(base64Data, mimeType) {
-  // Check key is set
   if (!getGeminiKey()) {
-    setScanState('error', 'No API key set. Tap ⚙ to add your Gemini API key.');
+    setScanState('error', 'No API key set.');
     showGeminiKeyPrompt();
     return;
   }
   setScanState('scanning');
 
-  const part = mimeType === 'application/pdf'
-    ? { inline_data: { mime_type: 'application/pdf', data: base64Data } }
-    : { inline_data: { mime_type: mimeType, data: base64Data } };
-
+  const part = { inline_data: { mime_type: mimeType, data: base64Data } };
   const body = {
-    contents: [{
-      parts: [
-        { text: GEMINI_PROMPT },
-        part
-      ]
-    }],
-    generationConfig: {
-      temperature: 0,
-      maxOutputTokens: 1024,
-    }
+    contents: [{ parts: [{ text: GEMINI_PROMPT }, part] }],
+    generationConfig: { temperature: 0, maxOutputTokens: 1024 }
   };
 
-  try {
-    setScanProgressText('Uploading report…');
-    const res = await fetch(getGeminiUrl(), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+  let lastError = '';
+  for (let i = 0; i < GEMINI_MODELS.length; i++) {
+    const model = GEMINI_MODELS[i];
+    setScanProgressText(`Reading report with AI (${model})…`);
+    try {
+      const res = await fetch(getGeminiUrl(model), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(()=>({}));
-      const msg = errData?.error?.message || `API error ${res.status}`;
-      // Specific helpful messages
-      if (res.status === 429) throw new Error('Quota exceeded. Wait a minute and try again, or check your API key at aistudio.google.com');
-      if (res.status === 400) throw new Error('Invalid API key. Tap ⚙ to update your Gemini key.');
-      if (res.status === 403) throw new Error('API key not authorised. Enable Gemini API at aistudio.google.com');
-      throw new Error(msg);
+      if (res.status === 429) {
+        // Rate limited on this model — try next one after short wait
+        lastError = '429';
+        if (i < GEMINI_MODELS.length - 1) {
+          setScanProgressText(`Quota hit on ${model}, trying next model…`);
+          await new Promise(r => setTimeout(r, 1500));
+          continue;
+        } else {
+          throw new Error('All models quota exceeded. Wait 1 minute then try again. Free tier allows 15 requests/minute.');
+        }
+      }
+      if (res.status === 400) throw new Error('Invalid API key. Tap "Set up API key" to update it.');
+      if (res.status === 403) throw new Error('API key not authorised. Make sure Gemini API is enabled at aistudio.google.com');
+      if (!res.ok) {
+        const e = await res.json().catch(()=>({}));
+        throw new Error(e?.error?.message || `API error ${res.status}`);
+      }
+
+      const data = await res.json();
+      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const jsonStr = rawText.replace(/```json|```/g,'').trim();
+
+      let parsed;
+      try { parsed = JSON.parse(jsonStr); }
+      catch(e) { throw new Error('Could not parse report. Try a clearer photo with good lighting.'); }
+
+      const filled = fillFormFromScan(parsed);
+      setScanState('success', filled);
+      return; // success — stop trying models
+
+    } catch(err) {
+      if (err.message === '429' || lastError === '429') continue;
+      setScanState('error', err.message);
+      return;
     }
-
-    setScanProgressText('Extracting biomarker values…');
-    const data = await res.json();
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    const jsonStr = rawText.replace(/```json|```/g,'').trim();
-    let parsed;
-    try { parsed = JSON.parse(jsonStr); }
-    catch(e) { throw new Error('Could not parse report data. Try a clearer image.'); }
-
-    const filled = fillFormFromScan(parsed);
-    setScanState('success', filled);
-
-  } catch(err) {
-    console.error('Gemini scan error:', err);
-    setScanState('error', err.message);
   }
+  setScanState('error', 'All models rate limited. Please wait 1 minute and try again.');
 }
 
 // ── Fill form inputs from parsed JSON ──
