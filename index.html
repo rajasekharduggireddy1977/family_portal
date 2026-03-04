@@ -26,6 +26,74 @@
   --topbar-h:56px;
   --nav-h:calc(60px + env(safe-area-inset-bottom));
 }
+
+/* ══════════ LIGHT THEME ══════════ */
+[data-theme="light"]{
+  --bg:#f0f2f8;--surface:#ffffff;--surface2:#e8ecf5;--surface3:#dde2ee;
+  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);
+  --text:#111827;--text2:#4b5563;--text3:#9ca3af;
+  --gold:#c97e00;--gold2:#b56f00;--gold-dim:rgba(201,126,0,.1);
+  --blue:#2a5fd4;--blue2:#1e4abf;--blue-dim:rgba(42,95,212,.1);
+  --red:#d63b3b;--red-dim:rgba(214,59,59,.09);
+  --orange:#c96500;--orange-dim:rgba(201,101,0,.09);
+  --green:#1a9e68;--green-dim:rgba(26,158,104,.09);
+  --shadow:0 4px 24px rgba(0,0,0,.12);--shadow-lg:0 8px 48px rgba(0,0,0,.2);
+}
+
+/* ══════════ LOADER SCREEN ══════════ */
+#loader-screen{
+  position:fixed;inset:0;z-index:999999;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;
+  transition:opacity .6s ease, transform .6s ease;
+}
+#loader-screen.fade-out{opacity:0;transform:scale(1.04);pointer-events:none;}
+.loader-logo{
+  width:88px;height:88px;
+  background:linear-gradient(135deg,var(--blue),var(--gold));
+  border-radius:28px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;
+  box-shadow:0 0 60px rgba(79,127,255,.35),0 0 120px rgba(240,180,41,.15);
+  animation:logoBounce 1.8s cubic-bezier(.34,1.56,.64,1) forwards;
+  margin-bottom:28px;
+}
+@keyframes logoBounce{
+  0%{opacity:0;transform:scale(.4) translateY(30px);}
+  60%{opacity:1;transform:scale(1.08) translateY(-4px);}
+  80%{transform:scale(.97) translateY(2px);}
+  100%{transform:scale(1) translateY(0);}
+}
+.loader-title{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;
+  color:var(--text);
+  opacity:0;animation:fadeUp .5s ease .5s forwards;
+  margin-bottom:6px;
+}
+.loader-sub{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;
+  opacity:0;animation:fadeUp .5s ease .7s forwards;
+  margin-bottom:36px;
+}
+.loader-bar-wrap{width:160px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;opacity:0;animation:fadeUp .4s ease .9s forwards;}
+.loader-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--gold));width:0%;animation:loaderProgress 2s cubic-bezier(.4,0,.2,1) 1s forwards;}
+@keyframes loaderProgress{0%{width:0%;}40%{width:55%;}70%{width:80%;}90%{width:93%;}100%{width:100%;}}
+
+.loader-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.lp{position:absolute;border-radius:50%;animation:lpFloat linear infinite;}
+@keyframes lpFloat{0%{opacity:0;transform:translateY(100vh) scale(0);}10%{opacity:.7;}90%{opacity:.3;}100%{opacity:0;transform:translateY(-10vh) scale(1.2);}}
+
+/* ══════════ THEME TOGGLE BTN ══════════ */
+.theme-toggle{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:17px;
+  transition:all .22s;flex-shrink:0;
+  user-select:none;
+}
+.theme-toggle:hover{border-color:var(--gold);transform:rotate(15deg);}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{height:100%;overflow-x:hidden;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;}
@@ -121,7 +189,8 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* ════════════════════════════════════════════
    DASHBOARD PAGE
 ════════════════════════════════════════════ */
-.dash-wrap{padding:14px 14px 0;}
+.dash-wrap{padding:14px 14px 0;display:flex;flex-direction:column;gap:16px;}
+.dash-section{display:flex;flex-direction:column;gap:6px;}
 
 /* Greeting */
 .dash-greeting{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;}
@@ -173,14 +242,29 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .ui-bar-fill{height:100%;border-radius:2px;}
 
 /* Family Summary Widget */
-.fam-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px 14px;}
-.fam-card{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .18s;}
+.fam-summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:10px 12px 14px;}
+.fam-card{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 10px;cursor:pointer;transition:all .18s;min-width:0;overflow:hidden;}
 .fam-card:hover,.fam-card:active{border-color:var(--border2);transform:translateX(3px);}
-.fam-av{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
-.fam-info{flex:1;min-width:0;}
-.fam-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.fam-role{font-size:10px;color:var(--text2);margin-top:2px;}
-.fam-status{font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fam-av{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;}
+.fam-info{flex:1;min-width:0;overflow:hidden;}
+.fam-name{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fam-role{font-size:9px;color:var(--text2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fam-status{font-size:9px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ══════════ DASHBOARD SECTION CARDS — BENTO PATTERN ══════════ */
+.dash-section-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 2px 16px rgba(0,0,0,.18);
+  margin-bottom:0;
+}
+.dash-section-label{
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);
+  padding:0 2px;margin-bottom:8px;
+}
 
 /* Attendance mini cards */
 .att-mini{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
@@ -206,18 +290,18 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 ════════════════════════════════════════════ */
 
 /* Member List (landing) */
-.members-list{display:flex;flex-direction:column;gap:10px;padding:14px;}
-.member-card-full{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.members-list{display:flex;flex-direction:column;gap:8px;padding:12px;}
+.member-card-full{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
 .member-card-full::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;}
 .member-card-full:hover,.member-card-full:active{border-color:var(--border2);background:var(--surface2);transform:translateX(4px);}
-.mcf-av{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;flex-shrink:0;position:relative;}
-.mcf-av::after{content:'';position:absolute;inset:-2px;border-radius:16px;border:2px solid rgba(255,255,255,.12);}
+.mcf-av{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;flex-shrink:0;position:relative;}
+.mcf-av::after{content:'';position:absolute;inset:-2px;border-radius:14px;border:2px solid rgba(255,255,255,.12);}
 .mcf-body{flex:1;min-width:0;}
-.mcf-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--text);}
-.mcf-role{font-size:12px;color:var(--text2);margin-top:3px;}
-.mcf-badges{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;}
-.mcf-badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--surface3);border:1px solid var(--border2);color:var(--text2);}
-.mcf-arrow{color:var(--gold);font-size:20px;flex-shrink:0;}
+.mcf-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text);}
+.mcf-role{font-size:11px;color:var(--text2);margin-top:2px;}
+.mcf-badges{display:flex;align-items:center;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.mcf-badge{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:var(--surface3);border:1px solid var(--border2);color:var(--text2);}
+.mcf-arrow{color:var(--gold);font-size:18px;flex-shrink:0;}
 
 /* Member Detail */
 .member-detail{display:none;}
@@ -442,7 +526,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 
 /* ════════════════════════════════════════════
-   PIN LOCK SCREEN
+   PIN LOCK SCREEN — DISABLED (hidden by default)
 ════════════════════════════════════════════ */
 #pin-lock{
   position:fixed;inset:0;z-index:99999;
@@ -452,7 +536,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   animation:lockFadeIn .4s ease both;
 }
 @keyframes lockFadeIn{from{opacity:0;transform:scale(.97);}to{opacity:1;transform:scale(1);}}
-#pin-lock.hidden{display:none;}
+#pin-lock.hidden{display:none !important;}
 #pin-lock.shake{animation:pinShake .4s ease both;}
 @keyframes pinShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-10px);}40%{transform:translateX(10px);}60%{transform:translateX(-8px);}80%{transform:translateX(8px);}}
 .lock-logo{width:72px;height:72px;background:linear-gradient(135deg,var(--blue),var(--gold));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:20px;box-shadow:0 0 40px rgba(79,127,255,.25);}
@@ -576,8 +660,17 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 </head>
 <body>
 
+<!-- ═══════════════ LOADER SCREEN ═══════════════ -->
+<div id="loader-screen">
+  <div class="loader-particles" id="loader-particles"></div>
+  <div class="loader-logo">🏛️</div>
+  <div class="loader-title">Duggireddy Portal</div>
+  <div class="loader-sub">Family · Secure · Private</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
 <!-- ═══════════════ PIN LOCK SCREEN ═══════════════ -->
-<div id="pin-lock">
+<div id="pin-lock" class="hidden">
   <div class="lock-logo">🏛️</div>
   <div class="lock-title">Duggireddy Portal</div>
   <div class="lock-sub">ENTER PIN TO ACCESS</div>
@@ -655,6 +748,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   </div>
   <div class="tb-right">
     <div class="tb-clock" id="clock">00:00:00</div>
+    <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</div>
     <div class="tb-search-btn" onclick="goSearch()" title="Search">⌕</div>
   </div>
 </div>
@@ -667,59 +761,62 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     <div class="dash-wrap stagger">
 
       <!-- Greeting -->
-      <div style="margin-bottom:12px;">
+      <div class="dash-section">
         <div class="dash-greeting" id="dash-greeting">☀️ Good morning, <em>Rajasekhar!</em></div>
         <div class="dash-date" id="dash-date"></div>
       </div>
 
       <!-- Alert Banner -->
-      <div class="alert-banner pressable" onclick="goPage('expiry')" id="dash-alert" style="margin-bottom:12px;">
-        <div class="alert-icon">🚨</div>
-        <div class="alert-body">
-          <div class="alert-title">2 items OVERDUE — Immediate action required</div>
-          <div class="alert-sub">Pay property tax at cdma.ap.gov.in before penalties apply</div>
+      <div class="dash-section">
+        <div class="alert-banner pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-body">
+            <div class="alert-title">Property Tax Overdue</div>
+            <div class="alert-sub">Pay property tax at cdma.ap.gov.in before penalties apply</div>
+          </div>
+          <div class="alert-cta">View →</div>
         </div>
-        <div class="alert-cta">View →</div>
       </div>
 
-      <!-- Family at a Glance — TOP -->
-      <div style="margin-bottom:12px;">
-        <div class="glass">
-          <div class="card-hdr">
-            <div class="card-title"><span class="card-title-icon">👨‍👩‍👧‍👦</span> Family at a Glance</div>
+      <!-- Family at a Glance -->
+      <div class="dash-section">
+        <div class="dash-section-label">👨‍👩‍👧‍👦 Family at a Glance</div>
+        <div class="dash-section-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px 4px;">
+            <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;">Members</div>
             <span class="card-action" onclick="goPage('members')">View All →</span>
           </div>
           <div class="fam-summary-grid" id="fam-summary"></div>
         </div>
       </div>
 
-      <!-- Attendance Tracker — TOP -->
-      <div style="margin-bottom:12px;">
-        <div class="glass">
-          <div class="card-hdr">
-            <div class="card-title"><span class="card-title-icon" style="background:rgba(167,139,250,.15)">🎓</span> Attendance Tracker</div>
+      <!-- Attendance Tracker -->
+      <div class="dash-section">
+        <div class="dash-section-label">🎓 Attendance Tracker</div>
+        <div class="dash-section-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px 4px;">
+            <div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;">Josritha · KL Univ · Even Sem 2025–26</div>
             <span style="font-size:10px;color:var(--red);font-weight:700;font-family:'DM Mono',monospace;" id="att-warning"></span>
           </div>
-          <div style="font-size:11px;color:var(--text2);padding:0 14px 8px;font-family:'DM Mono',monospace;">Josritha · KL Univ · Even Sem 2025–26</div>
-          <div style="display:flex;flex-direction:column;gap:8px;padding:0 14px 14px;" id="att-cards"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;padding:4px 14px 14px;" id="att-cards"></div>
         </div>
       </div>
 
       <!-- Quick Actions -->
-      <div style="margin-bottom:12px;">
-        <div class="section-title-row" style="margin-bottom:8px;"><span class="section-title-txt"><span class="section-title-icon">⚡</span> Quick Actions</span></div>
+      <div class="dash-section">
+        <div class="dash-section-label">⚡ Quick Actions</div>
         <div class="qa-strip">
           <div class="qa-btn qa-red pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')"><span>💸</span>Pay Property Tax</div>
-          <div class="qa-btn qa-blue pressable" onclick="goPage('expiry')"><span>🔄</span>Renew Insurance</div>
-          <div class="qa-btn qa-green pressable" onclick="goMemberSection('josritha','education')"><span>🎓</span>Josritha Attend.</div>
+          <div class="qa-btn qa-blue pressable" onclick="window.open('https://www.icicilombard.com','_blank')"><span>🔄</span>Renew Insurance</div>
+          <div class="qa-btn qa-green pressable" onclick="window.open('https://newerp.kluniversity.in/','_blank')"><span>🎓</span>Josritha Attend.</div>
           <div class="qa-btn qa-gold pressable" onclick="goPage('documents')"><span>📄</span>Open Documents</div>
         </div>
       </div>
 
-      <!-- Urgent Items (top 5) -->
-      <div style="margin-bottom:12px;">
-        <div class="section-title-row" style="margin-bottom:8px;">
-          <span class="section-title-txt"><span class="section-title-icon">⏳</span> Urgent Items</span>
+      <!-- Urgent Items -->
+      <div class="dash-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="dash-section-label" style="margin-bottom:0;">⏳ Urgent Items</div>
           <span class="view-all-btn" onclick="goPage('expiry')">Full View →</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;" id="urgent-items"></div>
@@ -732,6 +829,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 
     </div>
   </div>
+
 
   <!-- ══════════ MEMBERS PAGE ══════════ -->
   <div class="page" id="page-members">
@@ -1079,9 +1177,13 @@ function goMemberSection(memberId, tab) {
 // DASHBOARD
 // ═══════════════════════════════════════
 function initDashboard() {
-  // Greeting
+  // Dynamic time-based greeting
   const hour = new Date().getHours();
-  const greet = hour<12?'☀️ Good morning':hour<17?'🌤️ Good afternoon':'🌙 Good evening';
+  let greet;
+  if(hour >= 5 && hour < 12)       greet = '☀️ Good Morning';
+  else if(hour >= 12 && hour < 17) greet = '🌤️ Good Afternoon';
+  else if(hour >= 17 && hour < 21) greet = '🌆 Good Evening';
+  else                              greet = '🌙 Good Night';
   const gEl = document.getElementById('dash-greeting');
   if(gEl) gEl.innerHTML = greet+', <em>Rajasekhar!</em>';
   const dEl = document.getElementById('dash-date');
@@ -1671,96 +1773,9 @@ function init() {
 
 init();
 
-// ═══════════════════════════════════════
-// PIN LOCK SYSTEM
-// ═══════════════════════════════════════
-const PIN_CORRECT = '1234'; // Default PIN — change to any 4-digit code
-const PIN_SESSION_KEY = 'fp_unlocked';
-const PIN_LOCK_TIMEOUT = 5 * 60 * 1000; // 5 min idle auto-lock
-let pinBuffer = '';
-let pinLockTimer = null;
-
-function checkPinSession() {
-  const unlocked = sessionStorage.getItem(PIN_SESSION_KEY);
-  if (unlocked === 'yes') {
-    document.getElementById('pin-lock').classList.add('hidden');
-    resetIdleTimer();
-  }
-}
-
-function pinKey(digit) {
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += digit;
-  updatePinDots();
-  if (pinBuffer.length === 4) {
-    setTimeout(checkPin, 120);
-  }
-}
-
-function pinDel() {
-  if (!pinBuffer.length) return;
-  pinBuffer = pinBuffer.slice(0, -1);
-  updatePinDots();
-  document.getElementById('pin-err').textContent = '';
-}
-
-function updatePinDots() {
-  for (let i = 0; i < 4; i++) {
-    const dot = document.getElementById('pd' + i);
-    dot.classList.toggle('filled', i < pinBuffer.length);
-    dot.classList.remove('error');
-  }
-}
-
-function checkPin() {
-  if (pinBuffer === PIN_CORRECT) {
-    sessionStorage.setItem(PIN_SESSION_KEY, 'yes');
-    document.getElementById('pin-lock').classList.add('hidden');
-    resetIdleTimer();
-    showToast('🔓 Welcome, Rajasekhar!');
-    // Show PWA install banner after unlock if applicable
-    setTimeout(checkPwaPrompt, 2000);
-  } else {
-    // Wrong PIN
-    for (let i = 0; i < 4; i++) {
-      const dot = document.getElementById('pd' + i);
-      dot.classList.remove('filled');
-      dot.classList.add('error');
-    }
-    document.getElementById('pin-lock').classList.add('shake');
-    document.getElementById('pin-err').textContent = '✗ Incorrect PIN. Try again.';
-    setTimeout(() => {
-      document.getElementById('pin-lock').classList.remove('shake');
-      for (let i = 0; i < 4; i++) {
-        document.getElementById('pd' + i).classList.remove('error');
-      }
-    }, 500);
-    pinBuffer = '';
-  }
-}
-
-function resetIdleTimer() {
-  clearTimeout(pinLockTimer);
-  pinLockTimer = setTimeout(lockPortal, PIN_LOCK_TIMEOUT);
-}
-
-function lockPortal() {
-  sessionStorage.removeItem(PIN_SESSION_KEY);
-  pinBuffer = '';
-  updatePinDots();
-  document.getElementById('pin-err').textContent = '';
-  document.getElementById('pin-lock').classList.remove('hidden');
-}
-
-// Reset idle timer on any interaction
-['click', 'touchstart', 'keydown', 'scroll'].forEach(ev => {
-  document.addEventListener(ev, () => {
-    if (sessionStorage.getItem(PIN_SESSION_KEY) === 'yes') resetIdleTimer();
-  }, { passive: true });
-});
 
 // ═══════════════════════════════════════
-// PWA INSTALL PROMPT
+// SIDEBAR NAV SYNC
 // ═══════════════════════════════════════
 let pwaPromptEvent = null;
 
@@ -1812,10 +1827,86 @@ function syncSidebarNav(page) {
   if (target) target.classList.add('active');
 }
 
+
 // ═══════════════════════════════════════
-// INIT LOCK CHECK
+// INIT LOCK CHECK (PIN disabled)
 // ═══════════════════════════════════════
 checkPinSession();
+checkPwaPrompt();
+(function initLoader() {
+  // Generate floating particles
+  const container = document.getElementById('loader-particles');
+  if (container) {
+    const colors = ['rgba(79,127,255,.5)', 'rgba(240,180,41,.4)', 'rgba(62,207,142,.3)', 'rgba(167,139,250,.35)'];
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'lp';
+      const size = Math.random() * 6 + 3;
+      p.style.cssText = `
+        width:${size}px;height:${size}px;
+        left:${Math.random()*100}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        animation-duration:${Math.random()*6+5}s;
+        animation-delay:${Math.random()*3}s;
+      `;
+      container.appendChild(p);
+    }
+  }
+  // Hide loader after 3s and show portal
+  setTimeout(() => {
+    const loader = document.getElementById('loader-screen');
+    if (loader) {
+      loader.classList.add('fade-out');
+      setTimeout(() => { loader.style.display = 'none'; }, 650);
+    }
+  }, 3000);
+})();
+
+// ═══════════════════════════════════════
+// DARK / LIGHT THEME TOGGLE
+// ═══════════════════════════════════════
+function initTheme() {
+  const saved = localStorage.getItem('fp_theme') || 'dark';
+  applyTheme(saved);
+}
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  if (theme === 'light') {
+    root.setAttribute('data-theme', 'light');
+    if (btn) btn.textContent = '☀️';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#f0f2f8');
+  } else {
+    root.removeAttribute('data-theme');
+    if (btn) btn.textContent = '🌙';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#07080f');
+  }
+  localStorage.setItem('fp_theme', theme);
+}
+
+function toggleTheme() {
+  const current = localStorage.getItem('fp_theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+initTheme();
+
+// ═══════════════════════════════════════
+// PIN LOCK SYSTEM — DISABLED
+// (Re-enable by removing class="hidden" from #pin-lock HTML
+//  and calling checkPinSession() at bottom)
+// ═══════════════════════════════════════
+const PIN_CORRECT = '1234';
+const PIN_SESSION_KEY = 'fp_unlocked';
+const PIN_LOCK_TIMEOUT = 5 * 60 * 1000;
+let pinBuffer = '';
+let pinLockTimer = null;
+
+function checkPinSession() {
+  // PIN disabled — skip directly to portal
+  document.getElementById('pin-lock').classList.add('hidden');
+}
 </script>
 </body>
 </html>
