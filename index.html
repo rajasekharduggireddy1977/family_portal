@@ -605,14 +605,15 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .widget-edit-bar.active{display:flex;}
 .wed-done{padding:6px 14px;border-radius:8px;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
 .widget-container{display:flex;flex-direction:column;gap:14px;}
-.widget-item{position:relative;border-radius:18px;transition:opacity .2s,transform .2s;}
+.widget-item{position:relative;border-radius:18px;transition:opacity .22s,transform .22s;user-select:none;-webkit-user-select:none;}
 .widget-item.edit-mode{outline:2px dashed rgba(79,127,255,.4);outline-offset:3px;}
-.w-drag{display:none;position:absolute;top:10px;right:10px;z-index:10;width:32px;height:32px;border-radius:9px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;font-size:14px;cursor:grab;color:rgba(255,255,255,.8);}
-.w-drag:active{cursor:grabbing;}
+.w-drag{display:none;position:absolute;top:10px;right:10px;z-index:10;width:36px;height:36px;border-radius:10px;background:rgba(20,24,48,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);align-items:center;justify-content:center;font-size:18px;cursor:grab;color:rgba(255,255,255,.9);touch-action:none;}
 .widget-item.edit-mode .w-drag{display:flex;}
 .w-del{display:none;position:absolute;top:10px;left:10px;z-index:10;width:28px;height:28px;border-radius:50%;background:var(--red);align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;cursor:pointer;line-height:1;}
 .widget-item.edit-mode .w-del{display:flex;}
-.widget-item.drag-over{opacity:.4;transform:scale(.97);}
+.widget-item.is-dragging{opacity:0 !important;pointer-events:none;}
+.widget-item.drop-target{outline:2px solid var(--blue);outline-offset:3px;background:var(--blue-dim);border-radius:18px;}
+#drag-ghost{position:fixed;z-index:9000;pointer-events:none;border-radius:18px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.55),0 0 0 2px var(--blue);opacity:.92;transform-origin:top left;}
 .w-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px;}
 .w-hdr{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
 .wec-rows{display:flex;flex-direction:column;gap:6px;}
@@ -775,7 +776,258 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   .stats-grid{gap:18px;}
 }
 
-/* Sidebar Navigation (desktop only) */
+/* ════════════════════════════════════════════
+   FEATURE 05 — EMERGENCY QUICK-ACCESS CARD
+════════════════════════════════════════════ */
+.emg-card{
+  background:linear-gradient(135deg,rgba(255,30,30,.13) 0%,rgba(180,0,0,.07) 100%);
+  border:1.5px solid rgba(255,79,79,.35);
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+  animation:emgPulse 3s ease-in-out infinite;
+}
+@keyframes emgPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,79,79,0),0 4px 24px rgba(0,0,0,.25);}
+  50%{box-shadow:0 0 0 4px rgba(255,79,79,.08),0 4px 24px rgba(0,0,0,.25);}
+}
+.emg-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px 10px;
+  border-bottom:1px solid rgba(255,79,79,.18);
+}
+.emg-hdr-left{display:flex;align-items:center;gap:9px;}
+.emg-hdr-icon{
+  width:30px;height:30px;border-radius:9px;
+  background:rgba(255,79,79,.18);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+}
+.emg-hdr-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--red);letter-spacing:-.2px;}
+.emg-hdr-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:1px;}
+.emg-toggle{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  color:var(--red);padding:4px 10px;border:1px solid rgba(255,79,79,.3);
+  border-radius:6px;cursor:pointer;background:rgba(255,79,79,.08);
+  transition:all .15s;letter-spacing:.5px;text-transform:uppercase;
+}
+.emg-toggle:hover{background:rgba(255,79,79,.18);}
+.emg-contacts{display:flex;flex-direction:column;gap:0;}
+.emg-contact{
+  display:flex;align-items:center;gap:13px;
+  padding:11px 16px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  transition:background .15s;
+  position:relative;
+}
+.emg-contact:last-child{border-bottom:none;}
+.emg-contact:active{background:rgba(255,79,79,.06);}
+.emg-av{
+  width:36px;height:36px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+  border:1.5px solid rgba(255,79,79,.3);
+}
+.emg-info{flex:1;min-width:0;}
+.emg-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.emg-role{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:1px;letter-spacing:.4px;}
+.emg-actions{display:flex;gap:7px;flex-shrink:0;}
+.emg-btn{
+  width:33px;height:33px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;cursor:pointer;transition:all .15s;
+  border:1px solid rgba(255,255,255,.1);
+  background:var(--surface2);
+}
+.emg-btn:hover{transform:scale(1.1);}
+.emg-btn.call{background:rgba(62,207,142,.12);border-color:rgba(62,207,142,.3);color:var(--green);}
+.emg-btn.call:hover{background:rgba(62,207,142,.22);}
+.emg-btn.msg{background:rgba(79,127,255,.12);border-color:rgba(79,127,255,.3);color:var(--blue2);}
+.emg-btn.msg:hover{background:rgba(79,127,255,.22);}
+.emg-services{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:8px;padding:12px 14px 14px;
+  border-top:1px solid rgba(255,79,79,.15);
+}
+.emg-svc{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:10px 8px;border-radius:12px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  cursor:pointer;transition:all .18s;
+  text-decoration:none;
+}
+.emg-svc:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.3);}
+.emg-svc-ico{font-size:20px;line-height:1;}
+.emg-svc-num{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+.emg-svc-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.6px;text-align:center;text-transform:uppercase;}
+.emg-svc.emg-police{border-color:rgba(79,127,255,.3);background:rgba(79,127,255,.07);}
+.emg-svc.emg-ambulance{border-color:rgba(255,79,79,.3);background:rgba(255,79,79,.07);}
+.emg-svc.emg-fire{border-color:rgba(255,140,66,.3);background:rgba(255,140,66,.07);}
+.emg-collapsed .emg-contacts,.emg-collapsed .emg-services{display:none;}
+
+/* ════════════════════════════════════════════
+   FEATURE 06 — FAMILY CALENDAR SYNC
+════════════════════════════════════════════ */
+/* Calendar Page */
+#page-calendar .cal-wrap{padding:14px 14px 0;}
+.cal-page-hdr{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:14px;gap:10px;
+}
+.cal-page-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;}
+.cal-page-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.4px;}
+.cal-add-btn{
+  flex-shrink:0;display:flex;align-items:center;gap:6px;
+  padding:8px 13px;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),#3a6aff);
+  color:#fff;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:all .18s;border:none;white-space:nowrap;
+}
+.cal-add-btn:hover{opacity:.9;transform:translateY(-1px);}
+
+/* Month Header */
+.cal-month-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;margin-bottom:12px;
+}
+.cal-month-label{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.3px;}
+.cal-nav-btn{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--surface2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;color:var(--text2);
+  transition:all .15s;
+}
+.cal-nav-btn:hover{border-color:var(--blue);color:var(--blue2);}
+
+/* Grid calendar */
+.cal-grid-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);background:var(--surface2);border-bottom:1px solid var(--border);}
+.cal-dow{text-align:center;padding:8px 0;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;}
+.cal-cells{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-cell{
+  min-height:46px;padding:5px 4px;
+  border-right:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.04);
+  cursor:pointer;transition:background .12s;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  position:relative;
+}
+.cal-cell:hover{background:var(--surface2);}
+.cal-cell.other-month .cal-day-num{color:var(--text3);opacity:.4;}
+.cal-cell.today .cal-day-num{
+  background:var(--blue);color:#fff;
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;
+}
+.cal-cell.selected{background:var(--blue-dim);}
+.cal-day-num{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);line-height:1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.cal-dot-row{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;max-width:32px;}
+.cal-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+
+/* Filter chips */
+.cal-filter-chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;}
+.cal-filter-chips::-webkit-scrollbar{display:none;}
+.cal-chip{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  font-size:11px;font-weight:700;font-family:'Inter',sans-serif;
+  border:1.5px solid var(--border2);color:var(--text2);
+  background:var(--surface);cursor:pointer;transition:all .15s;
+  white-space:nowrap;flex-shrink:0;
+}
+.cal-chip.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue2);}
+.cal-chip-dot{width:7px;height:7px;border-radius:50%;}
+
+/* Events list */
+.cal-events-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:9px;
+}
+.cal-events-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;}
+.cal-event-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+  margin-bottom:8px;cursor:pointer;transition:all .15s;
+  position:relative;overflow:hidden;
+}
+.cal-event-item:hover{border-color:var(--border2);transform:translateX(3px);}
+.cal-event-bar{width:4px;border-radius:3px;align-self:stretch;flex-shrink:0;}
+.cal-event-body{flex:1;min-width:0;}
+.cal-event-title{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-event-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);margin-top:3px;}
+.cal-event-tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.cal-event-tag{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:4px;
+  background:rgba(255,255,255,.06);color:var(--text2);
+}
+.cal-event-right{flex-shrink:0;text-align:right;}
+.cal-event-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);}
+.cal-event-avatar{font-size:17px;margin-top:4px;}
+.cal-no-events{text-align:center;padding:32px 16px;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;}
+.cal-no-events span{font-size:28px;display:block;margin-bottom:8px;}
+
+/* Add Event Sheet */
+.cal-sheet{position:fixed;inset:0;z-index:800;display:flex;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.cal-sheet.hidden{display:none;}
+.cal-sheet-card{width:100%;max-height:88vh;overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px max(28px,env(safe-area-inset-bottom));border-top:1px solid var(--border2);animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.cal-sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 14px;}
+.cal-sheet-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:16px;}
+.cal-field{margin-bottom:13px;}
+.cal-field label{display:block;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;}
+.cal-input{
+  width:100%;padding:11px 13px;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text);font-size:13px;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color .15s;
+}
+.cal-input:focus{border-color:var(--blue);}
+.cal-color-row{display:flex;gap:8px;flex-wrap:wrap;}
+.cal-color-swatch{
+  width:28px;height:28px;border-radius:8px;cursor:pointer;
+  border:2.5px solid transparent;transition:all .15s;
+}
+.cal-color-swatch.active{border-color:#fff;transform:scale(1.15);}
+.cal-member-row{display:flex;gap:8px;flex-wrap:wrap;}
+.cal-member-chip{
+  padding:6px 13px;border-radius:20px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border2);background:var(--surface2);
+  cursor:pointer;transition:all .15s;color:var(--text2);
+}
+.cal-member-chip.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue2);}
+.cal-sheet-actions{display:flex;gap:8px;margin-top:8px;}
+.cal-save-btn{
+  flex:1;padding:13px;border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),#3a6aff);
+  color:#fff;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;
+  border:none;cursor:pointer;transition:all .15s;
+}
+.cal-save-btn:hover{opacity:.9;}
+.cal-cancel-btn{
+  padding:13px 20px;border-radius:12px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text2);font-size:13px;font-weight:700;
+  cursor:pointer;
+}
+
+/* Calendar mini widget on Dashboard */
+.cal-mini-wrap{padding:10px 12px 14px;}
+.cal-mini-event{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all .15s;}
+.cal-mini-event:hover{border-color:var(--border2);}
+.cal-mini-event:last-child{margin-bottom:0;}
+.cal-mini-bar{width:4px;border-radius:3px;height:36px;flex-shrink:0;}
+.cal-mini-body{flex:1;min-width:0;}
+.cal-mini-title{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-mini-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--text2);margin-top:2px;}
+.cal-mini-av{font-size:16px;flex-shrink:0;}
+.cal-mini-empty{text-align:center;padding:14px;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;}
+
+/* Sidebar nav item for Calendar */
 #sidebar-nav{
   display:none;
   position:fixed;top:var(--topbar-h);left:0;bottom:0;
@@ -868,6 +1120,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     <div class="snav-item" id="snav-expiry" onclick="goPage('expiry')">
       <div class="snav-icon">⏰</div> Expiry Tracker
       <span class="snav-badge">2</span>
+    </div>
+    <div class="snav-item" id="snav-calendar" onclick="goPage('calendar')">
+      <div class="snav-icon">📅</div> Calendar
     </div>
     <div class="snav-item" id="snav-search" onclick="goSearch()">
       <div class="snav-icon">🔍</div> Search
@@ -1055,7 +1310,112 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     </div>
   </div>
 
+  <!-- ══════════ CALENDAR PAGE ══════════ -->
+  <div class="page" id="page-calendar">
+    <div class="cal-wrap">
+      <div class="cal-page-hdr">
+        <div>
+          <div class="cal-page-title">📅 Family Calendar</div>
+          <div class="cal-page-sub">ALL EVENTS · DUGGIREDDY FAMILY</div>
+        </div>
+        <button class="cal-add-btn" onclick="openCalSheet()">＋ Add Event</button>
+      </div>
+      <!-- Month nav -->
+      <div class="cal-month-nav">
+        <div class="cal-nav-btn" onclick="calNav(-1)">‹</div>
+        <div class="cal-month-label" id="cal-month-label">March 2026</div>
+        <div class="cal-nav-btn" onclick="calNav(1)">›</div>
+      </div>
+      <!-- Grid -->
+      <div class="cal-grid-wrap">
+        <div class="cal-dow-row">
+          <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div>
+          <div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+        </div>
+        <div class="cal-cells" id="cal-cells"></div>
+      </div>
+      <!-- Member filter chips -->
+      <div class="cal-filter-chips" id="cal-chips"></div>
+      <!-- Event list -->
+      <div class="cal-events-hdr">
+        <div class="cal-events-title" id="cal-events-title">Upcoming Events</div>
+      </div>
+      <div id="cal-events-list"></div>
+    </div>
+  </div>
+
 </div><!-- /#content -->
+
+<!-- ═══════════════ ADD EVENT SHEET ═══════════════ -->
+<div class="cal-sheet hidden" id="cal-sheet" onclick="if(event.target===this)closeCalSheet()">
+  <div class="cal-sheet-card">
+    <div class="cal-sheet-handle"></div>
+    <div class="cal-sheet-title" id="cal-sheet-title">Add Event</div>
+    <div class="cal-field">
+      <label>Event Title</label>
+      <input class="cal-input" id="calf-title" type="text" placeholder="e.g. Doctor appointment, Visa renewal…">
+    </div>
+    <div class="cal-field">
+      <label>Date</label>
+      <input class="cal-input" id="calf-date" type="date">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="cal-field">
+        <label>Start Time</label>
+        <input class="cal-input" id="calf-start" type="time">
+      </div>
+      <div class="cal-field">
+        <label>End Time</label>
+        <input class="cal-input" id="calf-end" type="time">
+      </div>
+    </div>
+    <div class="cal-field">
+      <label>Category</label>
+      <select class="cal-input" id="calf-cat">
+        <option value="health">🏥 Health / Medical</option>
+        <option value="travel">✈️ Travel / Visa</option>
+        <option value="education">🎓 Education</option>
+        <option value="finance">💰 Finance / Banking</option>
+        <option value="government">🏛️ Government / Official</option>
+        <option value="family">👨‍👩‍👧‍👦 Family</option>
+        <option value="birthday">🎂 Birthday</option>
+        <option value="other">📌 Other</option>
+      </select>
+    </div>
+    <div class="cal-field">
+      <label>Color</label>
+      <div class="cal-color-row" id="cal-color-row">
+        <div class="cal-color-swatch active" data-color="#4f7fff" style="background:#4f7fff" onclick="selectCalColor('#4f7fff',this)"></div>
+        <div class="cal-color-swatch" data-color="#f0b429" style="background:#f0b429" onclick="selectCalColor('#f0b429',this)"></div>
+        <div class="cal-color-swatch" data-color="#3ecf8e" style="background:#3ecf8e" onclick="selectCalColor('#3ecf8e',this)"></div>
+        <div class="cal-color-swatch" data-color="#ff4f4f" style="background:#ff4f4f" onclick="selectCalColor('#ff4f4f',this)"></div>
+        <div class="cal-color-swatch" data-color="#a78bfa" style="background:#a78bfa" onclick="selectCalColor('#a78bfa',this)"></div>
+        <div class="cal-color-swatch" data-color="#ff8c42" style="background:#ff8c42" onclick="selectCalColor('#ff8c42',this)"></div>
+        <div class="cal-color-swatch" data-color="#f472b6" style="background:#f472b6" onclick="selectCalColor('#f472b6',this)"></div>
+      </div>
+    </div>
+    <div class="cal-field">
+      <label>Family Members</label>
+      <div class="cal-member-row" id="cal-member-row">
+        <div class="cal-member-chip active" data-member="all" onclick="toggleCalMember(this)">All</div>
+        <div class="cal-member-chip" data-member="Rajasekhar" onclick="toggleCalMember(this)">Rajasekhar</div>
+        <div class="cal-member-chip" data-member="Sreedevi" onclick="toggleCalMember(this)">Sreedevi</div>
+        <div class="cal-member-chip" data-member="Josritha" onclick="toggleCalMember(this)">Josritha</div>
+        <div class="cal-member-chip" data-member="Joshita" onclick="toggleCalMember(this)">Joshita</div>
+      </div>
+    </div>
+    <div class="cal-field">
+      <label>Notes (optional)</label>
+      <textarea class="cal-input" id="calf-notes" rows="2" placeholder="Any details, location, reminders…" style="resize:none;"></textarea>
+    </div>
+    <div class="cal-sheet-actions">
+      <button class="cal-cancel-btn" onclick="closeCalSheet()">Cancel</button>
+      <button class="cal-save-btn" onclick="saveCalEvent()">Save Event</button>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
 <nav id="bottom-nav">
@@ -1073,6 +1433,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <span class="bnav-icon">⏳</span><span>Expiry</span>
       <span class="bnav-badge">2</span>
       <div class="bnav-dot"></div>
+    </div>
+    <div class="bnav-item pressable" id="bnav-calendar" onclick="goPage('calendar')">
+      <span class="bnav-icon">📅</span><span>Calendar</span><div class="bnav-dot"></div>
     </div>
     <div class="bnav-item pressable" id="bnav-search" onclick="goPage('search')">
       <span class="bnav-icon">⌕</span><span>Search</span><div class="bnav-dot"></div>
@@ -1285,12 +1648,13 @@ function goPage(page) {
   window.scrollTo(0,0);
   if(page==='members') { showMembersList(); }
   if(page==='expiry') { setTimeout(animateExpBars,150); }
+  if(page==='calendar') { setTimeout(initCalendar,80); }
 }
 
 // ═══════════════════════════════════════════════════
 // IDEA A — SWIPE GESTURE NAVIGATION
 // ═══════════════════════════════════════════════════
-const PAGE_ORDER = ['dashboard','members','documents','expiry','search'];
+const PAGE_ORDER = ['dashboard','members','documents','expiry','calendar','search'];
 let swipeTouchX=0, swipeTouchY=0, swipeMoved=false;
 let swipeHintTimer=null;
 
@@ -1362,17 +1726,369 @@ function goMemberSection(memberId, tab) {
 // ═══════════════════════════════════════════════════
 // IDEA D — WIDGET HOME SCREEN
 // ═══════════════════════════════════════════════════
+// FEATURE 05 — EMERGENCY QUICK-ACCESS CARD
+// ═══════════════════════════════════════
+const EMG_CONTACTS = [
+  { name:'Rajasekhar Duggireddy', role:'Father · Head of Family', icon:'👨', phone:'+91 98765 43210', msg:true },
+  { name:'Sreedevi Duggireddy',   role:'Mother · Emergency Contact', icon:'👩', phone:'+91 98765 43211', msg:true },
+  { name:'Josritha Duggireddy',   role:'Daughter · KLH Hostel',     icon:'👧', phone:'+91 99887 76655', msg:true },
+  { name:'Joshita Duggireddy',    role:'Daughter · Student',         icon:'🧒', phone:'+91 99887 76656', msg:true },
+];
+const EMG_SERVICES = [
+  { cls:'emg-police',    ico:'👮', num:'100', lbl:'Police' },
+  { cls:'emg-ambulance', ico:'🚑', num:'108', lbl:'Ambulance' },
+  { cls:'emg-fire',      ico:'🚒', num:'101', lbl:'Fire' },
+];
+
+function buildEmgCard() {
+  const collapsed = localStorage.getItem('emg_collapsed') === '1';
+  let contacts = EMG_CONTACTS.map(c => `
+    <div class="emg-contact pressable">
+      <div class="emg-av">${c.icon}</div>
+      <div class="emg-info">
+        <div class="emg-name">${c.name}</div>
+        <div class="emg-role">${c.role}</div>
+      </div>
+      <div class="emg-actions">
+        <a class="emg-btn call" href="tel:${c.phone.replace(/\s/g,'')}" title="Call">📞</a>
+        ${c.msg ? `<a class="emg-btn msg" href="sms:${c.phone.replace(/\s/g,'')}" title="Message">💬</a>` : ''}
+      </div>
+    </div>`).join('');
+  let services = EMG_SERVICES.map(s => `
+    <a class="emg-svc ${s.cls} pressable" href="tel:${s.num}">
+      <div class="emg-svc-ico">${s.ico}</div>
+      <div class="emg-svc-num">${s.num}</div>
+      <div class="emg-svc-lbl">${s.lbl}</div>
+    </a>`).join('');
+  return `
+  <div class="emg-card${collapsed?' emg-collapsed':''}" id="emg-card">
+    <div class="emg-hdr">
+      <div class="emg-hdr-left">
+        <div class="emg-hdr-icon">🆘</div>
+        <div>
+          <div class="emg-hdr-title">Emergency Contacts</div>
+          <div class="emg-hdr-sub">Quick · Direct · Always Ready</div>
+        </div>
+      </div>
+      <div class="emg-toggle" onclick="toggleEmgCard()">${collapsed?'Show':'Hide'}</div>
+    </div>
+    <div class="emg-contacts">${contacts}</div>
+    <div class="emg-services">${services}</div>
+  </div>`;
+}
+
+function toggleEmgCard() {
+  const card = document.getElementById('emg-card');
+  const isCollapsed = card.classList.toggle('emg-collapsed');
+  localStorage.setItem('emg_collapsed', isCollapsed ? '1' : '0');
+  card.querySelector('.emg-toggle').textContent = isCollapsed ? 'Show' : 'Hide';
+}
+
+// ═══════════════════════════════════════
+// FEATURE 06 — FAMILY CALENDAR SYNC
+// ═══════════════════════════════════════
+const CAL_COLORS = {
+  health:'#ff4f4f', travel:'#4f7fff', education:'#a78bfa',
+  finance:'#f0b429', government:'#ff8c42', family:'#3ecf8e',
+  birthday:'#f472b6', other:'#8b93a8'
+};
+const CAL_CAT_ICONS = {
+  health:'🏥', travel:'✈️', education:'🎓', finance:'💰',
+  government:'🏛️', family:'👨‍👩‍👧‍👦', birthday:'🎂', other:'📌'
+};
+const MEMBER_COLORS = {
+  Rajasekhar:'#4f7fff', Sreedevi:'#f472b6',
+  Josritha:'#a78bfa', Joshita:'#3ecf8e', all:'#8b93a8'
+};
+
+// Seed events (stored in localStorage key 'fp_cal_events')
+const SEED_EVENTS = [
+  { id:'e1', title:"Rajasekhar Passport Renewal", date:"2026-04-15", start:"10:00", end:"12:00", cat:"government", color:"#ff8c42", members:["Rajasekhar"], notes:"Bring 2 photos + old passport" },
+  { id:'e2', title:"Josritha Semester Exams Begin", date:"2026-04-20", start:"09:00", end:"", cat:"education", color:"#a78bfa", members:["Josritha"], notes:"KLH Campus" },
+  { id:'e3', title:"Family Health Check-up", date:"2026-03-18", start:"08:30", end:"11:00", cat:"health", color:"#ff4f4f", members:["Rajasekhar","Sreedevi"], notes:"Star Hospitals, Hyderabad" },
+  { id:'e4', title:"Joshita Birthday 🎂", date:"2026-03-25", start:"", end:"", cat:"birthday", color:"#f472b6", members:["all"], notes:"Plan family dinner" },
+  { id:'e5', title:"Sreedevi Visa Appointment", date:"2026-05-10", start:"14:00", end:"15:30", cat:"travel", color:"#4f7fff", members:["Sreedevi"], notes:"US Consulate, Hyderabad" },
+  { id:'e6', title:"Income Tax Filing Deadline", date:"2026-07-31", start:"", end:"", cat:"finance", color:"#f0b429", members:["Rajasekhar"], notes:"Submit via CA" },
+];
+
+let calCurrentDate = new Date();
+let calSelectedDate = null;
+let calFilter = 'all'; // member filter
+let calSelectedColor = '#4f7fff';
+let calEditId = null;
+
+function getCalEvents() {
+  try {
+    const stored = localStorage.getItem('fp_cal_events');
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  localStorage.setItem('fp_cal_events', JSON.stringify(SEED_EVENTS));
+  return SEED_EVENTS;
+}
+
+function saveCalEvents(events) {
+  localStorage.setItem('fp_cal_events', JSON.stringify(events));
+}
+
+function initCalendar() {
+  renderCalGrid();
+  renderCalChips();
+  renderCalEvents(null);
+}
+
+function calNav(dir) {
+  calCurrentDate = new Date(calCurrentDate.getFullYear(), calCurrentDate.getMonth() + dir, 1);
+  renderCalGrid();
+  renderCalEvents(calSelectedDate);
+}
+
+function renderCalGrid() {
+  const year = calCurrentDate.getFullYear();
+  const month = calCurrentDate.getMonth();
+  const label = calCurrentDate.toLocaleDateString('en-IN', { month:'long', year:'numeric' });
+  document.getElementById('cal-month-label').textContent = label;
+
+  const today = new Date();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const daysInPrev = new Date(year, month, 0).getDate();
+
+  const events = getCalEvents();
+  // Build dot map: date-string → [colors]
+  const dotMap = {};
+  events.forEach(ev => {
+    if (!dotMap[ev.date]) dotMap[ev.date] = [];
+    dotMap[ev.date].push(ev.color);
+  });
+
+  let html = '';
+  // Prev month cells
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const d = daysInPrev - i;
+    const ds = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    html += `<div class="cal-cell other-month"><div class="cal-day-num">${d}</div></div>`;
+  }
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+    const isSel = calSelectedDate === ds;
+    const dots = (dotMap[ds]||[]).slice(0,3).map(c=>`<div class="cal-dot" style="background:${c}"></div>`).join('');
+    html += `<div class="cal-cell${isToday?' today':''}${isSel?' selected':''}" onclick="selectCalDate('${ds}')">
+      <div class="cal-day-num">${d}</div>
+      ${dots?`<div class="cal-dot-row">${dots}</div>`:''}
+    </div>`;
+  }
+  // Next month fill
+  const total = firstDay + daysInMonth;
+  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= remaining; d++) {
+    html += `<div class="cal-cell other-month"><div class="cal-day-num">${d}</div></div>`;
+  }
+  document.getElementById('cal-cells').innerHTML = html;
+}
+
+function selectCalDate(ds) {
+  calSelectedDate = calSelectedDate === ds ? null : ds;
+  renderCalGrid();
+  renderCalEvents(calSelectedDate);
+}
+
+function renderCalChips() {
+  const members = ['all','Rajasekhar','Sreedevi','Josritha','Joshita'];
+  const labels = { all:'🌐 All' };
+  let html = members.map(m => {
+    const col = MEMBER_COLORS[m] || '#8b93a8';
+    const lbl = labels[m] || m;
+    return `<div class="cal-chip${calFilter===m?' active':''}" onclick="setCalFilter('${m}')">
+      <div class="cal-chip-dot" style="background:${col}"></div>${lbl}
+    </div>`;
+  }).join('');
+  document.getElementById('cal-chips').innerHTML = html;
+}
+
+function setCalFilter(m) {
+  calFilter = m;
+  renderCalChips();
+  renderCalEvents(calSelectedDate);
+}
+
+function renderCalEvents(selectedDate) {
+  const events = getCalEvents();
+  let filtered = events.filter(ev => {
+    if (calFilter !== 'all') {
+      if (!ev.members.includes(calFilter) && !ev.members.includes('all')) return false;
+    }
+    if (selectedDate) return ev.date === selectedDate;
+    return true;
+  });
+  // Sort by date
+  filtered.sort((a,b) => a.date.localeCompare(b.date));
+
+  const titleEl = document.getElementById('cal-events-title');
+  if (selectedDate) {
+    const d = new Date(selectedDate + 'T12:00:00');
+    titleEl.textContent = d.toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric'});
+  } else {
+    titleEl.textContent = 'Upcoming Events';
+  }
+
+  if (!filtered.length) {
+    document.getElementById('cal-events-list').innerHTML = `<div class="cal-no-events"><span>📭</span>${selectedDate?'No events on this day':'No events found'}</div>`;
+    return;
+  }
+
+  const today = new Date().toISOString().slice(0,10);
+  let html = filtered.map(ev => {
+    const d = new Date(ev.date + 'T12:00:00');
+    const dStr = d.toLocaleDateString('en-IN',{month:'short',day:'numeric',weekday:'short'});
+    const isPast = ev.date < today;
+    const avatars = ev.members.slice(0,3).map(m => {
+      const icons = {Rajasekhar:'👨',Sreedevi:'👩',Josritha:'👧',Joshita:'🧒',all:'👨‍👩‍👧‍👦'};
+      return icons[m]||'👤';
+    }).join('');
+    const catIcon = CAL_CAT_ICONS[ev.cat]||'📌';
+    const time = ev.start ? `${ev.start}${ev.end?'–'+ev.end:''}` : 'All day';
+    return `<div class="cal-event-item pressable" onclick="editCalEvent('${ev.id}')" style="opacity:${isPast?.6:1}">
+      <div class="cal-event-bar" style="background:${ev.color}"></div>
+      <div class="cal-event-body">
+        <div class="cal-event-title">${catIcon} ${ev.title}</div>
+        <div class="cal-event-meta">${dStr} · ${time}</div>
+        ${ev.notes?`<div class="cal-event-tags"><span class="cal-event-tag">📝 ${ev.notes.slice(0,40)}${ev.notes.length>40?'…':''}</span></div>`:''}
+      </div>
+      <div class="cal-event-right">
+        <div class="cal-event-time">${isPast?'<span style="color:var(--text3)">Past</span>':''}</div>
+        <div class="cal-event-avatar">${avatars}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('cal-events-list').innerHTML = html;
+}
+
+function openCalSheet(prefillDate) {
+  calEditId = null;
+  document.getElementById('cal-sheet-title').textContent = 'Add Event';
+  document.getElementById('calf-title').value = '';
+  document.getElementById('calf-date').value = prefillDate || calSelectedDate || new Date().toISOString().slice(0,10);
+  document.getElementById('calf-start').value = '';
+  document.getElementById('calf-end').value = '';
+  document.getElementById('calf-cat').value = 'other';
+  document.getElementById('calf-notes').value = '';
+  calSelectedColor = '#4f7fff';
+  document.querySelectorAll('.cal-color-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.color === calSelectedColor);
+  });
+  document.querySelectorAll('.cal-member-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.member === 'all');
+  });
+  document.getElementById('cal-sheet').classList.remove('hidden');
+}
+
+function closeCalSheet() {
+  document.getElementById('cal-sheet').classList.add('hidden');
+}
+
+function editCalEvent(id) {
+  const events = getCalEvents();
+  const ev = events.find(e => e.id === id);
+  if (!ev) return;
+  calEditId = id;
+  document.getElementById('cal-sheet-title').textContent = 'Edit Event';
+  document.getElementById('calf-title').value = ev.title;
+  document.getElementById('calf-date').value = ev.date;
+  document.getElementById('calf-start').value = ev.start||'';
+  document.getElementById('calf-end').value = ev.end||'';
+  document.getElementById('calf-cat').value = ev.cat||'other';
+  document.getElementById('calf-notes').value = ev.notes||'';
+  calSelectedColor = ev.color;
+  document.querySelectorAll('.cal-color-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.color === ev.color);
+  });
+  document.querySelectorAll('.cal-member-chip').forEach(c => {
+    c.classList.toggle('active', ev.members.includes(c.dataset.member) || (c.dataset.member==='all' && ev.members.includes('all')));
+  });
+  document.getElementById('cal-sheet').classList.remove('hidden');
+}
+
+function saveCalEvent() {
+  const title = document.getElementById('calf-title').value.trim();
+  const date = document.getElementById('calf-date').value;
+  if (!title || !date) { showToast('⚠️ Title and date are required'); return; }
+  const start = document.getElementById('calf-start').value;
+  const end = document.getElementById('calf-end').value;
+  const cat = document.getElementById('calf-cat').value;
+  const notes = document.getElementById('calf-notes').value.trim();
+  const members = [...document.querySelectorAll('.cal-member-chip.active')].map(c => c.dataset.member);
+
+  const events = getCalEvents();
+  if (calEditId) {
+    const idx = events.findIndex(e => e.id === calEditId);
+    if (idx > -1) events[idx] = {...events[idx], title, date, start, end, cat, color:calSelectedColor, members, notes};
+  } else {
+    events.push({ id:'e'+Date.now(), title, date, start, end, cat, color:calSelectedColor, members, notes });
+  }
+  saveCalEvents(events);
+  closeCalSheet();
+  renderCalGrid();
+  renderCalEvents(calSelectedDate);
+  showToast(calEditId ? '✏️ Event updated' : '📅 Event added');
+  // Refresh dashboard cal widget
+  buildCalMiniWidget && buildCalMiniWidget();
+}
+
+function selectCalColor(color, el) {
+  calSelectedColor = color;
+  document.querySelectorAll('.cal-color-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleCalMember(el) {
+  if (el.dataset.member === 'all') {
+    document.querySelectorAll('.cal-member-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  } else {
+    document.querySelector('.cal-member-chip[data-member="all"]').classList.remove('active');
+    el.classList.toggle('active');
+    if (![...document.querySelectorAll('.cal-member-chip')].some(c => c.classList.contains('active'))) {
+      document.querySelector('.cal-member-chip[data-member="all"]').classList.add('active');
+    }
+  }
+}
+
+// Build mini cal widget for dashboard
+function buildCalMiniWidget() {
+  const events = getCalEvents();
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = events.filter(ev => ev.date >= today).sort((a,b) => a.date.localeCompare(b.date)).slice(0,4);
+  if (!upcoming.length) return `<div class="cal-mini-empty">No upcoming events</div>`;
+  const icons = {Rajasekhar:'👨',Sreedevi:'👩',Josritha:'👧',Joshita:'🧒',all:'👨‍👩‍👧‍👦'};
+  return upcoming.map(ev => {
+    const d = new Date(ev.date + 'T12:00:00');
+    const dStr = d.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
+    const av = icons[ev.members[0]]||'📅';
+    return `<div class="cal-mini-event pressable" onclick="goPage('calendar')">
+      <div class="cal-mini-bar" style="background:${ev.color}"></div>
+      <div class="cal-mini-body">
+        <div class="cal-mini-title">${ev.title}</div>
+        <div class="cal-mini-meta">${dStr}${ev.start?' · '+ev.start:''}</div>
+      </div>
+      <div class="cal-mini-av">${av}</div>
+    </div>`;
+  }).join('');
+}
+
 const WIDGET_DEFS = {
   alert:   { id:'alert',   icon:'⚠️',  name:'Alert Banner',        desc:'Property tax & urgent notices' },
   family:  { id:'family',  icon:'👨‍👩‍👧‍👦', name:'Family at a Glance',  desc:'Mini cards for all 4 members' },
   urgent:  { id:'urgent',  icon:'⏳',  name:'Urgent Expiry Items',  desc:'Top 5 expiring documents' },
   actions: { id:'actions', icon:'⚡',  name:'Quick Actions',        desc:'One-tap shortcuts to key tasks' },
-  att:     { id:'att',     icon:'🎓',  name:'Attendance Tracker',   desc:'Josritha\'s subject-wise attendance' },
+  att:       { id:'att',          icon:'🎓',  name:'Attendance Tracker',   desc:'Josritha\'s subject-wise attendance' },
+  emergency: { id:'emergency',    icon:'🆘',  name:'Emergency Contacts',   desc:'One-tap family contacts & emergency services' },
+  cal_mini:  { id:'cal_mini',     icon:'📅',  name:'Family Calendar',      desc:'Upcoming family events at a glance' },
 };
-const DEFAULT_WIDGETS=['alert','family','urgent','actions','att'];
+const DEFAULT_WIDGETS=['alert','family','urgent','emergency','cal_mini','actions','att'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
-let dragSrcIdx=null;
 
 function loadWidgetOrder() {
   try { const s=localStorage.getItem('fp_widgets'); if(s) widgetOrder=JSON.parse(s); } catch(e){}
@@ -1380,6 +2096,12 @@ function loadWidgetOrder() {
 function saveWidgetOrder() {
   try { localStorage.setItem('fp_widgets',JSON.stringify(widgetOrder)); } catch(e){}
 }
+
+// ── Touch-drag state ──────────────────────────────────────────────
+let tdSrcIdx=null;       // index of item being dragged
+let tdGhost=null;        // cloned ghost element
+let tdOffX=0,tdOffY=0;  // finger offset within the item
+let tdLastTarget=null;   // last drop-target item
 
 function renderWidgets() {
   const container=document.getElementById('widget-container');
@@ -1392,34 +2114,158 @@ function renderWidgets() {
     item.className='widget-item'+(editMode?' edit-mode':'');
     item.dataset.wid=wid;
     item.dataset.idx=i;
-    // Delete btn
+
+    // ── Delete button ──
     const del=document.createElement('div');
     del.className='w-del'; del.textContent='−';
     del.onclick=()=>removeWidget(wid);
     item.appendChild(del);
-    // Drag handle
+
+    // ── Drag handle (touch-drag only, no HTML5 drag) ──
     const drag=document.createElement('div');
     drag.className='w-drag'; drag.textContent='⠿';
-    drag.draggable=true;
-    drag.addEventListener('dragstart',e=>{dragSrcIdx=i;e.dataTransfer.effectAllowed='move';});
+    drag.setAttribute('aria-label','Drag to reorder');
+
+    // Touch events on the handle
+    drag.addEventListener('touchstart', e=>{
+      if(!editMode) return;
+      e.preventDefault();
+      e.stopPropagation();
+      tdStartDrag(e, item, i);
+    }, {passive:false});
+
+    // Mouse fallback for desktop
+    drag.addEventListener('mousedown', e=>{
+      if(!editMode) return;
+      tdStartDragMouse(e, item, i);
+    });
+
     item.appendChild(drag);
-    // Widget body
+
+    // ── Widget body ──
     const body=document.createElement('div');
     body.innerHTML=buildWidgetHTML(wid);
     item.appendChild(body);
-    // Drop target
-    item.addEventListener('dragover',e=>{e.preventDefault();item.classList.add('drag-over');});
-    item.addEventListener('dragleave',()=>item.classList.remove('drag-over'));
-    item.addEventListener('drop',e=>{
-      e.preventDefault();item.classList.remove('drag-over');
-      if(dragSrcIdx===null||dragSrcIdx===i) return;
-      const moved=widgetOrder.splice(dragSrcIdx,1)[0];
-      widgetOrder.splice(i,0,moved);
-      saveWidgetOrder();renderWidgets();initWidgetDynamic();
-    });
+
     container.appendChild(item);
   });
+
+  // Global touch/mouse move & end — attached once on document
+  initTouchDragListeners();
   initWidgetDynamic();
+}
+
+// Attach global listeners once
+let tdListenersAttached=false;
+function initTouchDragListeners() {
+  if(tdListenersAttached) return;
+  tdListenersAttached=true;
+
+  document.addEventListener('touchmove', e=>{
+    if(tdSrcIdx===null) return;
+    e.preventDefault();
+    const t=e.touches[0];
+    tdMoveDrag(t.clientX, t.clientY);
+  }, {passive:false});
+
+  document.addEventListener('touchend', e=>{
+    if(tdSrcIdx===null) return;
+    tdEndDrag();
+  });
+
+  document.addEventListener('mousemove', e=>{
+    if(tdSrcIdx===null) return;
+    tdMoveDrag(e.clientX, e.clientY);
+  });
+
+  document.addEventListener('mouseup', e=>{
+    if(tdSrcIdx===null) return;
+    tdEndDrag();
+  });
+}
+
+function tdStartDrag(e, item, idx) {
+  tdSrcIdx=idx;
+  const touch=e.touches[0];
+  const rect=item.getBoundingClientRect();
+  tdOffX=touch.clientX-rect.left;
+  tdOffY=touch.clientY-rect.top;
+  tdCreateGhost(item, rect, touch.clientX, touch.clientY);
+  item.classList.add('is-dragging');
+  // Haptic feedback on iOS
+  if(navigator.vibrate) navigator.vibrate(10);
+}
+
+function tdStartDragMouse(e, item, idx) {
+  tdSrcIdx=idx;
+  const rect=item.getBoundingClientRect();
+  tdOffX=e.clientX-rect.left;
+  tdOffY=e.clientY-rect.top;
+  tdCreateGhost(item, rect, e.clientX, e.clientY);
+  item.classList.add('is-dragging');
+}
+
+function tdCreateGhost(item, rect, cx, cy) {
+  // Remove any stale ghost
+  const old=document.getElementById('drag-ghost');
+  if(old) old.remove();
+
+  tdGhost=item.cloneNode(true);
+  tdGhost.id='drag-ghost';
+  tdGhost.style.cssText=`
+    width:${rect.width}px;
+    left:${cx-tdOffX}px;
+    top:${cy-tdOffY}px;
+  `;
+  // hide control buttons on ghost
+  tdGhost.querySelectorAll('.w-del,.w-drag').forEach(el=>el.style.display='none');
+  document.body.appendChild(tdGhost);
+}
+
+function tdMoveDrag(cx, cy) {
+  if(!tdGhost || tdSrcIdx===null) return;
+  tdGhost.style.left=(cx-tdOffX)+'px';
+  tdGhost.style.top=(cy-tdOffY)+'px';
+
+  // Find which widget-item the finger is over (excluding the dragging one)
+  const container=document.getElementById('widget-container');
+  if(!container) return;
+  const items=[...container.querySelectorAll('.widget-item:not(.is-dragging)')];
+
+  // Clear previous target
+  if(tdLastTarget) { tdLastTarget.classList.remove('drop-target'); tdLastTarget=null; }
+
+  // Use elementFromPoint on a slightly interior coordinate
+  const el=document.elementFromPoint(cx, cy);
+  if(!el) return;
+  const targetItem=el.closest('.widget-item');
+  if(targetItem && !targetItem.classList.contains('is-dragging')) {
+    targetItem.classList.add('drop-target');
+    tdLastTarget=targetItem;
+  }
+}
+
+function tdEndDrag() {
+  if(tdGhost) { tdGhost.remove(); tdGhost=null; }
+
+  const container=document.getElementById('widget-container');
+  if(container) {
+    // Clear dragging/target classes
+    container.querySelectorAll('.is-dragging').forEach(el=>el.classList.remove('is-dragging'));
+    if(tdLastTarget) {
+      const targetIdx=parseInt(tdLastTarget.dataset.idx);
+      if(!isNaN(targetIdx) && targetIdx!==tdSrcIdx) {
+        const moved=widgetOrder.splice(tdSrcIdx,1)[0];
+        widgetOrder.splice(targetIdx,0,moved);
+        saveWidgetOrder();
+        renderWidgets();
+        initWidgetDynamic();
+      }
+      tdLastTarget.classList.remove('drop-target');
+      tdLastTarget=null;
+    }
+  }
+  tdSrcIdx=null;
 }
 
 function buildWidgetHTML(wid) {
@@ -1458,7 +2304,14 @@ function buildWidgetHTML(wid) {
       </div>
       <div style="font-size:10px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:8px;">Josritha · KL Univ · Even Sem 2025–26</div>
       <div style="display:flex;flex-direction:column;gap:8px;" id="att-cards"></div></div>`;
-    default: return '';
+    case 'emergency': return buildEmgCard();
+    case 'cal_mini': return `<div class="w-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="w-hdr" style="margin:0">📅 &nbsp;Family Calendar</div>
+        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">View All →</span>
+      </div>
+      <div class="cal-mini-wrap" id="cal-mini-body"></div>
+    </div>`;
   }
 }
 
@@ -1522,6 +2375,9 @@ function initWidgetDynamic() {
     }).join('');
     setTimeout(()=>{document.querySelectorAll('#att-cards .att-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');},80);
   }
+  // Calendar mini widget
+  const calMiniBody = document.getElementById('cal-mini-body');
+  if (calMiniBody) calMiniBody.innerHTML = buildCalMiniWidget ? buildCalMiniWidget() : '';
   // Count-up
   document.querySelectorAll('[data-count]').forEach(el=>{
     const target=parseInt(el.dataset.count);const dur=700;const start=Date.now();
@@ -2456,6 +3312,8 @@ function checkPinSession() {
   // PIN disabled — skip directly to portal
   document.getElementById('pin-lock').classList.add('hidden');
 }
+
+// ═══════════════════════════════════════
+
+
 </script>
-</body>
-</html>
