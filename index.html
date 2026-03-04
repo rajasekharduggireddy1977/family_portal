@@ -665,19 +665,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .wp-cancel{text-align:center;margin-top:4px;cursor:pointer;color:var(--text2);font-size:12px;padding:10px;}
 /* ════════════════════════════════════════════
    PWA STANDALONE (Home Screen) MODE
-   Adds extra breathing room below topbar since
-   there is no browser URL bar to create separation
+   Topbar height already expands via calc(--topbar-h + --sat)
+   so content sits naturally below it — no extra padding needed.
 ════════════════════════════════════════════ */
-.pwa-standalone #content .dash-wrap,
-.pwa-standalone #content .docs-wrap,
-.pwa-standalone #content .expiry-wrap,
-.pwa-standalone #content .cal-wrap,
-.pwa-standalone #content .search-wrap,
-.pwa-standalone #content .members-view-toggle {
-  padding-top: max(16px, calc(var(--sat) + 8px));
-}
-/* Standalone: members page top toggle needs more space */
-.pwa-standalone .members-view-toggle { padding-top: 16px; }
 .stagger>*{animation:fadeUp .35s ease both;}
 .stagger>*:nth-child(1){animation-delay:.03s;}
 .stagger>*:nth-child(2){animation-delay:.07s;}
