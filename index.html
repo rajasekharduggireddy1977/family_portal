@@ -96,7 +96,7 @@
 .theme-toggle:hover{border-color:var(--gold);transform:rotate(15deg);}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{height:100%;overflow-x:hidden;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;overscroll-behavior-y:none;}
 body::before{content:'';position:fixed;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(79,127,255,.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(240,180,41,.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
 
@@ -109,6 +109,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   background:rgba(7,8,15,.92);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border2);
+  box-shadow:0 2px 16px rgba(0,0,0,.35);
   display:flex;align-items:center;padding:0 16px;
   padding-top:env(safe-area-inset-top);
   justify-content:space-between;
@@ -134,6 +135,12 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   border-top:1px solid var(--border2);
   padding:8px 0;
   padding-bottom:max(8px, env(safe-area-inset-bottom));
+  /* iOS Safari: prevent scroll-jitter on fixed elements */
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+  will-change:transform;
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
 }
 .bnav-inner{display:flex;justify-content:space-around;align-items:center;max-width:480px;margin:0 auto;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;font-family:'Inter',sans-serif;position:relative;min-width:52px;transition:color .18s;border-radius:10px;}
@@ -150,10 +157,18 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 #content{
   position:relative;z-index:1;
   padding-bottom:var(--nav-h);
-  min-height:calc(100vh - var(--topbar-h));
+  min-height:calc(100dvh - var(--topbar-h));
 }
 .page{display:none;}
 .page.active{display:block;animation:pageEnter .3s ease both;}
+/* Mobile: breathing room between topbar and page content on every page */
+@media (max-width:767px){
+  .page.active > *:first-child{ margin-top:4px; }
+  .members-view-toggle,.expiry-hdr,.docs-wrap,.search-wrap,.cal-wrap,.expiry-wrap{
+    padding-top:12px;
+  }
+  .dash-wrap{ padding-top:16px; }
+}
 @keyframes pageEnter{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
 /* ═══════════════════════════════════════
@@ -189,7 +204,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* ════════════════════════════════════════════
    DASHBOARD PAGE
 ════════════════════════════════════════════ */
-.dash-wrap{padding:14px 14px 0;display:flex;flex-direction:column;gap:16px;}
+.dash-wrap{padding:16px 14px 0;display:flex;flex-direction:column;gap:16px;}
 .dash-section{display:flex;flex-direction:column;gap:6px;}
 
 /* Greeting */
@@ -1001,6 +1016,14 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 }
 .cal-member-chip.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue2);}
 .cal-sheet-actions{display:flex;gap:8px;margin-top:8px;}
+.cal-delete-btn{
+  padding:13px 16px;border-radius:12px;
+  background:var(--red-dim);border:1px solid rgba(255,79,79,.35);
+  color:var(--red);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;
+}
+.cal-delete-btn:hover{background:rgba(255,79,79,.22);border-color:var(--red);}
+.cal-delete-btn.confirm{background:var(--red);color:#fff;border-color:var(--red);}
 .cal-save-btn{
   flex:1;padding:13px;border-radius:12px;
   background:linear-gradient(135deg,var(--blue),#3a6aff);
@@ -1399,9 +1422,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <div class="cal-member-row" id="cal-member-row">
         <div class="cal-member-chip active" data-member="all" onclick="toggleCalMember(this)">All</div>
         <div class="cal-member-chip" data-member="Rajasekhar" onclick="toggleCalMember(this)">Rajasekhar</div>
-        <div class="cal-member-chip" data-member="Sreedevi" onclick="toggleCalMember(this)">Sreedevi</div>
+        <div class="cal-member-chip" data-member="Vasundhara" onclick="toggleCalMember(this)">Vasundhara</div>
         <div class="cal-member-chip" data-member="Josritha" onclick="toggleCalMember(this)">Josritha</div>
-        <div class="cal-member-chip" data-member="Joshita" onclick="toggleCalMember(this)">Joshita</div>
+        <div class="cal-member-chip" data-member="Jeevan" onclick="toggleCalMember(this)">Jeevan</div>
       </div>
     </div>
     <div class="cal-field">
@@ -1409,6 +1432,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <textarea class="cal-input" id="calf-notes" rows="2" placeholder="Any details, location, reminders…" style="resize:none;"></textarea>
     </div>
     <div class="cal-sheet-actions">
+      <button class="cal-delete-btn" id="cal-delete-btn" onclick="confirmDeleteCalEvent()" style="display:none">🗑 Delete</button>
       <button class="cal-cancel-btn" onclick="closeCalSheet()">Cancel</button>
       <button class="cal-save-btn" onclick="saveCalEvent()">Save Event</button>
     </div>
@@ -1729,10 +1753,10 @@ function goMemberSection(memberId, tab) {
 // FEATURE 05 — EMERGENCY QUICK-ACCESS CARD
 // ═══════════════════════════════════════
 const EMG_CONTACTS = [
-  { name:'Rajasekhar Duggireddy', role:'Father · Head of Family', icon:'👨', phone:'+91 98765 43210', msg:true },
-  { name:'Sreedevi Duggireddy',   role:'Mother · Emergency Contact', icon:'👩', phone:'+91 98765 43211', msg:true },
-  { name:'Josritha Duggireddy',   role:'Daughter · KLH Hostel',     icon:'👧', phone:'+91 99887 76655', msg:true },
-  { name:'Joshita Duggireddy',    role:'Daughter · Student',         icon:'🧒', phone:'+91 99887 76656', msg:true },
+  { name:'Rajasekhar Duggireddy', role:'Father · Head of Family',  icon:'👨', phone:'+91 96406 56595', msg:true },
+  { name:'Vasundhara Duggireddy', role:'Mother · Spouse',          icon:'👩', phone:'+91 96529 48966', msg:true },
+  { name:'Josritha Duggireddy',   role:'Daughter · KLH Campus',    icon:'👧', phone:'', msg:false },
+  { name:'Jeevan Duggireddy',     role:'Son · Student',            icon:'👦', phone:'', msg:false },
 ];
 const EMG_SERVICES = [
   { cls:'emg-police',    ico:'👮', num:'100', lbl:'Police' },
@@ -1797,18 +1821,18 @@ const CAL_CAT_ICONS = {
   government:'🏛️', family:'👨‍👩‍👧‍👦', birthday:'🎂', other:'📌'
 };
 const MEMBER_COLORS = {
-  Rajasekhar:'#4f7fff', Sreedevi:'#f472b6',
-  Josritha:'#a78bfa', Joshita:'#3ecf8e', all:'#8b93a8'
+  Rajasekhar:'#4f7fff', Vasundhara:'#f472b6',
+  Josritha:'#a78bfa', Jeevan:'#3ecf8e', all:'#8b93a8'
 };
 
 // Seed events (stored in localStorage key 'fp_cal_events')
 const SEED_EVENTS = [
-  { id:'e1', title:"Rajasekhar Passport Renewal", date:"2026-04-15", start:"10:00", end:"12:00", cat:"government", color:"#ff8c42", members:["Rajasekhar"], notes:"Bring 2 photos + old passport" },
-  { id:'e2', title:"Josritha Semester Exams Begin", date:"2026-04-20", start:"09:00", end:"", cat:"education", color:"#a78bfa", members:["Josritha"], notes:"KLH Campus" },
-  { id:'e3', title:"Family Health Check-up", date:"2026-03-18", start:"08:30", end:"11:00", cat:"health", color:"#ff4f4f", members:["Rajasekhar","Sreedevi"], notes:"Star Hospitals, Hyderabad" },
-  { id:'e4', title:"Joshita Birthday 🎂", date:"2026-03-25", start:"", end:"", cat:"birthday", color:"#f472b6", members:["all"], notes:"Plan family dinner" },
-  { id:'e5', title:"Sreedevi Visa Appointment", date:"2026-05-10", start:"14:00", end:"15:30", cat:"travel", color:"#4f7fff", members:["Sreedevi"], notes:"US Consulate, Hyderabad" },
-  { id:'e6', title:"Income Tax Filing Deadline", date:"2026-07-31", start:"", end:"", cat:"finance", color:"#f0b429", members:["Rajasekhar"], notes:"Submit via CA" },
+  { id:'e1', title:"Rajasekhar Passport Renewal",   date:"2026-04-15", start:"10:00", end:"12:00", cat:"government", color:"#ff8c42", members:["Rajasekhar"], notes:"Bring 2 photos + old passport" },
+  { id:'e2', title:"Josritha Semester Exams Begin", date:"2026-04-20", start:"09:00", end:"",      cat:"education",  color:"#a78bfa", members:["Josritha"],   notes:"KLH Campus" },
+  { id:'e3', title:"Family Health Check-up",        date:"2026-03-18", start:"08:30", end:"11:00", cat:"health",     color:"#ff4f4f", members:["Rajasekhar","Vasundhara"], notes:"Star Hospitals, Hyderabad" },
+  { id:'e4', title:"Jeevan Birthday 🎂",            date:"2026-08-22", start:"",      end:"",      cat:"birthday",   color:"#f472b6", members:["all"],        notes:"Plan family celebration" },
+  { id:'e5', title:"Vasundhara Visa Appointment",   date:"2026-05-10", start:"14:00", end:"15:30", cat:"travel",     color:"#4f7fff", members:["Vasundhara"], notes:"US Consulate, Hyderabad" },
+  { id:'e6', title:"Income Tax Filing Deadline",    date:"2026-07-31", start:"",      end:"",      cat:"finance",    color:"#f0b429", members:["Rajasekhar"], notes:"Submit via CA" },
 ];
 
 let calCurrentDate = new Date();
@@ -1817,13 +1841,17 @@ let calFilter = 'all'; // member filter
 let calSelectedColor = '#4f7fff';
 let calEditId = null;
 
+const CAL_SEED_VERSION = 'v2'; // bump to force re-seed with corrected names
 function getCalEvents() {
   try {
+    const ver = localStorage.getItem('fp_cal_version');
     const stored = localStorage.getItem('fp_cal_events');
-    if (stored) return JSON.parse(stored);
+    if (stored && ver === CAL_SEED_VERSION) return JSON.parse(stored);
   } catch(e) {}
+  // First run or stale version — seed fresh
   localStorage.setItem('fp_cal_events', JSON.stringify(SEED_EVENTS));
-  return SEED_EVENTS;
+  localStorage.setItem('fp_cal_version', CAL_SEED_VERSION);
+  return JSON.parse(JSON.stringify(SEED_EVENTS));
 }
 
 function saveCalEvents(events) {
@@ -1895,7 +1923,7 @@ function selectCalDate(ds) {
 }
 
 function renderCalChips() {
-  const members = ['all','Rajasekhar','Sreedevi','Josritha','Joshita'];
+  const members = ['all','Rajasekhar','Vasundhara','Josritha','Jeevan'];
   const labels = { all:'🌐 All' };
   let html = members.map(m => {
     const col = MEMBER_COLORS[m] || '#8b93a8';
@@ -1944,7 +1972,7 @@ function renderCalEvents(selectedDate) {
     const dStr = d.toLocaleDateString('en-IN',{month:'short',day:'numeric',weekday:'short'});
     const isPast = ev.date < today;
     const avatars = ev.members.slice(0,3).map(m => {
-      const icons = {Rajasekhar:'👨',Sreedevi:'👩',Josritha:'👧',Joshita:'🧒',all:'👨‍👩‍👧‍👦'};
+      const icons = {Rajasekhar:'👨',Vasundhara:'👩',Josritha:'👧',Jeevan:'👦',all:'👨‍👩‍👧‍👦'};
       return icons[m]||'👤';
     }).join('');
     const catIcon = CAL_CAT_ICONS[ev.cat]||'📌';
@@ -1981,11 +2009,48 @@ function openCalSheet(prefillDate) {
   document.querySelectorAll('.cal-member-chip').forEach(c => {
     c.classList.toggle('active', c.dataset.member === 'all');
   });
+  // Hide delete button when adding new
+  const delBtn = document.getElementById('cal-delete-btn');
+  if(delBtn){ delBtn.style.display='none'; delBtn.classList.remove('confirm'); delBtn.textContent='🗑 Delete'; }
   document.getElementById('cal-sheet').classList.remove('hidden');
 }
 
 function closeCalSheet() {
   document.getElementById('cal-sheet').classList.add('hidden');
+  // Reset delete button state
+  const delBtn = document.getElementById('cal-delete-btn');
+  if(delBtn){ delBtn.classList.remove('confirm'); delBtn.textContent='🗑 Delete'; }
+}
+
+let _deleteConfirmTimer = null;
+function confirmDeleteCalEvent() {
+  const delBtn = document.getElementById('cal-delete-btn');
+  if (!delBtn) return;
+  if (delBtn.classList.contains('confirm')) {
+    // Second tap — execute delete
+    clearTimeout(_deleteConfirmTimer);
+    deleteCalEvent(calEditId);
+  } else {
+    // First tap — arm the button
+    delBtn.classList.add('confirm');
+    delBtn.textContent = '⚠️ Confirm';
+    _deleteConfirmTimer = setTimeout(() => {
+      delBtn.classList.remove('confirm');
+      delBtn.textContent = '🗑 Delete';
+    }, 3000);
+  }
+}
+
+function deleteCalEvent(id) {
+  if (!id) return;
+  const events = getCalEvents().filter(e => e.id !== id);
+  saveCalEvents(events);
+  closeCalSheet();
+  renderCalGrid();
+  renderCalEvents(calSelectedDate);
+  const calMiniBody = document.getElementById('cal-mini-body');
+  if (calMiniBody) calMiniBody.innerHTML = buildCalMiniWidget();
+  showToast('🗑 Event deleted');
 }
 
 function editCalEvent(id) {
@@ -2007,6 +2072,9 @@ function editCalEvent(id) {
   document.querySelectorAll('.cal-member-chip').forEach(c => {
     c.classList.toggle('active', ev.members.includes(c.dataset.member) || (c.dataset.member==='all' && ev.members.includes('all')));
   });
+  // Show delete button when editing
+  const delBtn = document.getElementById('cal-delete-btn');
+  if(delBtn){ delBtn.style.display=''; delBtn.classList.remove('confirm'); delBtn.textContent='🗑 Delete'; }
   document.getElementById('cal-sheet').classList.remove('hidden');
 }
 
@@ -2061,7 +2129,7 @@ function buildCalMiniWidget() {
   const today = new Date().toISOString().slice(0,10);
   const upcoming = events.filter(ev => ev.date >= today).sort((a,b) => a.date.localeCompare(b.date)).slice(0,4);
   if (!upcoming.length) return `<div class="cal-mini-empty">No upcoming events</div>`;
-  const icons = {Rajasekhar:'👨',Sreedevi:'👩',Josritha:'👧',Joshita:'🧒',all:'👨‍👩‍👧‍👦'};
+  const icons = {Rajasekhar:'👨',Vasundhara:'👩',Josritha:'👧',Jeevan:'👦',all:'👨‍👩‍👧‍👦'};
   return upcoming.map(ev => {
     const d = new Date(ev.date + 'T12:00:00');
     const dStr = d.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
@@ -2090,8 +2158,16 @@ const DEFAULT_WIDGETS=['alert','family','urgent','emergency','cal_mini','actions
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
+const WIDGET_VERSION = 'v2';
 function loadWidgetOrder() {
-  try { const s=localStorage.getItem('fp_widgets'); if(s) widgetOrder=JSON.parse(s); } catch(e){}
+  try {
+    const ver = localStorage.getItem('fp_widgets_ver');
+    const s = localStorage.getItem('fp_widgets');
+    if (s && ver === WIDGET_VERSION) { widgetOrder = JSON.parse(s); return; }
+  } catch(e) {}
+  // Fresh or stale — use default so new widgets are visible
+  widgetOrder = [...DEFAULT_WIDGETS];
+  localStorage.setItem('fp_widgets_ver', WIDGET_VERSION);
 }
 function saveWidgetOrder() {
   try { localStorage.setItem('fp_widgets',JSON.stringify(widgetOrder)); } catch(e){}
