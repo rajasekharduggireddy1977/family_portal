@@ -2106,7 +2106,7 @@ const FAM_SUMMARIES = {
 const SECTION_TABS = {
   rajasekhar:['identity','employment','education','finance','insurance','property'],
   vasundhara:['identity','vehicle','finance','insurance','property'],
-  josritha:['identity','education','insurance'],
+  josritha:['identity','education','insurance','academics'],
   jeevan:['identity','finance','insurance']
 };
 
@@ -2117,7 +2117,8 @@ const SECTION_META = {
   finance:{icon:'🏦',label:'Finance'},
   insurance:{icon:'🩺',label:'Insurance'},
   property:{icon:'🏠',label:'Property'},
-  vehicle:{icon:'🚗',label:'Vehicle'}
+  vehicle:{icon:'🚗',label:'Vehicle'},
+  academics:{icon:'📊',label:'Academics'}
 };
 
 const TYPE_COLORS = {Identity:'var(--blue2)',Finance:'var(--green)',Insurance:'var(--gold)',Education:'var(--purple)',Property:'var(--teal)',Vehicle:'var(--blue2)',Employment:'var(--gold)',Family:'var(--pink)'};
@@ -2363,13 +2364,23 @@ const MEMBER_COLORS = {
 };
 
 // Seed events (stored in localStorage key 'fp_cal_events')
+// SEED_VER: v2 — added insurance/property tracking events for Rajasekhar
+const SEED_VER = 'v2';
 const SEED_EVENTS = [
-  { id:'e1', title:"Rajasekhar Passport Renewal",   date:"2026-04-15", start:"10:00", end:"12:00", cat:"government", color:"#ff8c42", members:["Rajasekhar"], notes:"Bring 2 photos + old passport" },
-  { id:'e2', title:"Josritha Semester Exams Begin", date:"2026-04-20", start:"09:00", end:"",      cat:"education",  color:"#a78bfa", members:["Josritha"],   notes:"KLH Campus" },
-  { id:'e3', title:"Family Health Check-up",        date:"2026-03-18", start:"08:30", end:"11:00", cat:"health",     color:"#ff4f4f", members:["Rajasekhar","Vasundhara"], notes:"Star Hospitals, Hyderabad" },
-  { id:'e4', title:"Jeevan Birthday 🎂",            date:"2026-08-22", start:"",      end:"",      cat:"birthday",   color:"#f472b6", members:["all"],        notes:"Plan family celebration" },
-  { id:'e5', title:"Vasundhara Visa Appointment",   date:"2026-05-10", start:"14:00", end:"15:30", cat:"travel",     color:"#4f7fff", members:["Vasundhara"], notes:"US Consulate, Hyderabad" },
-  { id:'e6', title:"Income Tax Filing Deadline",    date:"2026-07-31", start:"",      end:"",      cat:"finance",    color:"#f0b429", members:["Rajasekhar"], notes:"Submit via CA" },
+  { id:'e1', title:"Rajasekhar Passport Renewal",          date:"2026-04-15", start:"10:00", end:"12:00", cat:"government", color:"#ff8c42", members:["Rajasekhar"], notes:"Bring 2 photos + old passport" },
+  { id:'e2', title:"Josritha Semester Exams Begin",        date:"2026-04-20", start:"09:00", end:"",      cat:"education",  color:"#a78bfa", members:["Josritha"],   notes:"KLH Campus" },
+  { id:'e3', title:"Family Health Check-up",               date:"2026-03-18", start:"08:30", end:"11:00", cat:"health",     color:"#ff4f4f", members:["Rajasekhar","Vasundhara"], notes:"Star Hospitals, Hyderabad" },
+  { id:'e4', title:"Jeevan Birthday 🎂",                   date:"2026-08-22", start:"",      end:"",      cat:"birthday",   color:"#f472b6", members:["all"],        notes:"Plan family celebration" },
+  { id:'e5', title:"Vasundhara Visa Appointment",          date:"2026-05-10", start:"14:00", end:"15:30", cat:"travel",     color:"#4f7fff", members:["Vasundhara"], notes:"US Consulate, Hyderabad" },
+  { id:'e6', title:"Income Tax Filing Deadline",           date:"2026-07-31", start:"",      end:"",      cat:"finance",    color:"#f0b429", members:["Rajasekhar"], notes:"Submit via CA" },
+  // ── Insurance & Property tracking events — Rajasekhar (default owner) ──
+  { id:'tr_prop_flat403',  title:"🏘️ Property Tax – Flat 403",            date:"2026-02-20", start:"", end:"", cat:"finance", color:"#ff4f4f", members:["Rajasekhar"], notes:"Assessment 1035037996 · Mangamuru Donka, Ongole · Pay at cdma.ap.gov.in" },
+  { id:'tr_prop_shopg5',   title:"🏬 Property Tax – Shop G5",             date:"2026-02-20", start:"", end:"", cat:"finance", color:"#ff4f4f", members:["Rajasekhar"], notes:"Assessment 1035038052 · Silver Spring Apts, Ongole · Pay at cdma.ap.gov.in" },
+  { id:'tr_car_ins',       title:"🚗 Car Insurance Renewal",              date:"2026-06-28", start:"", end:"", cat:"finance", color:"#f0b429", members:["Rajasekhar"], notes:"Hyundai i10 · AP27AK7873 · Policy 3001/103498197/10/000 · ICICI Lombard" },
+  { id:'tr_health_fam',    title:"👨‍👩‍👧‍👦 Family Health Insurance Renewal",  date:"2026-08-04", start:"", end:"", cat:"health",  color:"#4f7fff", members:["Rajasekhar"], notes:"ICICI Lombard Family Floater · Policy 4193i/APRN/400529214/00/000 · ₹25,812" },
+  { id:'tr_health_ind',    title:"🏥 Individual Health Insurance Renewal", date:"2026-08-06", start:"", end:"", cat:"health",  color:"#4f7fff", members:["Rajasekhar"], notes:"ICICI Lombard · Rajasekhar · Policy 4128i/HSNR/92094505/10/000 · ₹21,502" },
+  { id:'tr_dl',            title:"🪪 Driving Licence Expiry",             date:"2027-01-20", start:"", end:"", cat:"government", color:"#ff8c42", members:["Rajasekhar"], notes:"DLFAP62729122008 · Renew at Sarathi portal" },
+  { id:'tr_bike_ins',      title:"🛵 Bike Insurance Renewal",             date:"2028-02-24", start:"", end:"", cat:"finance", color:"#3ecf8e", members:["Rajasekhar"], notes:"Honda Activa 125 · TS08HJ8438 · Policy 3005/430080806/00/000 · ICICI Lombard" },
 ];
 
 let calCurrentDate = new Date();
@@ -2388,7 +2399,18 @@ function getCalEvents() {
   if (!events) {
     // First run — seed with correct data
     localStorage.setItem('fp_cal_events', JSON.stringify(SEED_EVENTS));
+    localStorage.setItem('fp_cal_seed_ver', SEED_VER);
     return JSON.parse(JSON.stringify(SEED_EVENTS));
+  }
+
+  // Seed version migration — inject new tracking events if not yet present
+  const storedSeedVer = localStorage.getItem('fp_cal_seed_ver');
+  if (storedSeedVer !== SEED_VER) {
+    const existingIds = new Set(events.map(e => e.id));
+    const newSeedEvents = SEED_EVENTS.filter(e => !existingIds.has(e.id));
+    if (newSeedEvents.length) events = [...events, ...newSeedEvents];
+    localStorage.setItem('fp_cal_events', JSON.stringify(events));
+    localStorage.setItem('fp_cal_seed_ver', SEED_VER);
   }
 
   // Migrate any stored events that still carry old wrong member names
@@ -2678,8 +2700,13 @@ function toggleCalMember(el) {
 function buildCalMiniWidget() {
   const events = getCalEvents();
   const today = new Date().toISOString().slice(0,10);
-  const upcoming = events.filter(ev => ev.date >= today).sort((a,b) => a.date.localeCompare(b.date)).slice(0,4);
-  if (!upcoming.length) return `<div class="cal-mini-empty">No upcoming events</div>`;
+  const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
+  let upcoming = events.filter(ev => {
+    if (ev.date < today) return false;
+    if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
+    return true;
+  }).sort((a,b) => a.date.localeCompare(b.date)).slice(0,4);
+  if (!upcoming.length) return `<div class="cal-mini-empty">No upcoming events${activeName?' for '+activeName:''}</div>`;
   const icons = {Rajasekhar:'👨',Vasundhara:'👩',Josritha:'👧',Jeevan:'👦',all:'👨‍👩‍👧‍👦'};
   return upcoming.map(ev => {
     const d = new Date(ev.date + 'T12:00:00');
@@ -2920,7 +2947,7 @@ function buildWidgetHTML(wid) {
     case 'urgent': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="w-hdr" style="margin:0">⏳ &nbsp;Urgent Items</div>
-        <span class="card-action" onclick="goPage('expiry')" style="font-size:11px">Full View →</span>
+        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">View Calendar →</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;" id="urgent-items"></div></div>`;
     case 'actions': return `<div class="w-card">
@@ -2951,26 +2978,39 @@ function buildWidgetHTML(wid) {
 }
 
 function initWidgetDynamic() {
-  // Urgent items
-  const sorted=[...EXPIRY].sort((a,b)=>daysUntil(a.date)-daysUntil(b.date)).slice(0,5);
+  // ── Urgent Items: pull from Calendar Events, ≤10 days or overdue, filtered by active member ──
   const uiC=document.getElementById('urgent-items');
   if(uiC) {
-    uiC.innerHTML=sorted.map(e=>{
-      const days=daysUntil(e.date);const col=expiryColor(days);
-      const pct=days<0?100:Math.max(1,Math.min(100,(days/730)*100));
-      return `<div class="urgent-item pressable" onclick="goPage('expiry')" style="border-left:3px solid ${col}${days<0?';background:rgba(255,79,79,.04)':''}">
-        <span class="ui-icon">${e.icon}</span>
-        <div class="ui-body">
-          <div class="ui-title">${e.label}</div>
-          <div class="ui-sub">${e.sub}</div>
-          <div class="ui-bar"><div class="ui-bar-fill" style="background:${col};width:0%" data-width="${pct}"></div></div>
-        </div>
-        <div class="ui-right">
-          <div class="ui-days" style="color:${col}">${days<0?Math.abs(days):days}</div>
-          <div style="font-size:9px;font-weight:700;font-family:'DM Mono',monospace;color:${col}">${days<0?'OVERDUE':'DAYS'}</div>
-          <div class="ui-date">${fmtDate(e.date)}</div>
-        </div></div>`;
-    }).join('');
+    const allCalEvts = getCalEvents();
+    const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
+    const urgent = allCalEvts.filter(ev => {
+      const days = daysUntil(ev.date);
+      if (days > 10) return false; // only ≤10 days ahead or overdue
+      if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
+      return true;
+    }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
+    if (!urgent.length) {
+      uiC.innerHTML = `<div style="padding:12px 0;text-align:center;color:var(--text3);font-size:13px;">✅ No urgent items in next 10 days</div>`;
+    } else {
+      uiC.innerHTML = urgent.map(ev => {
+        const days = daysUntil(ev.date);
+        const col = expiryColor(days);
+        const pct = days<0?100:Math.max(1,Math.min(100,((10-days)/10)*100));
+        const titleClean = ev.title.replace(/^[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}\s]+/u,'');
+        return `<div class="urgent-item pressable" onclick="goPage('calendar')" style="border-left:3px solid ${col}${days<0?';background:rgba(255,79,79,.04)':''}">
+          <span class="ui-icon">${ev.color?'📌':'⏳'}</span>
+          <div class="ui-body">
+            <div class="ui-title">${ev.title}</div>
+            <div class="ui-sub">${ev.notes?ev.notes.slice(0,50)+(ev.notes.length>50?'…':''):''}</div>
+            <div class="ui-bar"><div class="ui-bar-fill" style="background:${col};width:0%" data-width="${pct}"></div></div>
+          </div>
+          <div class="ui-right">
+            <div class="ui-days" style="color:${col}">${days<0?Math.abs(days):days}</div>
+            <div style="font-size:9px;font-weight:700;font-family:'DM Mono',monospace;color:${col}">${days<0?'OVERDUE':'DAYS'}</div>
+            <div class="ui-date">${fmtDate(ev.date)}</div>
+          </div></div>`;
+      }).join('');
+    }
     setTimeout(()=>{document.querySelectorAll('#urgent-items .ui-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');},80);
   }
   // Family summary
@@ -2986,31 +3026,43 @@ function initWidgetDynamic() {
           <div class="fam-status" style="color:${fs.statusColor}">${fs.status}</div>
         </div></div>`;
     }).join('');
-    // Apply global member filter to family summary cards
-    if (typeof applyGmDashboard === 'function') applyGmDashboard();
+    // Apply global member filter to family summary cards (inline — avoid calling applyGmDashboard to prevent recursion)
+    if (activePortalMember !== 'all') {
+      document.querySelectorAll('#fam-summary .fam-card').forEach(c => {
+        const onclick = c.getAttribute('onclick') || '';
+        c.style.display = onclick.includes("'" + activePortalMember + "'") ? '' : 'none';
+      });
+    }
   }
-  // Attendance
+  // Attendance — only show when member context is Josritha or All
+  const attWidget = document.querySelector('[data-wid="att"]');
   const below75=ATTENDANCE.filter(a=>Math.round(a.present/a.total*100)<75).length;
   const aw=document.getElementById('att-warning');
   if(aw) aw.textContent=below75+' subject'+(below75!==1?'s':'')+' below 75%';
   const ac=document.getElementById('att-cards');
   if(ac) {
-    ac.innerHTML=ATTENDANCE.map(a=>{
-      const pct=Math.round(a.present/a.total*100);
-      const col=pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
-      const lbl=pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
-      return `<div class="att-mini pressable" style="border-left:3px solid ${col}">
-        <span style="font-size:18px;flex-shrink:0">🎓</span>
-        <div class="att-mini-body">
-          <div class="att-mini-name">${a.subject}</div>
-          <div class="att-mini-code">${a.code} · ${a.type}</div>
-          <div class="att-bar-wrap"><div class="att-bar-fill" style="background:${col};width:0%" data-width="${pct}"></div></div>
-          <div style="font-size:11px;color:var(--text2)">${a.present}/${a.total} classes</div>
-        </div>
-        <div class="att-mini-right"><div class="att-pct" style="color:${col}">${pct}%</div><div class="att-label" style="color:${col}">${lbl}</div></div>
-      </div>`;
-    }).join('');
-    setTimeout(()=>{document.querySelectorAll('#att-cards .att-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');},80);
+    // If member context is set to someone other than Josritha, show a note
+    if (activePortalMember !== 'all' && activePortalMember !== 'josritha') {
+      ac.innerHTML = `<div style="padding:10px 0;text-align:center;color:var(--text3);font-size:12px;">Attendance is specific to Josritha</div>`;
+      if(aw) aw.textContent = '';
+    } else {
+      ac.innerHTML=ATTENDANCE.map(a=>{
+        const pct=Math.round(a.present/a.total*100);
+        const col=pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
+        const lbl=pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
+        return `<div class="att-mini pressable" style="border-left:3px solid ${col}${pct<75?';background:rgba(255,79,79,.03)':''}">
+          <span style="font-size:18px;flex-shrink:0">🎓</span>
+          <div class="att-mini-body">
+            <div class="att-mini-name" style="${pct<75?'color:var(--red);font-weight:700':''}">${a.subject}</div>
+            <div class="att-mini-code">${a.code} · ${a.type}</div>
+            <div class="att-bar-wrap"><div class="att-bar-fill" style="background:${col};width:0%" data-width="${pct}"></div></div>
+            <div style="font-size:11px;color:var(--text2)">${a.present}/${a.total} classes</div>
+          </div>
+          <div class="att-mini-right"><div class="att-pct" style="color:${col}">${pct}%</div><div class="att-label" style="color:${col}">${lbl}</div></div>
+        </div>`;
+      }).join('');
+      setTimeout(()=>{document.querySelectorAll('#att-cards .att-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');},80);
+    }
   }
   // Calendar mini widget
   const calMiniBody = document.getElementById('cal-mini-body');
@@ -3171,6 +3223,7 @@ function renderMemberTab(m, tab) {
   else if(tab==='insurance') html = renderInsuranceTab(m);
   else if(tab==='property') html = renderPropertyTab(m.sections.property);
   else if(tab==='vehicle') html = renderVehicleTab(m.sections.vehicle);
+  else if(tab==='academics') html = renderAcademicsTab(m);
   tc.innerHTML = `<div class="tab-content" style="animation:fadeUp .25s ease both">${html}</div>`;
 }
 
@@ -3241,6 +3294,51 @@ function renderInsuranceTab(m) {
   });
   return html||'<div style="padding:20px;text-align:center;color:var(--text3);">No insurance data</div>';
 }
+
+function renderAcademicsTab(m) {
+  if (m.id !== 'josritha') return '<div style="padding:20px;text-align:center;color:var(--text3);">Academics data is specific to Josritha</div>';
+  const below75 = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75).length;
+  const warnHtml = below75 > 0
+    ? `<div style="background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">⚠️</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--red);">${below75} subject${below75!==1?'s':''} below 75% attendance</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px;">Risk of detention — contact faculty advisor</div>
+        </div>
+       </div>`
+    : `<div style="background:rgba(62,207,142,.07);border:1px solid rgba(62,207,142,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">✅</span>
+        <div style="font-size:13px;font-weight:700;color:var(--green);">All subjects above 75% — on track</div>
+       </div>`;
+  const rows = ATTENDANCE.map(a => {
+    const pct = Math.round(a.present/a.total*100);
+    const col = pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
+    const lbl = pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
+    const barW = pct;
+    return `<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:14px;border-left:3px solid ${col}${pct<75?';background:rgba(255,79,79,.03)':''}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:${pct<75?'var(--red)':'var(--text1)'};">${a.subject}</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px;">${a.code} · ${a.type}</div>
+          <div style="margin-top:8px;height:4px;background:var(--border2);border-radius:4px;overflow:hidden;">
+            <div style="height:100%;width:${barW}%;background:${col};border-radius:4px;transition:width .4s ease;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:5px;">${a.present} present / ${a.total} total classes</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:22px;font-weight:800;color:${col};font-family:'DM Mono',monospace;">${pct}%</div>
+          <div style="font-size:9px;font-weight:700;color:${col};font-family:'DM Mono',monospace;letter-spacing:.5px;">${lbl}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div style="padding:4px 0;">
+    <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:12px;letter-spacing:.5px;">KL UNIVERSITY · EVEN SEMESTER 2025–26</div>
+    ${warnHtml}
+    <div style="display:flex;flex-direction:column;gap:10px;">${rows}</div>
+  </div>`;
+}
+
 
 function renderPropertyTab(props) {
   if(!props||!props.length) return '<div style="padding:20px;text-align:center;color:var(--text3);font-family:DM Mono,monospace;font-size:12px;">No property records</div>';
@@ -4996,19 +5094,22 @@ function applyMemberContextToCurrentPage() {
   }
 }
 
-// ── Dashboard: hide/show family summary cards ──
+// ── Dashboard: hide/show family summary cards + refresh live widgets ──
 function applyGmDashboard() {
   const fsC = document.getElementById('fam-summary');
-  if (!fsC) return;
-  if (activePortalMember === 'all') {
-    fsC.querySelectorAll('.fam-card').forEach(c => c.style.display = '');
-    return;
+  if (fsC) {
+    if (activePortalMember === 'all') {
+      fsC.querySelectorAll('.fam-card').forEach(c => c.style.display = '');
+    } else {
+      fsC.querySelectorAll('.fam-card').forEach(c => {
+        const onclick = c.getAttribute('onclick') || '';
+        const show = onclick.includes("'" + activePortalMember + "'");
+        c.style.display = show ? '' : 'none';
+      });
+    }
   }
-  fsC.querySelectorAll('.fam-card').forEach(c => {
-    const onclick = c.getAttribute('onclick') || '';
-    const show = onclick.includes("'" + activePortalMember + "'");
-    c.style.display = show ? '' : 'none';
-  });
+  // Refresh urgent items and cal mini (they respect activePortalMember)
+  initWidgetDynamic();
 }
 
 // ── Members: filter list and jump straight to member ──
