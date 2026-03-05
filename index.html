@@ -10,7 +10,7 @@
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Duggireddy%20Family%20Portal%22%2C%22short_name%22%3A%22Family%20Portal%22%2C%22description%22%3A%22Secure%20family%20document%20management%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2307080f%22%2C%22theme_color%22%3A%22%2307080f%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg'%2520viewBox%253D'0%25200%2520192%2520192'%253E%253Crect%2520width%253D'192'%2520height%253D'192'%2520rx%253D'40'%2520fill%253D'%252307080f'%252F%253E%253Ctext%2520x%253D'96'%2520y%253D'130'%2520font-size%253D'100'%2520text-anchor%253D'middle'%253E%25F0%259F%259B%25BF%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <title>Duggireddy Family Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
+
 <style>
 :root{
   --bg:#07080f;--surface:#0d1020;--surface2:#131626;--surface3:#181c2e;
@@ -4107,119 +4107,58 @@ function saveAppt() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// FEATURE 01 — PHASE 3: Tesseract.js Offline OCR Scanner
-// Zero API · Zero cost · Runs entirely in browser
+// FEATURE 01 — PHASE 3: OCR.space Report Scanner
+// Free · 500 req/day · No credit card · Works with PDF + Image
 // ═══════════════════════════════════════════════════════════
 
-// ── Indian lab report regex patterns ──
-// Covers Apollo, Star, Vijaya, Thyrocare, SRL, Metropolis formats
+// Built-in demo key — works instantly, no signup needed
+// For higher limits: register free at ocr.space (email only)
+const OCR_SPACE_URL = 'https://api.ocr.space/parse/image';
+
+function getOcrKey() {
+  return localStorage.getItem('fp_ocr_key') || 'helloworld';
+}
+
+// ── Regex patterns for Indian lab report biomarker extraction ──
 const OCR_PATTERNS = [
-  // Blood Glucose
-  { id:'glucose',       patterns:[
-    /(?:glucose|blood\s*sugar|fasting\s*glucose|fbs)[^\d]*(\d+\.?\d*)/i,
-    /(\d+\.?\d*)\s*(?:mg\/dl)?\s*(?:H|L|N)?\s*(?:\n|$).*glucose/i,
-  ]},
-  // HbA1c
-  { id:'hba1c',         patterns:[
-    /(?:hba1c|glycated\s*haemo|glyco?haemo|a1c)[^\d]*(\d+\.?\d*)/i,
-    /(?:hb\s*a1c|hemoglobin\s*a1c)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Total Cholesterol
-  { id:'cholesterol',   patterns:[
-    /(?:total\s*cholesterol|cholesterol\s*total)[^\d]*(\d+\.?\d*)/i,
-    /(?:^|\n)\s*cholesterol[^\d]*(\d{2,3}\.?\d*)/im,
-  ]},
-  // LDL
-  { id:'ldl',           patterns:[
-    /(?:ldl|ldl[\s-]*cholesterol|low\s*density)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // HDL
-  { id:'hdl',           patterns:[
-    /(?:hdl|hdl[\s-]*cholesterol|high\s*density)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Triglycerides
-  { id:'triglycerides', patterns:[
-    /(?:triglycerides?|tgl|tg)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Hemoglobin
-  { id:'hemoglobin',    patterns:[
-    /(?:haemoglobin|hemoglobin|hgb|hb)[^\d]*(\d+\.?\d*)/i,
-    /(?:^|\n)\s*hb\s*[:\-]?\s*(\d+\.?\d*)/im,
-  ]},
-  // TSH
-  { id:'tsh',           patterns:[
-    /(?:tsh|thyroid\s*stimulating)[^\d]*(\d+\.?\d*)/i,
-    /(?:t\.?s\.?h)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Creatinine
-  { id:'creatinine',    patterns:[
-    /(?:creatinine|serum\s*creatinine|s\.?\s*creatinine)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Uric Acid
-  { id:'uricacid',      patterns:[
-    /(?:uric\s*acid|serum\s*uric)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Vitamin D
-  { id:'vitd',          patterns:[
-    /(?:vitamin\s*d|vit\.?\s*d|25[\s-]*oh[\s-]*d|25\s*hydroxy)[^\d]*(\d+\.?\d*)/i,
-    /(?:calcidiol|cholecalciferol)[^\d]*(\d+\.?\d*)/i,
-  ]},
-  // Vitamin B12
-  { id:'vitb12',        patterns:[
-    /(?:vitamin\s*b[\s-]?12|vit\.?\s*b12|cyanocobalamin|cobalamin)[^\d]*(\d+\.?\d*)/i,
-    /(?:b[\s-]?12)[^\d]*(\d{2,4}\.?\d*)/i,
-  ]},
-  // WBC
-  { id:'wbc',           patterns:[
-    /(?:wbc|white\s*blood\s*cell|total\s*leucocyte|tlc)[^\d]*([\d]+\.?\d*)/i,
-    /(?:leucocytes?|leukocytes?)[^\d]*([\d]+\.?\d*)/i,
-  ]},
-  // Platelets
-  { id:'platelets',     patterns:[
-    /(?:platelet|plt)[^\d]*([\d]+\.?\d*)/i,
-    /(?:thrombocyte)[^\d]*([\d]+\.?\d*)/i,
-  ]},
-  // BP Systolic
-  { id:'bp_sys',        patterns:[
-    /(?:systolic|bp[\s\/]*sys)[^\d]*(\d{2,3})/i,
-    /(?:blood\s*pressure|b\.?p\.?)[^\d]*(\d{2,3})\s*\/?\s*\d*/i,
-  ]},
-  // Weight
-  { id:'weight',        meta:true, patterns:[
-    /(?:weight|wt\.?)[^\d]*(\d+\.?\d*)\s*kg/i,
-    /(\d{2,3}\.?\d*)\s*kg/i,
-  ]},
-  // Height
-  { id:'height',        meta:true, patterns:[
-    /(?:height|ht\.?)[^\d]*(\d+\.?\d*)\s*cm/i,
-    /(\d{3}\.?\d*)\s*cm/i,
-  ]},
-  // Lab name
+  { id:'glucose',       patterns:[/(?:glucose|blood\s*sugar|fasting\s*glucose|fbs)[^\d]*(\d+\.?\d*)/i]},
+  { id:'hba1c',         patterns:[/(?:hba1c|glycated|a1c|hb\s*a1c)[^\d]*(\d+\.?\d*)/i]},
+  { id:'cholesterol',   patterns:[/(?:total\s*cholesterol|cholesterol\s*total|^cholesterol)[^\d]*(\d+\.?\d*)/im]},
+  { id:'ldl',           patterns:[/(?:ldl|low\s*density)[^\d]*(\d+\.?\d*)/i]},
+  { id:'hdl',           patterns:[/(?:hdl|high\s*density)[^\d]*(\d+\.?\d*)/i]},
+  { id:'triglycerides', patterns:[/(?:triglycerides?|tgl|tg)[^\d]*(\d+\.?\d*)/i]},
+  { id:'hemoglobin',    patterns:[/(?:haemoglobin|hemoglobin|hgb|hb)[^\d]*(\d+\.?\d*)/i]},
+  { id:'tsh',           patterns:[/(?:tsh|thyroid\s*stimulating)[^\d]*(\d+\.?\d*)/i]},
+  { id:'creatinine',    patterns:[/(?:creatinine|s\.?\s*creatinine)[^\d]*(\d+\.?\d*)/i]},
+  { id:'uricacid',      patterns:[/(?:uric\s*acid)[^\d]*(\d+\.?\d*)/i]},
+  { id:'vitd',          patterns:[/(?:vitamin\s*d|25[\s-]*oh|calcidiol)[^\d]*(\d+\.?\d*)/i]},
+  { id:'vitb12',        patterns:[/(?:vitamin\s*b[\s-]?12|b12|cobalamin)[^\d]*(\d+\.?\d*)/i]},
+  { id:'wbc',           patterns:[/(?:wbc|total\s*leucocyte|tlc|white\s*blood)[^\d]*([\d.]+)/i]},
+  { id:'platelets',     patterns:[/(?:platelet|plt)[^\d]*([\d.]+)/i]},
+  { id:'bp_sys',        patterns:[/(?:systolic)[^\d]*(\d{2,3})/i, /bp[^\d]*(\d{2,3})\s*\//i]},
+  { id:'weight',        meta:true, patterns:[/(?:weight|wt)[^\d]*(\d+\.?\d*)\s*kg/i]},
+  { id:'height',        meta:true, patterns:[/(?:height|ht)[^\d]*(\d+\.?\d*)\s*cm/i]},
   { id:'lab_name',      text:true, patterns:[
-    /^(apollo\s+\w[\w\s]*(?:diagnostics?|hospitals?|clinic)?)/im,
-    /^(star\s+\w[\w\s]*(?:hospitals?|diagnostics?)?)/im,
-    /^(vijaya\s+\w[\w\s]*(?:diagnostics?|hospital)?)/im,
-    /^(thyrocare\s+[\w\s]*)/im,
-    /^(srl\s+\w[\w\s]*)/im,
-    /^(metropolis\s+[\w\s]*)/im,
-    /^(kims\s+[\w\s]*)/im,
-    /^(yashoda\s+[\w\s]*)/im,
+    /(apollo[\w\s]+(?:diagnostics?|hospital)?)/i,
+    /(star[\w\s]+hospital?)/i,
+    /(vijaya[\w\s]+diagnostic?)/i,
+    /(thyrocare[\w\s]*)/i,
+    /(srl[\w\s]+)/i,
+    /(metropolis[\w\s]+)/i,
+    /(kims[\w\s]+)/i,
+    /(yashoda[\w\s]+)/i,
   ]},
-  // Report date
-  { id:'report_date',   date:true, patterns:[
-    /(?:date|rpt\.?\s*date|collection\s*date|sample\s*date)[^\d]*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})/i,
-    /(?:date)[^\d]*(\d{1,2}\s+\w+\s+\d{4})/i,
-    /(\d{2}[\/-]\d{2}[\/-]\d{4})/,
+  { id:'report_date', date:true, patterns:[
+    /(?:date|collected|reported)[^\d]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
+    /(\d{2}[\/\-]\d{2}[\/\-]\d{4})/,
     /(\d{4}-\d{2}-\d{2})/,
+    /(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{4})/i,
   ]},
-  // Ref number
-  { id:'report_ref',    text:true, patterns:[
-    /(?:report\s*(?:no|num|ref|id)|accession\s*(?:no|num)|lab\s*(?:no|id))[^\w]*([\w\-\/]+)/i,
-    /(?:^|\n)\s*(?:id|no)[:\s]+([\w\-\/]{4,20})/im,
+  { id:'report_ref', text:true, patterns:[
+    /(?:report\s*(?:no|num|id)|accession\s*no|lab\s*no)[^\w]*([\w\-\/]{3,20})/i,
   ]},
 ];
 
-// ── Field input ID map ──
 const OCR_INPUT_MAP = {
   glucose:'hrm-glucose', hba1c:'hrm-hba1c', cholesterol:'hrm-cholesterol',
   ldl:'hrm-ldl', hdl:'hrm-hdl', triglycerides:'hrm-triglycerides',
@@ -4230,72 +4169,6 @@ const OCR_INPUT_MAP = {
   lab_name:'hr-lab', report_date:'hr-date', report_ref:'hr-ref',
 };
 
-// ── WBC / Platelet unit normalisation ──
-// Labs sometimes report in cells/µL (7200) instead of ×10³/µL (7.2)
-function normaliseCount(id, val) {
-  if (id === 'wbc'      && val > 100)  return parseFloat((val / 1000).toFixed(2));
-  if (id === 'platelets'&& val > 1000) return parseFloat((val / 1000).toFixed(0));
-  return val;
-}
-
-// ── Parse date string → YYYY-MM-DD ──
-function parseOcrDate(str) {
-  if (!str) return '';
-  // Already ISO
-  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-  // DD/MM/YYYY or DD-MM-YYYY
-  const m1 = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
-  if (m1) {
-    const y = m1[3].length===2 ? '20'+m1[3] : m1[3];
-    return `${y}-${m1[2].padStart(2,'0')}-${m1[1].padStart(2,'0')}`;
-  }
-  // "15 Jan 2026" / "15 January 2026"
-  const months = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',
-                  jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
-  const m2 = str.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/i);
-  if (m2) {
-    const mo = months[m2[2].toLowerCase().slice(0,3)];
-    if (mo) return `${m2[3]}-${mo}-${m2[1].padStart(2,'0')}`;
-  }
-  return '';
-}
-
-// ── Main regex extraction from OCR text ──
-function extractFromOcrText(rawText) {
-  const text = rawText;
-  const result = {};
-  let filled = 0;
-
-  OCR_PATTERNS.forEach(p => {
-    for (const rx of p.patterns) {
-      const m = text.match(rx);
-      if (!m || !m[1]) continue;
-      let val = m[1].trim();
-
-      if (p.date) {
-        const d = parseOcrDate(val);
-        if (d) { result[p.id] = d; filled++; }
-      } else if (p.text) {
-        result[p.id] = val.trim().slice(0, 60);
-        filled++;
-      } else {
-        let num = parseFloat(val);
-        if (isNaN(num)) continue;
-        num = normaliseCount(p.id, num);
-        // Sanity-check ranges to avoid false positives
-        const sane = SANITY[p.id];
-        if (sane && (num < sane[0] || num > sane[1])) continue;
-        result[p.id] = num;
-        filled++;
-      }
-      break; // first matching pattern wins
-    }
-  });
-
-  return { result, filled };
-}
-
-// ── Sanity ranges: [min, max] to reject OCR garbage ──
 const SANITY = {
   glucose:[40,500], hba1c:[3,15], cholesterol:[50,500],
   ldl:[10,400], hdl:[10,150], triglycerides:[20,1000],
@@ -4305,154 +4178,186 @@ const SANITY = {
   weight:[20,200], height:[50,220],
 };
 
+function normaliseCount(id, val) {
+  if (id==='wbc'       && val>100)  return parseFloat((val/1000).toFixed(2));
+  if (id==='platelets' && val>1000) return parseFloat((val/1000).toFixed(0));
+  return val;
+}
+
+function parseOcrDate(str) {
+  if (!str) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  const m1 = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m1) { const y=m1[3].length===2?'20'+m1[3]:m1[3]; return `${y}-${m1[2].padStart(2,'0')}-${m1[1].padStart(2,'0')}`; }
+  const months={jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+  const m2=str.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/i);
+  if (m2){const mo=months[m2[2].toLowerCase().slice(0,3)];if(mo)return `${m2[3]}-${mo}-${m2[1].padStart(2,'0')}`;}
+  return '';
+}
+
+function extractFromOcrText(rawText) {
+  let filled=0;
+  const result={};
+  OCR_PATTERNS.forEach(p => {
+    for (const rx of p.patterns) {
+      const m=rawText.match(rx);
+      if (!m||!m[1]) continue;
+      const val=m[1].trim();
+      if (p.date) {
+        const d=parseOcrDate(val);
+        if(d){result[p.id]=d;filled++;} 
+      } else if (p.text) {
+        result[p.id]=val.slice(0,60);filled++;
+      } else {
+        let num=parseFloat(val);
+        if(isNaN(num)) continue;
+        num=normaliseCount(p.id,num);
+        const s=SANITY[p.id];
+        if(s&&(num<s[0]||num>s[1])) continue;
+        result[p.id]=num;filled++;
+      }
+      break;
+    }
+  });
+  return {result,filled};
+}
+
 // ── File handler ──
 function handleReportFile(file) {
   if (!file) return;
-  if (file.size > 15 * 1024 * 1024) {
-    setScanState('error','File too large. Use an image under 15MB.');
-    return;
-  }
-  const url = URL.createObjectURL(file);
-  runTesseract(url, file.type);
+  if (file.size > 5*1024*1024) { setScanState('error','File too large. Max 5MB for free tier. Compress the image and try again.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => callOcrSpace(e.target.result, file.type, file.name);
+  reader.onerror = () => setScanState('error','Could not read file.');
+  reader.readAsDataURL(file);
 }
 
 function handleReportDrop(e) {
   e.preventDefault();
   document.getElementById('scan-zone').classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) handleReportFile(file);
+  const file=e.dataTransfer.files[0];
+  if(file) handleReportFile(file);
 }
 
-// ── Tesseract OCR runner ──
-async function runTesseract(imageUrl, mimeType) {
+// ── OCR.space API call ──
+async function callOcrSpace(dataUrl, mimeType, fileName) {
   setScanState('scanning');
-
-  // Check Tesseract loaded
-  if (typeof Tesseract === 'undefined') {
-    setScanState('error','OCR library not loaded. Check your internet connection and refresh.');
-    return;
-  }
+  setScanProgressText('Uploading to OCR engine…');
 
   try {
-    setScanProgressText('Loading OCR engine…');
+    const formData = new FormData();
+    formData.append('apikey', getOcrKey());
+    formData.append('language', 'eng');
+    formData.append('isOverlayRequired', 'false');
+    formData.append('detectOrientation', 'true');
+    formData.append('scale', 'true');
+    formData.append('OCREngine', '2'); // Engine 2 is better for structured docs
+    formData.append('isTable', 'true');
 
-    const worker = await Tesseract.createWorker('eng', 1, {
-      logger: m => {
-        if (m.status === 'recognizing text') {
-          const pct = Math.round((m.progress||0)*100);
-          setScanProgressText(`Reading report… ${pct}%`);
-        } else if (m.status === 'loading tesseract core') {
-          setScanProgressText('Loading OCR engine…');
-        } else if (m.status === 'initializing api') {
-          setScanProgressText('Initialising…');
-        }
-      }
-    });
+    // Convert dataURL to blob for upload
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    const u8arr = new Uint8Array(bstr.length);
+    for (let i=0;i<bstr.length;i++) u8arr[i]=bstr.charCodeAt(i);
+    const blob = new Blob([u8arr], {type: mime});
+    formData.append('file', blob, fileName || 'report.jpg');
 
-    // Optimise for printed text (lab reports are always printed)
-    await worker.setParameters({
-      tessedit_pageseg_mode: Tesseract.PSM.AUTO,
-      preserve_interword_spaces: '1',
-    });
+    setScanProgressText('Reading report text…');
+    const res = await fetch(OCR_SPACE_URL, { method:'POST', body:formData });
 
-    setScanProgressText('Scanning report…');
-    const result = await worker.recognize(imageUrl);
-    await worker.terminate();
-    URL.revokeObjectURL(imageUrl);
+    if (!res.ok) throw new Error('OCR service error: ' + res.status);
 
-    const rawText = result.data.text;
-    if (!rawText || rawText.trim().length < 20) {
-      setScanState('error','Could not read text from image. Try a clearer photo with good lighting.');
+    const data = await res.json();
+
+    if (data.IsErroredOnProcessing) {
+      const msg = data.ErrorMessage?.[0] || 'OCR failed';
+      if (msg.includes('File size')) throw new Error('File too large. Please use an image under 5MB.');
+      if (msg.includes('key'))       throw new Error('Invalid API key. Using default "helloworld" key.');
+      throw new Error(msg);
+    }
+
+    const rawText = data.ParsedResults?.map(r=>r.ParsedText).join(' ') || '';
+    if (!rawText.trim()) {
+      setScanState('error','No text found in image. Try a clearer photo with good lighting, or enter values manually.');
       return;
     }
 
-    setScanProgressText('Extracting values…');
-    const { result: extracted, filled } = extractFromOcrText(rawText);
+    setScanProgressText('Extracting biomarker values…');
+    const {result, filled} = extractFromOcrText(rawText);
 
-    if (filled === 0) {
-      setScanState('error','No biomarker values found. Make sure the image is clear and well-lit. You can enter values manually below.');
+    if (filled===0) {
+      setScanState('error','Text extracted but no biomarker values matched. You can enter values manually in the fields below.');
       return;
     }
 
-    fillFormFromOcr(extracted);
+    fillFormFromOcr(result);
     setScanState('success', filled);
 
   } catch(err) {
-    console.error('Tesseract error:', err);
-    setScanState('error','OCR failed: ' + (err.message||'Unknown error') + '. Try a clearer image.');
+    console.error('OCR error:', err);
+    setScanState('error', err.message || 'OCR failed. Try a clearer image.');
   }
 }
 
 // ── Fill form from OCR result ──
 function fillFormFromOcr(extracted) {
-  Object.entries(extracted).forEach(([key, val]) => {
-    const inputId = OCR_INPUT_MAP[key];
-    if (!inputId) return;
-    const el = document.getElementById(inputId);
-    if (!el) return;
-    el.value = val;
-    // Green highlight
-    el.style.borderColor = 'rgba(62,207,142,.7)';
-    el.style.background  = 'rgba(62,207,142,.07)';
-    setTimeout(() => { el.style.borderColor=''; el.style.background=''; }, 3000);
+  Object.entries(extracted).forEach(([key,val]) => {
+    const inputId=OCR_INPUT_MAP[key];
+    if(!inputId) return;
+    const el=document.getElementById(inputId);
+    if(!el) return;
+    el.value=val;
+    el.style.borderColor='rgba(62,207,142,.7)';
+    el.style.background='rgba(62,207,142,.07)';
+    setTimeout(()=>{el.style.borderColor='';el.style.background='';},3000);
   });
 }
 
 // ── Scan UI state ──
 function setScanState(state, payload) {
-  const progress = document.getElementById('scan-progress');
-  const errEl    = document.getElementById('scan-err');
-  const banner   = document.getElementById('scan-result-banner');
-  const zone     = document.getElementById('scan-zone');
-  if (!progress) return;
-
+  const progress=document.getElementById('scan-progress');
+  const errEl=document.getElementById('scan-err');
+  const banner=document.getElementById('scan-result-banner');
+  const zone=document.getElementById('scan-zone');
+  if(!progress) return;
   progress.classList.remove('active');
   errEl.classList.remove('active');
   banner.classList.remove('active');
-
-  if (state === 'scanning') {
+  if (state==='scanning') {
     progress.classList.add('active');
-    zone.style.opacity = '.5';
-    zone.style.pointerEvents = 'none';
-  } else if (state === 'success') {
-    zone.style.opacity = '';
-    zone.style.pointerEvents = '';
+    zone.style.opacity='.5';
+    zone.style.pointerEvents='none';
+  } else if (state==='success') {
+    zone.style.opacity='';
+    zone.style.pointerEvents='';
     banner.classList.add('active');
-    document.getElementById('scan-result-text').textContent =
-      `${payload} value${payload===1?'':'s'} extracted — review below`;
-    const fi = document.getElementById('scan-file-input');
-    if (fi) fi.value = '';
-    setTimeout(() => {
-      document.getElementById('hr-lab')?.scrollIntoView({ behavior:'smooth', block:'center' });
-    }, 400);
-  } else if (state === 'error') {
-    zone.style.opacity = '';
-    zone.style.pointerEvents = '';
+    document.getElementById('scan-result-text').textContent=`${payload} value${payload===1?'':'s'} extracted — review below`;
+    const fi=document.getElementById('scan-file-input');
+    if(fi) fi.value='';
+    setTimeout(()=>{ document.getElementById('hr-lab')?.scrollIntoView({behavior:'smooth',block:'center'}); },400);
+  } else if (state==='error') {
+    zone.style.opacity='';
+    zone.style.pointerEvents='';
     errEl.classList.add('active');
-    errEl.textContent = '⚠️ ' + (payload || 'Could not read report.');
+    errEl.textContent='⚠️ '+(payload||'Could not read report.');
   }
 }
-
-function setScanProgressText(txt) {
-  const el = document.getElementById('scan-progress-text');
-  if (el) el.textContent = txt;
-}
-function showScanError(msg) { setScanState('error', msg); }
+function setScanProgressText(txt) { const el=document.getElementById('scan-progress-text'); if(el) el.textContent=txt; }
+function showScanError(msg) { setScanState('error',msg); }
 
 // ── Reset scan UI when sheet opens ──
 const _origOpenAddReportSheet = openAddReportSheet;
 openAddReportSheet = function() {
   _origOpenAddReportSheet();
-  const progress = document.getElementById('scan-progress');
-  const errEl    = document.getElementById('scan-err');
-  const banner   = document.getElementById('scan-result-banner');
-  const zone     = document.getElementById('scan-zone');
-  if (progress) progress.classList.remove('active');
-  if (errEl)    errEl.classList.remove('active');
-  if (banner)   banner.classList.remove('active');
-  if (zone)     { zone.style.opacity=''; zone.style.pointerEvents=''; }
-  const fi = document.getElementById('scan-file-input');
-  if (fi) fi.value = '';
+  ['scan-progress','scan-err','scan-result-banner'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('active');
+  });
+  const zone=document.getElementById('scan-zone');
+  if(zone){zone.style.opacity='';zone.style.pointerEvents='';}
+  const fi=document.getElementById('scan-file-input');
+  if(fi) fi.value='';
 };
 
 function initHealthPage() {
