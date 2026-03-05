@@ -874,9 +874,11 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 }
 .emg-hdr{
   display:flex;align-items:center;justify-content:space-between;
-  padding:13px 16px 10px;
-  border-bottom:1px solid rgba(255,79,79,.18);
+  padding:13px 16px 13px;
+  cursor:pointer;
+  transition:background .15s;
 }
+.emg-hdr:active{background:rgba(255,79,79,.06);}
 .emg-hdr-left{display:flex;align-items:center;gap:9px;}
 .emg-hdr-icon{
   width:30px;height:30px;border-radius:9px;
@@ -886,13 +888,23 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 }
 .emg-hdr-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--red);letter-spacing:-.2px;}
 .emg-hdr-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:1px;}
-.emg-toggle{
-  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
-  color:var(--red);padding:4px 10px;border:1px solid rgba(255,79,79,.3);
-  border-radius:6px;cursor:pointer;background:rgba(255,79,79,.08);
-  transition:all .15s;letter-spacing:.5px;text-transform:uppercase;
+.emg-chevron{
+  font-size:20px;font-weight:300;color:var(--text3);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  transform:rotate(90deg);
+  line-height:1;user-select:none;
 }
-.emg-toggle:hover{background:rgba(255,79,79,.18);}
+.emg-chevron.open{transform:rotate(270deg);}
+.emg-body{
+  overflow:hidden;
+  max-height:0;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1);
+  border-top:0px solid rgba(255,79,79,.18);
+}
+.emg-card:not(.emg-collapsed) .emg-body{
+  max-height:600px;
+  border-top-width:1px;
+}
 .emg-contacts{display:flex;flex-direction:column;gap:0;}
 .emg-contact{
   display:flex;align-items:center;gap:13px;
@@ -944,7 +956,26 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .emg-svc.emg-police{border-color:rgba(79,127,255,.3);background:rgba(79,127,255,.07);}
 .emg-svc.emg-ambulance{border-color:rgba(255,79,79,.3);background:rgba(255,79,79,.07);}
 .emg-svc.emg-fire{border-color:rgba(255,140,66,.3);background:rgba(255,140,66,.07);}
-.emg-collapsed .emg-contacts,.emg-collapsed .emg-services{display:none;}
+
+/* Quick Actions list */
+.qa-list{display:flex;flex-direction:column;gap:4px;}
+.qa-row{
+  display:flex;align-items:center;gap:13px;
+  padding:12px 14px;border-radius:12px;
+  background:var(--surface2);border:1px solid var(--border2);
+  transition:background .15s,border-color .15s;
+  cursor:pointer;
+}
+.qa-row:active{background:var(--surface3);}
+.qa-row-icon{
+  width:38px;height:38px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.qa-row-body{flex:1;min-width:0;}
+.qa-row-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.1px;}
+.qa-row-sub{font-size:11px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;}
+.qa-row-arrow{font-size:16px;color:var(--text3);flex-shrink:0;font-weight:300;}
 
 /* ════════════════════════════════════════════
    FEATURE 06 — FAMILY CALENDAR SYNC
@@ -2303,7 +2334,7 @@ const EMG_SERVICES = [
 ];
 
 function buildEmgCard() {
-  const collapsed = localStorage.getItem('emg_collapsed') === '1';
+  const collapsed = localStorage.getItem('emg_collapsed') !== '0'; // default collapsed
   let contacts = EMG_CONTACTS.map(c => `
     <div class="emg-contact pressable">
       <div class="emg-av">${c.icon}</div>
@@ -2324,26 +2355,32 @@ function buildEmgCard() {
     </a>`).join('');
   return `
   <div class="emg-card${collapsed?' emg-collapsed':''}" id="emg-card">
-    <div class="emg-hdr">
+    <div class="emg-hdr pressable" onclick="toggleEmgCard()">
       <div class="emg-hdr-left">
         <div class="emg-hdr-icon">🆘</div>
         <div>
           <div class="emg-hdr-title">Emergency Contacts</div>
-          <div class="emg-hdr-sub">Quick · Direct · Always Ready</div>
+          <div class="emg-hdr-sub">${collapsed ? 'Tap to expand' : 'Family & emergency services'}</div>
         </div>
       </div>
-      <div class="emg-toggle" onclick="toggleEmgCard()">${collapsed?'Show':'Hide'}</div>
+      <div class="emg-chevron${collapsed?'':' open'}">›</div>
     </div>
-    <div class="emg-contacts">${contacts}</div>
-    <div class="emg-services">${services}</div>
+    <div class="emg-body">
+      <div class="emg-contacts">${contacts}</div>
+      <div class="emg-services">${services}</div>
+    </div>
   </div>`;
 }
 
 function toggleEmgCard() {
   const card = document.getElementById('emg-card');
+  if (!card) return;
   const isCollapsed = card.classList.toggle('emg-collapsed');
   localStorage.setItem('emg_collapsed', isCollapsed ? '1' : '0');
-  card.querySelector('.emg-toggle').textContent = isCollapsed ? 'Show' : 'Hide';
+  const chevron = card.querySelector('.emg-chevron');
+  if (chevron) chevron.classList.toggle('open', !isCollapsed);
+  const sub = card.querySelector('.emg-hdr-sub');
+  if (sub) sub.textContent = isCollapsed ? 'Tap to expand' : 'Family & emergency services';
 }
 
 // ═══════════════════════════════════════
@@ -2724,20 +2761,18 @@ function buildCalMiniWidget() {
 }
 
 const WIDGET_DEFS = {
-  alert:   { id:'alert',   icon:'⚠️',  name:'Alert Banner',        desc:'Property tax & urgent notices' },
-  family:  { id:'family',  icon:'👨‍👩‍👧‍👦', name:'Family at a Glance',  desc:'Mini cards for all 4 members' },
-  urgent:  { id:'urgent',  icon:'⏳',  name:'Urgent Expiry Items',  desc:'Top 5 expiring documents' },
-  actions: { id:'actions', icon:'⚡',  name:'Quick Actions',        desc:'One-tap shortcuts to key tasks' },
-  att:       { id:'att',          icon:'🎓',  name:'Attendance Tracker',   desc:'Josritha\'s subject-wise attendance' },
-  emergency: { id:'emergency',    icon:'🆘',  name:'Emergency Contacts',   desc:'One-tap family contacts & emergency services' },
-  cal_mini:  { id:'cal_mini',     icon:'📅',  name:'Family Calendar',      desc:'Upcoming family events at a glance' },
-  health_mini:{ id:'health_mini', icon:'💊',  name:'Family Health',         desc:'Health scores & abnormal markers' },
+  family:     { id:'family',     icon:'👨‍👩‍👧‍👦', name:'Family at a Glance',  desc:'Mini cards for all 4 members' },
+  urgent:     { id:'urgent',     icon:'⏳',  name:'Urgent Items',         desc:'Calendar events due within 10 days' },
+  health_mini:{ id:'health_mini',icon:'💊',  name:'Family Health',        desc:'Health scores & abnormal markers' },
+  cal_mini:   { id:'cal_mini',   icon:'📅',  name:'Family Calendar',      desc:'Upcoming family events at a glance' },
+  emergency:  { id:'emergency',  icon:'🆘',  name:'Emergency Contacts',   desc:'One-tap family contacts & emergency services' },
+  actions:    { id:'actions',    icon:'⚡',  name:'Quick Actions',        desc:'One-tap shortcuts to key tasks' },
 };
-const DEFAULT_WIDGETS=['alert','family','urgent','health_mini','emergency','cal_mini','actions','att'];
+const DEFAULT_WIDGETS=['family','urgent','health_mini','cal_mini','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
-const WIDGET_VERSION = 'v3';
+const WIDGET_VERSION = 'v4';
 function loadWidgetOrder() {
   try {
     const ver = localStorage.getItem('fp_widgets_ver');
@@ -2931,13 +2966,6 @@ function tdEndDrag() {
 
 function buildWidgetHTML(wid) {
   switch(wid) {
-    case 'alert': return `<div class="w-card">
-      <div class="w-hdr">⚠️ &nbsp;Alert</div>
-      <div class="alert-banner pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')" style="margin:0">
-        <span class="alert-icon">⚠️</span>
-        <div class="alert-body"><div class="alert-title">Property Tax Overdue</div><div class="alert-sub">Pay at cdma.ap.gov.in before penalties apply</div></div>
-        <div class="alert-cta">View →</div>
-      </div></div>`;
     case 'family': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="w-hdr" style="margin:0">👨‍👩‍👧‍👦 &nbsp;Family</div>
@@ -2951,20 +2979,57 @@ function buildWidgetHTML(wid) {
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;" id="urgent-items"></div></div>`;
     case 'actions': return `<div class="w-card">
-      <div class="w-hdr">⚡ &nbsp;Quick Actions</div>
-      <div class="qa-strip">
-        <div class="qa-btn qa-red pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')"><span>💸</span>Property Tax</div>
-        <div class="qa-btn qa-blue pressable" onclick="window.open('https://www.icicilombard.com','_blank')"><span>🔄</span>Renew Ins.</div>
-        <div class="qa-btn qa-green pressable" onclick="window.open('https://newerp.kluniversity.in/','_blank')"><span>🎓</span>KL Attend.</div>
-        <div class="qa-btn qa-gold pressable" onclick="goPage('documents')"><span>📄</span>Documents</div>
+      <div class="w-hdr" style="margin-bottom:12px;">⚡ &nbsp;Quick Actions</div>
+      <div class="qa-list">
+        <div class="qa-row pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')">
+          <div class="qa-row-icon" style="background:rgba(255,79,79,.15);color:var(--red);">💸</div>
+          <div class="qa-row-body">
+            <div class="qa-row-title">Property Tax</div>
+            <div class="qa-row-sub">Pay online · cdma.ap.gov.in</div>
+          </div>
+          <div class="qa-row-arrow">↗</div>
+        </div>
+        <div class="qa-row pressable" onclick="window.open('https://www.icicilombard.com','_blank')">
+          <div class="qa-row-icon" style="background:rgba(79,127,255,.15);color:var(--blue2);">🛡️</div>
+          <div class="qa-row-body">
+            <div class="qa-row-title">Renew Insurance</div>
+            <div class="qa-row-sub">ICICI Lombard portal</div>
+          </div>
+          <div class="qa-row-arrow">↗</div>
+        </div>
+        <div class="qa-row pressable" onclick="window.open('https://newerp.kluniversity.in/','_blank')">
+          <div class="qa-row-icon" style="background:rgba(167,139,250,.15);color:#a78bfa;">🎓</div>
+          <div class="qa-row-body">
+            <div class="qa-row-title">KL University ERP</div>
+            <div class="qa-row-sub">Josritha's attendance & results</div>
+          </div>
+          <div class="qa-row-arrow">↗</div>
+        </div>
+        <div class="qa-row pressable" onclick="window.open('https://eservices.tn.gov.in/','_blank')">
+          <div class="qa-row-icon" style="background:rgba(240,180,41,.13);color:var(--gold);">🏛️</div>
+          <div class="qa-row-body">
+            <div class="qa-row-title">Sarathi Portal</div>
+            <div class="qa-row-sub">Driving licence renewal</div>
+          </div>
+          <div class="qa-row-arrow">↗</div>
+        </div>
+        <div class="qa-row pressable" onclick="goPage('documents')">
+          <div class="qa-row-icon" style="background:rgba(62,207,142,.13);color:var(--green);">📄</div>
+          <div class="qa-row-body">
+            <div class="qa-row-title">Documents</div>
+            <div class="qa-row-sub">Browse all family documents</div>
+          </div>
+          <div class="qa-row-arrow">›</div>
+        </div>
+        <div class="qa-row pressable" onclick="goPage('calendar')">
+          <div class="qa-row-icon" style="background:rgba(244,114,182,.13);color:#f472b6;">📅</div>
+          <div class="qa-row-body">
+            <div class="qa-row-title">Family Calendar</div>
+            <div class="qa-row-sub">View & add events</div>
+          </div>
+          <div class="qa-row-arrow">›</div>
+        </div>
       </div></div>`;
-    case 'att': return `<div class="w-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="w-hdr" style="margin:0">🎓 &nbsp;Attendance</div>
-        <span style="font-size:10px;color:var(--red);font-weight:700;font-family:'DM Mono',monospace;" id="att-warning"></span>
-      </div>
-      <div style="font-size:10px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:8px;">Josritha · KL Univ · Even Sem 2025–26</div>
-      <div style="display:flex;flex-direction:column;gap:8px;" id="att-cards"></div></div>`;
     case 'emergency': return buildEmgCard();
     case 'health_mini': return buildHealthWidget();
     case 'cal_mini': return `<div class="w-card">
