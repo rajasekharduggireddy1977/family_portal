@@ -1764,6 +1764,17 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
             <strong style="color:var(--purple)">Josritha Duggireddy</strong> · KL University – KLH · Even Semester 2025–26 ·
             <span class="att-critical-ct" id="att-critical-text"></span>
           </div>
+          <!-- Sync bar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;background:var(--surface2);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:10px 14px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">🔄 Sync Attendance</div>
+              <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;" id="att-last-synced">Last synced: never</div>
+            </div>
+            <label style="background:var(--purple);color:#fff;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;padding:7px 14px;border-radius:8px;cursor:pointer;white-space:nowrap;">
+              📂 Upload JSON
+              <input type="file" accept=".json" style="display:none;" onchange="syncAttendanceFile(this)">
+            </label>
+          </div>
           <div class="eli-items" id="exp-att-items"></div>
         </div>
       </div>
@@ -3248,6 +3259,9 @@ function buildWidgetHTML(wid) {
 function initWidgetDynamic() {
   const allCalEvts = getCalEvents();
   const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
+  // Use synced attendance from localStorage if available, else hardcoded fallback
+  const _attRaw = localStorage.getItem('fp_attendance_synced');
+  const LIVE_ATT = _attRaw ? JSON.parse(_attRaw) : ATTENDANCE;
 
   // ─────────────────────────────────────────
   // HERO BRIEFING CARD
@@ -3271,7 +3285,7 @@ function initWidgetDynamic() {
     // Status line — compute live
     const overdueEvts = allCalEvts.filter(ev => daysUntil(ev.date) < 0);
     const soonEvts    = allCalEvts.filter(ev => { const d=daysUntil(ev.date); return d>=0 && d<=10; });
-    const attBelow    = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75);
+    const attBelow    = LIVE_ATT.filter(a => Math.round(a.present/a.total*100) < 75);
     // Collect critical health markers for specific insight
     let criticalHealthItems = [];
     if (typeof computeHealthScore === 'function' && typeof getBmStatus === 'function' && typeof getHealthData === 'function') {
@@ -3326,7 +3340,7 @@ function initWidgetDynamic() {
     }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
 
     // Academics chip — prepend if any subject below 75% (Josritha) and not filtered to another member
-    const attBelow75 = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75);
+    const attBelow75 = LIVE_ATT.filter(a => Math.round(a.present/a.total*100) < 75);
     const showAcadChip = attBelow75.length > 0 && (activePortalMember === 'all' || activePortalMember === 'josritha');
     const acadChip = showAcadChip
       ? `<div class="priority-chip overdue pressable" onclick="goPage('expiry');setTimeout(()=>switchExpTab('att'),80)">
@@ -3781,7 +3795,7 @@ function renderInsuranceTab(m) {
 
 function renderAcademicsTab(m) {
   if (m.id !== 'josritha') return '<div style="padding:20px;text-align:center;color:var(--text3);">Academics data is specific to Josritha</div>';
-  const below75 = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75).length;
+  const _ar2=localStorage.getItem("fp_attendance_synced");const _la2=_ar2?JSON.parse(_ar2):ATTENDANCE;const below75 = _la2.filter(a => Math.round(a.present/a.total*100) < 75).length;
   const warnHtml = below75 > 0
     ? `<div style="background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:20px;">⚠️</span>
@@ -3794,7 +3808,7 @@ function renderAcademicsTab(m) {
         <span style="font-size:20px;">✅</span>
         <div style="font-size:13px;font-weight:700;color:var(--green);">All subjects above 75% — on track</div>
        </div>`;
-  const rows = ATTENDANCE.map(a => {
+  const rows = _la2.map(a => {
     const pct = Math.round(a.present/a.total*100);
     const col = pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
     const lbl = pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
@@ -4233,13 +4247,21 @@ function initExpiry() {
     </div>`;
   }).join('');
 
-  // Attendance
-  const below75=ATTENDANCE.filter(a=>Math.round(a.present/a.total*100)<75).length;
+  // Attendance — use synced data if available, else fall back to hardcoded
+  const syncedRaw = localStorage.getItem('fp_attendance_synced');
+  const liveAttendance = syncedRaw ? JSON.parse(syncedRaw) : ATTENDANCE;
+
+  const below75=liveAttendance.filter(a=>Math.round(a.present/a.total*100)<75).length;
   const attCritEl=document.getElementById('att-critical-text');
   if(attCritEl) attCritEl.textContent=below75+' subjects below 75% threshold';
 
+  // Last synced timestamp
+  const syncedTs = localStorage.getItem('fp_attendance_synced_ts');
+  const syncedEl = document.getElementById('att-last-synced');
+  if(syncedEl) syncedEl.textContent = syncedTs ? 'Last synced: ' + syncedTs : (syncedRaw ? 'Synced' : 'Last synced: never — using default data');
+
   const attPane=document.getElementById('exp-att-items');
-  if(attPane) attPane.innerHTML=ATTENDANCE.map(a=>{
+  if(attPane) attPane.innerHTML=liveAttendance.map(a=>{
     const pct=Math.round(a.present/a.total*100);
     const col=pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
     const lbl=pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
@@ -4263,6 +4285,33 @@ function initExpiry() {
 function animateExpBars() {
   document.querySelectorAll('.eli-bar[data-width],.att-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');
   document.querySelectorAll('.ui-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');
+}
+
+function syncAttendanceFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data) || !data.length) { showToast('❌ Invalid attendance file'); return; }
+      // Validate shape
+      if (!data[0].hasOwnProperty('subject') || !data[0].hasOwnProperty('present') || !data[0].hasOwnProperty('total')) {
+        showToast('❌ File format not recognised'); return;
+      }
+      localStorage.setItem('fp_attendance_synced', JSON.stringify(data));
+      const ts = new Date().toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      localStorage.setItem('fp_attendance_synced_ts', ts);
+      showToast('✅ Attendance synced — ' + data.length + ' subjects updated');
+      initExpiry();
+      setTimeout(() => initWidgetDynamic(), 50);
+      // Reset file input
+      input.value = '';
+    } catch(err) {
+      showToast('❌ Could not parse file');
+    }
+  };
+  reader.readAsText(file);
 }
 
 function switchExpTab(tab) {
