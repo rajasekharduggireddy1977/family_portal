@@ -96,6 +96,70 @@
   user-select:none;
 }
 .theme-toggle:hover{border-color:var(--gold);transform:rotate(15deg);}
+
+/* ══════════ GLOBAL MEMBER PICKER ══════════ */
+#gm-pill{
+  display:flex;align-items:center;gap:6px;
+  padding:4px 10px 4px 5px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:20px;cursor:pointer;
+  font-size:11px;font-weight:700;font-family:'Inter',sans-serif;
+  color:var(--text);transition:all .18s;flex-shrink:0;
+  min-width:0;max-width:130px;
+}
+#gm-pill:hover{border-color:var(--blue);background:var(--blue-dim);}
+#gm-pill.member-active{border-color:var(--gm-color,var(--blue));background:rgba(var(--gm-color-rgb,79,127,255),.12);}
+.gm-av{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.gm-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px;}
+.gm-arrow{font-size:9px;color:var(--text3);flex-shrink:0;transition:transform .2s;}
+#gm-pill.open .gm-arrow{transform:rotate(180deg);}
+
+/* Dropdown */
+#gm-dropdown{
+  position:fixed;top:calc(var(--topbar-h) + var(--sat) + 4px);right:10px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:14px;box-shadow:var(--shadow-lg);
+  z-index:500;overflow:hidden;
+  min-width:190px;
+  opacity:0;transform:translateY(-6px) scale(.97);
+  pointer-events:none;transition:all .18s cubic-bezier(.34,1.56,.64,1);
+}
+#gm-dropdown.show{opacity:1;transform:translateY(0) scale(1);pointer-events:all;}
+.gm-dd-hdr{
+  padding:10px 14px 7px;
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;color:var(--text3);
+  border-bottom:1px solid var(--border);
+}
+.gm-dd-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;cursor:pointer;
+  transition:background .12s;font-size:13px;font-weight:600;color:var(--text);
+}
+.gm-dd-item:hover{background:var(--surface2);}
+.gm-dd-item.active{background:var(--blue-dim);color:var(--blue2);}
+.gm-dd-item .gm-av{width:26px;height:26px;font-size:10px;}
+.gm-dd-item-info{flex:1;}
+.gm-dd-item-name{font-size:12px;font-weight:700;}
+.gm-dd-item-role{font-size:10px;color:var(--text3);margin-top:1px;}
+.gm-dd-check{font-size:12px;color:var(--blue2);flex-shrink:0;}
+
+/* Context banner shown on each page when a member is filtered */
+.gm-context-banner{
+  display:flex;align-items:center;gap:10px;
+  margin:0 14px 10px;padding:8px 12px;
+  background:var(--blue-dim);border:1px solid rgba(79,127,255,.25);
+  border-radius:10px;font-size:11px;font-weight:600;color:var(--blue2);
+  font-family:'Inter',sans-serif;
+}
+.gm-context-banner .gm-av{width:22px;height:22px;font-size:9px;}
+.gm-cb-clear{margin-left:auto;font-size:10px;cursor:pointer;padding:2px 8px;border:1px solid rgba(79,127,255,.3);border-radius:5px;flex-shrink:0;transition:all .15s;}
+.gm-cb-clear:hover{background:rgba(79,127,255,.2);}
+
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{height:100%;overflow-x:hidden;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;overscroll-behavior-y:none;}
@@ -1371,8 +1435,44 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   </div>
   <div class="tb-right">
     <div class="tb-clock" id="clock">00:00:00</div>
+    <!-- Global Member Picker -->
+    <div id="gm-pill" onclick="toggleGmDropdown()" title="Filter by family member">
+      <div class="gm-av" id="gm-av" style="background:linear-gradient(135deg,#374151,#6b7280)">👨‍👩‍👧‍👦</div>
+      <span class="gm-name" id="gm-name">All</span>
+      <span class="gm-arrow">▾</span>
+    </div>
     <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</div>
     <div class="tb-search-btn" onclick="goSearch()" title="Search">⌕</div>
+  </div>
+</div>
+
+<!-- Global Member Dropdown -->
+<div id="gm-dropdown">
+  <div class="gm-dd-hdr">View as member</div>
+  <div class="gm-dd-item active" data-gm="all" onclick="setPortalMember('all')">
+    <div class="gm-av" style="background:linear-gradient(135deg,#374151,#6b7280)">👨‍👩‍👧‍👦</div>
+    <div class="gm-dd-item-info"><div class="gm-dd-item-name">All Family</div><div class="gm-dd-item-role">Full portal view</div></div>
+    <span class="gm-dd-check">✓</span>
+  </div>
+  <div class="gm-dd-item" data-gm="rajasekhar" onclick="setPortalMember('rajasekhar')">
+    <div class="gm-av" style="background:linear-gradient(135deg,#1a3254,#3b6fd4)">RR</div>
+    <div class="gm-dd-item-info"><div class="gm-dd-item-name">Rajasekhar</div><div class="gm-dd-item-role">Head of Family · 48M</div></div>
+    <span class="gm-dd-check" style="display:none">✓</span>
+  </div>
+  <div class="gm-dd-item" data-gm="vasundhara" onclick="setPortalMember('vasundhara')">
+    <div class="gm-av" style="background:linear-gradient(135deg,#5b21b6,#9333ea)">VD</div>
+    <div class="gm-dd-item-info"><div class="gm-dd-item-name">Vasundhara</div><div class="gm-dd-item-role">Spouse · 42F</div></div>
+    <span class="gm-dd-check" style="display:none">✓</span>
+  </div>
+  <div class="gm-dd-item" data-gm="josritha" onclick="setPortalMember('josritha')">
+    <div class="gm-av" style="background:linear-gradient(135deg,#9d174d,#ec4899)">JD</div>
+    <div class="gm-dd-item-info"><div class="gm-dd-item-name">Josritha</div><div class="gm-dd-item-role">Daughter · 19F</div></div>
+    <span class="gm-dd-check" style="display:none">✓</span>
+  </div>
+  <div class="gm-dd-item" data-gm="jeevan" onclick="setPortalMember('jeevan')">
+    <div class="gm-av" style="background:linear-gradient(135deg,#065f46,#0d9488)">JV</div>
+    <div class="gm-dd-item-info"><div class="gm-dd-item-name">Jeevan</div><div class="gm-dd-item-role">Son · 14M</div></div>
+    <span class="gm-dd-check" style="display:none">✓</span>
   </div>
 </div>
 
@@ -2092,10 +2192,15 @@ function goPage(page) {
   if(navEl) navEl.classList.add('active');
   syncSidebarNav(page);
   window.scrollTo(0,0);
-  if(page==='members') { showMembersList(); }
+  if(page==='members') {
+    showMembersList();
+    setTimeout(()=>applyGmMembers(),60);
+  }
   if(page==='expiry') { setTimeout(animateExpBars,150); }
-  if(page==='calendar') { setTimeout(initCalendar,80); }
-  if(page==='health')   { setTimeout(initHealthPage,80); }
+  if(page==='calendar') { setTimeout(()=>{ initCalendar(); applyGmCalendar(); },80); }
+  if(page==='health')   { setTimeout(()=>{ initHealthPage(); applyGmHealth(); },80); }
+  if(page==='documents') { setTimeout(()=>applyGmDocuments(),60); }
+  if(page==='dashboard') { setTimeout(()=>applyGmDashboard(),60); }
 }
 
 // ═══════════════════════════════════════════════════
@@ -2893,6 +2998,8 @@ function initWidgetDynamic() {
           <div class="fam-status" style="color:${fs.statusColor}">${fs.status}</div>
         </div></div>`;
     }).join('');
+    // Apply global member filter to family summary cards
+    if (typeof applyGmDashboard === 'function') applyGmDashboard();
   }
   // Attendance
   const below75=ATTENDANCE.filter(a=>Math.round(a.present/a.total*100)<75).length;
@@ -4502,11 +4609,23 @@ openAddReportSheet = function() {
 };
 
 function initHealthPage() {
+  // Respect global member context
+  if (activePortalMember !== 'all') {
+    healthActiveMember = activePortalMember;
+  }
   renderHealthMemberTabs();
+  // Hide member tabs when filtered to single member
+  const tabsEl = document.getElementById('health-member-tabs');
+  if (tabsEl) tabsEl.style.display = (activePortalMember === 'all') ? '' : 'none';
   renderHealthHero();
   renderHealthReportStrip();
   renderHealthCatTabs();
   renderBiomarkers();
+}
+
+function renderHealthPage() {
+  // Delegate to full initHealthPage (which includes Phase 2 wrapper for appts + history)
+  initHealthPage();
 }
 
 function renderHealthMemberTabs() {
@@ -4845,12 +4964,203 @@ function initHealthWidgetDynamic() {
   });
 }
 
+// ═══════════════════════════════════════
+// GLOBAL MEMBER CONTEXT
+// ═══════════════════════════════════════
+const GM_META = {
+  all:        { label:'All',        shortLabel:'All',     role:'Full portal view',    gradient:'linear-gradient(135deg,#374151,#6b7280)', color:'#6b7280', initials:'👨‍👩‍👧‍👦', personChip:'All' },
+  rajasekhar: { label:'Rajasekhar', shortLabel:'Rajasekhar', role:'Head of Family · 48M', gradient:'linear-gradient(135deg,#1a3254,#3b6fd4)', color:'#3b6fd4', initials:'RR', personChip:'Rajasekhar' },
+  vasundhara: { label:'Vasundhara', shortLabel:'Vasundhara', role:'Spouse · 42F',       gradient:'linear-gradient(135deg,#5b21b6,#9333ea)', color:'#9333ea', initials:'VD', personChip:'Vasundhara' },
+  josritha:   { label:'Josritha',   shortLabel:'Josritha',   role:'Daughter · 19F',     gradient:'linear-gradient(135deg,#9d174d,#ec4899)', color:'#ec4899', initials:'JD', personChip:'Josritha' },
+  jeevan:     { label:'Jeevan',     shortLabel:'Jeevan',     role:'Son · 14M',           gradient:'linear-gradient(135deg,#065f46,#0d9488)', color:'#0d9488', initials:'JV', personChip:'Jeevan' },
+};
+
+let activePortalMember = localStorage.getItem('fp_active_member') || 'all';
+
+function setPortalMember(id) {
+  activePortalMember = id;
+  localStorage.setItem('fp_active_member', id);
+  closeGmDropdown();
+  updateGmPill();
+  applyMemberContextToCurrentPage();
+}
+
+function updateGmPill() {
+  const m = GM_META[activePortalMember] || GM_META.all;
+  const pill = document.getElementById('gm-pill');
+  const av   = document.getElementById('gm-av');
+  const nm   = document.getElementById('gm-name');
+  if (!pill || !av || !nm) return;
+  av.style.background = m.gradient;
+  av.innerHTML = activePortalMember === 'all' ? '👨‍👩‍👧‍👦' : m.initials;
+  nm.textContent = m.shortLabel;
+  if (activePortalMember === 'all') {
+    pill.classList.remove('member-active');
+  } else {
+    pill.classList.add('member-active');
+    pill.style.setProperty('--gm-color', m.color);
+  }
+  // Update dropdown checks
+  document.querySelectorAll('#gm-dropdown .gm-dd-item').forEach(el => {
+    const isActive = el.dataset.gm === activePortalMember;
+    el.classList.toggle('active', isActive);
+    const chk = el.querySelector('.gm-dd-check');
+    if (chk) chk.style.display = isActive ? '' : 'none';
+  });
+}
+
+function toggleGmDropdown() {
+  const dd = document.getElementById('gm-dropdown');
+  const pill = document.getElementById('gm-pill');
+  const isOpen = dd.classList.contains('show');
+  if (isOpen) { closeGmDropdown(); }
+  else { dd.classList.add('show'); pill.classList.add('open'); }
+}
+
+function closeGmDropdown() {
+  document.getElementById('gm-dropdown').classList.remove('show');
+  document.getElementById('gm-pill').classList.remove('open');
+}
+
+// Close dropdown on outside tap
+document.addEventListener('click', e => {
+  if (!e.target.closest('#gm-pill') && !e.target.closest('#gm-dropdown')) closeGmDropdown();
+}, true);
+
+// ── Context banner builder ──
+function gmContextBanner(pageId) {
+  if (activePortalMember === 'all') return '';
+  const m = GM_META[activePortalMember];
+  return `<div class="gm-context-banner">
+    <div class="gm-av" style="background:${m.gradient}">${m.initials}</div>
+    <span>Showing <strong>${m.label}</strong>'s data only</span>
+    <span class="gm-cb-clear" onclick="setPortalMember('all')">✕ Show All</span>
+  </div>`;
+}
+
+// ── Apply context to current active page ──
+function applyMemberContextToCurrentPage() {
+  const activePage = document.querySelector('.page.active');
+  if (!activePage) return;
+  const pageId = activePage.id.replace('page-', '');
+  switch(pageId) {
+    case 'dashboard':   applyGmDashboard();   break;
+    case 'members':     applyGmMembers();     break;
+    case 'documents':   applyGmDocuments();   break;
+    case 'health':      applyGmHealth();      break;
+    case 'calendar':    applyGmCalendar();    break;
+    case 'expiry':      break; // expiry is family-wide, no filter needed
+  }
+}
+
+// ── Dashboard: hide/show family summary cards ──
+function applyGmDashboard() {
+  const fsC = document.getElementById('fam-summary');
+  if (!fsC) return;
+  if (activePortalMember === 'all') {
+    fsC.querySelectorAll('.fam-card').forEach(c => c.style.display = '');
+    return;
+  }
+  fsC.querySelectorAll('.fam-card').forEach(c => {
+    const onclick = c.getAttribute('onclick') || '';
+    const show = onclick.includes("'" + activePortalMember + "'");
+    c.style.display = show ? '' : 'none';
+  });
+}
+
+// ── Members: filter list and jump straight to member ──
+function applyGmMembers() {
+  if (activePortalMember === 'all') {
+    // Restore full list view
+    document.getElementById('members-detail-view').style.display = 'none';
+    const saved = localStorage.getItem('fp_members_view') || 'list';
+    setMembersView(saved);
+    // Re-render list with all members
+    const container = document.getElementById('members-cards');
+    if (container) {
+      container.innerHTML = Object.values(MEMBERS).map(m => {
+        const tabs = SECTION_TABS[m.id]||['identity'];
+        const badges = tabs.map(t=>`<span class="mcf-badge">${SECTION_META[t]?.icon||'📄'} ${SECTION_META[t]?.label||t}</span>`).join('');
+        return `<div class="member-card-full pressable" onclick="showMemberDetail('${m.id}','identity')" style="border-left-color:${m.color}">
+          <div class="mcf-av" style="background:${m.gradient};overflow:hidden;padding:0;">${MEMBER_PHOTOS[m.id]?`<img src="${MEMBER_PHOTOS[m.id]}" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:14px;" alt="${m.shortName}">`:m.initials}</div>
+          <div class="mcf-body">
+            <div class="mcf-name">${m.name}</div>
+            <div class="mcf-role">${m.role} · Age ${age(m.dob)}</div>
+            <div class="mcf-badges">${badges}</div>
+          </div>
+          <div class="mcf-arrow">›</div>
+        </div>`;
+      }).join('');
+    }
+  } else {
+    // Jump directly to this member's profile
+    showMemberDetail(activePortalMember, 'identity');
+    // Hide the back button's "← Family" since there's no list to go back to in filtered mode
+  }
+}
+
+// ── Documents: auto-set person filter chip ──
+function applyGmDocuments() {
+  if (activePortalMember === 'all') {
+    // Reset to All
+    docPersonFilter = 'All';
+    document.querySelectorAll('[data-person-chip]').forEach(c => c.classList.toggle('active', c.getAttribute('data-person-chip') === 'All'));
+    // Show all person chips
+    document.querySelectorAll('[data-person-chip]').forEach(c => c.style.display = '');
+  } else {
+    const chipName = GM_META[activePortalMember].personChip;
+    docPersonFilter = chipName;
+    document.querySelectorAll('[data-person-chip]').forEach(c => {
+      const val = c.getAttribute('data-person-chip');
+      c.classList.toggle('active', val === chipName);
+      // Hide other person chips except All and selected
+      c.style.display = (val === 'All' || val === chipName) ? '' : 'none';
+    });
+  }
+  applyDocFilters();
+}
+
+// ── Health: switch to member ──
+function applyGmHealth() {
+  if (activePortalMember !== 'all') {
+    healthActiveMember = activePortalMember;
+    // Hide member switcher tabs when in filtered mode
+    const tabsEl = document.getElementById('health-member-tabs');
+    if (tabsEl) tabsEl.style.display = 'none';
+  } else {
+    healthActiveMember = 'rajasekhar';
+    const tabsEl = document.getElementById('health-member-tabs');
+    if (tabsEl) tabsEl.style.display = '';
+  }
+  renderHealthPage();
+}
+
+// ── Calendar: set member filter ──
+function applyGmCalendar() {
+  if (activePortalMember === 'all') {
+    setCalFilter('all');
+    // Show all chips
+    document.querySelectorAll('#cal-chips .cal-chip').forEach(c => c.style.display = '');
+  } else {
+    const name = GM_META[activePortalMember].label;
+    setCalFilter(name);
+    // Hide other member chips
+    document.querySelectorAll('#cal-chips .cal-chip').forEach(c => {
+      const txt = c.textContent.trim();
+      c.style.display = (txt.includes('All') || txt.includes(name)) ? '' : 'none';
+    });
+  }
+}
+
 function init() {
   initDashboard();
   initMembers();
   initDocuments();
   initExpiry();
   buildSearchIdx();
+  // Apply saved member context after full init
+  updateGmPill();
+  applyMemberContextToCurrentPage();
 }
 
 init();
