@@ -3176,6 +3176,7 @@ function initMembers() {
       const dx=e.changedTouches[0].clientX-carouselTouchX;
       if(Math.abs(dx)>40){
         const members=Object.values(MEMBERS);
+        // Use carouselIdx which is always the true current slide position
         if(dx<0 && carouselIdx<members.length-1) setCarouselIdx(carouselIdx+1);
         else if(dx>0 && carouselIdx>0) setCarouselIdx(carouselIdx-1);
       }
@@ -3189,6 +3190,13 @@ function buildCarousel() {
   const dotsEl = document.getElementById('carousel-dots');
   if(!track||!dotsEl) return;
   const members=Object.values(MEMBERS);
+  const memberIds=members.map(m=>m.id);
+
+  // Determine start index: use activePortalMember if set, else preserve carouselIdx
+  const startIdx = (activePortalMember && activePortalMember !== 'all')
+    ? Math.max(0, memberIds.indexOf(activePortalMember))
+    : Math.max(0, Math.min(carouselIdx, members.length-1));
+
   track.innerHTML = members.map((m,i)=>{
     const fs=FAM_SUMMARIES[m.id]||{status:'–',statusColor:'var(--text3)'};
     const tabs=SECTION_TABS[m.id]||['identity'];
@@ -3223,9 +3231,22 @@ function buildCarousel() {
       </div>
     </div>`;
   }).join('');
-  dotsEl.innerHTML=members.map((_,i)=>`<div class="cdot ${i===0?'active':''}" onclick="setCarouselIdx(${i})"></div>`).join('');
+
+  // Dots: render all, mark correct one active, onclick uses member id not index position
+  dotsEl.innerHTML=members.map((m,i)=>`<div class="cdot ${i===startIdx?'active':''}" onclick="setCarouselToMember('${m.id}')"></div>`).join('');
+
+  // Snap to correct slide without animation on initial build
+  carouselIdx = startIdx;
+  track.style.transform = `translateX(-${startIdx*100}%)`;
 }
 
+// Replaces setCarouselIdx for dot/swipe clicks — uses member id to avoid index drift
+function setCarouselToMember(memberId) {
+  const members = Object.values(MEMBERS);
+  const idx = members.findIndex(m => m.id === memberId);
+  if (idx === -1) return;
+  setCarouselIdx(idx);
+}
 function setCarouselIdx(i) {
   carouselIdx=i;
   const track=document.getElementById('carousel-track');
@@ -5160,6 +5181,8 @@ function applyGmMembers() {
     document.getElementById('members-detail-view').style.display = 'none';
     const saved = localStorage.getItem('fp_members_view') || 'list';
     setMembersView(saved);
+    // Rebuild carousel so it reflects "all" mode with correct index
+    buildCarousel();
     // Re-render list with all members
     const container = document.getElementById('members-cards');
     if (container) {
@@ -5395,6 +5418,76 @@ function checkPinSession() {
   // PIN disabled — skip directly to portal
   document.getElementById('pin-lock').classList.add('hidden');
 }
+
+// ═══════════════════════════════════════
+// KEYBOARD DISMISS — BOTTOM NAV JUMP FIX
+// ═══════════════════════════════════════
+(function() {
+  const nav = document.getElementById('bottom-nav');
+  if (!nav) return;
+
+  // ── visualViewport API (Chrome Android, iOS 13+) ──
+  if (window.visualViewport) {
+    let _lastVPHeight = window.visualViewport.height;
+    let _pinTimer = null;
+
+    window.visualViewport.addEventListener('resize', () => {
+      const newH = window.visualViewport.height;
+      const delta = newH - _lastVPHeight;
+      _lastVPHeight = newH;
+
+      // Keyboard dismissed = viewport grew significantly (> 100px)
+      if (delta > 100) {
+        // Pin the nav during the reflow frame
+        nav.style.transition = 'none';
+        nav.style.transform = 'translateZ(0) translateY(0)';
+        // Lock scroll position to prevent jump
+        const sy = window.scrollY;
+        requestAnimationFrame(() => {
+          window.scrollTo(0, sy);
+          requestAnimationFrame(() => {
+            nav.style.transform = '';
+            nav.style.transition = '';
+          });
+        });
+      }
+
+      // Keyboard open = viewport shrank — offset nav up so it stays above keyboard
+      if (delta < -100) {
+        // Nothing needed — fixed positioning handles this
+      }
+    });
+  }
+
+  // ── Fallback: blur on any text input (search, health inputs, etc.) ──
+  document.addEventListener('blur', function(e) {
+    if (!e.target || !e.target.matches('input, textarea')) return;
+    // Small delay so viewport resize event fires first
+    setTimeout(() => {
+      const sy = window.scrollY;
+      nav.style.transition = 'none';
+      requestAnimationFrame(() => {
+        window.scrollTo(0, sy);
+        nav.style.transform = 'translateZ(0)';
+        requestAnimationFrame(() => {
+          nav.style.transform = '';
+          nav.style.transition = '';
+        });
+      });
+    }, 50);
+  }, true);
+
+  // ── Search page: blur input when user taps outside ──
+  const searchInp = document.getElementById('search-input');
+  if (searchInp) {
+    // After results render, tapping a result blurs the input — handled by blur above
+    // Additionally suppress scroll-jump on focus by locking scrollY
+    searchInp.addEventListener('focus', () => {
+      // Remember scroll position before keyboard opens
+      searchInp._scrollY = window.scrollY;
+    });
+  }
+})();
 
 // ═══════════════════════════════════════
 
