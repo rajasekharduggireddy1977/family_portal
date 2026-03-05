@@ -3770,31 +3770,10 @@ const BM_DEFS = [
 
 // ── Seed health data per member ──
 const HEALTH_SEED = {
-  rajasekhar: {
-    lastUpdated:'2025-12-23', labName:'MedPlus Diagnostics, Kukatpally', reportRef:'PTGOC2600839524',
-    vitals:{ weight:null, height:null, bmi:null },
-    markers:{
-      glucose:102, hba1c:6.0, cholesterol:151, ldl:86, hdl:37, triglycerides:138,
-      hemoglobin:17.1, tsh:2.90, creatinine:1.10, uricacid:5.6,
-      vitd:41.7, vitb12:388, wbc:8.84, platelets:327, bp_sys:null,
-      bilirubin:1.51, alt:29, ast:25, alp:81, ggt:45
-    }
-  },
-  vasundhara: {
-    lastUpdated:null, labName:null, reportRef:null,
-    vitals:{ weight:null, height:null, bmi:null },
-    markers:{}
-  },
-  josritha: {
-    lastUpdated:null, labName:null, reportRef:null,
-    vitals:{ weight:null, height:null, bmi:null },
-    markers:{}
-  },
-  jeevan: {
-    lastUpdated:null, labName:null, reportRef:null,
-    vitals:{ weight:null, height:null, bmi:null },
-    markers:{}
-  }
+  rajasekhar: { lastUpdated:null, labName:null, reportRef:null, vitals:{weight:null,height:null,bmi:null}, markers:{} },
+  vasundhara:  { lastUpdated:null, labName:null, reportRef:null, vitals:{weight:null,height:null,bmi:null}, markers:{} },
+  josritha:    { lastUpdated:null, labName:null, reportRef:null, vitals:{weight:null,height:null,bmi:null}, markers:{} },
+  jeevan:      { lastUpdated:null, labName:null, reportRef:null, vitals:{weight:null,height:null,bmi:null}, markers:{} }
 };
 
 const HEALTH_CATS = ['All','Blood','Lipids','Thyroid','Kidney','Liver','Vitamins','CBC','Vitals'];
@@ -3804,15 +3783,15 @@ let healthActiveCat    = 'All';
 // ── Load / save health data from localStorage ──
 function getHealthData() {
   try {
-    const s = localStorage.getItem('fp_health_v2');
+    const s = localStorage.getItem('fp_health_v3');
     if (s) return JSON.parse(s);
   } catch(e) {}
   const d = JSON.parse(JSON.stringify(HEALTH_SEED));
-  localStorage.setItem('fp_health_v2', JSON.stringify(d));
+  localStorage.setItem('fp_health_v3', JSON.stringify(d));
   return d;
 }
 function saveHealthData(data) {
-  localStorage.setItem('fp_health_v2', JSON.stringify(data));
+  localStorage.setItem('fp_health_v3', JSON.stringify(data));
 }
 
 // ── Compute health score (0–100) for a member ──
@@ -3881,10 +3860,10 @@ let haActiveMember  = 'rajasekhar'; // selected member in add-appt sheet
 
 // ── Appointments storage ──
 function getAppts() {
-  try { const s=localStorage.getItem('fp_health_appts'); if(s) return JSON.parse(s); } catch(e){}
+  try { const s=localStorage.getItem('fp_health_appts_v3'); if(s) return JSON.parse(s); } catch(e){}
   return SEED_APPTS();
 }
-function saveAppts(arr) { localStorage.setItem('fp_health_appts',JSON.stringify(arr)); }
+function saveAppts(arr) { localStorage.setItem('fp_health_appts_v3',JSON.stringify(arr)); }
 
 function SEED_APPTS() {
   const appts = [
@@ -3892,16 +3871,16 @@ function SEED_APPTS() {
     { id:'a2', member:'vasundhara', title:'Thyroid Follow-up',         date:'2026-04-05', time:'09:30', loc:'Dr. Priya, KIMS Hospital',      notes:'Fasting required · 6 hrs' },
     { id:'a3', member:'josritha',   title:'Annual Health Check-up',    date:'2026-05-12', time:'08:00', loc:'Apollo Diagnostics, Hyderabad', notes:'Full body check package' },
   ];
-  localStorage.setItem('fp_health_appts', JSON.stringify(appts));
+  localStorage.setItem('fp_health_appts_v3', JSON.stringify(appts));
   return appts;
 }
 
 // ── Report history storage ──
 function getReportHistory() {
-  try { const s=localStorage.getItem('fp_health_reports'); if(s) return JSON.parse(s); } catch(e){}
+  try { const s=localStorage.getItem('fp_health_reports_v3'); if(s) return JSON.parse(s); } catch(e){}
   return [];
 }
-function saveReportHistory(arr) { localStorage.setItem('fp_health_reports',JSON.stringify(arr)); }
+function saveReportHistory(arr) { localStorage.setItem('fp_health_reports_v3',JSON.stringify(arr)); }
 
 // ── Extend initHealthPage to also render Phase 2 sections ──
 const _origInitHealthPage = initHealthPage;
@@ -4002,14 +3981,17 @@ function loadReportIntoView(reportId) {
   const history = getReportHistory();
   const r = history.find(x => x.id === reportId);
   if (!r) return;
-  // Temporarily patch health data with this report's values for display
+  // Only update the member who owns this report
+  const owner = r.member;
+  if (owner !== healthActiveMember) return; // safety: should not happen
   const data = getHealthData();
-  data[healthActiveMember] = {
+  // Show exactly what was in this report — do NOT merge with existing markers
+  data[owner] = {
     lastUpdated: r.date,
     labName:     r.labName,
     reportRef:   r.ref || '',
-    vitals:      r.vitals || data[healthActiveMember].vitals,
-    markers:     { ...data[healthActiveMember].markers, ...r.markers }
+    vitals:      r.vitals && (r.vitals.weight || r.vitals.height) ? r.vitals : data[owner].vitals,
+    markers:     { ...r.markers }   // only this report's markers, no bleed-over
   };
   saveHealthData(data);
   renderHealthHero();
@@ -4094,7 +4076,7 @@ function saveLabReport() {
       height: height || data[hrActiveMember].vitals.height,
       bmi:    newReport.vitals.bmi || data[hrActiveMember].vitals.bmi
     },
-    markers: { ...data[hrActiveMember].markers, ...markers }
+    markers: { ...markers }   // this report only — no merge with prior data
   };
   saveHealthData(data);
 
@@ -4787,14 +4769,15 @@ function buildHealthWidget() {
     return { id, m, score, col, circ, offset, flags };
   });
 
-  // Show first member with issues, else first member
-  const featured = scores.find(s => s.flags.length > 0) || scores[0];
+  // Always feature Rajasekhar (head of family) on dashboard
+  const featured = scores.find(s => s.id === 'rajasekhar') || scores[0];
   const r = 24, circ = 2 * Math.PI * r;
 
-  // Top 3 abnormal markers for featured member
+  // Top 3 abnormal markers for featured member (Rajasekhar / head of family)
   const featData = data[featured.id];
   const featMeta = featured.m;
-  const topMarkers = BM_DEFS
+  const hasAnyData = featData && Object.keys(featData.markers||{}).length > 0;
+  const topMarkers = !hasAnyData ? [] : BM_DEFS
     .map(def => ({ def, val:featData.markers[def.id], st:getBmStatus(def, featData.markers[def.id], featMeta.gender) }))
     .filter(x => x.val != null && x.st !== 'normal')
     .sort((a,b) => { const o={'high':0,'low':1,'borderline':2}; return (o[a.st]||3)-(o[b.st]||3); })
@@ -4814,7 +4797,8 @@ function buildHealthWidget() {
     </div>`;
   }).join('');
 
-  const allOk = scores.every(s => s.flags.length === 0);
+  const allOk = !hasAnyData || scores.every(s => s.flags.length === 0);
+  const reportDateStr = featData && featData.lastUpdated ? ' · ' + fmtHealthDate(featData.lastUpdated) : '';
 
   return `<div class="w-card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -4836,11 +4820,11 @@ function buildHealthWidget() {
       </div>
       <div class="hws-info">
         <div class="hw-info-name">${featured.m.label}</div>
-        <div class="hw-info-sub">${scoreLabel(featured.score)} · ${getHealthData()[featured.id].vitals.bmi} BMI</div>
+        <div class="hw-info-sub">${hasAnyData ? scoreLabel(featured.score) : 'No reports yet'}${reportDateStr}</div>
         <div class="hw-flags">${flagHtml || '<span class="hw-flag green">All Clear ✓</span>'}</div>
       </div>
     </div>
-    ${topMarkers.length ? `<div class="hw-bm-rows">${bmRows}</div>` : `<div style="text-align:center;padding:8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">✓ No abnormal markers for ${featured.m.label}</div>`}
+    ${!hasAnyData ? `<div style="text-align:center;padding:12px 8px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.6">No reports yet<br><span style="font-size:10px;opacity:.6">Go to Health → Add Lab Report</span></div>` : topMarkers.length ? `<div class="hw-bm-rows">${bmRows}</div>` : `<div style="text-align:center;padding:8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--green)">✓ All markers normal</div>`}
   </div>`;
 }
 
