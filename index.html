@@ -213,6 +213,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   will-change:transform;
   -webkit-backface-visibility:hidden;
   backface-visibility:hidden;
+  contain:layout style paint;
 }
 .bnav-inner{display:flex;justify-content:space-around;align-items:center;max-width:480px;margin:0 auto;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;font-family:'Inter',sans-serif;position:relative;min-width:52px;transition:color .18s;border-radius:10px;}
@@ -231,9 +232,16 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   padding-top:calc(var(--topbar-h) + var(--sat));
   padding-bottom:var(--nav-h);
   min-height:100dvh;
+  /* Prevent bottom nav reflow affecting scroll */
+  isolation:isolate;
 }
 .page{display:none;}
-.page.active{display:block;animation:pageEnter .3s ease both;}
+.page.active{
+  display:block;
+  animation:pageEnter .3s ease both;
+  overscroll-behavior:none;
+  -webkit-overflow-scrolling:touch;
+}
 /* Mobile: breathing room between topbar and page content on every page */
 @media (max-width:767px){
   .page.active > *:first-child{ margin-top:4px; }
@@ -483,6 +491,11 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   border-bottom:1px solid var(--border2);
   padding:10px 14px 0;
   box-shadow:0 3px 14px rgba(0,0,0,.28);
+  will-change:transform;
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+  /* Reserve space so height changes don't reflow siblings */
+  contain:layout style;
 }
 
 /* Search input */
@@ -3473,7 +3486,7 @@ function buildDocList() {
         <div class="doc-cat-left">
           <div class="doc-cat-icon" style="background:${col}18;color:${col}">${icon}</div>
           <span class="doc-cat-name" style="color:${col}">${type}</span>
-          <span class="doc-cat-ct">${docs.length} doc${docs.length>1?'s':''}</span>
+          <span class="doc-cat-ct" data-cat-ct="${type}" data-total="${docs.length}">${docs.length} doc${docs.length>1?'s':''}</span>
         </div>
         <span class="doc-cat-chevron">▾</span>
       </div>
@@ -3554,20 +3567,49 @@ function applyDocFilters() {
     r.style.display=show?'':'none';
     if(show)vis++;
   });
+
+  // ── Per-category: count visible rows, update header badge, show/hide section ──
+  let visibleCats=0;
   document.querySelectorAll('[data-cat-section]').forEach(section=>{
     const body=section.querySelector('.doc-cat-body');if(!body)return;
-    const hasVis=Array.from(body.querySelectorAll('.doc-row')).some(r=>r.style.display!=='none');
+    const catRows=Array.from(body.querySelectorAll('.doc-row'));
+    const visCount=catRows.filter(r=>r.style.display!=='none').length;
+    const totalCount=catRows.length;
+    const hasVis=visCount>0;
     section.style.display=hasVis?'':'none';
+    if(hasVis) visibleCats++;
+    // Update category header count badge
+    const ct=section.querySelector('[data-cat-ct]');
+    if(ct){
+      const isFiltering=docTypeFilter!=='All'||docPersonFilter!=='All'||!!q;
+      if(isFiltering && visCount<totalCount){
+        ct.textContent=visCount+' / '+totalCount+' doc'+(totalCount!==1?'s':'');
+        ct.style.color='var(--blue2)';
+      } else {
+        ct.textContent=totalCount+' doc'+(totalCount!==1?'s':'');
+        ct.style.color='';
+      }
+    }
   });
+
   const total=rows.length;
   const isFiltered=docTypeFilter!=='All'||docPersonFilter!=='All'||!!q;
   const mc=document.getElementById('doc-match-ct');if(mc)mc.textContent=q?vis+' match'+(vis!==1?'es':''):'';
-  const cl=document.getElementById('docs-count-lbl');if(cl)cl.textContent=isFiltered?vis+' / '+total+' docs':total+' records · 8 categories · 4 members';
+  const cl=document.getElementById('docs-count-lbl');
+  if(cl){
+    if(isFiltered){
+      cl.textContent=vis+' doc'+(vis!==1?'s':'')+' · '+visibleCats+' categor'+(visibleCats!==1?'ies':'y');
+    } else {
+      cl.textContent=total+' records · 8 categories · 4 members';
+    }
+  }
+  // Update hero doc count
+  const tn=document.getElementById('docs-total-num');
+  if(tn) tn.textContent=isFiltered?vis:total;
   const nm=document.getElementById('doc-no-match');if(nm)nm.style.display=vis===0?'block':'none';
   const rb=document.getElementById('docs-reset');if(rb)rb.style.display=isFiltered?'flex':'';
   const sc=document.getElementById('doc-clr');if(sc)sc.style.display=q?'flex':'none';
 }
-
 function clearDocSearch(){const inp=document.getElementById('doc-search');if(inp)inp.value='';applyDocFilters();}
 function resetDocFilters(){docTypeFilter='All';docPersonFilter='All';clearDocSearch();document.querySelectorAll('[data-type-chip]').forEach(c=>c.classList.toggle('active',c.getAttribute('data-type-chip')==='All'));document.querySelectorAll('[data-person-chip]').forEach(c=>c.classList.toggle('active',c.getAttribute('data-person-chip')==='All'));}
 
