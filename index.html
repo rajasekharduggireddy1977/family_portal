@@ -2386,7 +2386,7 @@ function goPage(page) {
     showMembersList();
     setTimeout(()=>applyGmMembers(),60);
   }
-  if(page==='expiry') { setTimeout(animateExpBars,150); }
+  if(page==='expiry') { setTimeout(()=>{ initExpiry(); animateExpBars(); },80); }
   if(page==='calendar') { setTimeout(()=>{ initCalendar(); applyGmCalendar(); },80); }
   if(page==='health')   { setTimeout(()=>{ initHealthPage(); applyGmHealth(); },80); }
   if(page==='documents') { setTimeout(()=>{ applyGmDocuments(); collapseAllDocSections(); },80); }
