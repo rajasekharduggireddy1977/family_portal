@@ -3795,7 +3795,9 @@ function renderInsuranceTab(m) {
 
 function renderAcademicsTab(m) {
   if (m.id !== 'josritha') return '<div style="padding:20px;text-align:center;color:var(--text3);">Academics data is specific to Josritha</div>';
-  const _ar2=localStorage.getItem("fp_attendance_synced");const _la2=_ar2?JSON.parse(_ar2):ATTENDANCE;const below75 = _la2.filter(a => Math.round(a.present/a.total*100) < 75).length;
+  const _attSynced = localStorage.getItem('fp_attendance_synced');
+  const liveAtt = _attSynced ? JSON.parse(_attSynced) : ATTENDANCE;
+  const below75 = liveAtt.filter(a => Math.round(a.present/a.total*100) < 75).length;
   const warnHtml = below75 > 0
     ? `<div style="background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:20px;">⚠️</span>
@@ -3808,7 +3810,7 @@ function renderAcademicsTab(m) {
         <span style="font-size:20px;">✅</span>
         <div style="font-size:13px;font-weight:700;color:var(--green);">All subjects above 75% — on track</div>
        </div>`;
-  const rows = _la2.map(a => {
+  const rows = liveAtt.map(a => {
     const pct = Math.round(a.present/a.total*100);
     const col = pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
     const lbl = pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
@@ -4214,6 +4216,7 @@ function closeTlSheet() {
 // EXPIRY (original list)
 // ═══════════════════════════════════════
 function initExpiry() {
+  try {
   const sorted=[...EXPIRY].sort((a,b)=>daysUntil(a.date)-daysUntil(b.date));
   const overdue=sorted.filter(e=>daysUntil(e.date)<0).length;
   const urgent=sorted.filter(e=>{const d=daysUntil(e.date);return d>=0&&d<=90;}).length;
@@ -4280,6 +4283,7 @@ function initExpiry() {
       </div>
     </div>`;
   }).join('');
+  } catch(e) { console.error('initExpiry error:', e); }
 }
 
 function animateExpBars() {
