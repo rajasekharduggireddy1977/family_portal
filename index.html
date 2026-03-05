@@ -1999,6 +1999,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
     <div class="bnav-item pressable" id="bnav-search" onclick="goPage('search')">
       <span class="bnav-icon">⌕</span><span>Search</span><div class="bnav-dot"></div>
     </div>
+    <div class="bnav-item pressable" id="bnav-backup" onclick="openBackupModal()">
+      <span class="bnav-icon">💾</span><span>Backup</span><div class="bnav-dot"></div>
+    </div>
   </div>
 </nav>
 
@@ -6006,7 +6009,7 @@ function doRestore(input) {
 </script>
 
 <!-- BACKUP MODAL -->
-<div id="backup-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;">
+<div id="backup-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)closeBackupModal()">
   <div style="background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.4);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
       <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);">💾 Backup & Restore</div>
