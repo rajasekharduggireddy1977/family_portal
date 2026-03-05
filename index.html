@@ -4863,6 +4863,8 @@ function initDashboard() {
   // Load widget order preference and render widgets
   loadWidgetOrder();
   renderWidgets();
+  // Init AI widgets after DOM is rendered
+  setTimeout(aiWidgetsInit, 200);
 }
 
 // ═══════════════════════════════════════════════════
@@ -7818,19 +7820,25 @@ Key documents & details you know:
 Be warm, helpful, concise (2-4 sentences unless list needed), culturally aware of Telugu/Indian family values. Address members by name. Use relevant emojis occasionally.`;
 
 function aiChatOpen(prefill) {
-  // Scroll to AI chat widget or open it
+  // Find the chat widget input
+  const input = document.getElementById('aicw-input');
   const chatEl = document.getElementById('aicw-messages');
+
+  // Scroll chat widget into view if it exists
   if (chatEl) {
-    chatEl.closest('.widget-item')?.scrollIntoView({behavior:'smooth', block:'start'});
-    setTimeout(() => {
-      const input = document.getElementById('aicw-input');
-      if (input && prefill) {
-        input.value = prefill;
-        aiChatAutoResize(input);
-        aiChatSend();
-      }
-    }, 400);
+    const widgetItem = chatEl.closest('.widget-item');
+    if (widgetItem) widgetItem.scrollIntoView({behavior:'smooth', block:'start'});
   }
+
+  // Set prefill and send after scroll settles
+  setTimeout(() => {
+    const inp = document.getElementById('aicw-input');
+    if (inp && prefill) {
+      inp.value = prefill;
+      aiChatAutoResize(inp);
+      aiChatSend();
+    }
+  }, chatEl ? 450 : 50);
 }
 
 function aiChatSendQuick(chip) {
@@ -8012,13 +8020,6 @@ function aiWidgetsInit() {
     if (!aimwPlan) setTimeout(aiMealGenerate, 1200);
   }
 }
-
-// Patch renderWidgets to also init AI widgets after render
-const _origRenderWidgets = renderWidgets;
-window.renderWidgets = function() {
-  _origRenderWidgets();
-  setTimeout(aiWidgetsInit, 100);
-};
 
 // ═══════════════════════════════════════
 
