@@ -222,6 +222,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .bnav-item.active .bnav-icon{transform:scale(1.15);}
 .bnav-dot{width:4px;height:4px;border-radius:50%;background:var(--blue2);margin:0 auto;opacity:0;transition:opacity .18s;}
 .bnav-item.active .bnav-dot{opacity:1;}
+.bnav-alert-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--bg);animation:alertPulse 1.8s ease-in-out infinite;}
+.snav-alert-dot{position:absolute;top:50%;right:14px;transform:translateY(-50%);margin:0;}
+@keyframes alertPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.25);}}
 .bnav-badge{position:absolute;top:0;right:8px;background:var(--red);color:#fff;font-size:8px;font-weight:700;padding:1px 4px;border-radius:20px;font-family:'DM Mono',monospace;}
 
 /* ═══════════════════════════════════════
@@ -874,7 +877,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   background:radial-gradient(circle,rgba(79,127,255,.12) 0%,transparent 70%);
   pointer-events:none;
 }
-.hero-greeting{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.15;}
+.hero-greeting{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.15;margin:0;padding:0;}
 .hero-greeting em{font-style:normal;background:linear-gradient(135deg,var(--blue2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:.3px;}
 .hero-status-line{font-size:12px;color:var(--text2);margin:10px 0 12px;line-height:1.5;border-left:2px solid rgba(79,127,255,.4);padding-left:10px;}
@@ -1589,7 +1592,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <div class="snav-icon">📅</div> Calendar
     </div>
     <div class="snav-item" id="snav-health" onclick="goPage('health')">
-      <div class="snav-icon">💊</div> Health
+      <div class="snav-icon">💊</div> Health<div class="bnav-alert-dot snav-alert-dot" id="health-alert-dot-snav" style="display:none;"></div>
     </div>
     <div class="snav-item" id="snav-search" onclick="goSearch()">
       <div class="snav-icon">🔍</div> Search
@@ -1973,7 +1976,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <span class="bnav-icon">📅</span><span>Calendar</span><div class="bnav-dot"></div>
     </div>
     <div class="bnav-item pressable" id="bnav-health" onclick="goPage('health')">
-      <span class="bnav-icon">💊</span><span>Health</span><div class="bnav-dot"></div>
+      <span class="bnav-icon">💊</span><span>Health</span><div class="bnav-dot"></div><div class="bnav-alert-dot" id="health-alert-dot" style="display:none;"></div>
     </div>
     <div class="bnav-item pressable" id="bnav-search" onclick="goPage('search')">
       <span class="bnav-icon">⌕</span><span>Search</span><div class="bnav-dot"></div>
@@ -2316,6 +2319,21 @@ function copyVal(val, btn) {
   });
 }
 
+function updateHealthBadge() {
+  if (typeof getBmStatus !== 'function' || typeof getHealthData !== 'function') return;
+  const hData = getHealthData();
+  let hasCritical = false;
+  Object.entries(HEALTH_MEMBER_META || {}).forEach(([id, m]) => {
+    const mData = hData[id]; if (!mData) return;
+    (BM_DEFS || []).forEach(def => {
+      const val = mData.markers[def.id]; if (val == null) return;
+      if (getBmStatus(def, val, m.gender) === 'high' || getBmStatus(def, val, m.gender) === 'low') hasCritical = true;
+    });
+  });
+  const d=document.getElementById('health-alert-dot'),ds=document.getElementById('health-alert-dot-snav');
+  if(d)  d.style.display  = hasCritical?'block':'none';
+  if(ds) ds.style.display = hasCritical?'block':'none';
+}
 function showToast(msg='✓ Copied to clipboard'){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);
 }
@@ -3054,9 +3072,17 @@ function tdCreateGhost(item, rect, cx, cy) {
   tdGhost=item.cloneNode(true);
   tdGhost.id='drag-ghost';
   tdGhost.style.cssText=`
+    position:fixed;
+    z-index:9999;
+    pointer-events:none;
     width:${rect.width}px;
     left:${cx-tdOffX}px;
     top:${cy-tdOffY}px;
+    opacity:0.88;
+    box-shadow:0 8px 32px rgba(0,0,0,.45);
+    border-radius:16px;
+    transform:scale(1.03);
+    transition:none;
   `;
   // hide control buttons on ghost
   tdGhost.querySelectorAll('.w-del,.w-drag').forEach(el=>el.style.display='none');
@@ -3113,11 +3139,11 @@ function buildWidgetHTML(wid) {
   switch(wid) {
     case 'hero': return `<div class="hero-card" id="hero-card">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div style="flex:1;min-width:0;">
-          <div class="hero-greeting" id="dash-greeting">☀️ Good Morning, <em>Rajasekhar!</em></div>
+        <div style="flex:1;min-width:0;margin-top:0;">
+          <div class="hero-greeting" id="dash-greeting" style="margin-top:0;">☀️ Good Morning, <em>Rajasekhar!</em></div>
           <div class="hero-date" id="dash-date"></div>
         </div>
-        <div class="widget-edit-btn" id="widget-edit-btn" onclick="enterWidgetEdit()">⚙ Widgets</div>
+        <div class="widget-edit-btn" id="widget-edit-btn" onclick="enterWidgetEdit()" style="margin-top:2px;flex-shrink:0;">⚙ Widgets</div>
       </div>
       <div class="hero-status-line" id="hero-status-line">Loading family status…</div>
       <div class="hero-dots" id="hero-dots"></div>
@@ -3246,16 +3272,28 @@ function initWidgetDynamic() {
     const overdueEvts = allCalEvts.filter(ev => daysUntil(ev.date) < 0);
     const soonEvts    = allCalEvts.filter(ev => { const d=daysUntil(ev.date); return d>=0 && d<=10; });
     const attBelow    = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75);
-    const healthScores = typeof computeHealthScore === 'function'
-      ? Object.keys(HEALTH_MEMBER_META || {}).map(id => computeHealthScore(id))
-      : [];
-    const healthOk = healthScores.length === 0 || healthScores.every(s => s >= 70);
+    // Collect critical health markers for specific insight
+    let criticalHealthItems = [];
+    if (typeof computeHealthScore === 'function' && typeof getBmStatus === 'function' && typeof getHealthData === 'function') {
+      const hData = getHealthData();
+      Object.entries(HEALTH_MEMBER_META || {}).forEach(([id, m]) => {
+        const mData = hData[id];
+        if (!mData) return;
+        (BM_DEFS || []).forEach(def => {
+          const val = mData.markers[def.id];
+          if (val == null) return;
+          const st = getBmStatus(def, val, m.gender);
+          if (st === 'high' || st === 'low') criticalHealthItems.push({ member: m.label, marker: def.name.split(' ')[0], st });
+        });
+      });
+    }
+    const healthOk = criticalHealthItems.length === 0;
     let parts = [];
     if (overdueEvts.length) parts.push(`<strong style="color:var(--red)">${overdueEvts.length} overdue</strong>`);
     if (soonEvts.length) parts.push(`<strong style="color:var(--gold)">${soonEvts.length} due this week</strong>`);
     if (!overdueEvts.length && !soonEvts.length) parts.push('<strong style="color:var(--green)">No urgent items</strong>');
-    if (!healthOk) parts.push('<strong style="color:var(--orange)">Health needs review</strong>');
-    else if (healthScores.length) parts.push('<strong style="color:var(--green)">Family health looks good</strong>');
+    if (!healthOk) { const s=criticalHealthItems[0],more=criticalHealthItems.length>1?' +'+(criticalHealthItems.length-1)+' more':''; parts.push('<strong style="color:var(--orange)">'+s.member+': '+s.marker+' '+s.st+more+'</strong>'); }
+    else if (Object.keys(HEALTH_MEMBER_META||{}).length) parts.push('<strong style="color:var(--green)">Family health looks good</strong>');
     if (attBelow.length) parts.push(`<strong style="color:var(--red)">Josritha: ${attBelow.length} subject${attBelow.length>1?'s':''} at risk</strong>`);
     const statusLine = document.getElementById('hero-status-line');
     if (statusLine) statusLine.innerHTML = parts.join(' · ');
@@ -3287,10 +3325,20 @@ function initWidgetDynamic() {
       return true;
     }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
 
-    if (!filtered.length) {
+    // Academics chip — prepend if any subject below 75% (Josritha) and not filtered to another member
+    const attBelow75 = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75);
+    const showAcadChip = attBelow75.length > 0 && (activePortalMember === 'all' || activePortalMember === 'josritha');
+    const acadChip = showAcadChip
+      ? `<div class="priority-chip overdue pressable" onclick="goPage('expiry');setTimeout(()=>switchExpTab('att'),80)">
+           <span>📚 ${attBelow75.length} subject${attBelow75.length>1?'s':''} &lt;75%</span>
+           <span class="pc-days">Josritha</span>
+         </div>`
+      : '';
+
+    if (!filtered.length && !showAcadChip) {
       priorityStrip.innerHTML = `<div class="priority-empty">✅ All clear for next 30 days</div>`;
     } else {
-      priorityStrip.innerHTML = filtered.slice(0, 8).map(ev => {
+      priorityStrip.innerHTML = acadChip + filtered.slice(0, showAcadChip ? 7 : 8).map(ev => {
         const d = daysUntil(ev.date);
         const cls = d < 0 ? 'overdue' : d <= 7 ? 'due-soon' : 'upcoming';
         const daysLabel = d < 0 ? `${Math.abs(d)}d overdue` : d === 0 ? 'today' : `${d}d`;
@@ -3339,12 +3387,24 @@ function initWidgetDynamic() {
   const tlList = document.getElementById('timeline-list');
   if (tlList) {
     const now = new Date(); now.setHours(0,0,0,0);
-    const evts = allCalEvts.filter(ev => {
+
+    // Cal events
+    const calFiltered = allCalEvts.filter(ev => {
       const d = daysUntil(ev.date);
       if (d < -3 || d > 60) return false;
       if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
       return true;
-    }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
+    });
+
+    // Doc expiry items merged in — show those within 60 days or overdue (≥ -3)
+    const expiryFiltered = (typeof EXPIRY !== 'undefined' ? EXPIRY : []).filter(e => {
+      const d = daysUntil(e.date);
+      if (d < -3 || d > 60) return false;
+      if (activeName) return e.person === activeName || e.person === 'Family';
+      return true;
+    }).map(e => ({ _isExpiry: true, title: e.label, date: e.date, members: [e.person], icon: e.icon || '📋', id: e.id }));
+
+    const evts = [...calFiltered, ...expiryFiltered].sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
 
     if (!evts.length) {
       tlList.innerHTML = `<div style="padding:18px 0;text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">No events in the next 60 days</div>`;
@@ -3378,13 +3438,13 @@ function initWidgetDynamic() {
           const badge = d < 0 ? 'overdue' : d === 0 ? 'today' : 'upcoming';
           const badgeTxt = d < 0 ? `${Math.abs(d)}d overdue` : d === 0 ? 'TODAY' : `in ${d}d`;
           const members = (ev.members||[]).filter(x=>x&&x!=='all').slice(0,2).join(', ');
-          return `<div class="tl-item pressable" onclick="goPage('calendar')">
+          return `<div class="tl-item pressable" onclick="goPage('${ev._isExpiry ? 'expiry' : 'calendar'}')">
             <div class="tl-bar-wrap">
               <div class="tl-dot" style="background:${col}"></div>
               <div class="tl-bar" style="background:${col};opacity:.15"></div>
             </div>
             <div class="tl-body">
-              <div class="tl-title">${ev.title}</div>
+              <div class="tl-title">${ev._isExpiry ? (ev.icon+' ') : ''}${ev.title}</div>
               <div class="tl-meta">${members ? members + ' · ' : ''}${fmtDate(ev.date)}</div>
             </div>
             <div class="tl-right">
@@ -3496,6 +3556,8 @@ function initWidgetDynamic() {
     const target = parseInt(el.dataset.count); const dur = 700; const start = Date.now();
     const tick = () => { const e=Date.now()-start; const p=Math.min(e/dur,1); el.textContent=Math.round((1-Math.pow(1-p,3))*target); if(p<1) requestAnimationFrame(tick); }; tick();
   });
+  // Update health nav badge
+  updateHealthBadge();
 }
 
 function enterWidgetEdit() {
@@ -4659,6 +4721,9 @@ function saveLabReport() {
     renderReportHistory();
   }
   showToast('✓ Lab report saved for ' + HEALTH_MEMBER_META[hrActiveMember].label);
+  updateHealthBadge();
+  // Refresh dashboard hero so status line reflects new health data immediately
+  setTimeout(() => initWidgetDynamic(), 50);
 }
 
 // ── Add Appointment sheet ──
