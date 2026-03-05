@@ -2102,7 +2102,7 @@ function goPage(page) {
 // IDEA A — SWIPE GESTURE NAVIGATION
 // ═══════════════════════════════════════════════════
 const PAGE_ORDER = ['dashboard','members','documents','expiry','calendar','health','search'];
-let swipeTouchX=0, swipeTouchY=0, swipeMoved=false;
+let swipeTouchX=0, swipeTouchY=0, swipeTarget=null;
 let swipeHintTimer=null;
 
 function showSwipeHint(msg) {
@@ -2114,22 +2114,43 @@ function showSwipeHint(msg) {
   swipeHintTimer=setTimeout(()=>el.classList.remove('show'),1800);
 }
 
+// Returns true if el or any ancestor scrolls horizontally
+function isInsideHScroll(el) {
+  while(el && el !== document.body) {
+    const st = getComputedStyle(el);
+    const ox = st.overflowX;
+    if((ox==='auto'||ox==='scroll') && el.scrollWidth > el.clientWidth+4) return true;
+    // Also block swipe inside any open sheet / modal / input / select
+    if(el.matches('input,select,textarea')) return true;
+    if(el.classList.contains('hr-sheet-card') || el.classList.contains('ha-sheet-card') ||
+       el.classList.contains('bm-sheet-card') || el.classList.contains('sidebar-card')) return true;
+    el=el.parentElement;
+  }
+  return false;
+}
+
 document.getElementById('content')?.addEventListener('touchstart', e=>{
   swipeTouchX=e.touches[0].clientX;
   swipeTouchY=e.touches[0].clientY;
-  swipeMoved=false;
+  swipeTarget=e.target;
 },{passive:true});
 
 document.getElementById('content')?.addEventListener('touchend', e=>{
   const dx=e.changedTouches[0].clientX-swipeTouchX;
   const dy=e.changedTouches[0].clientY-swipeTouchY;
-  if(Math.abs(dx)<40||Math.abs(dy)>Math.abs(dx)*1.1) return;
+  // Ignore: not horizontal, too short, or started inside a scrollable/interactive area
+  if(Math.abs(dx)<52) return;
+  if(Math.abs(dy)>Math.abs(dx)*0.6) return;
+  if(swipeTarget && isInsideHScroll(swipeTarget)) return;
+  // Also ignore if any sheet is currently open
+  const sheets=['hr-sheet','ha-sheet','bm-sheet','sidebar-nav','gemini-key-sheet'];
+  if(sheets.some(id=>{ const el=document.getElementById(id); return el&&!el.classList.contains('hidden'); })) return;
   const idx=PAGE_ORDER.indexOf(currentPage);
-  if(dx<-40 && idx<PAGE_ORDER.length-1) {
+  if(dx<-52 && idx<PAGE_ORDER.length-1) {
     const next=PAGE_ORDER[idx+1];
     goPage(next);
     showSwipeHint('→ '+next.charAt(0).toUpperCase()+next.slice(1));
-  } else if(dx>40 && idx>0) {
+  } else if(dx>52 && idx>0) {
     const prev=PAGE_ORDER[idx-1];
     goPage(prev);
     showSwipeHint('← '+prev.charAt(0).toUpperCase()+prev.slice(1));
