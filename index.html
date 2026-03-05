@@ -4230,32 +4230,36 @@ function extractFromText(rawText) {
 // PATH A: PDF.js — reads text directly from digital PDFs
 // Unlimited pages · Offline · Zero API · 100% accurate
 // ════════════════════════════════════════════════════════
+// Load PDF.js legacy UMD build (classic <script>, not ES module)
+// v2.16.105 is the last stable version that exposes window.pdfjsLib reliably
+const PDFJS_SRC    = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js';
+const PDFJS_WORKER = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.worker.min.js';
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Failed to load: ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function ensurePdfJs() {
+  if (window.pdfjsLib) return window.pdfjsLib;
+  setScanProgressText('Loading PDF reader…');
+  await loadScript(PDFJS_SRC);
+  if (!window.pdfjsLib) throw new Error('PDF.js did not load. Try refreshing the page.');
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+  return window.pdfjsLib;
+}
+
 async function extractPdfText(arrayBuffer) {
-  // Dynamically load PDF.js from CDN
-  if (!window.pdfjsLib) {
-    setScanProgressText('Loading PDF reader…');
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs', true);
-    window.pdfjsLib = window['pdfjs-dist/build/pdf'];
-    if (window.pdfjsLib) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-    }
-  }
-
-  // Fallback: try unpkg if cdnjs failed
-  if (!window.pdfjsLib) {
-    await loadScript('https://unpkg.com/pdfjs-dist@4.0.379/build/pdf.min.mjs', true);
-    window.pdfjsLib = window['pdfjs-dist/build/pdf'];
-    if (window.pdfjsLib) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://unpkg.com/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs';
-    }
-  }
-
-  if (!window.pdfjsLib) throw new Error('PDF reader could not load. Check internet connection.');
-
+  const pdfjs = await ensurePdfJs();
   setScanProgressText('Reading PDF…');
-  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+  const pdf = await pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
   const totalPages = pdf.numPages;
   let allText = '';
 
@@ -4263,29 +4267,15 @@ async function extractPdfText(arrayBuffer) {
     setScanProgressText('Reading page ' + i + ' of ' + totalPages + '…');
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    // Join text items with spaces, preserve line breaks via y-position grouping
     let lastY = null;
     content.items.forEach(item => {
-      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
-        allText += '\n';
-      }
+      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) allText += '\n';
       allText += item.str + ' ';
       lastY = item.transform[5];
     });
     allText += '\n';
   }
   return allText.trim();
-}
-
-function loadScript(src, isModule) {
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = src;
-    if (isModule) s.type = 'module';
-    s.onload = resolve;
-    s.onerror = reject;
-    document.head.appendChild(s);
-  });
 }
 
 // ════════════════════════════════════════════════════════
