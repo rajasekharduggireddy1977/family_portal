@@ -743,6 +743,120 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   .stats-grid{gap:18px;}
 }
 
+
+/* ═══════════════════════════════════════
+   WIDGET SYSTEM
+═══════════════════════════════════════ */
+
+/* Edit-mode toolbar */
+.widget-edit-bar{
+  display:none;align-items:center;justify-content:space-between;
+  padding:8px 14px;
+  background:rgba(79,127,255,.08);
+  border:1px solid rgba(79,127,255,.2);
+  border-radius:10px;
+  margin:0 14px 4px;
+  font-family:'DM Mono',monospace;font-size:10px;color:var(--blue2);
+  letter-spacing:.03em;
+}
+.widget-edit-bar.active{display:flex;}
+.wed-done{
+  background:var(--blue);color:#fff;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  padding:5px 14px;border-radius:7px;cursor:pointer;
+  transition:opacity .15s;
+}
+.wed-done:hover{opacity:.85;}
+
+/* ⚙ Widgets button */
+.widget-edit-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--text3);background:rgba(255,255,255,.04);
+  border:1px solid var(--border2);border-radius:7px;
+  padding:5px 11px;cursor:pointer;transition:all .15s;
+  white-space:nowrap;flex-shrink:0;
+}
+.widget-edit-btn:hover{color:var(--text);border-color:var(--border);}
+
+/* Widget container */
+.widget-container{
+  display:flex;flex-direction:column;gap:12px;
+  padding:0 14px;
+}
+
+/* Individual widget wrapper */
+.widget-item{
+  position:relative;border-radius:16px;
+  transition:opacity .2s,transform .2s;
+}
+.widget-item.edit-mode{border:1.5px dashed rgba(79,127,255,.3);border-radius:16px;}
+.widget-item.is-dragging{opacity:.4;}
+
+/* Delete button (−) */
+.w-del{
+  display:none;
+  position:absolute;top:-8px;left:-8px;z-index:10;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--red);color:#fff;
+  font-size:16px;font-weight:700;line-height:22px;text-align:center;
+  cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);
+  transition:transform .15s;
+}
+.widget-item.edit-mode .w-del{display:block;}
+.w-del:hover{transform:scale(1.15);}
+
+/* Drag handle (⠿) */
+.w-drag{
+  display:none;
+  position:absolute;top:-8px;right:-8px;z-index:10;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--blue);color:#fff;
+  font-size:13px;line-height:22px;text-align:center;
+  cursor:grab;box-shadow:0 2px 6px rgba(0,0,0,.4);
+  touch-action:none;
+}
+.widget-item.edit-mode .w-drag{display:block;}
+
+/* Widget card surface */
+.w-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px 16px;
+  overflow:hidden;
+}
+
+/* Widget card header label */
+.w-hdr{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  color:var(--text);margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* Add widget button */
+.add-widget-wrap{
+  padding:4px 14px 12px;
+  display:none;
+}
+.add-widget-wrap.active{display:block;}
+.add-widget-btn{
+  width:100%;padding:11px;border-radius:12px;
+  background:rgba(79,127,255,.07);
+  border:1.5px dashed rgba(79,127,255,.3);
+  color:var(--blue2);font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:600;text-align:center;
+  cursor:pointer;transition:all .18s;
+}
+.add-widget-btn:hover{background:rgba(79,127,255,.14);}
+
+/* Desktop widget container wider */
+@media(min-width:768px){
+  .widget-container{padding:0 28px;}
+  .widget-edit-bar{margin:0 28px 4px;}
+  .add-widget-wrap{padding:4px 28px 16px;}
+}
+
 /* ════════════════════════════════════════════
    FEATURE 05 — EMERGENCY QUICK-ACCESS CARD
 ════════════════════════════════════════════ */
