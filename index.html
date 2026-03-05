@@ -245,7 +245,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* Mobile: breathing room between topbar and page content on every page */
 @media (max-width:767px){
   .page.active > *:first-child{ margin-top:4px; }
-  .members-view-toggle,.expiry-hdr,.docs-wrap,.search-wrap,.cal-wrap,.expiry-wrap{
+  .expiry-hdr,.docs-wrap,.search-wrap,.cal-wrap,.expiry-wrap{
     padding-top:12px;
   }
   .dash-wrap{ padding-top:16px; }
@@ -641,178 +641,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* ════════════════════════════════════════════
    IDEA B — MEMBER CAROUSEL
 ════════════════════════════════════════════ */
-.members-view-toggle{
-  display:flex;gap:4px;background:rgba(13,16,32,.96);border:1px solid var(--border);
-  border-radius:10px;padding:3px;margin:10px 14px 8px;
-  position:sticky;
-  top:calc(var(--topbar-h) + var(--sat) + 6px);
-  z-index:50;
-  box-shadow:0 2px 12px rgba(0,0,0,.35);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-}
-.mvt-btn{flex:1;padding:7px 8px;border-radius:8px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;cursor:pointer;color:var(--text2);transition:all .2s;user-select:none;}
-.mvt-btn.active{background:var(--blue-dim);color:var(--blue2);border:1px solid rgba(79,127,255,.3);}
-#member-carousel-wrap{overflow:hidden;touch-action:pan-y;}
-.carousel-track{display:flex;will-change:transform;}
-.carousel-track.animated{transition:transform .36s cubic-bezier(.4,0,.2,1);}
-.carousel-slide{flex:0 0 100%;width:100%;padding:6px 14px 10px;box-sizing:border-box;}
-.cc-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);}
-.cc-hero{min-height:108px;display:flex;align-items:center;padding:16px;gap:14px;position:relative;overflow:hidden;}
-.cc-hero-bg{position:absolute;inset:0;opacity:.9;}
-.cc-hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.1) 100%);}
-.cc-av{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;position:relative;z-index:1;border:2px solid rgba(255,255,255,.25);overflow:hidden;}
-.cc-av img{width:100%;height:100%;object-fit:cover;object-position:center top;}
-.cc-info{position:relative;z-index:1;flex:1;min-width:0;}
-.cc-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cc-role{font-size:11px;color:rgba(255,255,255,.72);margin-top:3px;}
-.cc-dob{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;}
-.cc-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:9px;}
-.cc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
-.cc-stat{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 6px;text-align:center;}
-.cc-stat-num{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);line-height:1;}
-.cc-stat-lbl{font-size:8px;color:var(--text2);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:.2px;text-transform:uppercase;}
-.cc-status{font-size:11px;font-weight:600;padding:7px 12px;border-radius:9px;text-align:center;}
-.cc-open{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;background:var(--blue-dim);border:1px solid rgba(79,127,255,.3);color:var(--blue2);font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;user-select:none;}
-.cc-open:active{background:rgba(79,127,255,.22);transform:scale(.98);}
-.carousel-dots{display:flex;justify-content:center;gap:7px;padding:2px 0 12px;}
-.cdot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:all .25s;cursor:pointer;user-select:none;}
-.cdot.active{width:22px;border-radius:4px;background:var(--blue2);}
-.c-swipe-hint{text-align:center;font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);padding-bottom:6px;letter-spacing:.04em;}
-/* ════════════════════════════════════════════
-   IDEA C — DOCUMENT TIMELINE
-════════════════════════════════════════════ */
-.expiry-view-toggle{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;margin:0 0 12px;}
-.evtb{flex:1;padding:7px 8px;border-radius:8px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;cursor:pointer;color:var(--text2);transition:all .2s;user-select:none;}
-.evtb.active{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(240,180,41,.3);}
-#timeline-pane{display:none;}
-.tl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;cursor:grab;padding-bottom:6px;}
-.tl-scroll:active{cursor:grabbing;}
-.tl-scroll::-webkit-scrollbar{height:3px;}
-.tl-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-/* Canvas is tall enough for items ABOVE the line (row 0) and BELOW (row 1) */
-.tl-canvas{position:relative;min-width:920px;height:210px;margin:4px 0;}
-/* The horizontal axis line sits at y=100px */
-.tl-axis-line{position:absolute;left:40px;right:40px;top:100px;height:3px;border-radius:2px;
-  background:linear-gradient(90deg,var(--red) 0%,var(--orange) 20%,var(--gold) 45%,var(--green) 75%);}
-/* TODAY vertical pole */
-.tl-today-pole{position:absolute;top:56px;width:2px;height:50px;background:var(--blue2);border-radius:1px;z-index:4;}
-.tl-today-pole::before{content:'TODAY';position:absolute;top:-14px;left:50%;transform:translateX(-50%);
-  font-family:'DM Mono',monospace;font-size:7.5px;font-weight:800;color:var(--blue2);white-space:nowrap;}
-/* Month tick marks below axis */
-.tl-mth-tick{position:absolute;top:108px;font-family:'DM Mono',monospace;font-size:7px;color:var(--text3);
-  transform:translateX(-50%);white-space:nowrap;pointer-events:none;}
-/* Items ABOVE axis: bubble at top, stem going down to dot on line */
-/* bubble top = 28px, bubble height = 32px → bottom at 60px */
-/* stem 38px → bottom 98px, dot 10px → center at 103px (on the line at 100px ✓) */
-.tl-above{position:absolute;top:28px;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:2;}
-/* Items BELOW axis: dot on line, stem going down, bubble at bottom */
-/* dot center = 100px, stem 28px, bubble 32px → bubble top at 130px, bottom at 162px */
-.tl-below{position:absolute;top:97px;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:2;}
-.tl-bub{width:32px;height:32px;border-radius:10px;background:var(--surface2);border:2px solid;
-  display:flex;align-items:center;justify-content:center;font-size:14px;
-  flex-shrink:0;transition:transform .15s,box-shadow .15s;}
-.tl-above:hover .tl-bub,.tl-above:active .tl-bub,
-.tl-below:hover .tl-bub,.tl-below:active .tl-bub{transform:scale(1.18);box-shadow:0 4px 16px rgba(0,0,0,.4);}
-.tl-stem{width:2px;flex-shrink:0;opacity:.7;}
-.tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--bg);flex-shrink:0;}
-/* short label under above-items, above below-items */
-.tl-above-lbl{position:absolute;top:70px;font-family:'DM Mono',monospace;font-size:7px;color:var(--text2);
-  transform:translateX(-50%);white-space:nowrap;max-width:78px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;}
-.tl-below-lbl{position:absolute;top:172px;font-family:'DM Mono',monospace;font-size:7px;color:var(--text2);
-  transform:translateX(-50%);white-space:nowrap;max-width:78px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;}
-.tl-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-.tl-leg{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text2);}
-.tl-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.tl-sheet{position:fixed;inset:0;z-index:800;display:flex;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-.tl-sheet.hidden{display:none;}
-.tl-sheet-card{width:100%;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px 36px;border-top:1px solid var(--border2);animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1) both;}
-@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-.tl-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 16px;}
-/* ════════════════════════════════════════════
-   IDEA D — WIDGET HOME SCREEN
-════════════════════════════════════════════ */
-.widget-edit-btn{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:9px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;user-select:none;}
-.widget-edit-btn:hover{border-color:var(--blue);color:var(--blue2);}
-.widget-edit-bar{display:none;align-items:center;justify-content:space-between;padding:9px 14px;background:rgba(79,127,255,.1);border:1px solid rgba(79,127,255,.25);border-radius:12px;margin-bottom:10px;font-size:12px;font-weight:600;color:var(--blue2);}
-.widget-edit-bar.active{display:flex;}
-.wed-done{padding:6px 14px;border-radius:8px;background:var(--blue);color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
-.widget-container{display:flex;flex-direction:column;gap:14px;}
-.widget-item{position:relative;border-radius:18px;transition:opacity .22s,transform .22s;user-select:none;-webkit-user-select:none;}
-.widget-item.edit-mode{outline:2px dashed rgba(79,127,255,.4);outline-offset:3px;}
-.w-drag{display:none;position:absolute;top:10px;right:10px;z-index:10;width:36px;height:36px;border-radius:10px;background:rgba(20,24,48,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);align-items:center;justify-content:center;font-size:18px;cursor:grab;color:rgba(255,255,255,.9);touch-action:none;}
-.widget-item.edit-mode .w-drag{display:flex;}
-.w-del{display:none;position:absolute;top:10px;left:10px;z-index:10;width:28px;height:28px;border-radius:50%;background:var(--red);align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;cursor:pointer;line-height:1;}
-.widget-item.edit-mode .w-del{display:flex;}
-.widget-item.is-dragging{opacity:0 !important;pointer-events:none;}
-.widget-item.drop-target{outline:2px solid var(--blue);outline-offset:3px;background:var(--blue-dim);border-radius:18px;}
-#drag-ghost{position:fixed;z-index:9000;pointer-events:none;border-radius:18px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.55),0 0 0 2px var(--blue);opacity:.92;transform-origin:top left;}
-.w-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px;}
-.w-hdr{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
-.wec-rows{display:flex;flex-direction:column;gap:6px;}
-.wec-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:border-color .15s;}
-.wec-row:active{border-color:var(--border2);}
-.wec-icon{font-size:15px;flex-shrink:0;}
-.wec-name{flex:1;font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.wec-days{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;flex-shrink:0;}
-.w-att-rings{display:flex;justify-content:space-around;align-items:center;padding:4px 0;}
-.w-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.w-ring{position:relative;width:56px;height:56px;}
-.wring-svg{transform:rotate(-90deg);}
-.wring-track{fill:none;stroke:rgba(255,255,255,.07);}
-.wring-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);}
-.wring-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;}
-.w-ring-name{font-size:8.5px;font-family:'DM Mono',monospace;color:var(--text2);text-align:center;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.add-widget-wrap{display:none;margin-top:4px;}
-.add-widget-wrap.show{display:block;}
-.add-widget-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:16px;border:2px dashed rgba(79,127,255,.3);color:var(--blue2);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:rgba(79,127,255,.04);}
-.add-widget-btn:hover{border-color:var(--blue);background:var(--blue-dim);}
-.wp-sheet{position:fixed;inset:0;z-index:800;display:flex;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-.wp-sheet.hidden{display:none;}
-.wp-card{width:100%;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px 36px;border-top:1px solid var(--border2);animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1) both;}
-.wp-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 14px;}
-.wp-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;}
-.wp-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;margin-bottom:8px;transition:all .15s;}
-.wp-row:hover,.wp-row:active{border-color:var(--blue);background:var(--blue-dim);}
-.wp-row.disabled{opacity:.38;pointer-events:none;}
-.wp-ico{font-size:22px;flex-shrink:0;}
-.wp-info{flex:1;}
-.wp-name{font-size:13px;font-weight:700;}
-.wp-desc{font-size:11px;color:var(--text2);margin-top:2px;}
-.wp-cancel{text-align:center;margin-top:4px;cursor:pointer;color:var(--text2);font-size:12px;padding:10px;}
-/* ════════════════════════════════════════════
-   PWA STANDALONE (Home Screen) MODE
-   Topbar height already expands via calc(--topbar-h + --sat)
-   so content sits naturally below it — no extra padding needed.
-════════════════════════════════════════════ */
-.stagger>*{animation:fadeUp .35s ease both;}
-.stagger>*:nth-child(1){animation-delay:.03s;}
-.stagger>*:nth-child(2){animation-delay:.07s;}
-.stagger>*:nth-child(3){animation-delay:.11s;}
-.stagger>*:nth-child(4){animation-delay:.15s;}
-.stagger>*:nth-child(5){animation-delay:.19s;}
-.stagger>*:nth-child(6){animation-delay:.23s;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-/* Card press feedback */
-.pressable{transition:transform .1s,box-shadow .1s;}
-.pressable:active{transform:scale(.97);}
 
-::-webkit-scrollbar{width:3px;height:3px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 
-/* ════════════════════════════════════════════
-   PIN LOCK SCREEN — DISABLED (hidden by default)
-════════════════════════════════════════════ */
-#pin-lock{
-  position:fixed;inset:0;z-index:99999;
-  background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:32px 24px;
-  animation:lockFadeIn .4s ease both;
-}
 @keyframes lockFadeIn{from{opacity:0;transform:scale(.97);}to{opacity:1;transform:scale(1);}}
 #pin-lock.hidden{display:none !important;}
 #pin-lock.shake{animation:pinShake .4s ease both;}
@@ -1558,21 +1389,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   <!-- ══════════ MEMBERS PAGE ══════════ -->
   <div class="page" id="page-members">
     <!-- View toggle: list / carousel -->
-    <div class="members-view-toggle">
-      <div class="mvt-btn active" id="mvt-list" onclick="setMembersView('list')">☰ List</div>
-      <div class="mvt-btn" id="mvt-carousel" onclick="setMembersView('carousel')">⬡ Carousel</div>
-    </div>
     <!-- Member List -->
     <div id="members-list-view">
       <div class="members-list stagger" id="members-cards"></div>
-    </div>
-    <!-- Member Carousel -->
-    <div id="members-carousel-view" style="display:none;">
-      <div id="member-carousel-wrap">
-        <div class="carousel-track" id="carousel-track"></div>
-      </div>
-      <div class="carousel-dots" id="carousel-dots"></div>
-      <div class="c-swipe-hint">← swipe to browse members →</div>
     </div>
     <!-- Member Detail -->
     <div id="members-detail-view" style="display:none;">
@@ -2230,6 +2049,14 @@ let currentExpTab = 'docs';
 
 function goPage(page) {
   if(currentPage === page && page !== 'members') return;
+
+  // ── Reset bottom nav + dismiss keyboard before page transition ──
+  const _nav = document.getElementById('bottom-nav');
+  if (_nav) { _nav.style.transition = ''; _nav.style.transform = ''; _nav.style.bottom = ''; }
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    document.activeElement.blur();
+  }
+
   currentPage = page;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
@@ -3144,8 +2971,6 @@ function initDashboard() {
 // ═══════════════════════════════════════════════════
 // IDEA B — MEMBER CAROUSEL
 // ═══════════════════════════════════════════════════
-let carouselIdx=0;
-let carouselTX=0, carouselTouchX=0, carouselDragging=false;
 
 function initMembers() {
   // List view
@@ -3165,114 +2990,12 @@ function initMembers() {
       </div>`;
     }).join('');
   }
-  // Carousel view
-  buildCarousel();
-  // Swipe on carousel
-  const wrap = document.getElementById('member-carousel-wrap');
-  if(wrap) {
-    wrap.addEventListener('touchstart', e=>{carouselTouchX=e.touches[0].clientX;carouselDragging=true;},{passive:true});
-    wrap.addEventListener('touchend', e=>{
-      if(!carouselDragging) return;
-      const dx=e.changedTouches[0].clientX-carouselTouchX;
-      if(Math.abs(dx)>40){
-        const members=Object.values(MEMBERS);
-        // Use carouselIdx which is always the true current slide position
-        if(dx<0 && carouselIdx<members.length-1) setCarouselIdx(carouselIdx+1);
-        else if(dx>0 && carouselIdx>0) setCarouselIdx(carouselIdx-1);
-      }
-      carouselDragging=false;
-    },{passive:true});
-  }
 }
 
-function buildCarousel() {
-  const track = document.getElementById('carousel-track');
-  const dotsEl = document.getElementById('carousel-dots');
-  if(!track||!dotsEl) return;
-  const members=Object.values(MEMBERS);
-  const memberIds=members.map(m=>m.id);
-
-  // Determine start index: use activePortalMember if set, else preserve carouselIdx
-  const startIdx = (activePortalMember && activePortalMember !== 'all')
-    ? Math.max(0, memberIds.indexOf(activePortalMember))
-    : Math.max(0, Math.min(carouselIdx, members.length-1));
-
-  track.innerHTML = members.map((m,i)=>{
-    const fs=FAM_SUMMARIES[m.id]||{status:'–',statusColor:'var(--text3)'};
-    const tabs=SECTION_TABS[m.id]||['identity'];
-    const docCount=Object.values(DOC_LINKS).filter((_,j)=>{
-      const keys=Object.keys(DOC_LINKS);
-      return keys[j].toLowerCase().includes(m.shortName.toLowerCase());
-    }).length;
-    const expCount=[...EXPIRY].filter(e=>(e.sub||'').toLowerCase().includes(m.shortName.toLowerCase())).length;
-    const photo=MEMBER_PHOTOS[m.id]?`<img src="${MEMBER_PHOTOS[m.id]}" style="width:100%;height:100%;object-fit:cover;object-position:center top;">`:m.initials;
-    return `<div class="carousel-slide">
-      <div class="cc-card">
-        <div class="cc-hero">
-          <div class="cc-hero-bg" style="background:${m.gradient}"></div>
-          <div class="cc-hero-overlay"></div>
-          <div class="cc-av">${photo}</div>
-          <div class="cc-info">
-            <div class="cc-name">${m.name}</div>
-            <div class="cc-role">${m.role}</div>
-            <div class="cc-dob">🎂 ${m.dob} · Age ${age(m.dob)}</div>
-          </div>
-        </div>
-        <div class="cc-body">
-          <div class="cc-stats">
-            <div class="cc-stat"><div class="cc-stat-num">${tabs.length}</div><div class="cc-stat-lbl">Sections</div></div>
-            <div class="cc-stat"><div class="cc-stat-num">${docCount}</div><div class="cc-stat-lbl">Docs</div></div>
-            <div class="cc-stat"><div class="cc-stat-num">${expCount}</div><div class="cc-stat-lbl">Expiring</div></div>
-          </div>
-          <div class="cc-status" style="background:${fs.statusColor}18;color:${fs.statusColor};border:1px solid ${fs.statusColor}33">${fs.status}</div>
-          ${m.mobile?`<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);text-align:center;">📱 ${m.mobile}</div>`:''}
-          <div class="cc-open pressable" onclick="showMemberDetail('${m.id}','identity')">View Full Profile →</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // Dots: render all, mark correct one active, onclick uses member id not index position
-  dotsEl.innerHTML=members.map((m,i)=>`<div class="cdot ${i===startIdx?'active':''}" onclick="setCarouselToMember('${m.id}')"></div>`).join('');
-
-  // Snap to correct slide without animation on initial build
-  carouselIdx = startIdx;
-  track.style.transform = `translateX(-${startIdx*100}%)`;
-}
-
-// Replaces setCarouselIdx for dot/swipe clicks — uses member id to avoid index drift
-function setCarouselToMember(memberId) {
-  const members = Object.values(MEMBERS);
-  const idx = members.findIndex(m => m.id === memberId);
-  if (idx === -1) return;
-  setCarouselIdx(idx);
-}
-function setCarouselIdx(i) {
-  carouselIdx=i;
-  const track=document.getElementById('carousel-track');
-  if(track){track.classList.add('animated');track.style.transform=`translateX(-${i*100}%)`;setTimeout(()=>track.classList.remove('animated'),400);}
-  document.querySelectorAll('.cdot').forEach((d,j)=>d.classList.toggle('active',j===i));
-}
-
-function setMembersView(view) {
-  const listV=document.getElementById('members-list-view');
-  const carV=document.getElementById('members-carousel-view');
-  const btnL=document.getElementById('mvt-list');
-  const btnC=document.getElementById('mvt-carousel');
-  if(view==='carousel'){
-    listV.style.display='none'; carV.style.display=''; 
-    btnL.classList.remove('active'); btnC.classList.add('active');
-  } else {
-    listV.style.display=''; carV.style.display='none';
-    btnL.classList.add('active'); btnC.classList.remove('active');
-  }
-  localStorage.setItem('fp_members_view',view);
-}
 
 function showMembersList() {
-  const saved=localStorage.getItem('fp_members_view')||'list';
   document.getElementById('members-detail-view').style.display='none';
-  setMembersView(saved);
+  document.getElementById('members-list-view').style.display='';
 }
 
 function showMemberDetail(memberId, tab) {
@@ -5179,10 +4902,7 @@ function applyGmMembers() {
   if (activePortalMember === 'all') {
     // Restore full list view
     document.getElementById('members-detail-view').style.display = 'none';
-    const saved = localStorage.getItem('fp_members_view') || 'list';
-    setMembersView(saved);
-    // Rebuild carousel so it reflects "all" mode with correct index
-    buildCarousel();
+    document.getElementById('members-list-view').style.display = '';
     // Re-render list with all members
     const container = document.getElementById('members-cards');
     if (container) {
