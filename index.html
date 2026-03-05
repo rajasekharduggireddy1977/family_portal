@@ -1842,6 +1842,16 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <div class="hr-field"><label>Systolic mmHg</label><input class="hr-input" id="hrm-bp_sys" type="number" placeholder="90–120"></div>
     </div>
 
+    <!-- Liver Function -->
+    <div class="hr-sec">Liver Function (LFT)</div>
+    <div class="hr-grid">
+      <div class="hr-field"><label>Bilirubin Total mg/dL</label><input class="hr-input" id="hrm-bilirubin" type="number" step="0.01" placeholder="0.3–1.2"></div>
+      <div class="hr-field"><label>ALT / SGPT IU/L</label><input class="hr-input" id="hrm-alt" type="number" placeholder="0–50"></div>
+      <div class="hr-field"><label>AST / SGOT IU/L</label><input class="hr-input" id="hrm-ast" type="number" placeholder="0–50"></div>
+      <div class="hr-field"><label>ALP IU/L</label><input class="hr-input" id="hrm-alp" type="number" placeholder="30–120"></div>
+      <div class="hr-field"><label>GGT U/L</label><input class="hr-input" id="hrm-ggt" type="number" placeholder="0–55"></div>
+    </div>
+
     <div class="hr-actions">
       <button class="hr-cancel" onclick="closeAddReportSheet()">Cancel</button>
       <button class="hr-save" onclick="saveLabReport()">Save Report</button>
@@ -3725,48 +3735,63 @@ const BM_DEFS = [
     insight:'Normal platelet count is 150–400 ×10³/µL. Low platelets cause bleeding risk; high platelets increase clotting risk.' },
   { id:'bp_sys',     name:'Blood Pressure (Systolic)',icon:'❤️', unit:'mmHg',  cat:'Vitals',   low:90,  normLow:90,  normHigh:120, high:140,  max:180,
     insight:'Normal systolic BP is 90–120 mmHg. 120–139 is elevated; 140+ is hypertension stage 1. Regular monitoring is key.' },
+  { id:'bilirubin',  name:'Bilirubin (Total)',         icon:'🟡', unit:'mg/dL',  cat:'Liver',    low:0,   normLow:0.3, normHigh:1.2, high:2.0,  max:5,
+    insight:'Total bilirubin should be 0.3–1.2 mg/dL. Elevated levels indicate liver stress, bile duct issues, or hemolysis.' },
+  { id:'alt',        name:'ALT / SGPT',                icon:'🫁', unit:'IU/L',   cat:'Liver',    low:0,   normLow:0,   normHigh:50,  high:80,   max:200,
+    insight:'ALT is a liver enzyme. Normal is below 50 IU/L. Elevated ALT is a key indicator of liver inflammation or damage.' },
+  { id:'ast',        name:'AST / SGOT',                icon:'🫁', unit:'IU/L',   cat:'Liver',    low:0,   normLow:0,   normHigh:50,  high:80,   max:200,
+    insight:'AST is elevated in liver disease, muscle damage, or heart issues. Normal range is below 50 IU/L.' },
+  { id:'alp',        name:'Alkaline Phosphatase (ALP)',icon:'🧬', unit:'IU/L',   cat:'Liver',    low:30,  normLow:30,  normHigh:120, high:200,  max:300,
+    insight:'ALP is 30–120 IU/L normally. Elevated ALP can indicate liver or bone disease. It rises in bile duct obstruction.' },
+  { id:'ggt',        name:'GGT',                       icon:'🧬', unit:'U/L',    cat:'Liver',    low:0,   normLow:0,   normHigh:55,  high:100,  max:200,
+    insight:'GGT above 55 U/L may indicate liver disease, alcohol use, or bile duct problems. A sensitive marker for liver stress.' },
 ];
 
 // ── Seed health data per member ──
 const HEALTH_SEED = {
   rajasekhar: {
-    lastUpdated:'2026-02-10', labName:'Apollo Diagnostics, Hyderabad', reportRef:'APL-2026-0210-RD',
-    vitals:{ weight:78, height:172, bmi:26.4 },
-    markers:{ glucose:102, hba1c:5.8, cholesterol:198, ldl:118, hdl:48, triglycerides:162, hemoglobin:14.2, tsh:2.8, creatinine:1.0, uricacid:6.1, vitd:18, vitb12:310, wbc:7.2, platelets:230, bp_sys:126 }
+    lastUpdated:'2025-12-23', labName:'MedPlus Diagnostics, Kukatpally', reportRef:'PTGOC2600839524',
+    vitals:{ weight:null, height:null, bmi:null },
+    markers:{
+      glucose:102, hba1c:6.0, cholesterol:151, ldl:86, hdl:37, triglycerides:138,
+      hemoglobin:17.1, tsh:2.90, creatinine:1.10, uricacid:5.6,
+      vitd:41.7, vitb12:388, wbc:8.84, platelets:327, bp_sys:null,
+      bilirubin:1.51, alt:29, ast:25, alp:81, ggt:45
+    }
   },
   vasundhara: {
-    lastUpdated:'2026-01-22', labName:'Star Hospitals, Hyderabad', reportRef:'STR-2026-0122-VD',
-    vitals:{ weight:62, height:158, bmi:24.8 },
-    markers:{ glucose:88, hba1c:5.1, cholesterol:185, ldl:105, hdl:55, triglycerides:130, hemoglobin:11.8, tsh:5.2, creatinine:0.8, uricacid:4.2, vitd:14, vitb12:195, wbc:6.8, platelets:280, bp_sys:112 }
+    lastUpdated:null, labName:null, reportRef:null,
+    vitals:{ weight:null, height:null, bmi:null },
+    markers:{}
   },
   josritha: {
-    lastUpdated:'2025-12-15', labName:'Vijaya Diagnostic Centre, Hyderabad', reportRef:'VDC-2025-1215-JD',
-    vitals:{ weight:54, height:160, bmi:21.1 },
-    markers:{ glucose:82, hba1c:4.9, cholesterol:155, ldl:85, hdl:62, triglycerides:95, hemoglobin:12.1, tsh:2.1, creatinine:0.7, uricacid:3.8, vitd:22, vitb12:420, wbc:6.1, platelets:310, bp_sys:108 }
+    lastUpdated:null, labName:null, reportRef:null,
+    vitals:{ weight:null, height:null, bmi:null },
+    markers:{}
   },
   jeevan: {
-    lastUpdated:'2025-11-08', labName:'Vijaya Diagnostic Centre, Hyderabad', reportRef:'VDC-2025-1108-JV',
-    vitals:{ weight:48, height:155, bmi:19.9 },
-    markers:{ glucose:78, hba1c:4.7, cholesterol:148, ldl:78, hdl:58, triglycerides:88, hemoglobin:13.4, tsh:1.8, creatinine:0.6, uricacid:4.0, vitd:25, vitb12:380, wbc:7.5, platelets:295, bp_sys:102 }
+    lastUpdated:null, labName:null, reportRef:null,
+    vitals:{ weight:null, height:null, bmi:null },
+    markers:{}
   }
 };
 
-const HEALTH_CATS = ['All','Blood','Lipids','Thyroid','Kidney','Vitamins','CBC','Vitals'];
+const HEALTH_CATS = ['All','Blood','Lipids','Thyroid','Kidney','Liver','Vitamins','CBC','Vitals'];
 let healthActiveMember = 'rajasekhar';
 let healthActiveCat    = 'All';
 
 // ── Load / save health data from localStorage ──
 function getHealthData() {
   try {
-    const s = localStorage.getItem('fp_health_v1');
+    const s = localStorage.getItem('fp_health_v2');
     if (s) return JSON.parse(s);
   } catch(e) {}
   const d = JSON.parse(JSON.stringify(HEALTH_SEED));
-  localStorage.setItem('fp_health_v1', JSON.stringify(d));
+  localStorage.setItem('fp_health_v2', JSON.stringify(d));
   return d;
 }
 function saveHealthData(data) {
-  localStorage.setItem('fp_health_v1', JSON.stringify(data));
+  localStorage.setItem('fp_health_v2', JSON.stringify(data));
 }
 
 // ── Compute health score (0–100) for a member ──
@@ -4154,6 +4179,11 @@ const OCR_PATTERNS = [
   { id:'report_ref', text:true, patterns:[
     /(?:report\s*(?:no|num|id)|accession\s*no|lab\s*no)[^\w]*([\w\-\/]{3,20})/i,
   ]},
+  { id:'bilirubin', patterns:[/(?:bilirubin\s*total|total\s*bilirubin)[^\d]*(\d+\.?\d*)/i, /(?:^|\n)bilirubin[^\d]*(\d+\.?\d*)/im] },
+  { id:'alt', patterns:[/(?:alt|sgpt|alanine\s*amino)[^\d]*(\d+\.?\d*)/i] },
+  { id:'ast', patterns:[/(?:ast|sgot|aspartate\s*amino)[^\d]*(\d+\.?\d*)/i] },
+  { id:'alp', patterns:[/(?:alkaline\s*phosphatase|\balp\b)[^\d]*(\d+\.?\d*)/i] },
+  { id:'ggt', patterns:[/(?:gamma\s*glutamyl|\bggt\b)[^\d]*(\d+\.?\d*)/i] },
 ];
 
 const OCR_INPUT_MAP = {
@@ -4162,6 +4192,7 @@ const OCR_INPUT_MAP = {
   hemoglobin:'hrm-hemoglobin', tsh:'hrm-tsh', creatinine:'hrm-creatinine',
   uricacid:'hrm-uricacid', vitd:'hrm-vitd', vitb12:'hrm-vitb12',
   wbc:'hrm-wbc', platelets:'hrm-platelets', bp_sys:'hrm-bp_sys',
+  bilirubin:'hrm-bilirubin', alt:'hrm-alt', ast:'hrm-ast', alp:'hrm-alp', ggt:'hrm-ggt',
   weight:'hrv-weight', height:'hrv-height',
   lab_name:'hr-lab', report_date:'hr-date', report_ref:'hr-ref',
 };
@@ -4172,6 +4203,7 @@ const SANITY = {
   hemoglobin:[4,22], tsh:[0.01,100], creatinine:[0.2,20],
   uricacid:[1,20], vitd:[1,200], vitb12:[50,3000],
   wbc:[0.5,50], platelets:[20,1000], bp_sys:[60,250],
+  bilirubin:[0.1,20], alt:[5,500], ast:[5,500], alp:[10,500], ggt:[5,500],
   weight:[20,200], height:[50,220],
 };
 
