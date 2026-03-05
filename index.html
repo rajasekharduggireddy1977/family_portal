@@ -474,7 +474,16 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .dhs-num{font-weight:700;color:var(--text);}
 
 /* Sticky search + nav bar */
-.docs-searchbar-wrap{position:sticky;top:calc(var(--topbar-h) + var(--sat));z-index:60;background:rgba(7,8,15,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border2);padding:10px 14px 0;}
+.docs-searchbar-wrap{
+  position:sticky;
+  top:calc(var(--topbar-h) + var(--sat));
+  z-index:60;
+  background:var(--bg);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);
+  padding:10px 14px 0;
+  box-shadow:0 3px 14px rgba(0,0,0,.28);
+}
 
 /* Search input */
 .docs-search-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1.5px solid var(--border2);border-radius:14px;padding:10px 14px;transition:all .22s;margin-bottom:10px;}
@@ -500,7 +509,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .fc-chip-person.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:var(--text);}
 
 /* Reset bar */
-.docs-reset-bar{display:none;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(79,127,255,.05);border-bottom:1px solid rgba(79,127,255,.12);}
+.docs-reset-bar{display:none;align-items:center;justify-content:space-between;padding:6px 0 4px;background:transparent;border-top:1px solid rgba(79,127,255,.15);margin-top:2px;}
 .drb-info{font-size:11px;color:var(--blue2);font-weight:600;font-family:'DM Mono',monospace;}
 .drb-reset{font-size:10px;font-family:'DM Mono',monospace;color:var(--red);background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.18);border-radius:20px;padding:4px 12px;cursor:pointer;transition:all .15s;}
 .drb-reset:hover{background:rgba(255,79,79,.18);}
@@ -1578,7 +1587,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
           <div class="dhs" style="color:var(--red);border-color:rgba(255,79,79,.3);"><span class="dhs-num" style="color:var(--red);">2</span> expiring</div>
         </div>
       </div>
-      <!-- Sticky Search + Filter Bar -->
+      <!-- Sticky Search + Filter Bar (includes reset bar) -->
       <div class="docs-searchbar-wrap">
         <div class="docs-search-row">
           <span class="dsr-icon">🔍</span>
@@ -1590,11 +1599,11 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
         <div class="docs-filter-tabs" id="type-chips"></div>
         <!-- Person filter chips -->
         <div class="docs-filter-tabs" id="person-chips"></div>
-      </div>
-      <!-- Reset bar -->
-      <div class="docs-reset-bar" id="docs-reset">
-        <span class="drb-info" id="docs-count-lbl">Filtered view</span>
-        <button class="drb-reset" onclick="resetDocFilters()">✕ Reset all</button>
+        <!-- Reset bar — inside sticky so it stays visible -->
+        <div class="docs-reset-bar" id="docs-reset">
+          <span class="drb-info" id="docs-count-lbl">Filtered view</span>
+          <button class="drb-reset" onclick="resetDocFilters()">✕ Reset all</button>
+        </div>
       </div>
       <!-- Doc list body (categories + rows injected by JS) -->
       <div class="docs-list-container" id="doc-list-body"></div>
@@ -2224,7 +2233,7 @@ function goPage(page) {
   if(page==='expiry') { setTimeout(animateExpBars,150); }
   if(page==='calendar') { setTimeout(()=>{ initCalendar(); applyGmCalendar(); },80); }
   if(page==='health')   { setTimeout(()=>{ initHealthPage(); applyGmHealth(); },80); }
-  if(page==='documents') { setTimeout(()=>{ collapseAllDocSections(); applyGmDocuments(); },60); }
+  if(page==='documents') { setTimeout(()=>{ applyGmDocuments(); collapseAllDocSections(); },80); }
   if(page==='dashboard') { setTimeout(()=>applyGmDashboard(),60); }
 }
 
@@ -3446,6 +3455,8 @@ function initDocuments() {
   }
 
   buildDocList();
+  // Start fully collapsed — applyDocFilters will NOT reopen them
+  setTimeout(collapseAllDocSections, 20);
 }
 
 function buildDocList() {
@@ -3547,7 +3558,6 @@ function applyDocFilters() {
     const body=section.querySelector('.doc-cat-body');if(!body)return;
     const hasVis=Array.from(body.querySelectorAll('.doc-row')).some(r=>r.style.display!=='none');
     section.style.display=hasVis?'':'none';
-    if(body.style.display==='none'&&hasVis)body.style.display='';
   });
   const total=rows.length;
   const isFiltered=docTypeFilter!=='All'||docPersonFilter!=='All'||!!q;
@@ -5135,26 +5145,21 @@ function applyGmMembers() {
 // ── Documents: auto-set person filter chip ──
 function applyGmDocuments() {
   if (activePortalMember === 'all') {
-    // Collapse all sections on member switch
-    collapseAllDocSections();
-    // Reset to All
     docPersonFilter = 'All';
     document.querySelectorAll('[data-person-chip]').forEach(c => c.classList.toggle('active', c.getAttribute('data-person-chip') === 'All'));
-    // Show all person chips
     document.querySelectorAll('[data-person-chip]').forEach(c => c.style.display = '');
   } else {
-    // Collapse all sections on member switch
-    collapseAllDocSections();
     const chipName = GM_META[activePortalMember].personChip;
     docPersonFilter = chipName;
     document.querySelectorAll('[data-person-chip]').forEach(c => {
       const val = c.getAttribute('data-person-chip');
       c.classList.toggle('active', val === chipName);
-      // Hide other person chips except All and selected
       c.style.display = (val === 'All' || val === chipName) ? '' : 'none';
     });
   }
+  // Apply row/section visibility first, then collapse all bodies
   applyDocFilters();
+  collapseAllDocSections();
 }
 
 // ── Health: switch to member ──
