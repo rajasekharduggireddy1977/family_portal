@@ -3555,23 +3555,34 @@ function initWidgetDynamic() {
     if (!evts.length) {
       tlList.innerHTML = `<div style="padding:18px 0;text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">No events in the next 60 days</div>`;
     } else {
-      // Group into Overdue / Today / This Week / This Month / Later
-      const groups = { overdue:[], today:[], week:[], month:[], later:[] };
+      // Group into Overdue / Today / This Week / This Month / Next Month / Later
+      const groups = { overdue:[], today:[], week:[], month:[], nextmonth:[], later:[] };
+      const nowMonth = now.getMonth();
+      const nowYear = now.getFullYear();
       evts.forEach(ev => {
         const d = daysUntil(ev.date);
+        const evDate = new Date(ev.date);
+        const evMonth = evDate.getMonth();
+        const evYear = evDate.getFullYear();
         if (d < 0) groups.overdue.push(ev);
         else if (d === 0) groups.today.push(ev);
         else if (d <= 7) groups.week.push(ev);
-        else if (d <= 30) groups.month.push(ev);
+        else if (evYear === nowYear && evMonth === nowMonth) groups.month.push(ev);
+        else if ((evYear === nowYear && evMonth === nowMonth + 1) || (nowMonth === 11 && evYear === nowYear + 1 && evMonth === 0)) groups.nextmonth.push(ev);
         else groups.later.push(ev);
       });
 
+      const thisMonthName = now.toLocaleString('default',{month:'long'}).toUpperCase();
+      const nextMonthDate = new Date(nowYear, nowMonth + 1, 1);
+      const nextMonthName = nextMonthDate.toLocaleString('default',{month:'long'}).toUpperCase();
+
       const groupDefs = [
-        { key:'overdue', label:'OVERDUE', col:'var(--red)' },
-        { key:'today',   label:'TODAY',   col:'var(--gold)' },
-        { key:'week',    label:'THIS WEEK', col:'var(--blue2)' },
-        { key:'month',   label:'THIS MONTH', col:'var(--text2)' },
-        { key:'later',   label:'LATER',   col:'var(--text3)' },
+        { key:'overdue',   label:'OVERDUE',     col:'var(--red)' },
+        { key:'today',     label:'TODAY',       col:'var(--gold)' },
+        { key:'week',      label:'THIS WEEK',   col:'var(--blue2)' },
+        { key:'month',     label:thisMonthName, col:'var(--text2)' },
+        { key:'nextmonth', label:nextMonthName, col:'var(--text3)' },
+        { key:'later',     label:'LATER',       col:'var(--text3)' },
       ];
 
       let html = '';
