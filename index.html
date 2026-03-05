@@ -858,8 +858,161 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 }
 
 /* ════════════════════════════════════════════
-   FEATURE 05 — EMERGENCY QUICK-ACCESS CARD
+   ELITE DASHBOARD — NEW COMPONENTS
 ════════════════════════════════════════════ */
+
+/* ── Hero Briefing Card ── */
+.hero-card{
+  background:linear-gradient(145deg,#08101e 0%,#0c1830 55%,#07080f 100%);
+  border:1px solid rgba(79,127,255,.22);
+  border-radius:18px;padding:18px 18px 16px;
+  position:relative;overflow:hidden;
+}
+.hero-card::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(79,127,255,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-greeting{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.15;}
+.hero-greeting em{font-style:normal;background:linear-gradient(135deg,var(--blue2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:.3px;}
+.hero-status-line{font-size:12px;color:var(--text2);margin:10px 0 12px;line-height:1.5;border-left:2px solid rgba(79,127,255,.4);padding-left:10px;}
+.hero-status-line strong{color:var(--text);}
+.hero-dots{display:flex;gap:8px;flex-wrap:wrap;}
+.hero-dot{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:20px;
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:500;
+  border:1px solid transparent;
+}
+.hero-dot-pip{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.hero-dot.green{background:rgba(62,207,142,.08);border-color:rgba(62,207,142,.2);color:var(--green);}
+.hero-dot.green .hero-dot-pip{background:var(--green);}
+.hero-dot.amber{background:rgba(240,180,41,.08);border-color:rgba(240,180,41,.2);color:var(--gold);}
+.hero-dot.amber .hero-dot-pip{background:var(--gold);animation:pipPulse 1.8s ease-in-out infinite;}
+.hero-dot.red{background:rgba(255,79,79,.1);border-color:rgba(255,79,79,.25);color:var(--red);}
+.hero-dot.red .hero-dot-pip{background:var(--red);animation:pipPulse 1.2s ease-in-out infinite;}
+@keyframes pipPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+/* ── Priority Strip ── */
+.priority-strip-wrap{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.priority-strip-wrap::-webkit-scrollbar{display:none;}
+.priority-chip{
+  display:flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:20px;flex-shrink:0;
+  cursor:pointer;transition:all .18s;
+  font-size:12px;font-weight:600;
+  border:1px solid transparent;
+}
+.priority-chip:active{transform:scale(.96);}
+.priority-chip.overdue{
+  background:rgba(255,79,79,.12);border-color:rgba(255,79,79,.35);color:var(--red);
+}
+.priority-chip.due-soon{
+  background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.28);color:var(--gold);
+}
+.priority-chip.upcoming{
+  background:rgba(79,127,255,.08);border-color:rgba(79,127,255,.2);color:var(--blue2);
+}
+.pc-days{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  padding:2px 6px;border-radius:10px;background:rgba(255,255,255,.08);
+}
+.priority-empty{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--green);
+  padding:8px 14px;background:rgba(62,207,142,.07);
+  border:1px solid rgba(62,207,142,.18);border-radius:20px;
+}
+
+/* ── Unified Timeline ── */
+.timeline-list{display:flex;flex-direction:column;}
+.tl-group-label{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  color:var(--text3);letter-spacing:.8px;text-transform:uppercase;
+  padding:10px 0 6px;
+}
+.tl-group-label:first-child{padding-top:2px;}
+.tl-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);
+  cursor:pointer;transition:opacity .15s;
+}
+.tl-item:last-child{border-bottom:none;}
+.tl-item:active{opacity:.7;}
+.tl-bar-wrap{display:flex;flex-direction:column;align-items:center;padding-top:3px;flex-shrink:0;}
+.tl-bar{width:3px;border-radius:2px;flex:1;min-height:28px;background:var(--border2);}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-bottom:4px;}
+.tl-body{flex:1;min-width:0;}
+.tl-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tl-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;}
+.tl-right{text-align:right;flex-shrink:0;}
+.tl-badge{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  padding:3px 7px;border-radius:8px;letter-spacing:.3px;
+}
+.tl-badge.overdue{background:rgba(255,79,79,.15);color:var(--red);}
+.tl-badge.today{background:rgba(240,180,41,.15);color:var(--gold);}
+.tl-badge.upcoming{background:rgba(79,127,255,.1);color:var(--blue2);}
+.tl-days{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;}
+
+/* ── Health Pulse Row ── */
+.health-pulse-row{display:flex;gap:8px;justify-content:space-between;}
+.hp-member{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:12px 6px 10px;border-radius:14px;
+  background:var(--surface2);border:1px solid var(--border);
+  cursor:pointer;transition:all .2s;
+}
+.hp-member:active{transform:scale(.96);}
+.hp-av{
+  width:36px;height:36px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;
+  position:relative;overflow:hidden;
+}
+.hp-ring-wrap{position:relative;width:44px;height:44px;}
+.hp-ring-svg{transform:rotate(-90deg);display:block;}
+.hp-ring-track{fill:none;stroke:rgba(255,255,255,.07);}
+.hp-ring-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);}
+.hp-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hp-score{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;line-height:1;}
+.hp-name{font-family:'DM Mono',monospace;font-size:9px;color:var(--text2);text-align:center;white-space:nowrap;overflow:hidden;width:100%;text-overflow:ellipsis;}
+.hp-flag{font-size:8px;font-family:'DM Mono',monospace;font-weight:700;padding:2px 5px;border-radius:5px;margin-top:2px;}
+.hp-flag.ok{background:rgba(62,207,142,.1);color:var(--green);}
+.hp-flag.warn{background:rgba(255,79,79,.12);color:var(--red);}
+
+/* ── Adaptive Member Cards ── */
+.fam-pulse-grid{display:flex;flex-direction:column;gap:8px;padding:4px 0 2px;}
+.fam-pulse-card{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:13px;
+  background:var(--surface2);border:1px solid var(--border);
+  cursor:pointer;transition:all .18s;
+}
+.fam-pulse-card:active{transform:translateX(4px);border-color:var(--border2);}
+.fpc-av{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#fff;
+  overflow:hidden;
+}
+.fpc-body{flex:1;min-width:0;}
+.fpc-name{font-size:13px;font-weight:700;color:var(--text);}
+.fpc-role{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;}
+.fpc-stat{font-size:11px;margin-top:4px;}
+.fpc-arrow{font-size:18px;color:var(--text3);font-weight:300;}
+
+/* ── Section label style ── */
+.w-section-lbl{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;color:var(--text3);
+  padding:0 2px 4px;
+}
+
 .emg-card{
   background:linear-gradient(135deg,rgba(255,30,30,.13) 0%,rgba(180,0,0,.07) 100%);
   border:1.5px solid rgba(255,79,79,.35);
@@ -1505,17 +1658,6 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   <!-- ══════════ DASHBOARD PAGE ══════════ -->
   <div class="page active" id="page-dashboard">
     <div class="dash-wrap stagger">
-
-      <!-- Greeting -->
-      <div class="dash-section">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-          <div>
-            <div class="dash-greeting" id="dash-greeting">☀️ Good Morning, <em>Rajasekhar!</em></div>
-            <div class="dash-date" id="dash-date"></div>
-          </div>
-          <div class="widget-edit-btn" id="widget-edit-btn" onclick="enterWidgetEdit()">⚙ Widgets</div>
-        </div>
-      </div>
       <!-- Widget edit mode bar -->
       <div class="widget-edit-bar" id="widget-edit-bar">
         <span>✦ Drag to reorder · tap − to remove</span>
@@ -1527,7 +1669,6 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <div class="add-widget-wrap" id="add-widget-wrap">
         <div class="add-widget-btn" onclick="openWidgetPicker()">＋ Add Widget</div>
       </div>
-
     </div>
   </div>
 
@@ -2761,18 +2902,22 @@ function buildCalMiniWidget() {
 }
 
 const WIDGET_DEFS = {
-  family:     { id:'family',     icon:'👨‍👩‍👧‍👦', name:'Family at a Glance',  desc:'Mini cards for all 4 members' },
-  urgent:     { id:'urgent',     icon:'⏳',  name:'Urgent Items',         desc:'Calendar events due within 10 days' },
-  health_mini:{ id:'health_mini',icon:'💊',  name:'Family Health',        desc:'Health scores & abnormal markers' },
-  cal_mini:   { id:'cal_mini',   icon:'📅',  name:'Family Calendar',      desc:'Upcoming family events at a glance' },
-  emergency:  { id:'emergency',  icon:'🆘',  name:'Emergency Contacts',   desc:'One-tap family contacts & emergency services' },
-  actions:    { id:'actions',    icon:'⚡',  name:'Quick Actions',        desc:'One-tap shortcuts to key tasks' },
+  hero:       { id:'hero',       icon:'🌟', name:'Hero Briefing',       desc:'Live status summary with greeting' },
+  priority:   { id:'priority',   icon:'🔔', name:'Priority Strip',      desc:'Scrollable chips — items due soon' },
+  family:     { id:'family',     icon:'👨‍👩‍👧‍👦', name:'Family at a Glance',  desc:'Adaptive member cards' },
+  timeline:   { id:'timeline',   icon:'📆', name:'Unified Timeline',    desc:'All upcoming events in one view' },
+  health_mini:{ id:'health_mini',icon:'💊', name:'Family Health',       desc:'Health scores & abnormal markers' },
+  health_pulse:{ id:'health_pulse',icon:'❤️', name:'Health Pulse Row',  desc:'Score rings for all 4 members' },
+  urgent:     { id:'urgent',     icon:'⏳', name:'Urgent Items',        desc:'Calendar events due within 10 days' },
+  cal_mini:   { id:'cal_mini',   icon:'📅', name:'Family Calendar',     desc:'Upcoming family events at a glance' },
+  emergency:  { id:'emergency',  icon:'🆘', name:'Emergency Contacts',  desc:'One-tap family contacts & services' },
+  actions:    { id:'actions',    icon:'⚡', name:'Quick Actions',       desc:'One-tap shortcuts to key tasks' },
 };
-const DEFAULT_WIDGETS=['family','urgent','health_mini','cal_mini','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','priority','family','timeline','health_pulse','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
-const WIDGET_VERSION = 'v4';
+const WIDGET_VERSION = 'v5';
 function loadWidgetOrder() {
   try {
     const ver = localStorage.getItem('fp_widgets_ver');
@@ -2966,12 +3111,44 @@ function tdEndDrag() {
 
 function buildWidgetHTML(wid) {
   switch(wid) {
+    case 'hero': return `<div class="hero-card" id="hero-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div style="flex:1;min-width:0;">
+          <div class="hero-greeting" id="dash-greeting">☀️ Good Morning, <em>Rajasekhar!</em></div>
+          <div class="hero-date" id="dash-date"></div>
+        </div>
+        <div class="widget-edit-btn" id="widget-edit-btn" onclick="enterWidgetEdit()">⚙ Widgets</div>
+      </div>
+      <div class="hero-status-line" id="hero-status-line">Loading family status…</div>
+      <div class="hero-dots" id="hero-dots"></div>
+    </div>`;
+    case 'priority': return `<div class="w-card" style="padding:14px 16px 12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="w-hdr" style="margin:0">🔔 &nbsp;Priority</div>
+        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">Calendar →</span>
+      </div>
+      <div class="priority-strip-wrap" id="priority-strip"></div>
+    </div>`;
+    case 'timeline': return `<div class="w-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="w-hdr" style="margin:0">📆 &nbsp;Timeline</div>
+        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">View All →</span>
+      </div>
+      <div id="timeline-list" class="timeline-list"></div>
+    </div>`;
+    case 'health_pulse': return `<div class="w-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="w-hdr" style="margin:0">❤️ &nbsp;Health Pulse</div>
+        <span class="card-action" onclick="goPage('health')" style="font-size:11px">Reports →</span>
+      </div>
+      <div class="health-pulse-row" id="health-pulse-row"></div>
+    </div>`;
     case 'family': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="w-hdr" style="margin:0">👨‍👩‍👧‍👦 &nbsp;Family</div>
         <span class="card-action" onclick="goPage('members')" style="font-size:11px">View All →</span>
       </div>
-      <div class="fam-summary-grid" id="fam-summary"></div></div>`;
+      <div id="fam-summary" class="fam-pulse-grid"></div></div>`;
     case 'urgent': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="w-hdr" style="margin:0">⏳ &nbsp;Urgent Items</div>
@@ -3043,14 +3220,237 @@ function buildWidgetHTML(wid) {
 }
 
 function initWidgetDynamic() {
-  // ── Urgent Items: pull from Calendar Events, ≤10 days or overdue, filtered by active member ──
-  const uiC=document.getElementById('urgent-items');
-  if(uiC) {
-    const allCalEvts = getCalEvents();
-    const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
+  const allCalEvts = getCalEvents();
+  const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
+
+  // ─────────────────────────────────────────
+  // HERO BRIEFING CARD
+  // ─────────────────────────────────────────
+  const heroCard = document.getElementById('hero-card');
+  if (heroCard) {
+    // Greeting
+    const greet = document.getElementById('dash-greeting');
+    if (greet) {
+      const h = new Date().getHours();
+      const tod = h < 12 ? '☀️ Good Morning' : h < 17 ? '🌤️ Good Afternoon' : '🌙 Good Evening';
+      const who = activeName && activeName !== 'All' ? activeName : 'Rajasekhar';
+      greet.innerHTML = `${tod}, <em>${who}!</em>`;
+    }
+    // Date
+    const dateEl = document.getElementById('dash-date');
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    }
+    // Status line — compute live
+    const overdueEvts = allCalEvts.filter(ev => daysUntil(ev.date) < 0);
+    const soonEvts    = allCalEvts.filter(ev => { const d=daysUntil(ev.date); return d>=0 && d<=10; });
+    const attBelow    = ATTENDANCE.filter(a => Math.round(a.present/a.total*100) < 75);
+    const healthScores = typeof computeHealthScore === 'function'
+      ? Object.keys(HEALTH_MEMBER_META || {}).map(id => computeHealthScore(id))
+      : [];
+    const healthOk = healthScores.length === 0 || healthScores.every(s => s >= 70);
+    let parts = [];
+    if (overdueEvts.length) parts.push(`<strong style="color:var(--red)">${overdueEvts.length} overdue</strong>`);
+    if (soonEvts.length) parts.push(`<strong style="color:var(--gold)">${soonEvts.length} due this week</strong>`);
+    if (!overdueEvts.length && !soonEvts.length) parts.push('<strong style="color:var(--green)">No urgent items</strong>');
+    if (!healthOk) parts.push('<strong style="color:var(--orange)">Health needs review</strong>');
+    else if (healthScores.length) parts.push('<strong style="color:var(--green)">Family health looks good</strong>');
+    if (attBelow.length) parts.push(`<strong style="color:var(--red)">Josritha: ${attBelow.length} subject${attBelow.length>1?'s':''} at risk</strong>`);
+    const statusLine = document.getElementById('hero-status-line');
+    if (statusLine) statusLine.innerHTML = parts.join(' · ');
+    // Dots
+    const dotsEl = document.getElementById('hero-dots');
+    if (dotsEl) {
+      const dots = [
+        { label:'Finance', cls: overdueEvts.length?'red':soonEvts.length?'amber':'green' },
+        { label:'Health',  cls: healthOk?'green':'amber' },
+        { label:'Academics', cls: attBelow.length?'amber':'green' },
+        { label:'Documents', cls: 'green' },
+      ];
+      dotsEl.innerHTML = dots.map(d => `
+        <div class="hero-dot ${d.cls}">
+          <div class="hero-dot-pip"></div>${d.label}
+        </div>`).join('');
+    }
+  }
+
+  // ─────────────────────────────────────────
+  // PRIORITY STRIP
+  // ─────────────────────────────────────────
+  const priorityStrip = document.getElementById('priority-strip');
+  if (priorityStrip) {
+    const filtered = allCalEvts.filter(ev => {
+      const d = daysUntil(ev.date);
+      if (d > 30) return false;
+      if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
+      return true;
+    }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
+
+    if (!filtered.length) {
+      priorityStrip.innerHTML = `<div class="priority-empty">✅ All clear for next 30 days</div>`;
+    } else {
+      priorityStrip.innerHTML = filtered.slice(0, 8).map(ev => {
+        const d = daysUntil(ev.date);
+        const cls = d < 0 ? 'overdue' : d <= 7 ? 'due-soon' : 'upcoming';
+        const daysLabel = d < 0 ? `${Math.abs(d)}d overdue` : d === 0 ? 'today' : `${d}d`;
+        const shortTitle = ev.title.replace(/^(Rajasekhar|Vasundhara|Josritha|Jeevan)\s+/i,'').split(' ').slice(0,3).join(' ');
+        return `<div class="priority-chip ${cls} pressable" onclick="goPage('calendar')">
+          <span>${shortTitle}</span>
+          <span class="pc-days">${daysLabel}</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // ─────────────────────────────────────────
+  // FAMILY CARDS — Adaptive list style
+  // ─────────────────────────────────────────
+  const fsC = document.getElementById('fam-summary');
+  if (fsC) {
+    const membersToShow = activePortalMember !== 'all'
+      ? Object.values(MEMBERS).filter(m => m.id === activePortalMember)
+      : Object.values(MEMBERS);
+
+    fsC.innerHTML = membersToShow.map(m => {
+      const fs = FAM_SUMMARIES[m.id] || { status:'–', statusColor:'var(--text3)' };
+      const calCount = allCalEvts.filter(ev => ev.members.includes(m.shortName) && daysUntil(ev.date) >= 0 && daysUntil(ev.date) <= 30).length;
+      const calNote = calCount ? `${calCount} event${calCount>1?'s':''} this month` : 'No upcoming events';
+      return `<div class="fam-pulse-card pressable" onclick="goPage('members');setTimeout(()=>showMemberDetail('${m.id}','identity'),50)">
+        <div class="fpc-av" style="background:${m.gradient};">
+          ${MEMBER_PHOTOS[m.id]
+            ? `<img src="${MEMBER_PHOTOS[m.id]}" style="width:100%;height:100%;object-fit:cover;object-position:center top;" alt="${m.shortName}">`
+            : m.initials}
+        </div>
+        <div class="fpc-body">
+          <div class="fpc-name">${m.shortName}</div>
+          <div class="fpc-role">${m.role} · ${age(m.dob)}</div>
+          <div class="fpc-stat" style="color:${fs.statusColor}">${fs.status}</div>
+          <div class="fpc-stat" style="color:var(--text3);font-size:10px;font-family:'DM Mono',monospace;margin-top:1px;">📅 ${calNote}</div>
+        </div>
+        <div class="fpc-arrow">›</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ─────────────────────────────────────────
+  // UNIFIED TIMELINE
+  // ─────────────────────────────────────────
+  const tlList = document.getElementById('timeline-list');
+  if (tlList) {
+    const now = new Date(); now.setHours(0,0,0,0);
+    const evts = allCalEvts.filter(ev => {
+      const d = daysUntil(ev.date);
+      if (d < -3 || d > 60) return false;
+      if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
+      return true;
+    }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
+
+    if (!evts.length) {
+      tlList.innerHTML = `<div style="padding:18px 0;text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">No events in the next 60 days</div>`;
+    } else {
+      // Group into Overdue / Today / This Week / This Month / Later
+      const groups = { overdue:[], today:[], week:[], month:[], later:[] };
+      evts.forEach(ev => {
+        const d = daysUntil(ev.date);
+        if (d < 0) groups.overdue.push(ev);
+        else if (d === 0) groups.today.push(ev);
+        else if (d <= 7) groups.week.push(ev);
+        else if (d <= 30) groups.month.push(ev);
+        else groups.later.push(ev);
+      });
+
+      const groupDefs = [
+        { key:'overdue', label:'OVERDUE', col:'var(--red)' },
+        { key:'today',   label:'TODAY',   col:'var(--gold)' },
+        { key:'week',    label:'THIS WEEK', col:'var(--blue2)' },
+        { key:'month',   label:'THIS MONTH', col:'var(--text2)' },
+        { key:'later',   label:'LATER',   col:'var(--text3)' },
+      ];
+
+      let html = '';
+      groupDefs.forEach(g => {
+        if (!groups[g.key].length) return;
+        html += `<div class="tl-group-label" style="color:${g.col}">${g.label}</div>`;
+        html += groups[g.key].slice(0,5).map(ev => {
+          const d = daysUntil(ev.date);
+          const col = d < 0 ? 'var(--red)' : d === 0 ? 'var(--gold)' : ev.color || 'var(--blue2)';
+          const badge = d < 0 ? 'overdue' : d === 0 ? 'today' : 'upcoming';
+          const badgeTxt = d < 0 ? `${Math.abs(d)}d overdue` : d === 0 ? 'TODAY' : `in ${d}d`;
+          const members = (ev.members||[]).filter(x=>x&&x!=='all').slice(0,2).join(', ');
+          return `<div class="tl-item pressable" onclick="goPage('calendar')">
+            <div class="tl-bar-wrap">
+              <div class="tl-dot" style="background:${col}"></div>
+              <div class="tl-bar" style="background:${col};opacity:.15"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-title">${ev.title}</div>
+              <div class="tl-meta">${members ? members + ' · ' : ''}${fmtDate(ev.date)}</div>
+            </div>
+            <div class="tl-right">
+              <div class="tl-badge ${badge}">${badgeTxt}</div>
+            </div>
+          </div>`;
+        }).join('');
+      });
+      tlList.innerHTML = html;
+    }
+  }
+
+  // ─────────────────────────────────────────
+  // HEALTH PULSE ROW
+  // ─────────────────────────────────────────
+  const hpr = document.getElementById('health-pulse-row');
+  if (hpr && typeof computeHealthScore === 'function') {
+    const r = 17, circ = 2 * Math.PI * r;
+    hpr.innerHTML = Object.entries(HEALTH_MEMBER_META).map(([id, m]) => {
+      const score = computeHealthScore(id);
+      const col = typeof scoreColor === 'function' ? scoreColor(score) : '#4f7fff';
+      const offset = circ - (score / 100) * circ;
+      const member = Object.values(MEMBERS).find(x => x.id === id);
+      const grad = member ? member.gradient : '#374151';
+      const initials = member ? member.initials : '?';
+      const hasFlags = typeof getHealthData === 'function' && typeof getBmStatus === 'function';
+      let flagCount = 0;
+      if (hasFlags) {
+        const mData = getHealthData()[id];
+        (BM_DEFS||[]).forEach(def => {
+          const val = mData && mData.markers && mData.markers[def.id];
+          if (val != null && getBmStatus(def, val, m.gender) !== 'normal') flagCount++;
+        });
+      }
+      return `<div class="hp-member pressable" onclick="goPage('health')">
+        <div class="hp-ring-wrap">
+          <svg class="hp-ring-svg" width="44" height="44" viewBox="0 0 44 44">
+            <circle class="hp-ring-track" cx="22" cy="22" r="${r}" stroke-width="5"/>
+            <circle class="hp-ring-fill" cx="22" cy="22" r="${r}" stroke="${col}" stroke-width="5"
+              stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${circ.toFixed(1)}"
+              data-offset="${offset.toFixed(1)}" class="hp-ring-anim"/>
+          </svg>
+          <div class="hp-ring-inner">
+            <div class="hp-score" style="color:${col}">${score}</div>
+          </div>
+        </div>
+        <div class="hp-name">${m.label.split(' ')[0]}</div>
+        <div class="hp-flag ${flagCount?'warn':'ok'}">${flagCount?flagCount+'⚠':'✓ OK'}</div>
+      </div>`;
+    }).join('');
+    // Animate rings
+    setTimeout(() => {
+      document.querySelectorAll('.hp-ring-anim[data-offset]').forEach(el => {
+        el.style.strokeDashoffset = el.dataset.offset;
+      });
+    }, 120);
+  }
+
+  // ─────────────────────────────────────────
+  // URGENT ITEMS (legacy widget if present)
+  // ─────────────────────────────────────────
+  const uiC = document.getElementById('urgent-items');
+  if (uiC) {
     const urgent = allCalEvts.filter(ev => {
-      const days = daysUntil(ev.date);
-      if (days > 10) return false; // only ≤10 days ahead or overdue
+      const d = daysUntil(ev.date);
+      if (d > 10) return false;
       if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
       return true;
     }).sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
@@ -3061,9 +3461,8 @@ function initWidgetDynamic() {
         const days = daysUntil(ev.date);
         const col = expiryColor(days);
         const pct = days<0?100:Math.max(1,Math.min(100,((10-days)/10)*100));
-        const titleClean = ev.title.replace(/^[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}\s]+/u,'');
         return `<div class="urgent-item pressable" onclick="goPage('calendar')" style="border-left:3px solid ${col}${days<0?';background:rgba(255,79,79,.04)':''}">
-          <span class="ui-icon">${ev.color?'📌':'⏳'}</span>
+          <span class="ui-icon">⏳</span>
           <div class="ui-body">
             <div class="ui-title">${ev.title}</div>
             <div class="ui-sub">${ev.notes?ev.notes.slice(0,50)+(ev.notes.length>50?'…':''):''}</div>
@@ -3078,66 +3477,24 @@ function initWidgetDynamic() {
     }
     setTimeout(()=>{document.querySelectorAll('#urgent-items .ui-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');},80);
   }
-  // Family summary
-  const fsC=document.getElementById('fam-summary');
-  if(fsC) {
-    fsC.innerHTML=Object.values(MEMBERS).map(m=>{
-      const fs=FAM_SUMMARIES[m.id]||{status:'–',statusColor:'var(--text3)'};
-      return `<div class="fam-card pressable" onclick="goPage('members');setTimeout(()=>showMemberDetail('${m.id}','identity'),50)">
-        <div class="fam-av" style="background:${m.gradient};overflow:hidden;padding:0;">${MEMBER_PHOTOS[m.id]?`<img src="${MEMBER_PHOTOS[m.id]}" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:10px;" alt="${m.shortName}">`:m.initials}</div>
-        <div class="fam-info">
-          <div class="fam-name">${m.shortName}</div>
-          <div class="fam-role">${m.role} · ${age(m.dob)}</div>
-          <div class="fam-status" style="color:${fs.statusColor}">${fs.status}</div>
-        </div></div>`;
-    }).join('');
-    // Apply global member filter to family summary cards (inline — avoid calling applyGmDashboard to prevent recursion)
-    if (activePortalMember !== 'all') {
-      document.querySelectorAll('#fam-summary .fam-card').forEach(c => {
-        const onclick = c.getAttribute('onclick') || '';
-        c.style.display = onclick.includes("'" + activePortalMember + "'") ? '' : 'none';
-      });
-    }
-  }
-  // Attendance — only show when member context is Josritha or All
-  const attWidget = document.querySelector('[data-wid="att"]');
-  const below75=ATTENDANCE.filter(a=>Math.round(a.present/a.total*100)<75).length;
-  const aw=document.getElementById('att-warning');
-  if(aw) aw.textContent=below75+' subject'+(below75!==1?'s':'')+' below 75%';
-  const ac=document.getElementById('att-cards');
-  if(ac) {
-    // If member context is set to someone other than Josritha, show a note
-    if (activePortalMember !== 'all' && activePortalMember !== 'josritha') {
-      ac.innerHTML = `<div style="padding:10px 0;text-align:center;color:var(--text3);font-size:12px;">Attendance is specific to Josritha</div>`;
-      if(aw) aw.textContent = '';
-    } else {
-      ac.innerHTML=ATTENDANCE.map(a=>{
-        const pct=Math.round(a.present/a.total*100);
-        const col=pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
-        const lbl=pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
-        return `<div class="att-mini pressable" style="border-left:3px solid ${col}${pct<75?';background:rgba(255,79,79,.03)':''}">
-          <span style="font-size:18px;flex-shrink:0">🎓</span>
-          <div class="att-mini-body">
-            <div class="att-mini-name" style="${pct<75?'color:var(--red);font-weight:700':''}">${a.subject}</div>
-            <div class="att-mini-code">${a.code} · ${a.type}</div>
-            <div class="att-bar-wrap"><div class="att-bar-fill" style="background:${col};width:0%" data-width="${pct}"></div></div>
-            <div style="font-size:11px;color:var(--text2)">${a.present}/${a.total} classes</div>
-          </div>
-          <div class="att-mini-right"><div class="att-pct" style="color:${col}">${pct}%</div><div class="att-label" style="color:${col}">${lbl}</div></div>
-        </div>`;
-      }).join('');
-      setTimeout(()=>{document.querySelectorAll('#att-cards .att-bar-fill[data-width]').forEach(el=>el.style.width=el.dataset.width+'%');},80);
-    }
-  }
-  // Calendar mini widget
+
+  // ─────────────────────────────────────────
+  // CALENDAR MINI
+  // ─────────────────────────────────────────
   const calMiniBody = document.getElementById('cal-mini-body');
-  if (calMiniBody) calMiniBody.innerHTML = buildCalMiniWidget ? buildCalMiniWidget() : '';
-  // Health mini widget ring animation
+  if (calMiniBody) calMiniBody.innerHTML = typeof buildCalMiniWidget === 'function' ? buildCalMiniWidget() : '';
+
+  // ─────────────────────────────────────────
+  // HEALTH MINI ring animation
+  // ─────────────────────────────────────────
   if (typeof initHealthWidgetDynamic === 'function') initHealthWidgetDynamic();
-  // Count-up
-  document.querySelectorAll('[data-count]').forEach(el=>{
-    const target=parseInt(el.dataset.count);const dur=700;const start=Date.now();
-    const tick=()=>{const e=Date.now()-start;const p=Math.min(e/dur,1);el.textContent=Math.round((1-Math.pow(1-p,3))*target);if(p<1)requestAnimationFrame(tick);};tick();
+
+  // ─────────────────────────────────────────
+  // COUNT-UP NUMBERS
+  // ─────────────────────────────────────────
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.dataset.count); const dur = 700; const start = Date.now();
+    const tick = () => { const e=Date.now()-start; const p=Math.min(e/dur,1); el.textContent=Math.round((1-Math.pow(1-p,3))*target); if(p<1) requestAnimationFrame(tick); }; tick();
   });
 }
 
