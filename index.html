@@ -1638,9 +1638,501 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .snav-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--red);color:#fff;font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;font-family:'DM Mono',monospace;}
 .snav-footer{margin-top:auto;padding:16px 24px;border-top:1px solid var(--border);}
 .snav-footer-txt{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);line-height:1.6;}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 1 — GLASSMORPHISM CARD UPGRADE
+══════════════════════════════════════════════ */
+.glass-card {
+  background: rgba(13,16,32,0.72) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,.09) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.06);
+}
+[data-theme="light"] .glass-card {
+  background: rgba(255,255,255,0.78) !important;
+  border: 1px solid rgba(0,0,0,.06) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,.9);
+}
+/* Apply glass to key cards */
+.dash-section-card, .hero-card, .w-card,
+.cal-grid-wrap, .cal-month-nav,
+.doc-cat-section, .member-card-full,
+.stat-card, .appt-card {
+  background: rgba(13,16,32,0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 4px 24px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
+}
+[data-theme="light"] .dash-section-card,
+[data-theme="light"] .hero-card,
+[data-theme="light"] .w-card,
+[data-theme="light"] .cal-grid-wrap,
+[data-theme="light"] .cal-month-nav,
+[data-theme="light"] .doc-cat-section,
+[data-theme="light"] .member-card-full,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .appt-card {
+  background: rgba(255,255,255,0.82);
+  box-shadow: 0 4px 20px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 2 — SKELETON LOADERS
+══════════════════════════════════════════════ */
+@keyframes skeletonShimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.04) 0%,
+    rgba(255,255,255,.10) 40%,
+    rgba(255,255,255,.04) 80%);
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+[data-theme="light"] .skeleton {
+  background: linear-gradient(90deg,
+    rgba(0,0,0,.04) 0%,
+    rgba(0,0,0,.10) 40%,
+    rgba(0,0,0,.04) 80%);
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.4s ease-in-out infinite;
+}
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.skel-line { height: 12px; border-radius: 6px; }
+.skel-line.w-90 { width: 90%; }
+.skel-line.w-70 { width: 70%; }
+.skel-line.w-50 { width: 50%; }
+.skel-line.w-30 { width: 30%; }
+.skel-avatar { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
+.skel-row { display: flex; align-items: center; gap: 12px; }
+.skel-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 3 — PAGE TRANSITION ANIMATIONS
+══════════════════════════════════════════════ */
+.page {
+  animation: none;
+}
+.page.active {
+  animation: pageEnter 0.35s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Stagger child cards on enter */
+.page.active .stagger > * {
+  opacity: 0;
+  animation: staggerIn 0.4s cubic-bezier(.4,0,.2,1) both;
+}
+.page.active .stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.page.active .stagger > *:nth-child(2) { animation-delay: 0.09s; }
+.page.active .stagger > *:nth-child(3) { animation-delay: 0.14s; }
+.page.active .stagger > *:nth-child(4) { animation-delay: 0.19s; }
+.page.active .stagger > *:nth-child(5) { animation-delay: 0.24s; }
+.page.active .stagger > *:nth-child(6) { animation-delay: 0.29s; }
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 4 — FLOATING ACTION BUTTON (FAB)
+══════════════════════════════════════════════ */
+#fab-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 16px);
+  right: 18px;
+  z-index: 300;
+  width: 56px; height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--blue), #3a6aff);
+  color: #fff;
+  font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 28px rgba(79,127,255,.55), 0 2px 8px rgba(0,0,0,.3);
+  transition: all .22s cubic-bezier(.34,1.56,.64,1);
+  border: none;
+  user-select: none;
+  line-height: 1;
+}
+#fab-btn:hover { transform: scale(1.08) rotate(8deg); box-shadow: 0 10px 36px rgba(79,127,255,.7); }
+#fab-btn:active { transform: scale(0.93); }
+#fab-btn.hidden { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(12px); }
+/* FAB menu */
+#fab-menu {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 82px);
+  right: 14px;
+  z-index: 299;
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: flex-end;
+  transition: all .22s;
+}
+#fab-menu.hidden { opacity: 0; pointer-events: none; transform: translateY(12px) scale(0.95); }
+.fab-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 10px 16px 10px 12px;
+  cursor: pointer;
+  font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  white-space: nowrap;
+  transition: all .15s;
+  min-height: 44px;
+}
+.fab-item:hover { background: var(--surface2); border-color: var(--blue); color: var(--blue2); }
+.fab-item:active { transform: scale(0.96); }
+.fab-item-ico { font-size: 18px; width: 32px; height: 32px; border-radius: 9px; background: var(--blue-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+@media(min-width:768px) {
+  #fab-btn { bottom: 24px; }
+  #fab-menu { bottom: 90px; }
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 5 — COMMAND PALETTE (⌘K)
+══════════════════════════════════════════════ */
+#cmd-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: max(60px, env(safe-area-inset-top, 0px) + 40px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s;
+}
+#cmd-overlay.open { opacity: 1; pointer-events: all; }
+#cmd-palette {
+  width: 100%; max-width: 560px;
+  margin: 0 16px;
+  background: rgba(13,16,32,.96);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(79,127,255,.08);
+  transform: translateY(-12px) scale(0.98);
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+#cmd-overlay.open #cmd-palette { transform: translateY(0) scale(1); }
+[data-theme="light"] #cmd-palette {
+  background: rgba(248,250,255,.97);
+  border-color: rgba(0,0,0,.1);
+}
+.cmd-search-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+[data-theme="light"] .cmd-search-row { border-bottom-color: rgba(0,0,0,.07); }
+.cmd-search-icon { font-size: 20px; color: var(--blue2); flex-shrink: 0; }
+.cmd-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-size: 17px; color: var(--text);
+  font-family: 'Inter', sans-serif;
+  caret-color: var(--blue);
+}
+.cmd-input::placeholder { color: var(--text3); }
+.cmd-kbd {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--text3); background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1); border-radius: 5px;
+  padding: 2px 7px; white-space: nowrap; flex-shrink: 0;
+}
+[data-theme="light"] .cmd-kbd { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.1); }
+#cmd-results {
+  max-height: 380px; overflow-y: auto;
+  padding: 8px 0 12px;
+}
+#cmd-results::-webkit-scrollbar { width: 4px; }
+#cmd-results::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+.cmd-section-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700;
+  color: var(--text3); letter-spacing: 1px; text-transform: uppercase;
+  padding: 10px 18px 5px;
+}
+.cmd-result-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background .12s;
+}
+.cmd-result-item:hover, .cmd-result-item.selected {
+  background: rgba(79,127,255,.1);
+}
+.cmd-result-item:active { background: rgba(79,127,255,.18); }
+.cmd-result-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; background: rgba(255,255,255,.05); flex-shrink: 0;
+}
+.cmd-result-body { flex: 1; min-width: 0; }
+.cmd-result-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.cmd-result-sub { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.cmd-result-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700;
+  padding: 3px 8px; border-radius: 20px;
+  background: var(--blue-dim); color: var(--blue2);
+  border: 1px solid rgba(79,127,255,.2); flex-shrink: 0;
+}
+.cmd-empty {
+  padding: 32px 18px;
+  text-align: center;
+  font-size: 13px; color: var(--text3);
+  font-family: 'DM Mono', monospace;
+}
+.cmd-footer {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 10px 18px;
+  display: flex; align-items: center; gap: 14px;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3);
+}
+[data-theme="light"] .cmd-footer { border-top-color: rgba(0,0,0,.07); }
+.cmd-footer-key {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 4px; padding: 2px 6px; font-size: 9px;
+}
+[data-theme="light"] .cmd-footer-key { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.1); }
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 6 — ANIMATED COUNT-UP NUMBERS
+══════════════════════════════════════════════ */
+.count-up { display: inline-block; transition: transform 0.15s; }
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 7 — PULL-TO-REFRESH INDICATOR
+══════════════════════════════════════════════ */
+#ptr-indicator {
+  position: fixed;
+  top: calc(var(--topbar-h) + var(--sat) + 8px);
+  left: 50%; transform: translateX(-50%) translateY(-80px);
+  z-index: 400;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 30px;
+  padding: 8px 18px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; font-family: 'DM Mono', monospace;
+  color: var(--text2);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  opacity: 0;
+  white-space: nowrap;
+}
+#ptr-indicator.ptr-show { transform: translateX(-50%) translateY(0); opacity: 1; }
+#ptr-indicator.ptr-refreshing .ptr-ico { animation: spin 0.7s linear infinite; }
+.ptr-ico { font-size: 16px; transition: transform 0.3s; }
+#ptr-indicator.ptr-ready .ptr-ico { transform: rotate(180deg); }
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 8 — CONTEXTUAL EMPTY STATES
+══════════════════════════════════════════════ */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+.empty-state-icon {
+  font-size: 52px; margin-bottom: 16px;
+  animation: emptyFloat 3s ease-in-out infinite;
+}
+@keyframes emptyFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.empty-state-title {
+  font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800;
+  color: var(--text); margin-bottom: 8px;
+}
+.empty-state-sub {
+  font-size: 13px; color: var(--text2); line-height: 1.6; max-width: 260px;
+}
+.empty-state-cta {
+  margin-top: 20px;
+  padding: 10px 24px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--blue), #3a6aff);
+  color: #fff; font-size: 13px; font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer; border: none;
+  transition: all .18s;
+  box-shadow: 0 4px 16px rgba(79,127,255,.4);
+}
+.empty-state-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,127,255,.5); }
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 9 — MICRO-INTERACTION RIPPLES
+══════════════════════════════════════════════ */
+.pressable {
+  position: relative; overflow: hidden;
+}
+.pressable::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%),
+    rgba(255,255,255,.18) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.pressable:active::after { opacity: 1; transition: opacity 0s; }
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 10 — ENHANCED TOAST & NOTIFICATIONS
+══════════════════════════════════════════════ */
+#toast {
+  display: flex !important;
+  gap: 10px;
+  align-items: center;
+}
+.toast-icon { font-size: 18px; flex-shrink: 0; }
+.toast-body { flex: 1; text-align: left; }
+.toast-title { font-size: 12px; font-weight: 700; }
+.toast-sub { font-size: 10px; color: var(--text2); margin-top: 1px; font-weight: 400; }
+
+/* Enhanced stat cards hover */
+.stat-card {
+  transition: all .25s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.stat-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0,0,0,.4);
+  border-color: var(--border2) !important;
+}
+
+/* Member card enhanced hover */
+.member-card-full {
+  transition: all .22s cubic-bezier(.4,0,.2,1);
+}
+.member-card-full:hover {
+  transform: translateX(6px) translateY(-1px);
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+
+/* Topbar glass */
+#topbar {
+  background: rgba(7,8,15,0.82) !important;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+}
+[data-theme="light"] #topbar {
+  background: rgba(240,242,248,0.88) !important;
+}
+
+/* Bottom nav glass */
+#bottom-nav {
+  background: rgba(10,12,22,0.88) !important;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+}
+[data-theme="light"] #bottom-nav {
+  background: rgba(255,255,255,0.9) !important;
+  border-top: 1px solid rgba(0,0,0,.08) !important;
+}
+
+/* Sidebar glass */
+#sidebar-nav {
+  background: rgba(7,8,15,0.92) !important;
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+}
+[data-theme="light"] #sidebar-nav {
+  background: rgba(240,242,248,0.95) !important;
+}
+
+/* Smooth focus rings */
+input:focus, button:focus-visible {
+  outline: 2px solid rgba(79,127,255,.5);
+  outline-offset: 2px;
+}
+
+/* Widget card glass */
+.w-card {
+  transition: box-shadow .25s, transform .25s;
+}
+.w-card:hover {
+  box-shadow: 0 8px 36px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+/* Priority chips enhanced */
+.priority-chip {
+  transition: all .22s cubic-bezier(.4,0,.2,1);
+}
+.priority-chip:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+
+/* Scrollbar custom */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.2); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); }
+
 </style>
 </head>
 <body>
+
+<!-- ═══════════════ PULL-TO-REFRESH INDICATOR ═══════════════ -->
+<div id="ptr-indicator">
+  <span class="ptr-ico">↓</span>
+  <span id="ptr-label">Pull to refresh</span>
+</div>
+
+<!-- ═══════════════ FAB BUTTON & MENU ═══════════════ -->
+<div id="fab-menu" class="hidden">
+  <div class="fab-item" onclick="fabAction('event')">
+    <div class="fab-item-ico">📅</div> Add Event
+  </div>
+  <div class="fab-item" onclick="fabAction('search')">
+    <div class="fab-item-ico">🔍</div> Quick Search
+  </div>
+  <div class="fab-item" onclick="fabAction('backup')">
+    <div class="fab-item-ico">💾</div> Backup Now
+  </div>
+</div>
+<div id="fab-btn" onclick="toggleFab()" title="Quick Actions">＋</div>
+
+<!-- ═══════════════ COMMAND PALETTE ═══════════════ -->
+<div id="cmd-overlay" onclick="if(event.target===this)closeCommandPalette()">
+  <div id="cmd-palette">
+    <div class="cmd-search-row">
+      <span class="cmd-search-icon">⌕</span>
+      <input type="text" class="cmd-input" id="cmd-input"
+        placeholder="Search pages, members, documents…"
+        oninput="cmdSearch(this.value)"
+        autocomplete="off">
+      <span class="cmd-kbd">ESC</span>
+    </div>
+    <div id="cmd-results"></div>
+    <div class="cmd-footer">
+      <span><span class="cmd-footer-key">↑↓</span> navigate</span>
+      <span><span class="cmd-footer-key">↵</span> select</span>
+      <span><span class="cmd-footer-key">ESC</span> close</span>
+      <span style="margin-left:auto;"><span class="cmd-footer-key">⌘K</span> open</span>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════ LOADER SCREEN ═══════════════ -->
 <div id="loader-screen">
@@ -1760,6 +2252,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
       <span class="gm-arrow">▾</span>
     </div>
     <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</div>
+    <div class="tb-search-btn pressable" onclick="openCommandPalette()" title="Command Palette (⌘K)" style="display:flex;align-items:center;gap:4px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:9px;padding:6px 9px;cursor:pointer;transition:all .15s;white-space:nowrap;" onmouseenter="this.style.borderColor='rgba(79,127,255,.4)';this.style.color='var(--blue2)'" onmouseleave="this.style.borderColor='';this.style.color=''">⌘K</div>
     <div class="tb-search-btn" onclick="goSearch()" title="Search">⌕</div>
   </div>
 </div>
@@ -6137,6 +6630,388 @@ function doRestore(input) {
     const el = document.getElementById('snav-backup-ts');
     if (el) el.textContent = 'Backed up: ' + ts;
   }
+})();
+
+// ═══════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 1 — HAPTIC FEEDBACK HELPER
+// ═══════════════════════════════════════════════════════
+function haptic(type = 'light') {
+  if (!navigator.vibrate) return;
+  const patterns = { light: [10], medium: [20], heavy: [40], success: [10,50,10], error: [80,40,80] };
+  navigator.vibrate(patterns[type] || [10]);
+}
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 2 — ANIMATED COUNT-UP
+// ═══════════════════════════════════════════════════════
+function animateCountUp(el, target, duration = 900, suffix = '') {
+  if (!el) return;
+  const start = 0;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (target - start) * eased);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target + suffix;
+  }
+  requestAnimationFrame(update);
+}
+
+// Run count-up on stat cards when dashboard becomes visible
+function runDashboardCountUps() {
+  // Stat numbers with data-target attributes
+  document.querySelectorAll('[data-countup]').forEach(el => {
+    const target = parseFloat(el.getAttribute('data-countup'));
+    const suffix = el.getAttribute('data-suffix') || '';
+    if (!isNaN(target)) animateCountUp(el, target, 900, suffix);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 3 — FAB BUTTON
+// ═══════════════════════════════════════════════════════
+let fabOpen = false;
+
+function toggleFab() {
+  haptic('medium');
+  fabOpen = !fabOpen;
+  const menu = document.getElementById('fab-menu');
+  const btn = document.getElementById('fab-btn');
+  if (fabOpen) {
+    menu.classList.remove('hidden');
+    btn.textContent = '✕';
+    btn.style.background = 'linear-gradient(135deg,#ff4f4f,#cc1a1a)';
+  } else {
+    menu.classList.add('hidden');
+    btn.textContent = '＋';
+    btn.style.background = '';
+  }
+}
+
+function fabAction(action) {
+  haptic('light');
+  toggleFab();
+  if (action === 'event') {
+    goPage('calendar');
+    setTimeout(() => { if(typeof openCalSheet === 'function') openCalSheet(); }, 200);
+  } else if (action === 'search') {
+    openCommandPalette();
+  } else if (action === 'backup') {
+    openBackupModal();
+  }
+}
+
+// Update FAB visibility per page — hide on search/dashboard
+function updateFabVisibility(page) {
+  const fab = document.getElementById('fab-btn');
+  const menu = document.getElementById('fab-menu');
+  if (!fab) return;
+  if (page === 'search') {
+    fab.classList.add('hidden');
+  } else {
+    fab.classList.remove('hidden');
+  }
+  // Close menu on page change
+  if (fabOpen) toggleFab();
+}
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 4 — COMMAND PALETTE
+// ═══════════════════════════════════════════════════════
+let cmdSelectedIdx = -1;
+
+const CMD_PAGES = [
+  { icon: '🏠', title: 'Dashboard', sub: 'Home overview', action: () => goPage('dashboard'), badge: 'Page' },
+  { icon: '👨‍👩‍👧‍👦', title: 'Members', sub: 'Family profiles & documents', action: () => goPage('members'), badge: 'Page' },
+  { icon: '📁', title: 'Documents', sub: 'All family records', action: () => goPage('documents'), badge: 'Page' },
+  { icon: '⏰', title: 'Expiry Tracker', sub: 'Passports, insurance, visas', action: () => goPage('expiry'), badge: 'Page' },
+  { icon: '📅', title: 'Calendar', sub: 'Family events & reminders', action: () => goPage('calendar'), badge: 'Page' },
+  { icon: '💊', title: 'Health', sub: 'Medical records & appointments', action: () => goPage('health'), badge: 'Page' },
+  { icon: '🔍', title: 'Search', sub: 'Find documents & IDs', action: () => goPage('search'), badge: 'Page' },
+  { icon: '🌙', title: 'Toggle Theme', sub: 'Switch dark / light mode', action: () => toggleTheme(), badge: 'Action' },
+  { icon: '💾', title: 'Backup Data', sub: 'Download backup JSON', action: () => openBackupModal(), badge: 'Action' },
+  { icon: '➕', title: 'Add Calendar Event', sub: 'Create a new family event', action: () => { goPage('calendar'); setTimeout(() => { if(typeof openCalSheet === 'function') openCalSheet(); }, 200); }, badge: 'Action' },
+];
+
+// Build member entries from MEMBERS data
+function getCmdEntries() {
+  const entries = [...CMD_PAGES];
+  if (typeof MEMBERS !== 'undefined') {
+    Object.values(MEMBERS).forEach(m => {
+      entries.push({
+        icon: '👤', title: m.name, sub: m.role + ' · Tap to view profile',
+        action: () => { goPage('members'); setTimeout(() => showMemberDetail(m.id || Object.keys(MEMBERS).find(k=>MEMBERS[k]===m)), 150); },
+        badge: 'Member'
+      });
+    });
+  }
+  return entries;
+}
+
+function openCommandPalette() {
+  const overlay = document.getElementById('cmd-overlay');
+  const input = document.getElementById('cmd-input');
+  overlay.classList.add('open');
+  input.value = '';
+  cmdSearch('');
+  setTimeout(() => input.focus(), 120);
+  haptic('light');
+}
+
+function closeCommandPalette() {
+  document.getElementById('cmd-overlay').classList.remove('open');
+  cmdSelectedIdx = -1;
+}
+
+function cmdSearch(query) {
+  const results = document.getElementById('cmd-results');
+  const q = query.trim().toLowerCase();
+  const entries = getCmdEntries();
+  const filtered = q
+    ? entries.filter(e => e.title.toLowerCase().includes(q) || e.sub.toLowerCase().includes(q) || (e.badge||'').toLowerCase().includes(q))
+    : entries.slice(0, 12);
+
+  if (filtered.length === 0) {
+    results.innerHTML = `<div class="cmd-empty">😕 No results for "<strong>${query}</strong>"</div>`;
+    return;
+  }
+
+  // Group by badge type
+  const groups = {};
+  filtered.forEach(e => {
+    const g = e.badge || 'Other';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(e);
+  });
+
+  let html = '';
+  let globalIdx = 0;
+  Object.entries(groups).forEach(([group, items]) => {
+    if (!q) html += `<div class="cmd-section-label">${group}s</div>`;
+    items.forEach(item => {
+      html += `
+        <div class="cmd-result-item" data-idx="${globalIdx}" onclick="cmdExecute(${globalIdx})">
+          <div class="cmd-result-icon">${item.icon}</div>
+          <div class="cmd-result-body">
+            <div class="cmd-result-title">${item.title}</div>
+            <div class="cmd-result-sub">${item.sub}</div>
+          </div>
+          <div class="cmd-result-badge">${item.badge || ''}</div>
+        </div>`;
+      globalIdx++;
+    });
+  });
+  results.innerHTML = html;
+  // Store filtered for keyboard nav
+  results._filtered = filtered;
+  cmdSelectedIdx = -1;
+}
+
+function cmdExecute(idx) {
+  const results = document.getElementById('cmd-results');
+  const filtered = results._filtered;
+  if (!filtered || !filtered[idx]) return;
+  closeCommandPalette();
+  haptic('medium');
+  setTimeout(() => filtered[idx].action(), 80);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  // ⌘K or Ctrl+K to open
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    const overlay = document.getElementById('cmd-overlay');
+    if (overlay.classList.contains('open')) closeCommandPalette();
+    else openCommandPalette();
+    return;
+  }
+  const overlay = document.getElementById('cmd-overlay');
+  if (!overlay.classList.contains('open')) return;
+  const results = document.getElementById('cmd-results');
+  const items = results.querySelectorAll('.cmd-result-item');
+  if (e.key === 'Escape') { closeCommandPalette(); return; }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    cmdSelectedIdx = Math.min(cmdSelectedIdx + 1, items.length - 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    cmdSelectedIdx = Math.max(cmdSelectedIdx - 1, 0);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (cmdSelectedIdx >= 0) cmdExecute(cmdSelectedIdx);
+    else if (items.length > 0) cmdExecute(0);
+    return;
+  }
+  items.forEach((el, i) => el.classList.toggle('selected', i === cmdSelectedIdx));
+  if (items[cmdSelectedIdx]) items[cmdSelectedIdx].scrollIntoView({ block: 'nearest' });
+});
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 5 — PULL TO REFRESH
+// ═══════════════════════════════════════════════════════
+(function initPullToRefresh() {
+  let startY = 0, pulling = false, triggered = false;
+  const indicator = document.getElementById('ptr-indicator');
+  const label = document.getElementById('ptr-label');
+  const THRESHOLD = 80;
+
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY === 0) {
+      startY = e.touches[0].clientY;
+      pulling = true;
+      triggered = false;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 20 && window.scrollY === 0) {
+      const progress = Math.min(dy / THRESHOLD, 1);
+      indicator.classList.add('ptr-show');
+      if (progress >= 1) {
+        indicator.classList.add('ptr-ready');
+        label.textContent = 'Release to refresh';
+        triggered = true;
+      } else {
+        indicator.classList.remove('ptr-ready');
+        label.textContent = 'Pull to refresh';
+        triggered = false;
+      }
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    if (!pulling) return;
+    pulling = false;
+    if (triggered) {
+      indicator.classList.add('ptr-refreshing');
+      indicator.classList.remove('ptr-ready');
+      label.textContent = 'Refreshing…';
+      haptic('medium');
+      setTimeout(() => {
+        // Re-init the current page
+        if (currentPage === 'dashboard') initDashboard();
+        if (currentPage === 'expiry') { initExpiry(); animateExpBars(); }
+        if (currentPage === 'calendar') initCalendar();
+        if (currentPage === 'health') initHealthPage();
+        indicator.classList.remove('ptr-show', 'ptr-refreshing');
+        label.textContent = 'Pull to refresh';
+        showToast('✅ Refreshed');
+      }, 900);
+    } else {
+      indicator.classList.remove('ptr-show', 'ptr-ready');
+    }
+  }, { passive: true });
+})();
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 6 — RIPPLE ON PRESSABLE ELEMENTS
+// ═══════════════════════════════════════════════════════
+document.addEventListener('pointerdown', e => {
+  const el = e.target.closest('.pressable');
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  el.style.setProperty('--ripple-x', x + '%');
+  el.style.setProperty('--ripple-y', y + '%');
+  haptic('light');
+});
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 7 — SKELETON LOADERS
+// ═══════════════════════════════════════════════════════
+function showSkeletonLoader(containerId, count = 3) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += `
+      <div class="skeleton-card">
+        <div class="skel-row">
+          <div class="skeleton skel-avatar"></div>
+          <div class="skel-body">
+            <div class="skeleton skel-line w-70"></div>
+            <div class="skeleton skel-line w-50"></div>
+          </div>
+        </div>
+        <div class="skeleton skel-line w-90"></div>
+        <div class="skeleton skel-line w-30"></div>
+      </div>`;
+  }
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 8 — ENHANCED EMPTY STATE HELPER
+// ═══════════════════════════════════════════════════════
+function renderEmptyState(config) {
+  return `
+    <div class="empty-state">
+      <div class="empty-state-icon">${config.icon || '📭'}</div>
+      <div class="empty-state-title">${config.title || 'Nothing here yet'}</div>
+      <div class="empty-state-sub">${config.sub || 'Add some items to get started.'}</div>
+      ${config.cta ? `<button class="empty-state-cta" onclick="${config.ctaAction}">${config.cta}</button>` : ''}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 9 — ENHANCED TOAST WITH ICON + TITLE
+// ═══════════════════════════════════════════════════════
+// Override showToast to support rich format
+const _originalShowToast = window.showToast;
+function showToast(msg, type = 'info', subtitle = '') {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  const icons = { info: 'ℹ️', success: '✅', error: '❌', warning: '⚠️' };
+  const icon = icons[type] || (msg.startsWith('✅') ? '' : msg.startsWith('❌') ? '' : '');
+  if (subtitle) {
+    toast.innerHTML = `
+      <span class="toast-icon">${icon}</span>
+      <div class="toast-body">
+        <div class="toast-title">${msg}</div>
+        <div class="toast-sub">${subtitle}</div>
+      </div>`;
+  } else {
+    toast.innerHTML = `<span style="font-size:16px;">${msg}</span>`;
+  }
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════════════════
+// UI IMPROVEMENT 10 — PAGE CHANGE HOOK
+// ═══════════════════════════════════════════════════════
+const _origGoPage = goPage;
+// Patch goPage to add haptic + FAB update + count-up trigger
+window.goPage = function(page) {
+  haptic('light');
+  _origGoPage(page);
+  updateFabVisibility(page);
+  if (page === 'dashboard') setTimeout(runDashboardCountUps, 400);
+};
+
+// Keyboard shortcut hint in topbar on desktop
+(function addCmdKHint() {
+  const tbRight = document.querySelector('.tb-right');
+  if (!tbRight || window.innerWidth < 768) return;
+  const hint = document.createElement('div');
+  hint.style.cssText = 'display:flex;align-items:center;gap:5px;font-family:"DM Mono",monospace;font-size:10px;color:var(--text3);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:5px 10px;cursor:pointer;white-space:nowrap;transition:all .15s;';
+  hint.innerHTML = '⌘K <span style="opacity:.7">Search</span>';
+  hint.onclick = openCommandPalette;
+  hint.onmouseenter = () => hint.style.borderColor = 'rgba(79,127,255,.4)';
+  hint.onmouseleave = () => hint.style.borderColor = 'rgba(255,255,255,.08)';
+  tbRight.insertBefore(hint, tbRight.firstChild);
 })();
 
 // ═══════════════════════════════════════
