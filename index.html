@@ -10,6 +10,7 @@
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Duggireddy%20Family%20Portal%22%2C%22short_name%22%3A%22Family%20Portal%22%2C%22description%22%3A%22Secure%20family%20document%20management%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2307080f%22%2C%22theme_color%22%3A%22%2307080f%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg'%2520viewBox%253D'0%25200%2520192%2520192'%253E%253Crect%2520width%253D'192'%2520height%253D'192'%2520rx%253D'40'%2520fill%253D'%252307080f'%252F%253E%253Ctext%2520x%253D'96'%2520y%253D'130'%2520font-size%253D'100'%2520text-anchor%253D'middle'%253E%25F0%259F%259B%25BF%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <title>Duggireddy Family Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
 <style>
 :root{
   --bg:#07080f;--surface:#0d1020;--surface2:#131626;--surface3:#181c2e;
@@ -1877,40 +1878,6 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   </div>
 </div>
 
-<!-- ═══════════════ GEMINI KEY SETUP SHEET ═══════════════ -->
-<div class="ha-sheet hidden" id="gemini-key-sheet" onclick="if(event.target===this)closeGeminiKeySheet()">
-  <div class="ha-sheet-card">
-    <div class="hr-handle"></div>
-    <div class="hr-sheet-title">🔑 Gemini API Key</div>
-    <div class="hr-sheet-sub" style="margin-bottom:14px;">Required once for AI report scanning. Your key is stored only on this device.</div>
-
-    <div style="background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
-      <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px;">How to get a free key</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.6;">
-        1. Go to <strong style="color:var(--text)">aistudio.google.com</strong><br>
-        2. Sign in with your Google account<br>
-        3. Click <strong style="color:var(--text)">Get API Key → Create API Key</strong><br>
-        4. Copy and paste it below
-      </div>
-    </div>
-
-    <div class="hr-field" style="margin-bottom:14px;">
-      <label>Paste your API Key here</label>
-      <input class="hr-input" id="gemini-key-input" type="text"
-             placeholder="AIzaSy…"
-             style="font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.5px;">
-    </div>
-
-    <div style="font-size:11px;color:var(--text3);margin-bottom:14px;line-height:1.5;">
-      🔒 Stored only in your browser's localStorage — never sent anywhere except Google's API.
-    </div>
-
-    <div class="hr-actions">
-      <button class="hr-cancel" onclick="closeGeminiKeySheet()">Cancel</button>
-      <button class="hr-save" onclick="saveGeminiKey()">Save Key & Scan</button>
-    </div>
-  </div>
-</div>
 
 <div id="toast">✓ Copied to clipboard</div>
 
@@ -4140,131 +4107,215 @@ function saveAppt() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// FEATURE 01 — PHASE 3: Gemini Vision Lab Report Scanner
+// FEATURE 01 — PHASE 3: Tesseract.js Offline OCR Scanner
+// Zero API · Zero cost · Runs entirely in browser
 // ═══════════════════════════════════════════════════════════
 
-const GEMINI_MODELS = [
-  'gemini-2.0-flash-lite',   // most quota on free tier
-  'gemini-2.0-flash',        // fallback
-  'gemini-2.5-flash',        // last resort
+// ── Indian lab report regex patterns ──
+// Covers Apollo, Star, Vijaya, Thyrocare, SRL, Metropolis formats
+const OCR_PATTERNS = [
+  // Blood Glucose
+  { id:'glucose',       patterns:[
+    /(?:glucose|blood\s*sugar|fasting\s*glucose|fbs)[^\d]*(\d+\.?\d*)/i,
+    /(\d+\.?\d*)\s*(?:mg\/dl)?\s*(?:H|L|N)?\s*(?:\n|$).*glucose/i,
+  ]},
+  // HbA1c
+  { id:'hba1c',         patterns:[
+    /(?:hba1c|glycated\s*haemo|glyco?haemo|a1c)[^\d]*(\d+\.?\d*)/i,
+    /(?:hb\s*a1c|hemoglobin\s*a1c)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Total Cholesterol
+  { id:'cholesterol',   patterns:[
+    /(?:total\s*cholesterol|cholesterol\s*total)[^\d]*(\d+\.?\d*)/i,
+    /(?:^|\n)\s*cholesterol[^\d]*(\d{2,3}\.?\d*)/im,
+  ]},
+  // LDL
+  { id:'ldl',           patterns:[
+    /(?:ldl|ldl[\s-]*cholesterol|low\s*density)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // HDL
+  { id:'hdl',           patterns:[
+    /(?:hdl|hdl[\s-]*cholesterol|high\s*density)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Triglycerides
+  { id:'triglycerides', patterns:[
+    /(?:triglycerides?|tgl|tg)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Hemoglobin
+  { id:'hemoglobin',    patterns:[
+    /(?:haemoglobin|hemoglobin|hgb|hb)[^\d]*(\d+\.?\d*)/i,
+    /(?:^|\n)\s*hb\s*[:\-]?\s*(\d+\.?\d*)/im,
+  ]},
+  // TSH
+  { id:'tsh',           patterns:[
+    /(?:tsh|thyroid\s*stimulating)[^\d]*(\d+\.?\d*)/i,
+    /(?:t\.?s\.?h)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Creatinine
+  { id:'creatinine',    patterns:[
+    /(?:creatinine|serum\s*creatinine|s\.?\s*creatinine)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Uric Acid
+  { id:'uricacid',      patterns:[
+    /(?:uric\s*acid|serum\s*uric)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Vitamin D
+  { id:'vitd',          patterns:[
+    /(?:vitamin\s*d|vit\.?\s*d|25[\s-]*oh[\s-]*d|25\s*hydroxy)[^\d]*(\d+\.?\d*)/i,
+    /(?:calcidiol|cholecalciferol)[^\d]*(\d+\.?\d*)/i,
+  ]},
+  // Vitamin B12
+  { id:'vitb12',        patterns:[
+    /(?:vitamin\s*b[\s-]?12|vit\.?\s*b12|cyanocobalamin|cobalamin)[^\d]*(\d+\.?\d*)/i,
+    /(?:b[\s-]?12)[^\d]*(\d{2,4}\.?\d*)/i,
+  ]},
+  // WBC
+  { id:'wbc',           patterns:[
+    /(?:wbc|white\s*blood\s*cell|total\s*leucocyte|tlc)[^\d]*([\d]+\.?\d*)/i,
+    /(?:leucocytes?|leukocytes?)[^\d]*([\d]+\.?\d*)/i,
+  ]},
+  // Platelets
+  { id:'platelets',     patterns:[
+    /(?:platelet|plt)[^\d]*([\d]+\.?\d*)/i,
+    /(?:thrombocyte)[^\d]*([\d]+\.?\d*)/i,
+  ]},
+  // BP Systolic
+  { id:'bp_sys',        patterns:[
+    /(?:systolic|bp[\s\/]*sys)[^\d]*(\d{2,3})/i,
+    /(?:blood\s*pressure|b\.?p\.?)[^\d]*(\d{2,3})\s*\/?\s*\d*/i,
+  ]},
+  // Weight
+  { id:'weight',        meta:true, patterns:[
+    /(?:weight|wt\.?)[^\d]*(\d+\.?\d*)\s*kg/i,
+    /(\d{2,3}\.?\d*)\s*kg/i,
+  ]},
+  // Height
+  { id:'height',        meta:true, patterns:[
+    /(?:height|ht\.?)[^\d]*(\d+\.?\d*)\s*cm/i,
+    /(\d{3}\.?\d*)\s*cm/i,
+  ]},
+  // Lab name
+  { id:'lab_name',      text:true, patterns:[
+    /^(apollo\s+\w[\w\s]*(?:diagnostics?|hospitals?|clinic)?)/im,
+    /^(star\s+\w[\w\s]*(?:hospitals?|diagnostics?)?)/im,
+    /^(vijaya\s+\w[\w\s]*(?:diagnostics?|hospital)?)/im,
+    /^(thyrocare\s+[\w\s]*)/im,
+    /^(srl\s+\w[\w\s]*)/im,
+    /^(metropolis\s+[\w\s]*)/im,
+    /^(kims\s+[\w\s]*)/im,
+    /^(yashoda\s+[\w\s]*)/im,
+  ]},
+  // Report date
+  { id:'report_date',   date:true, patterns:[
+    /(?:date|rpt\.?\s*date|collection\s*date|sample\s*date)[^\d]*(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})/i,
+    /(?:date)[^\d]*(\d{1,2}\s+\w+\s+\d{4})/i,
+    /(\d{2}[\/-]\d{2}[\/-]\d{4})/,
+    /(\d{4}-\d{2}-\d{2})/,
+  ]},
+  // Ref number
+  { id:'report_ref',    text:true, patterns:[
+    /(?:report\s*(?:no|num|ref|id)|accession\s*(?:no|num)|lab\s*(?:no|id))[^\w]*([\w\-\/]+)/i,
+    /(?:^|\n)\s*(?:id|no)[:\s]+([\w\-\/]{4,20})/im,
+  ]},
 ];
-function getGeminiKey() { return localStorage.getItem('fp_gemini_key') || ''; }
-function getGeminiUrl(model) {
-  return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${getGeminiKey()}`;
-}
 
-function showGeminiKeyPrompt() {
-  const input = document.getElementById('gemini-key-input');
-  if (input) input.value = getGeminiKey();
-  document.getElementById('gemini-key-sheet').classList.remove('hidden');
-}
-function closeGeminiKeySheet() {
-  document.getElementById('gemini-key-sheet').classList.add('hidden');
-}
-function saveGeminiKey() {
-  const key = document.getElementById('gemini-key-input').value.trim();
-  if (!key || !key.startsWith('AIza')) {
-    showToast('⚠️ Invalid key — should start with AIza…');
-    return;
-  }
-  localStorage.setItem('fp_gemini_key', key);
-  closeGeminiKeySheet();
-  showToast('✓ API key saved');
-  const errEl = document.getElementById('scan-err');
-  if (errEl) errEl.classList.remove('active');
-}
-
-function checkGeminiKeyOnOpen() {
-  if (!getGeminiKey()) {
-    const zone = document.getElementById('scan-zone');
-    if (zone && !document.getElementById('scan-key-btn')) {
-      const btn = document.createElement('div');
-      btn.id = 'scan-key-btn';
-      btn.style.cssText = 'margin-top:10px;font-size:11px;color:var(--gold);font-weight:700;cursor:pointer;text-decoration:underline;';
-      btn.textContent = '⚙ Set up Gemini API key first';
-      btn.onclick = (e) => { e.stopPropagation(); showGeminiKeyPrompt(); };
-      zone.appendChild(btn);
-    }
-  }
-}
-
-// ── Field mapping: gemini JSON key → HTML input id ──
-const SCAN_FIELD_MAP = {
-  lab_name:      'hr-lab',
-  report_date:   'hr-date',
-  report_ref:    'hr-ref',
-  weight:        'hrv-weight',
-  height:        'hrv-height',
-  glucose:       'hrm-glucose',
-  hba1c:         'hrm-hba1c',
-  cholesterol:   'hrm-cholesterol',
-  ldl:           'hrm-ldl',
-  hdl:           'hrm-hdl',
-  triglycerides: 'hrm-triglycerides',
-  hemoglobin:    'hrm-hemoglobin',
-  wbc:           'hrm-wbc',
-  platelets:     'hrm-platelets',
-  tsh:           'hrm-tsh',
-  creatinine:    'hrm-creatinine',
-  uric_acid:     'hrm-uricacid',
-  vitamin_d:     'hrm-vitd',
-  vitamin_b12:   'hrm-vitb12',
-  bp_systolic:   'hrm-bp_sys',
+// ── Field input ID map ──
+const OCR_INPUT_MAP = {
+  glucose:'hrm-glucose', hba1c:'hrm-hba1c', cholesterol:'hrm-cholesterol',
+  ldl:'hrm-ldl', hdl:'hrm-hdl', triglycerides:'hrm-triglycerides',
+  hemoglobin:'hrm-hemoglobin', tsh:'hrm-tsh', creatinine:'hrm-creatinine',
+  uricacid:'hrm-uricacid', vitd:'hrm-vitd', vitb12:'hrm-vitb12',
+  wbc:'hrm-wbc', platelets:'hrm-platelets', bp_sys:'hrm-bp_sys',
+  weight:'hrv-weight', height:'hrv-height',
+  lab_name:'hr-lab', report_date:'hr-date', report_ref:'hr-ref',
 };
 
-const GEMINI_PROMPT = `You are a medical lab report parser. Extract ALL available values from this lab report image or PDF.
-
-Return ONLY a valid JSON object with these exact keys (omit any key if the value is not present in the report):
-{
-  "lab_name": "string — name of lab or hospital",
-  "report_date": "string — date in YYYY-MM-DD format",
-  "report_ref": "string — report reference or accession number",
-  "weight": number,
-  "height": number,
-  "glucose": number,
-  "hba1c": number,
-  "cholesterol": number,
-  "ldl": number,
-  "hdl": number,
-  "triglycerides": number,
-  "hemoglobin": number,
-  "wbc": number,
-  "platelets": number,
-  "tsh": number,
-  "creatinine": number,
-  "uric_acid": number,
-  "vitamin_d": number,
-  "vitamin_b12": number,
-  "bp_systolic": number
+// ── WBC / Platelet unit normalisation ──
+// Labs sometimes report in cells/µL (7200) instead of ×10³/µL (7.2)
+function normaliseCount(id, val) {
+  if (id === 'wbc'      && val > 100)  return parseFloat((val / 1000).toFixed(2));
+  if (id === 'platelets'&& val > 1000) return parseFloat((val / 1000).toFixed(0));
+  return val;
 }
 
-Rules:
-- Return ONLY the JSON object, no explanation, no markdown, no backticks
-- All numeric values must be plain numbers (no units, no ranges)
-- For date use YYYY-MM-DD format
-- If a value appears multiple times, use the most recent or most relevant one
-- WBC should be in ×10³/µL (divide by 1000 if given in cells/µL like 7200 → 7.2)
-- Platelets should be in ×10³/µL (divide by 1000 if given like 230000 → 230)`;
+// ── Parse date string → YYYY-MM-DD ──
+function parseOcrDate(str) {
+  if (!str) return '';
+  // Already ISO
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  // DD/MM/YYYY or DD-MM-YYYY
+  const m1 = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m1) {
+    const y = m1[3].length===2 ? '20'+m1[3] : m1[3];
+    return `${y}-${m1[2].padStart(2,'0')}-${m1[1].padStart(2,'0')}`;
+  }
+  // "15 Jan 2026" / "15 January 2026"
+  const months = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',
+                  jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+  const m2 = str.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/i);
+  if (m2) {
+    const mo = months[m2[2].toLowerCase().slice(0,3)];
+    if (mo) return `${m2[3]}-${mo}-${m2[1].padStart(2,'0')}`;
+  }
+  return '';
+}
 
-// ── File input handler ──
+// ── Main regex extraction from OCR text ──
+function extractFromOcrText(rawText) {
+  const text = rawText;
+  const result = {};
+  let filled = 0;
+
+  OCR_PATTERNS.forEach(p => {
+    for (const rx of p.patterns) {
+      const m = text.match(rx);
+      if (!m || !m[1]) continue;
+      let val = m[1].trim();
+
+      if (p.date) {
+        const d = parseOcrDate(val);
+        if (d) { result[p.id] = d; filled++; }
+      } else if (p.text) {
+        result[p.id] = val.trim().slice(0, 60);
+        filled++;
+      } else {
+        let num = parseFloat(val);
+        if (isNaN(num)) continue;
+        num = normaliseCount(p.id, num);
+        // Sanity-check ranges to avoid false positives
+        const sane = SANITY[p.id];
+        if (sane && (num < sane[0] || num > sane[1])) continue;
+        result[p.id] = num;
+        filled++;
+      }
+      break; // first matching pattern wins
+    }
+  });
+
+  return { result, filled };
+}
+
+// ── Sanity ranges: [min, max] to reject OCR garbage ──
+const SANITY = {
+  glucose:[40,500], hba1c:[3,15], cholesterol:[50,500],
+  ldl:[10,400], hdl:[10,150], triglycerides:[20,1000],
+  hemoglobin:[4,22], tsh:[0.01,100], creatinine:[0.2,20],
+  uricacid:[1,20], vitd:[1,200], vitb12:[50,3000],
+  wbc:[0.5,50], platelets:[20,1000], bp_sys:[60,250],
+  weight:[20,200], height:[50,220],
+};
+
+// ── File handler ──
 function handleReportFile(file) {
   if (!file) return;
-  const maxMB = 10;
-  if (file.size > maxMB * 1024 * 1024) {
-    showScanError(`File too large. Please use an image under ${maxMB}MB.`);
+  if (file.size > 15 * 1024 * 1024) {
+    setScanState('error','File too large. Use an image under 15MB.');
     return;
   }
-  const reader = new FileReader();
-  reader.onload = e => {
-    const base64 = e.target.result.split(',')[1];
-    const mimeType = file.type || 'image/jpeg';
-    scanReportWithGemini(base64, mimeType);
-  };
-  reader.onerror = () => showScanError('Could not read file. Try again.');
-  reader.readAsDataURL(file);
+  const url = URL.createObjectURL(file);
+  runTesseract(url, file.type);
 }
 
-// ── Drag-drop handler ──
 function handleReportDrop(e) {
   e.preventDefault();
   document.getElementById('scan-zone').classList.remove('drag-over');
@@ -4272,107 +4323,89 @@ function handleReportDrop(e) {
   if (file) handleReportFile(file);
 }
 
-// ── Core Gemini call with model fallback chain ──
-async function scanReportWithGemini(base64Data, mimeType) {
-  if (!getGeminiKey()) {
-    setScanState('error', 'No API key set.');
-    showGeminiKeyPrompt();
-    return;
-  }
+// ── Tesseract OCR runner ──
+async function runTesseract(imageUrl, mimeType) {
   setScanState('scanning');
 
-  const part = { inline_data: { mime_type: mimeType, data: base64Data } };
-  const body = {
-    contents: [{ parts: [{ text: GEMINI_PROMPT }, part] }],
-    generationConfig: { temperature: 0, maxOutputTokens: 1024 }
-  };
+  // Check Tesseract loaded
+  if (typeof Tesseract === 'undefined') {
+    setScanState('error','OCR library not loaded. Check your internet connection and refresh.');
+    return;
+  }
 
-  let lastError = '';
-  for (let i = 0; i < GEMINI_MODELS.length; i++) {
-    const model = GEMINI_MODELS[i];
-    setScanProgressText(`Reading report with AI (${model})…`);
-    try {
-      const res = await fetch(getGeminiUrl(model), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
+  try {
+    setScanProgressText('Loading OCR engine…');
 
-      if (res.status === 429) {
-        // Rate limited on this model — try next one after short wait
-        lastError = '429';
-        if (i < GEMINI_MODELS.length - 1) {
-          setScanProgressText(`Quota hit on ${model}, trying next model…`);
-          await new Promise(r => setTimeout(r, 1500));
-          continue;
-        } else {
-          throw new Error('All models quota exceeded. Wait 1 minute then try again. Free tier allows 15 requests/minute.');
+    const worker = await Tesseract.createWorker('eng', 1, {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          const pct = Math.round((m.progress||0)*100);
+          setScanProgressText(`Reading report… ${pct}%`);
+        } else if (m.status === 'loading tesseract core') {
+          setScanProgressText('Loading OCR engine…');
+        } else if (m.status === 'initializing api') {
+          setScanProgressText('Initialising…');
         }
       }
-      if (res.status === 400) throw new Error('Invalid API key. Tap "Set up API key" to update it.');
-      if (res.status === 403) throw new Error('API key not authorised. Make sure Gemini API is enabled at aistudio.google.com');
-      if (!res.ok) {
-        const e = await res.json().catch(()=>({}));
-        throw new Error(e?.error?.message || `API error ${res.status}`);
-      }
+    });
 
-      const data = await res.json();
-      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      const jsonStr = rawText.replace(/```json|```/g,'').trim();
+    // Optimise for printed text (lab reports are always printed)
+    await worker.setParameters({
+      tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+      preserve_interword_spaces: '1',
+    });
 
-      let parsed;
-      try { parsed = JSON.parse(jsonStr); }
-      catch(e) { throw new Error('Could not parse report. Try a clearer photo with good lighting.'); }
+    setScanProgressText('Scanning report…');
+    const result = await worker.recognize(imageUrl);
+    await worker.terminate();
+    URL.revokeObjectURL(imageUrl);
 
-      const filled = fillFormFromScan(parsed);
-      setScanState('success', filled);
-      return; // success — stop trying models
-
-    } catch(err) {
-      if (err.message === '429' || lastError === '429') continue;
-      setScanState('error', err.message);
+    const rawText = result.data.text;
+    if (!rawText || rawText.trim().length < 20) {
+      setScanState('error','Could not read text from image. Try a clearer photo with good lighting.');
       return;
     }
+
+    setScanProgressText('Extracting values…');
+    const { result: extracted, filled } = extractFromOcrText(rawText);
+
+    if (filled === 0) {
+      setScanState('error','No biomarker values found. Make sure the image is clear and well-lit. You can enter values manually below.');
+      return;
+    }
+
+    fillFormFromOcr(extracted);
+    setScanState('success', filled);
+
+  } catch(err) {
+    console.error('Tesseract error:', err);
+    setScanState('error','OCR failed: ' + (err.message||'Unknown error') + '. Try a clearer image.');
   }
-  setScanState('error', 'All models rate limited. Please wait 1 minute and try again.');
 }
 
-// ── Fill form inputs from parsed JSON ──
-function fillFormFromScan(parsed) {
-  let count = 0;
-  Object.entries(SCAN_FIELD_MAP).forEach(([key, inputId]) => {
-    const val = parsed[key];
-    if (val === undefined || val === null || val === '') return;
+// ── Fill form from OCR result ──
+function fillFormFromOcr(extracted) {
+  Object.entries(extracted).forEach(([key, val]) => {
+    const inputId = OCR_INPUT_MAP[key];
+    if (!inputId) return;
     const el = document.getElementById(inputId);
     if (!el) return;
-    // Format date correctly
-    if (inputId === 'hr-date' && typeof val === 'string') {
-      // Try to normalise date to YYYY-MM-DD
-      const d = new Date(val);
-      el.value = isNaN(d) ? val : d.toISOString().slice(0,10);
-    } else {
-      el.value = val;
-    }
-    // Visual highlight on filled fields
-    el.style.borderColor = 'rgba(62,207,142,.6)';
-    el.style.background  = 'rgba(62,207,142,.06)';
-    setTimeout(() => {
-      el.style.borderColor = '';
-      el.style.background  = '';
-    }, 3000);
-    count++;
+    el.value = val;
+    // Green highlight
+    el.style.borderColor = 'rgba(62,207,142,.7)';
+    el.style.background  = 'rgba(62,207,142,.07)';
+    setTimeout(() => { el.style.borderColor=''; el.style.background=''; }, 3000);
   });
-  return count;
 }
 
-// ── UI state helpers ──
+// ── Scan UI state ──
 function setScanState(state, payload) {
   const progress = document.getElementById('scan-progress');
   const errEl    = document.getElementById('scan-err');
   const banner   = document.getElementById('scan-result-banner');
   const zone     = document.getElementById('scan-zone');
+  if (!progress) return;
 
-  // Reset all
   progress.classList.remove('active');
   errEl.classList.remove('active');
   banner.classList.remove('active');
@@ -4386,11 +4419,9 @@ function setScanState(state, payload) {
     zone.style.pointerEvents = '';
     banner.classList.add('active');
     document.getElementById('scan-result-text').textContent =
-      `${payload} value${payload===1?'':'s'} extracted — please review below`;
-    // Reset file input so user can scan again
+      `${payload} value${payload===1?'':'s'} extracted — review below`;
     const fi = document.getElementById('scan-file-input');
     if (fi) fi.value = '';
-    // Scroll down to show filled fields
     setTimeout(() => {
       document.getElementById('hr-lab')?.scrollIntoView({ behavior:'smooth', block:'center' });
     }, 400);
@@ -4398,7 +4429,7 @@ function setScanState(state, payload) {
     zone.style.opacity = '';
     zone.style.pointerEvents = '';
     errEl.classList.add('active');
-    errEl.textContent = '⚠️ ' + (payload || 'Could not read report. Try a clearer photo.');
+    errEl.textContent = '⚠️ ' + (payload || 'Could not read report.');
   }
 }
 
@@ -4406,16 +4437,12 @@ function setScanProgressText(txt) {
   const el = document.getElementById('scan-progress-text');
   if (el) el.textContent = txt;
 }
-
-function showScanError(msg) {
-  setScanState('error', msg);
-}
+function showScanError(msg) { setScanState('error', msg); }
 
 // ── Reset scan UI when sheet opens ──
 const _origOpenAddReportSheet = openAddReportSheet;
 openAddReportSheet = function() {
   _origOpenAddReportSheet();
-  // Reset scan state
   const progress = document.getElementById('scan-progress');
   const errEl    = document.getElementById('scan-err');
   const banner   = document.getElementById('scan-result-banner');
@@ -4426,7 +4453,6 @@ openAddReportSheet = function() {
   if (zone)     { zone.style.opacity=''; zone.style.pointerEvents=''; }
   const fi = document.getElementById('scan-file-input');
   if (fi) fi.value = '';
-  checkGeminiKeyOnOpen();
 };
 
 function initHealthPage() {
