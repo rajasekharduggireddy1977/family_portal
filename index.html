@@ -524,6 +524,38 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* Section Icon Grid 2×3 */
 .section-icon-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;}
 .acad-sticky-bar{position:sticky;top:var(--topbar-h);z-index:50;background:var(--bg);padding:8px 0 4px;margin-bottom:0;}
+.wknav-card{background:var(--surface2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+.wknav-card.today-day{border:2px solid var(--purple);box-shadow:0 4px 20px rgba(139,92,246,.18);}
+.wknav-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);}
+.wknav-card.today-day .wknav-hdr{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.1));}
+.wknav-arrow{width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--text2);flex-shrink:0;transition:all .15s;user-select:none;-webkit-user-select:none;}
+.wknav-arrow:active{background:var(--border2);transform:scale(.92);}
+.wknav-arrow.disabled{opacity:.3;pointer-events:none;}
+.wknav-day-info{text-align:center;flex:1;}
+.wknav-day-name{font-size:14px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:var(--text1);}
+.wknav-card.today-day .wknav-day-name{color:var(--purple);}
+.wknav-day-meta{font-size:10px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;}
+.wknav-today-pill{display:inline-block;font-size:9px;font-weight:800;background:var(--purple);color:#fff;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;letter-spacing:.4px;}
+.wknav-att-toggle{font-size:10px;font-weight:700;font-family:'DM Mono',monospace;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s;}
+.wknav-att-toggle.on{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.35);color:var(--purple);}
+.wknav-slots{padding:0;}
+.wknav-slot{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-top:1px solid var(--border2);transition:background .12s;}
+.wknav-slot:first-child{border-top:none;}
+.wknav-slot-icon-col{flex-shrink:0;text-align:center;width:30px;}
+.wknav-slot-icon{font-size:18px;line-height:1;}
+.wknav-slot-period{font-size:9px;font-weight:800;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
+.wknav-slot-body{flex:1;min-width:0;}
+.wknav-slot-subject{font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wknav-slot-meta{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
+.wknav-att-badge{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;}
+.wknav-no-class{padding:28px 16px;text-align:center;color:var(--text3);font-size:12px;}
+.wknav-dots{display:flex;justify-content:center;gap:8px;padding:6px 0 2px;}
+.wknav-dot{width:8px;height:8px;border-radius:50%;border:2px solid var(--border2);background:transparent;cursor:pointer;transition:all .15s;}
+.wknav-dot.active{background:var(--purple);border-color:var(--purple);}
+.wknav-dot.has-class{border-color:var(--text3);}
+.wknav-dot.today-dot{border-color:var(--purple);}
+.wknav-body-anim{animation:wknavFade .18s ease both;}
+@keyframes wknavFade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
 .acad-sticky-stats{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border2);font-size:10px;font-family:'DM Mono',monospace;}
 .acad-stat-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-weight:700;font-size:10px;}
 .sig-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid var(--border);background:var(--surface2);transition:all .18s;min-height:52px;}
@@ -5916,7 +5948,7 @@ function initWidgetDynamic() {
         const _ttData = JSON.parse(_ttRaw);
         const todaySlots = _ttData.filter(s => s.day === todayDayName);
         if (todaySlots.length > 0 && !showAcadChip) {
-          ttChip = `<div class="priority-chip upcoming pressable" onclick="goPage('members');setTimeout(()=>{window._acadView='combined';showMemberDetail('josritha','academics');},80)">
+          ttChip = `<div class="priority-chip upcoming pressable" onclick="goPage('members');setTimeout(()=>{window._acadView='weekview';showMemberDetail('josritha','academics');},80)">
             <div class="pc-icon">🗓️</div>
             <div class="pc-body">
               <div class="pc-title">${todaySlots.length} class${todaySlots.length!==1?'es':''} today</div>
@@ -6329,11 +6361,124 @@ function renderInsuranceTab(m) {
   return html||'<div style="padding:20px;text-align:center;color:var(--text3);">No insurance data</div>';
 }
 
+function buildWkNavCard(d) {
+  var DAY_ORDER = d.DAY_ORDER;
+  var byDay = d.byDay;
+  var attMap = d.attMap;
+  var TYPE_ICONS = d.TYPE_ICONS;
+  var todayName = d.todayName;
+  var showAtt = d.showAtt;
+  var curIdx = d.curIdx;
+  var day = DAY_ORDER[curIdx];
+  var slots = byDay[day] || [];
+  var isToday = day === todayName;
+
+  var prevDisabled = curIdx <= 0 ? ' disabled' : '';
+  var nextDisabled = curIdx >= DAY_ORDER.length - 1 ? ' disabled' : '';
+  var dayMeta = slots.length ? (slots.length + ' class' + (slots.length !== 1 ? 'es' : '')) : 'No classes';
+  var hdr = '<div class="wknav-hdr">'
+    + '<div class="wknav-arrow' + prevDisabled + '" onclick="wkNav(-1)">‹</div>'
+    + '<div class="wknav-day-info">'
+    + '<div class="wknav-day-name">' + day + (isToday ? '<span class="wknav-today-pill">TODAY</span>' : '') + '</div>'
+    + '<div class="wknav-day-meta">' + dayMeta + '</div>'
+    + '</div>'
+    + '<div class="wknav-arrow' + nextDisabled + '" onclick="wkNav(1)">›</div>'
+    + '</div>';
+
+  var attToggle = '<div style="display:flex;justify-content:flex-end;padding:6px 14px 0;">'
+    + '<button class="wknav-att-toggle' + (showAtt ? ' on' : '') + '" onclick="wkToggleAtt()">'
+    + (showAtt ? '📊 Hide Att.' : '📊 Show Att.')
+    + '</button></div>';
+
+  var slotHtml = '';
+  if (!slots.length) {
+    slotHtml = '<div class="wknav-no-class">🎉 No classes scheduled</div>';
+  } else {
+    slots.forEach(function(slot) {
+      var att = attMap[slot.att_key];
+      var pct = att ? Math.round(att.present / att.total * 100) : null;
+      var col = pct === null ? 'var(--text3)' : pct >= 75 ? 'var(--green)' : pct >= 70 ? 'var(--orange)' : 'var(--red)';
+      var badgeBg = pct === null ? 'transparent' : pct >= 75 ? 'rgba(62,207,142,.12)' : pct >= 70 ? 'rgba(255,165,0,.12)' : 'rgba(255,79,79,.12)';
+      var attBadge = '';
+      if (showAtt && att) {
+        var risk = pct < 75 ? ' ⚠️ RISK' : '';
+        attBadge = '<div class="wknav-att-badge" style="background:' + badgeBg + ';color:' + col + '">'
+          + pct + '% · ' + att.present + '/' + att.total + risk
+          + '</div>';
+      } else if (showAtt && !att) {
+        attBadge = '<div style="font-size:10px;color:var(--text3);margin-top:4px;font-style:italic;">No att data</div>';
+      }
+      slotHtml += '<div class="wknav-slot">'
+        + '<div class="wknav-slot-icon-col">'
+        + '<div class="wknav-slot-icon">' + (TYPE_ICONS[slot.type] || '📌') + '</div>'
+        + '<div class="wknav-slot-period">P' + slot.period + '</div>'
+        + '</div>'
+        + '<div class="wknav-slot-body">'
+        + '<div class="wknav-slot-subject">' + (slot.subject || slot.code) + '</div>'
+        + '<div class="wknav-slot-meta">' + (slot.time || '') + ' · ' + slot.type + (slot.room ? ' · 📍 ' + slot.room : '') + '</div>'
+        + attBadge
+        + '</div>'
+        + '</div>';
+    });
+  }
+
+  var dots = '<div class="wknav-dots">';
+  DAY_ORDER.forEach(function(dd, ii) {
+    var cls = 'wknav-dot';
+    if (ii === curIdx) cls += ' active';
+    else if (byDay[dd] && byDay[dd].length) cls += ' has-class';
+    if (dd === todayName && ii !== curIdx) cls += ' today-dot';
+    dots += '<div class="' + cls + '" title="' + dd + '" onclick="wkNavTo(' + ii + ')"></div>';
+  });
+  dots += '</div>';
+
+  return '<div class="wknav-card' + (isToday ? ' today-day' : '') + '">'
+    + hdr
+    + '<div class="wknav-slots wknav-body-anim" id="wknav-body">'
+    + attToggle
+    + '<div style="height:6px;"></div>'
+    + slotHtml
+    + '</div>'
+    + '</div>'
+    + dots;
+}
+
+function wkNav(dir) {
+  var d = window._wkDayData;
+  if (!d) return;
+  var newIdx = d.curIdx + dir;
+  if (newIdx < 0 || newIdx >= d.DAY_ORDER.length) return;
+  d.curIdx = newIdx;
+  var root = document.getElementById('wknav-root');
+  if (root) root.innerHTML = buildWkNavCard(d);
+}
+
+function wkNavTo(idx) {
+  var d = window._wkDayData;
+  if (!d) return;
+  d.curIdx = idx;
+  var root = document.getElementById('wknav-root');
+  if (root) root.innerHTML = buildWkNavCard(d);
+}
+
+function wkToggleAtt() {
+  var d = window._wkDayData;
+  if (!d) return;
+  d.showAtt = !d.showAtt;
+  var root = document.getElementById('wknav-root');
+  if (root) root.innerHTML = buildWkNavCard(d);
+}
+
 function switchAcadView(viewId) {
   window._acadView = viewId;
-  // Re-render only the tab content — no scroll reset
+  // Re-render only the tab content — no scroll, no page jump
   var m = typeof currentMember !== 'undefined' ? MEMBERS[currentMember] : null;
   if (m) renderMemberTab(m, 'academics');
+  // Re-init week nav day data when switching to weekview
+  if (viewId === 'weekview' && window._wkDayData) {
+    var root = document.getElementById('wknav-root');
+    if (root) root.innerHTML = buildWkNavCard(window._wkDayData);
+  }
 }
 
 function renderAcademicsTab(m) {
@@ -6388,15 +6533,14 @@ function renderAcademicsTab(m) {
     </div>`;
 
   // ── View switcher ─────────────────────────────────────────────────────
-  const _acadView = window._acadView || (window._acadView = liveTT ? 'combined' : 'attendance');
-  const tabs = [
-    {id:'attendance', label:'📊 Attendance'},
-    {id:'timetable',  label:'🗓️ Timetable'},
-    {id:'combined',   label:'📅 Day View'},
-  ];
-  const switcher = `<div style="display:flex;gap:6px;margin-bottom:16px;background:var(--surface2);border-radius:10px;padding:4px;">
-    ${tabs.map(t=>`<button onclick="switchAcadView('${t.id}')" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;${_acadView===t.id?'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);':'background:transparent;color:var(--text3);'}">${t.label}</button>`).join('')}
-  </div>`;
+  // View switcher (2 tabs: Attendance + Week View)
+  var _acadView = window._acadView || 'attendance';
+  var switcher = '<div style="display:flex;gap:6px;margin-bottom:0;background:var(--surface2);border-radius:10px;padding:4px;">';
+  [['attendance','\U0001F4CA Attendance'],['weekview','\U0001F4C5 Week View']].forEach(function(t) {
+    var isAct = _acadView === t[0];
+    switcher += '<button onclick="switchAcadView(\'' + t[0] + '\')" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;cursor:pointer;transition:all .2s;' + (isAct ? 'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);' : 'background:transparent;color:var(--text3);') + '">' + t[1] + '</button>';
+  });
+  switcher += '</div>';
 
   // ── ATTENDANCE VIEW ───────────────────────────────────────────────────
   const attView = liveAtt.map(a => {
@@ -6421,104 +6565,44 @@ function renderAcademicsTab(m) {
     </div>`;
   }).join('');
 
-  // ── TIMETABLE + COMBINED VIEWS ────────────────────────────────────────
-  const DAY_ORDER = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  const TYPE_ICONS = {Lecture:'📖',Lab:'🔬',Tutorial:'📝',Seminar:'🎓'};
-  const todayName = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][new Date().getDay()];
+  // ── WEEK VIEW — single-block navigator Mon-Sat ──────────────────────
+  var DAY_ORDER = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  var TYPE_ICONS = {Lecture:'\U0001F4D6',Lab:'\U0001F52C',Tutorial:'\U0001F4DD',Seminar:'\U0001F393'};
+  var todayName = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][new Date().getDay()];
 
-  let ttView = '', combView = '';
+  var weekViewHtml = '';
   if (liveTT) {
-    // Group timetable by day
-    const byDay = {};
-    DAY_ORDER.forEach(d => byDay[d] = []);
-    liveTT.forEach(slot => { if (byDay[slot.day]) byDay[slot.day].push(slot); });
-    DAY_ORDER.forEach(d => byDay[d].sort((a,b) => a.period - b.period));
+    var byDay = {};
+    DAY_ORDER.forEach(function(d){ byDay[d] = []; });
+    liveTT.forEach(function(slot){ if (byDay[slot.day]) byDay[slot.day].push(slot); });
+    DAY_ORDER.forEach(function(d){ byDay[d].sort(function(a,b){ return a.period - b.period; }); });
+    var attMap = {};
+    liveAtt.forEach(function(a){ attMap[a.code+'|'+a.type] = a; });
 
-    // Build att lookup map by att_key
-    const attMap = {};
-    liveAtt.forEach(a => { attMap[a.code+'|'+a.type] = a; });
+    // Determine initial day index: today if it's a weekday, else 0 (Monday)
+    var todayIdx = DAY_ORDER.indexOf(todayName);
+    var initIdx = todayIdx >= 0 ? todayIdx : 0;
+    // Store on window so wkNav can access it
+    window._wkDayData = { byDay: byDay, attMap: attMap, DAY_ORDER: DAY_ORDER,
+      TYPE_ICONS: TYPE_ICONS, todayName: todayName, showAtt: true, curIdx: initIdx };
 
-    // Render timetable-only view
-    ttView = DAY_ORDER.map(day => {
-      const slots = byDay[day];
-      if (!slots.length) return '';
-      const isToday = day === todayName;
-      return `<div style="border-radius:12px;overflow:hidden;border:${isToday?'2px solid var(--purple)':'1px solid var(--border2)'};${isToday?'box-shadow:0 4px 16px rgba(139,92,246,.2);':''}margin-bottom:12px;">
-        <div style="padding:10px 14px;background:${isToday?'linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.12))':'var(--surface2)'};display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:12px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:${isToday?'var(--purple)':'var(--text2)'};">${day}</span>
-          ${isToday?'<span style="font-size:10px;font-weight:700;background:var(--purple);color:#fff;padding:2px 8px;border-radius:20px;">TODAY</span>':''}
-        </div>
-        ${slots.map((slot,i) => `
-          <div style="padding:11px 14px;${i<slots.length-1?'border-bottom:1px solid var(--border2)':''}display:flex;align-items:flex-start;gap:12px;">
-            <div style="flex-shrink:0;text-align:center;min-width:28px;">
-              <div style="font-size:18px;">${TYPE_ICONS[slot.type]||'📌'}</div>
-              <div style="font-size:10px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;">${slot.period}</div>
-            </div>
-            <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${slot.subject||slot.code}</div>
-              <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;">${slot.time||''} · ${slot.type} · ${slot.section||''}</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:1px;">📍 ${slot.room||''}</div>
-            </div>
-          </div>`).join('')}
-      </div>`;
-    }).join('');
-
-    // Render combined view (day-wise with attendance correlation)
-    combView = DAY_ORDER.map(day => {
-      const slots = byDay[day];
-      if (!slots.length) return '';
-      const isToday = day === todayName;
-      return `<div style="border-radius:12px;overflow:hidden;border:${isToday?'2px solid var(--purple)':'1px solid var(--border2)'};${isToday?'box-shadow:0 4px 16px rgba(139,92,246,.2);':''}margin-bottom:14px;">
-        <div style="padding:10px 14px;background:${isToday?'linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.12))':'var(--surface2)'};display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:12px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:${isToday?'var(--purple)':'var(--text2)'};">${day}</span>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span style="font-size:10px;color:var(--text3);">${slots.length} class${slots.length!==1?'es':''}</span>
-            ${isToday?'<span style="font-size:10px;font-weight:700;background:var(--purple);color:#fff;padding:2px 8px;border-radius:20px;">TODAY</span>':''}
-          </div>
-        </div>
-        ${slots.map((slot,i) => {
-          const att = attMap[slot.att_key];
-          const pct = att ? Math.round(att.present/att.total*100) : null;
-          const col = pct===null ? 'var(--text3)' : pct>=75 ? 'var(--green)' : pct>=70 ? 'var(--orange)' : 'var(--red)';
-          const attBadge = att
-            ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;border-radius:6px;background:${pct>=75?'rgba(62,207,142,.1)':pct>=70?'rgba(255,165,0,.1)':'rgba(255,79,79,.1)'};">
-                <span style="font-size:11px;font-weight:800;color:${col};font-family:'DM Mono',monospace;">${pct}%</span>
-                <span style="font-size:10px;color:${col};">${att.present}/${att.total}</span>
-                ${pct<75?'<span style="font-size:9px;color:var(--red);font-weight:700;">⚠ RISK</span>':''}
-               </div>`
-            : `<div style="margin-top:5px;font-size:10px;color:var(--text3);font-style:italic;">No attendance data</div>`;
-          return `<div style="padding:11px 14px;${i<slots.length-1?'border-bottom:1px solid var(--border2)':''}display:flex;align-items:flex-start;gap:12px;">
-            <div style="flex-shrink:0;text-align:center;min-width:28px;">
-              <div style="font-size:18px;">${TYPE_ICONS[slot.type]||'📌'}</div>
-              <div style="font-size:10px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;">${slot.period}</div>
-            </div>
-            <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${slot.subject||slot.code}</div>
-              <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;">${slot.time||''} · ${slot.type} · ${slot.room||''}</div>
-              ${attBadge}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>`;
-    }).join('');
+    weekViewHtml = '<div id="wknav-root">' + buildWkNavCard(window._wkDayData) + '</div>';
   }
 
-  const noTTHint = !liveTT
-    ? `<div style="text-align:center;padding:24px 16px;background:var(--surface2);border-radius:12px;border:1px dashed var(--border2);">
-        <div style="font-size:28px;margin-bottom:8px;">🗓️</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text2);">No timetable uploaded yet</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5;">Use the KL Portal bookmark to extract your timetable JSON,<br>then upload it above to enable Day View.</div>
-       </div>`
+  var noTTHint = !liveTT
+    ? '<div style="text-align:center;padding:24px 16px;background:var(--surface2);border-radius:12px;border:1px dashed var(--border2);">'
+      + '<div style="font-size:28px;margin-bottom:8px;">🗓️</div>'
+      + '<div style="font-size:13px;font-weight:700;color:var(--text2);">No timetable uploaded yet</div>'
+      + '<div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5;">Use the KL Portal bookmark to extract your timetable JSON,<br>then upload it above to enable Week View.</div>'
+      + '</div>'
     : '';
 
-  // ── Content by active view ────────────────────────────────────────────
-  let content = '';
+  // ── Content by active view ──────────────────────────────────────────
+  var content = '';
   if (_acadView === 'attendance') {
-    content = `<div style="display:flex;flex-direction:column;gap:10px;">${attView}</div>`;
-  } else if (_acadView === 'timetable') {
-    content = liveTT ? ttView : noTTHint;
+    content = '<div style="display:flex;flex-direction:column;gap:10px;">' + attView + '</div>';
   } else {
-    content = liveTT ? combView : noTTHint;
+    content = liveTT ? weekViewHtml : noTTHint;
   }
 
   // Build sticky stats bar
