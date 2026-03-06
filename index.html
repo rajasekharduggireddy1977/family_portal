@@ -7249,13 +7249,9 @@ function bmSaveKey() {
   }
   groqSaveKey(key);
   aibLoaded = false;
-  showToast('✅ Groq key saved & AI activated!', 'success');
-  openBackupModal(); // refresh the modal view
-  // Reload briefing & meals
-  setTimeout(() => {
-    if (document.getElementById('ai-briefing-card')) aiLoadBriefing(true);
-    if (document.getElementById('aimw-meals-body')) aiMealGenerate();
-  }, 400);
+  showToast('✅ Groq key saved!', 'success');
+  openBackupModal();
+  setTimeout(() => { if (document.getElementById('ai-briefing-card')) aibShowIdle(); }, 400);
 }
 function closeBackupModal() {
   document.getElementById('backup-modal').style.display = 'none';
@@ -7758,9 +7754,8 @@ function groqSubmitKey() {
   }
   groqSaveKey(key);
   aibLoaded = false;
-  showToast('✅ Groq AI activated!', 'success');
-  aiLoadBriefing(true);
-  if (document.getElementById('aimw-meals-body')) setTimeout(aiMealGenerate, 800);
+  showToast('✅ Groq AI activated! Tap briefing to generate.', 'success');
+  aibShowIdle();
 }
 
 function aiShowKeySetup() {
@@ -7774,7 +7769,7 @@ function aiShowKeySetup() {
         <div style="font-size:13px;color:var(--green);font-weight:600;">✅ Groq AI is active</div>
         <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);background:rgba(255,255,255,.05);padding:8px 12px;border-radius:8px;">${masked}</div>
         <div style="display:flex;gap:8px;">
-          <div onclick="aibLoaded=false;aiLoadBriefing(false)"
+          <div onclick="aibLoaded=false;aibShowIdle()"
             style="flex:1;padding:9px;border-radius:9px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.25);color:var(--green);font-size:12px;font-weight:700;cursor:pointer;text-align:center;">
             ✓ Keep & Continue
           </div>
@@ -7872,6 +7867,27 @@ function aiCheckFestival() {
 // ═══════════════════════════════════════════════════════
 let aibLoaded = false;
 let aibDetailsOpen = false;
+
+// Show idle "tap to generate" state — no API call
+function aibShowIdle() {
+  const textEl = document.getElementById('aib-text');
+  const tsEl   = document.getElementById('aib-ts');
+  const dateEl = document.getElementById('aib-date');
+  if (!textEl) return;
+  if (!groqGetKey()) { aiShowKeyPrompt(); return; }
+  if (aibLoaded) return; // already generated this session, keep showing it
+  if (dateEl) dateEl.innerHTML = `📅 ${aiGetDate()}`;
+  textEl.innerHTML = `
+    <div onclick="aiLoadBriefing(true)" style="display:flex;align-items:center;gap:12px;padding:4px 0;cursor:pointer;opacity:.85;transition:opacity .15s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity='.85'">
+      <div style="width:38px;height:38px;border-radius:12px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">✨</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">Tap to generate today's briefing</div>
+        <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;">Uses 1 Groq API call · Free</div>
+      </div>
+      <div style="margin-left:auto;font-size:18px;color:var(--purple);">›</div>
+    </div>`;
+  if (tsEl) tsEl.textContent = 'On demand';
+}
 
 function aiLoadBriefing(force=false) {
   if (aibLoaded && !force) return;
@@ -8215,14 +8231,13 @@ async function aiMealGenerate() {
 // ── AI Widget post-render init ────────────────────────
 // Called safely after renderWidgets() completes
 function aiWidgetsInit() {
-  // AI Briefing — auto-load once per session
+  // Briefing — show idle state, no API call on load
   if (document.getElementById('ai-briefing-card')) {
-    aiLoadBriefing();
+    aibShowIdle();
   }
-  // Meal planner — render fallback immediately, then generate
+  // Meal planner — render fallback plan immediately, no API call
   if (document.getElementById('aimw-meals-body')) {
     aimwRenderDay();
-    if (!aimwPlan) setTimeout(aiMealGenerate, 1200);
   }
 }
 
