@@ -5271,8 +5271,9 @@ function syncTimetableFile(input) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data) || !data.length || !data[0].hasOwnProperty("day") || !data[0].hasOwnProperty("att_key")) {
+      const parsed = JSON.parse(e.target.result);
+      const data = Array.isArray(parsed) ? parsed : (parsed.timetable && Array.isArray(parsed.timetable) ? parsed.timetable : null);
+      if (!data || !data.length || !data[0].hasOwnProperty("day") || !data[0].hasOwnProperty("att_key")) {
         showToast("❌ Invalid timetable file — use the KL Portal bookmark"); return;
       }
       localStorage.setItem("fp_timetable_synced", JSON.stringify(data));
