@@ -4401,7 +4401,10 @@ function buildWidgetHTML(wid) {
             <div class="aib-chip" onclick="aibToggleDetails()" id="aib-details-btn">📊 Details</div>
             <div class="aib-chip ai-chat-chip" onclick="aiChatOpen('Tell me more about today\'s family briefing')">💬 Ask AI</div>
           </div>
-          <div class="aib-ts" id="aib-ts">Generating…</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+            <div class="aib-ts" id="aib-ts">On demand</div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.3px;" id="aib-model-tag">⚡ llama-3.1-8b-instant</div>
+          </div>
         </div>
       </div>
     </div>`;
@@ -7698,7 +7701,7 @@ window.goPage = function(page) {
 
 // ── Groq Key Management ───────────────────────────────
 const GROQ_KEY_STORAGE = 'fp_groq_key';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_MODEL = 'llama-3.1-8b-instant';
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
 function groqGetKey() {
