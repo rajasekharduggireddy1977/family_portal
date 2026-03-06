@@ -248,6 +248,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{height:100%;overflow-x:hidden;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;overscroll-behavior-y:none;}
+body.modal-open{overflow:hidden;position:fixed;width:100%;left:0;}
 body::before{content:'';position:fixed;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(79,127,255,.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(240,180,41,.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
 
@@ -293,6 +294,8 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   padding-bottom:max(8px, env(safe-area-inset-bottom));
   -webkit-transform:translate3d(0,0,0);
   transform:translate3d(0,0,0);
+  will-change:transform;
+  contain:layout style;
 }
 #bottom-nav::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,rgba(10,12,22,.97));pointer-events:none;z-index:1;}
 .bnav-inner{display:flex;justify-content:flex-start;align-items:center;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:100%;padding:0 4px;}
@@ -1242,25 +1245,76 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 [data-theme="light"] .hp-ring-track { stroke: rgba(0,0,0,.07); }
 
 /* ── Adaptive Member Cards ── */
-.fam-pulse-grid{display:flex;flex-direction:column;gap:8px;padding:4px 0 2px;}
-.fam-pulse-card{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 14px;border-radius:13px;
-  background:var(--surface2);border:1px solid var(--border);
-  cursor:pointer;transition:all .18s;
+/* ══ FAMILY WIDGET — Spotify-meets-family redesign ══ */
+.fam-pulse-grid { display: flex; flex-direction: column; gap: 0; padding: 0; }
+
+/* Hero member card - full width, big visual impact */
+.fpc-hero {
+  position: relative; border-radius: 16px; overflow: hidden;
+  margin-bottom: 8px; cursor: pointer; min-height: 88px;
+  display: flex; align-items: flex-end;
+  border: 1px solid var(--border2);
+  transition: transform .18s, box-shadow .18s;
 }
-.fam-pulse-card:active{transform:translateX(4px);border-color:var(--border2);}
-.fpc-av{
-  width:40px;height:40px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#fff;
-  overflow:hidden;
+.fpc-hero:active { transform: scale(.98); }
+.fpc-hero-bg {
+  position: absolute; inset: 0;
+  opacity: .18;
 }
-.fpc-body{flex:1;min-width:0;}
-.fpc-name{font-size:13px;font-weight:700;color:var(--text);}
-.fpc-role{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;}
-.fpc-stat{font-size:11px;margin-top:4px;}
-.fpc-arrow{font-size:18px;color:var(--text3);font-weight:300;}
+.fpc-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(7,8,15,.92) 0%, rgba(7,8,15,.3) 60%, transparent 100%);
+}
+.fpc-hero-body {
+  position: relative; z-index: 2; padding: 12px 14px;
+  display: flex; align-items: flex-end; gap: 12px; width: 100%;
+}
+.fpc-hero-av {
+  width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #fff;
+  overflow: hidden; border: 2px solid rgba(255,255,255,.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+}
+.fpc-hero-text { flex: 1; min-width: 0; }
+.fpc-hero-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #fff; line-height: 1.1; }
+.fpc-hero-role { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,.55); margin-top: 2px; text-transform: uppercase; letter-spacing: .6px; }
+.fpc-hero-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.fpc-chip {
+  font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+  font-family: 'Inter', sans-serif; white-space: nowrap;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.fpc-chip-green  { background: rgba(62,207,142,.2); color: #3ecf8e; border: 1px solid rgba(62,207,142,.3); }
+.fpc-chip-orange { background: rgba(255,140,66,.2); color: #ff8c42; border: 1px solid rgba(255,140,66,.3); }
+.fpc-chip-red    { background: rgba(255,79,79,.2);  color: #ff4f4f; border: 1px solid rgba(255,79,79,.3); }
+.fpc-chip-blue   { background: rgba(79,127,255,.2); color: #7aa0ff; border: 1px solid rgba(79,127,255,.3); }
+.fpc-chip-gray   { background: rgba(255,255,255,.08); color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.1); }
+
+/* Mini cards row - 2 compact cards side by side */
+.fpc-mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fpc-mini {
+  position: relative; border-radius: 14px; overflow: hidden;
+  padding: 12px 12px 10px; cursor: pointer;
+  background: var(--surface2); border: 1px solid var(--border);
+  transition: transform .16s, border-color .16s;
+  display: flex; flex-direction: column; gap: 0;
+}
+.fpc-mini:active { transform: scale(.96); border-color: var(--border2); }
+.fpc-mini-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 14px 14px 0 0;
+}
+.fpc-mini-av {
+  width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800; color: #fff;
+  overflow: hidden; margin-bottom: 8px;
+}
+.fpc-mini-name { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); }
+.fpc-mini-role { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text3); margin-top: 1px; }
+.fpc-mini-stat { font-size: 9px; margin-top: 6px; }
+.fpc-mini-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.fpc-mini .fpc-chip { font-size: 8px; padding: 2px 6px; }
 
 /* ── Section label style ── */
 .w-section-lbl{
@@ -4756,11 +4810,13 @@ function openCalSheet(prefillDate) {
   // Hide delete button when adding new
   const delBtn = document.getElementById('cal-delete-btn');
   if(delBtn){ delBtn.style.display='none'; delBtn.classList.remove('confirm'); delBtn.textContent='🗑 Delete'; }
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('cal-sheet').classList.remove('hidden');
 }
 
 function closeCalSheet() {
   document.getElementById('cal-sheet').classList.add('hidden');
+  var _sy2=parseInt(document.body.dataset.scrollY||'0',10);document.body.classList.remove('modal-open');document.body.style.top='';window.scrollTo(0,_sy2);
   // Reset delete button state
   const delBtn = document.getElementById('cal-delete-btn');
   if(delBtn){ delBtn.classList.remove('confirm'); delBtn.textContent='🗑 Delete'; }
@@ -4819,6 +4875,7 @@ function editCalEvent(id) {
   // Show delete button when editing
   const delBtn = document.getElementById('cal-delete-btn');
   if(delBtn){ delBtn.style.display=''; delBtn.classList.remove('confirm'); delBtn.textContent='🗑 Delete'; }
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('cal-sheet').classList.remove('hidden');
 }
 
@@ -6834,31 +6891,66 @@ function initWidgetDynamic() {
   // ─────────────────────────────────────────
   const fsC = document.getElementById('fam-summary');
   if (fsC) {
-    const membersToShow = activePortalMember !== 'all'
+    const membersArr = activePortalMember !== 'all'
       ? Object.values(MEMBERS).filter(m => m.id === activePortalMember)
       : Object.values(MEMBERS);
 
-    fsC.innerHTML = membersToShow.map(m => {
-      const fs = FAM_SUMMARIES[m.id] || { status:'–', statusColor:'var(--text3)' };
-      const calCount = allCalEvts.filter(ev => ev.members.includes(m.shortName) && daysUntil(ev.date) >= 0 && daysUntil(ev.date) <= 30).length;
-      const calNote = calCount ? `${calCount} event${calCount>1?'s':''} this month` : 'No upcoming events';
-      return `<div class="fam-pulse-card pressable" onclick="goPage('members');setTimeout(()=>showMemberDetail('${m.id}','identity'),50)">
-        <div class="fpc-av" style="background:${m.gradient};">
-          ${MEMBER_PHOTOS[m.id]
-            ? `<img src="${MEMBER_PHOTOS[m.id]}" style="width:100%;height:100%;object-fit:cover;object-position:center top;" alt="${m.shortName}">`
-            : m.initials}
-        </div>
-        <div class="fpc-body">
-          <div class="fpc-name">${m.shortName}</div>
-          <div class="fpc-role">${m.role} · ${age(m.dob)}</div>
-          <div class="fpc-stat" style="color:${fs.statusColor}">${fs.status}</div>
-          <div class="fpc-stat" style="color:var(--text3);font-size:10px;font-family:'DM Mono',monospace;margin-top:1px;">📅 ${calNote}</div>
-        </div>
-        <div class="fpc-arrow">›</div>
-      </div>`;
-    }).join('');
-  }
+    function fpcChips(m, calCount) {
+      const fs = FAM_SUMMARIES[m.id] || { status:'-', statusColor:'var(--text3)' };
+      var chips = [];
+      if (calCount > 0) chips.push('<span class="fpc-chip fpc-chip-blue">\uD83D\uDCC5 ' + calCount + ' event' + (calCount>1?'s':'') + '</span>');
+      var chipClass = 'fpc-chip-gray';
+      if (fs.statusColor === 'var(--green)') chipClass = 'fpc-chip-green';
+      else if (fs.statusColor === 'var(--orange)') chipClass = 'fpc-chip-orange';
+      else if (fs.statusColor === 'var(--red)') chipClass = 'fpc-chip-red';
+      chips.push('<span class="fpc-chip ' + chipClass + '">' + fs.status + '</span>');
+      return chips.join('');
+    }
 
+    function fpcAvatar(m, size, radius, fontSize) {
+      var inner = MEMBER_PHOTOS[m.id]
+        ? '<img src="' + MEMBER_PHOTOS[m.id] + '" style="width:100%;height:100%;object-fit:cover;object-position:center top;" alt="' + m.shortName + '">'
+        : m.initials;
+      return '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:' + radius + 'px;background:' + m.gradient + ';flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-size:' + fontSize + 'px;font-weight:800;color:#fff;overflow:hidden;">' + inner + '</div>';
+    }
+
+    function fpcHeroCard(m) {
+      var calCount = allCalEvts.filter(function(ev){ return ev.members.includes(m.shortName) && daysUntil(ev.date) >= 0 && daysUntil(ev.date) <= 30; }).length;
+      var nav = 'goPage(\'members\');setTimeout(function(){showMemberDetail(\'' + m.id + '\',\'identity\');},50)';
+      return '<div class="fpc-hero pressable" onclick="' + nav + '">'
+        + '<div class="fpc-hero-bg" style="background:' + m.gradient + ';"></div>'
+        + '<div class="fpc-hero-overlay"></div>'
+        + '<div class="fpc-hero-body">'
+        + fpcAvatar(m, 52, 15, 17)
+        + '<div class="fpc-hero-text">'
+        + '<div class="fpc-hero-name">' + m.shortName + '</div>'
+        + '<div class="fpc-hero-role">' + m.role + ' \u00B7 ' + age(m.dob) + ' yrs</div>'
+        + '<div class="fpc-hero-chips">' + fpcChips(m, calCount) + '</div>'
+        + '</div>'
+        + '<div style="color:rgba(255,255,255,.4);font-size:20px;">&#x203A;</div>'
+        + '</div></div>';
+    }
+
+    function fpcMiniCard(m) {
+      var calCount = allCalEvts.filter(function(ev){ return ev.members.includes(m.shortName) && daysUntil(ev.date) >= 0 && daysUntil(ev.date) <= 30; }).length;
+      var nav = 'goPage(\'members\');setTimeout(function(){showMemberDetail(\'' + m.id + '\',\'identity\');},50)';
+      return '<div class="fpc-mini pressable" onclick="' + nav + '">'
+        + '<div class="fpc-mini-accent" style="background:' + m.gradient + ';"></div>'
+        + fpcAvatar(m, 36, 11, 11)
+        + '<div class="fpc-mini-name">' + m.shortName + '</div>'
+        + '<div class="fpc-mini-role">' + m.role + '</div>'
+        + '<div class="fpc-mini-chips">' + fpcChips(m, calCount) + '</div>'
+        + '</div>';
+    }
+
+    if (membersArr.length === 1) {
+      fsC.innerHTML = fpcHeroCard(membersArr[0]);
+    } else {
+      var heroHtml = fpcHeroCard(membersArr[0]);
+      var miniHtml = '<div class="fpc-mini-row">' + membersArr.slice(1).map(fpcMiniCard).join('') + '</div>';
+      fsC.innerHTML = heroHtml + miniHtml;
+    }
+  }
   // ─────────────────────────────────────────
   // UNIFIED TIMELINE
   // ─────────────────────────────────────────
@@ -7023,9 +7115,11 @@ function openWidgetPicker() {
       <div class="wp-info"><div class="wp-name">${d.name}</div><div class="wp-desc">${active?'✓ Already added':d.desc}</div></div>
     </div>`;
   }).join('');
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('wp-sheet').classList.remove('hidden');
 }
-function closeWidgetPicker() { document.getElementById('wp-sheet').classList.add('hidden'); }
+function closeWidgetPicker() { document.getElementById('wp-sheet').classList.add('hidden');
+  var _sy2=parseInt(document.body.dataset.scrollY||'0',10);document.body.classList.remove('modal-open');document.body.style.top='';window.scrollTo(0,_sy2); }
 function addWidget(wid) {
   if(!widgetOrder.includes(wid)) widgetOrder.push(wid);
   saveWidgetOrder();closeWidgetPicker();renderWidgets();initWidgetDynamic();
@@ -8006,11 +8100,13 @@ function openTlSheet(idx) {
       <div onclick="window.open('https://www.icicilombard.com','_blank')" style="flex:1;min-width:120px;padding:10px;border-radius:10px;background:var(--blue-dim);border:1px solid rgba(79,127,255,.3);color:var(--blue2);font-size:12px;font-weight:700;text-align:center;cursor:pointer;">🔄 Renew Now</div>
     </div>`:''}
   `;
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('tl-sheet').classList.remove('hidden');
 }
 
 function closeTlSheet() {
   document.getElementById('tl-sheet').classList.add('hidden');
+  var _sy2=parseInt(document.body.dataset.scrollY||'0',10);document.body.classList.remove('modal-open');document.body.style.top='';window.scrollTo(0,_sy2);
 }
 
 // ═══════════════════════════════════════
@@ -8426,10 +8522,12 @@ function openAddReportSheet() {
   // Clear all marker inputs
   ['weight','height'].forEach(f => { const el=document.getElementById('hrv-'+f); if(el) el.value=''; });
   BM_DEFS.forEach(def => { const el=document.getElementById('hrm-'+def.id); if(el) el.value=''; });
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('hr-sheet').classList.remove('hidden');
 }
 function closeAddReportSheet() {
   document.getElementById('hr-sheet').classList.add('hidden');
+  var _sy2=parseInt(document.body.dataset.scrollY||'0',10);document.body.classList.remove('modal-open');document.body.style.top='';window.scrollTo(0,_sy2);
 }
 
 function renderHrMemberSelect() {
@@ -8518,10 +8616,12 @@ function openAddApptSheet() {
   document.getElementById('ha-time').value  = '';
   document.getElementById('ha-loc').value   = '';
   document.getElementById('ha-notes').value = '';
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('ha-sheet').classList.remove('hidden');
 }
 function closeAddApptSheet() {
   document.getElementById('ha-sheet').classList.add('hidden');
+  var _sy2=parseInt(document.body.dataset.scrollY||'0',10);document.body.classList.remove('modal-open');document.body.style.top='';window.scrollTo(0,_sy2);
 }
 function renderHaMemberSelect() {
   const wrap = document.getElementById('ha-member-select');
@@ -9164,6 +9264,7 @@ function openBmSheet(bmId, memberId) {
     <button onclick="closeBmSheet()" style="width:100%;margin-top:12px;padding:13px;border-radius:12px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;">Close</button>
   `;
 
+  var _sy=window.scrollY||window.pageYOffset;document.body.dataset.scrollY=_sy;document.body.style.top='-'+_sy+'px';document.body.classList.add('modal-open');
   document.getElementById('bm-sheet').classList.remove('hidden');
   // Animate needle
   requestAnimationFrame(() => {
@@ -9176,6 +9277,7 @@ function openBmSheet(bmId, memberId) {
 
 function closeBmSheet() {
   document.getElementById('bm-sheet').classList.add('hidden');
+  var _sy2=parseInt(document.body.dataset.scrollY||'0',10);document.body.classList.remove('modal-open');document.body.style.top='';window.scrollTo(0,_sy2);
 }
 
 // ── Dashboard health widget builder ──
@@ -9366,19 +9468,7 @@ function applyMemberContextToCurrentPage() {
 
 // ── Dashboard: hide/show family summary cards + refresh live widgets ──
 function applyGmDashboard() {
-  const fsC = document.getElementById('fam-summary');
-  if (fsC) {
-    if (activePortalMember === 'all') {
-      fsC.querySelectorAll('.fam-card').forEach(c => c.style.display = '');
-    } else {
-      fsC.querySelectorAll('.fam-card').forEach(c => {
-        const onclick = c.getAttribute('onclick') || '';
-        const show = onclick.includes("'" + activePortalMember + "'");
-        c.style.display = show ? '' : 'none';
-      });
-    }
-  }
-  // Refresh urgent items and cal mini (they respect activePortalMember)
+  // Re-render family widget on member context switch via initWidgetDynamic
   initWidgetDynamic();
 }
 
@@ -9753,7 +9843,12 @@ function openBackupModal() {
       </div>`;
   }
 
-  document.getElementById('backup-modal').style.display = 'flex';
+  var modal = document.getElementById('backup-modal');
+  modal.style.display = 'flex';
+  var scrollY = window.scrollY || window.pageYOffset;
+  document.body.dataset.scrollY = scrollY;
+  document.body.style.top = '-' + scrollY + 'px';
+  document.body.classList.add('modal-open');
 }
 
 function bmCopyKey() {
@@ -9795,6 +9890,10 @@ function bmSaveKey() {
 }
 function closeBackupModal() {
   document.getElementById('backup-modal').style.display = 'none';
+  var scrollY = parseInt(document.body.dataset.scrollY || '0', 10);
+  document.body.classList.remove('modal-open');
+  document.body.style.top = '';
+  window.scrollTo(0, scrollY);
 }
 
 function doBackup() {
@@ -10137,9 +10236,9 @@ function tlNavMonth(dir) {
 function buildCollapsibleWidget(title, innerHtml, wid, collapsed) {
   var state = collapsed ? ' collapsed' : '';
   return '<div class="w-card w-card-collapsible' + state + '" data-wid="' + wid + '">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;">'
-    + '<div class="w-hdr" style="margin:0;">' + title + '</div>'
-    + '<div class="w-collapse-btn" onclick="wToggle(this)">&#x203A;</div>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="wToggle(this)">'
+    + '<div class="w-hdr" style="margin:0;pointer-events:none;">' + title + '</div>'
+    + '<div class="w-collapse-btn" style="pointer-events:none;">&#x203A;</div>'
     + '</div>'
     + '<div class="w-body"><div style="height:10px;"></div>' + innerHtml + '</div>'
     + '</div>';
