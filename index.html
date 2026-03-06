@@ -2955,6 +2955,14 @@ input:focus, button:focus-visible {
 
 /* ── Slot list ── */
 .jac-slots{padding:4px 0 6px;}
+
+/* ── Swipe gesture ── */
+.jac-swipe-zone{position:relative;overflow:hidden;touch-action:pan-y;}
+.jac-slots{padding:4px 0 6px;will-change:transform;}
+.jac-swipe-hint{position:absolute;top:50%;transform:translateY(-50%);font-size:20px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:10;color:var(--text2);font-weight:300;}
+.jac-swipe-hint.left{left:8px;}
+.jac-swipe-hint.right{right:8px;}
+.jac-swipe-hint.show{opacity:.6;}
 .jac-slot{display:flex;align-items:center;gap:0;padding:0;position:relative;}
 .jac-slot + .jac-slot{border-top:1px solid rgba(255,255,255,.04);}
 .jac-slot-bar{width:3px;flex-shrink:0;align-self:stretch;border-radius:0;}
@@ -6025,10 +6033,10 @@ function buildJacSlots(d) {
   var slots    = byDay[DAY_FULL[curIdx]] || [];
 
   if (!slots.length) {
-    return '<div class="jac-slots"><div class="jac-noclss">\U0001f389 No classes today</div></div>';
+    return '<div class="jac-swipe-zone" id="jac-swipe-zone"><div class="jac-swipe-hint left" id="jac-hint-left">‹</div><div class="jac-swipe-hint right" id="jac-hint-right">›</div><div class="jac-slots" id="jac-slots-inner"><div class="jac-noclss">\U0001f389 No classes today</div></div></div>';
   }
 
-  var html = '<div class="jac-slots jac-anim">';
+  var html = '<div class="jac-swipe-zone" id="jac-swipe-zone"><div class="jac-swipe-hint left" id="jac-hint-left">‹</div><div class="jac-swipe-hint right" id="jac-hint-right">›</div><div class="jac-slots jac-anim" id="jac-slots-inner">';
   slots.forEach(function(sl) {
     var att = attMap[sl.att_key || (sl.code + '|' + sl.type)];
     var pct = att ? Math.round(att.present / att.total * 100) : null;
@@ -6048,8 +6056,98 @@ function buildJacSlots(d) {
       + '<div class="jac-slot-pct" style="background:' + bg + ';color:' + col + ';">' + pctLabel + riskMark + '</div>'
       + '</div></div>';
   });
-  html += '</div>';
+  html += '</div></div>';
   return html;
+}
+
+
+function jacInitSwipe() {
+  var zone = document.getElementById('jac-swipe-zone');
+  if (!zone || zone._swipeInit) return;
+  zone._swipeInit = true;
+
+  var startX = 0, startY = 0, curX = 0;
+  var dragging = false, locked = false;
+  var THRESHOLD = 40;
+  var VELOCITY_THRESHOLD = 0.3;
+  var startTime = 0;
+
+  var slotsEl   = document.getElementById('jac-slots-inner');
+  var hintLeft  = document.getElementById('jac-hint-left');
+  var hintRight = document.getElementById('jac-hint-right');
+
+  function getD() { return window._jacData; }
+
+  zone.addEventListener('touchstart', function(e) {
+    var t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+    startTime = Date.now();
+    dragging = true; locked = false; curX = 0;
+    if (slotsEl) slotsEl.style.transition = 'none';
+  }, { passive: true });
+
+  zone.addEventListener('touchmove', function(e) {
+    if (!dragging) return;
+    var t = e.touches[0];
+    var dx = t.clientX - startX;
+    var dy = t.clientY - startY;
+    if (!locked) {
+      if (Math.abs(dy) > Math.abs(dx) + 4) { dragging = false; return; }
+      locked = true;
+    }
+    curX = dx;
+    var d = getD();
+    var atLeft  = !d || d.curIdx <= 0;
+    var atRight = !d || d.curIdx >= d.DAY_FULL.length - 1;
+    var resist  = (atLeft && dx > 0) || (atRight && dx < 0);
+    var tx = resist ? dx * 0.18 : dx;
+    if (slotsEl) slotsEl.style.transform = 'translateX(' + tx + 'px)';
+    if (hintLeft)  hintLeft.className  = 'jac-swipe-hint left'  + (dx >  15 && !atLeft  ? ' show' : '');
+    if (hintRight) hintRight.className = 'jac-swipe-hint right' + (dx < -15 && !atRight ? ' show' : '');
+  }, { passive: true });
+
+  zone.addEventListener('touchend', function() {
+    if (!dragging || !locked) return;
+    dragging = false;
+    var elapsed  = Math.max(1, Date.now() - startTime);
+    var velocity = Math.abs(curX) / elapsed;
+    var isFlick  = velocity > VELOCITY_THRESHOLD;
+    var isFar    = Math.abs(curX) > THRESHOLD;
+    var d        = getD();
+    if (hintLeft)  hintLeft.className  = 'jac-swipe-hint left';
+    if (hintRight) hintRight.className = 'jac-swipe-hint right';
+    if ((isFar || isFlick) && d) {
+      var dir    = curX < 0 ? 1 : -1;
+      var newIdx = d.curIdx + dir;
+      if (newIdx >= 0 && newIdx < d.DAY_FULL.length) {
+        if (slotsEl) {
+          slotsEl.style.transition = 'transform 0.16s ease-in';
+          slotsEl.style.transform  = 'translateX(' + (curX < 0 ? '-110%' : '110%') + ')';
+        }
+        setTimeout(function() {
+          d.curIdx = newIdx;
+          jacRefresh();
+          var fresh = document.getElementById('jac-slots-inner');
+          if (fresh) {
+            fresh.style.transition = 'none';
+            fresh.style.transform  = 'translateX(' + (curX < 0 ? '60px' : '-60px') + ')';
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() {
+                fresh.style.transition = 'transform 0.2s cubic-bezier(.25,.46,.45,.94)';
+                fresh.style.transform  = 'translateX(0)';
+              });
+            });
+          }
+          jacInitSwipe();
+        }, 150);
+        return;
+      }
+    }
+    if (slotsEl) {
+      slotsEl.style.transition = 'transform 0.22s cubic-bezier(.25,.46,.45,.94)';
+      slotsEl.style.transform  = 'translateX(0)';
+    }
+  }, { passive: true });
 }
 
 function jacNav(dir) {
@@ -6089,6 +6187,8 @@ function jacRefresh() {
   while (tmp.firstChild) {
     card.insertBefore(tmp.firstChild, sevEl);
   }
+  // Re-attach swipe after DOM update
+  requestAnimationFrame(function(){ jacInitSwipe(); });
 }
 
 function buildAttSeverityWidget() {
@@ -6728,7 +6828,7 @@ function initWidgetDynamic() {
     if (!item) return;
     var body = item.children[2];
     if (!body) return;
-    if (wid === 'att_severity' || wid === 'josritha_acad') body.innerHTML = buildJosrithaAcadWidget();
+    if (wid === 'att_severity' || wid === 'josritha_acad') { body.innerHTML = buildJosrithaAcadWidget(); requestAnimationFrame(function(){ jacInitSwipe(); }); }
     else if (wid === 'vehicle')  body.innerHTML = buildVehicleWidget();
     else if (wid === 'photos')   body.innerHTML = buildMemoryWallWidget();
     // grocery + briefing only refresh on tab switch — don't wipe user input
