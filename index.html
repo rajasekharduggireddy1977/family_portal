@@ -1920,7 +1920,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   position: fixed;
   bottom: calc(var(--nav-h) + 16px);
   right: 18px;
-  z-index: 300;
+  z-index: 9100;
   width: 38px; height: 38px;
   border-radius: 12px;
   background: linear-gradient(135deg, var(--blue), #3a6aff);
@@ -1942,7 +1942,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   position: fixed;
   bottom: calc(var(--nav-h) + 64px);
   right: 14px;
-  z-index: 299;
+  z-index: 9050;
   display: flex; flex-direction: column; gap: 8px;
   align-items: flex-end;
   transition: all .22s;
@@ -2513,7 +2513,7 @@ input:focus, button:focus-visible {
   position: fixed;
   bottom: calc(var(--nav-h) + 64px);
   right: 18px;
-  z-index: 301;
+  z-index: 9101;
   width: 52px; height: 52px;
   border-radius: 16px;
   background: linear-gradient(135deg, #7c3aed, #4f46e5, #2563eb);
@@ -2554,7 +2554,7 @@ input:focus, button:focus-visible {
 
 /* Panel backdrop */
 #ai-panel-backdrop {
-  position: fixed; inset: 0; z-index: 899;
+  position: fixed; inset: 0; z-index: 8999;
   background: rgba(0,0,0,.45);
   backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
   opacity: 0; pointer-events: none;
@@ -2569,7 +2569,7 @@ input:focus, button:focus-visible {
   right: 0;
   width: min(380px, 100vw);
   height: min(82vh, 720px);
-  z-index: 900;
+  z-index: 9000;
   display: flex; flex-direction: column;
   transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s ease;
   transform-origin: bottom right;
@@ -2593,6 +2593,7 @@ input:focus, button:focus-visible {
   display: flex; flex-direction: column;
   overflow: hidden;
   box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(124,58,237,.15), inset 0 1px 0 rgba(255,255,255,.06);
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Panel header */
@@ -2640,6 +2641,8 @@ input:focus, button:focus-visible {
   padding: 16px 14px 8px;
   display: flex; flex-direction: column; gap: 14px;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 #ai-panel-messages::-webkit-scrollbar { width: 3px; }
 #ai-panel-messages::-webkit-scrollbar-track { background: transparent; }
@@ -2890,6 +2893,7 @@ input:focus, button:focus-visible {
     <!-- Input -->
     <div id="ai-panel-input-row">
       <textarea id="ai-panel-input" placeholder="Ask anything…" rows="1"
+        inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="sentences"
         onkeydown="aiPanelKeyDown(event)"
         oninput="aiPanelAutoResize(this)"></textarea>
       <button id="ai-panel-send" onclick="aiPanelSend()">
@@ -7855,78 +7859,112 @@ let aiPanelOpen = false;
 let aiPanelBusy = false;
 let aiPanelHistory = [];
 
-const AI_PANEL_CHIPS = {
+/* Chip data — NO apostrophes in strings to avoid HTML attribute breakage */
+var AI_CHIPS = {
   dashboard: [
-    {label: "🏃 Can Josritha skip today?", q: "Can Josritha skip classes today?"},
-    {label: "📊 Attendance risk report", q: "Give me a full attendance risk report for Josritha"},
-    {label: "📄 Documents expiring soon?", q: "Which family documents are expiring soon?"},
-    {label: "🌤️ Family briefing", q: "Give me a quick family briefing for today"}
+    ["skip", "Can Josritha skip classes today?"],
+    ["report", "Give Josritha full attendance risk report"],
+    ["docs", "Which family documents are expiring soon?"],
+    ["brief", "Give a quick family briefing for today"]
   ],
   members: [
-    {label: "🏃 Skip classes today?", q: "Can Josritha skip classes today?"},
-    {label: "📅 Today's timetable", q: "Show me today's timetable for Josritha"},
-    {label: "📊 Attendance summary", q: "Give me Josritha full attendance summary with safe or risk status per subject"},
-    {label: "🎯 How many can she miss?", q: "For each subject, how many more classes can Josritha miss before hitting 75 percent?"}
+    ["skip", "Can Josritha skip classes today?"],
+    ["tt", "Show today timetable for Josritha"],
+    ["att", "Give Josritha full attendance summary with safe or risk status per subject"],
+    ["miss", "For each subject how many more classes can Josritha miss before 75 percent?"]
   ],
   calendar: [
-    {label: "📅 Events coming up?", q: "What important events are coming up for the family?"},
-    {label: "💡 Family tip", q: "Give me a useful tip or reminder for the family this week"}
+    ["events", "What important events are coming up for the family?"],
+    ["tip", "Give a useful tip or reminder for the family this week"]
   ],
   expiry: [
-    {label: "⚠️ What is expiring?", q: "Which documents or policies are expiring soon and what should we do?"},
-    {label: "🏥 Insurance summary", q: "Summarize all family insurance policies and their status"}
+    ["exp", "Which documents or policies are expiring soon and what should be done?"],
+    ["ins", "Summarize all family insurance policies and their status"]
   ],
   health: [
-    {label: "🏥 Health summary", q: "Give me a health records summary for the family"},
-    {label: "💊 Appointments due?", q: "Are there any health appointments or checkups due?"}
+    ["hlth", "Give a health records summary for the family"],
+    ["appt", "Are there any health appointments or checkups due?"]
   ]
-}
+};
+
+var AI_CHIP_LABELS = {
+  skip: "🏃 Can she skip today?",
+  report: "📊 Attendance risk",
+  docs: "📄 Expiring documents",
+  brief: "🌤️ Family briefing",
+  tt: "📅 Today timetable",
+  att: "📊 Attendance summary",
+  miss: "🎯 How many can she miss?",
+  events: "📅 Events coming up?",
+  tip: "💡 Family tip",
+  exp: "⚠️ What is expiring?",
+  ins: "🏥 Insurance summary",
+  hlth: "🏥 Health summary",
+  appt: "💊 Appointments due?"
+};
+
+/* Store chip questions by index so onclick just passes an index — no string in attribute */
+var _aiChipQuestions = [];
 
 function toggleAIPanel() {
+  /* Close FAB menu if open */
+  if (typeof fabOpen !== 'undefined' && fabOpen) {
+    var fmenu = document.getElementById('fab-menu');
+    var fbtn  = document.getElementById('fab-btn');
+    fabOpen = false;
+    if (fmenu) fmenu.classList.add('hidden');
+    if (fbtn)  { fbtn.textContent = '\uFF0B'; fbtn.style.background = ''; }
+  }
   aiPanelOpen = !aiPanelOpen;
-  const panel = document.getElementById('ai-panel');
-  const backdrop = document.getElementById('ai-panel-backdrop');
-  const fab = document.getElementById('ai-fab');
-  const fabIcon = document.getElementById('ai-fab-icon');
+  var panel    = document.getElementById('ai-panel');
+  var backdrop = document.getElementById('ai-panel-backdrop');
+  var fab      = document.getElementById('ai-fab');
+  var fabIcon  = document.getElementById('ai-fab-icon');
+  if (!panel || !backdrop || !fab || !fabIcon) return;
   if (aiPanelOpen) {
     panel.classList.remove('ai-panel-closed');
     panel.classList.add('ai-panel-open');
     backdrop.classList.add('visible');
     fab.classList.add('panel-open');
-    fabIcon.textContent = '✕';
+    fabIcon.textContent = '\u2715';
     aiPanelUpdateChips();
     aiPanelUpdateStatus();
-    setTimeout(function() { document.getElementById('ai-panel-input').focus(); }, 300);
-    haptic('medium');
+    if (typeof haptic === 'function') haptic('medium');
   } else {
     panel.classList.add('ai-panel-closed');
     panel.classList.remove('ai-panel-open');
     backdrop.classList.remove('visible');
     fab.classList.remove('panel-open');
-    fabIcon.textContent = '✦';
-    haptic('light');
+    fabIcon.textContent = '\u2726';
+    if (typeof haptic === 'function') haptic('light');
   }
 }
 
 function aiPanelUpdateStatus() {
-  const dot = document.getElementById('ai-panel-dot');
-  const txt = document.getElementById('ai-panel-status-text');
-  const hasKey = !!groqGetKey();
-  if (dot) { dot.className = hasKey ? '' : 'offline'; }
-  if (txt) { txt.textContent = hasKey ? 'Groq · LLaMA 3.1' : 'No API key — tap to set'; }
+  var dot = document.getElementById('ai-panel-dot');
+  var txt = document.getElementById('ai-panel-status-text');
+  var hasKey = !!(typeof groqGetKey === 'function' && groqGetKey());
+  if (dot) dot.className = hasKey ? '' : 'offline';
+  if (txt) txt.textContent = hasKey ? 'Groq LLaMA 3.1 — Ready' : 'No API key — add in Settings';
 }
 
 function aiPanelUpdateChips() {
-  const container = document.getElementById('ai-panel-chips');
+  var container = document.getElementById('ai-panel-chips');
   if (!container) return;
-  const page = typeof currentPage !== 'undefined' ? currentPage : 'dashboard';
-  const chips = AI_PANEL_CHIPS[page] || AI_PANEL_CHIPS.dashboard;
-  container.innerHTML = chips.map(function(c) {
-    return '<div class="ai-pc" onclick="aiPanelSendQuick(' + JSON.stringify(c.q) + ')">' + c.label + '</div>';
-  }).join('');
+  var page = typeof currentPage !== 'undefined' ? currentPage : 'dashboard';
+  var chips = AI_CHIPS[page] || AI_CHIPS.dashboard;
+  _aiChipQuestions = [];
+  var html = '';
+  for (var i = 0; i < chips.length; i++) {
+    _aiChipQuestions.push(chips[i][1]);
+    html += '<div class="ai-pc" onclick="aiPanelChipClick(' + i + ')">' + AI_CHIP_LABELS[chips[i][0]] + '</div>';
+  }
+  container.innerHTML = html;
 }
 
-function aiPanelSendQuick(q) {
+function aiPanelChipClick(idx) {
+  var q = _aiChipQuestions[idx];
+  if (!q) return;
   var input = document.getElementById('ai-panel-input');
   if (input) { input.value = q; aiPanelAutoResize(input); }
   aiPanelSend();
@@ -7944,13 +7982,12 @@ function aiPanelAutoResize(el) {
 function aiPanelAppendMsg(role, html) {
   var container = document.getElementById('ai-panel-messages');
   if (!container) return;
-  // Remove welcome screen on first message
   var welcome = container.querySelector('.ai-panel-welcome');
   if (welcome) welcome.remove();
   var div = document.createElement('div');
   div.className = 'ai-pm ' + role;
   if (role === 'ai') {
-    div.innerHTML = '<div class="ai-pm-av">✦</div><div class="ai-pm-bubble">' + html + '</div>';
+    div.innerHTML = '<div class="ai-pm-av">\u2726</div><div class="ai-pm-bubble">' + html + '</div>';
   } else {
     div.innerHTML = '<div class="ai-pm-bubble">' + html + '</div>';
   }
@@ -7964,11 +8001,13 @@ function aiPanelShowTyping() {
   var welcome = container.querySelector('.ai-panel-welcome');
   if (welcome) welcome.remove();
   var div = document.createElement('div');
-  div.className = 'ai-pm ai'; div.id = 'ai-panel-typing';
-  div.innerHTML = '<div class="ai-pm-av">✦</div><div class="ai-pm-bubble"><div class="ai-typing-dots"><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div></div></div>';
+  div.className = 'ai-pm ai';
+  div.id = 'ai-panel-typing';
+  div.innerHTML = '<div class="ai-pm-av">\u2726</div><div class="ai-pm-bubble"><div class="ai-typing-dots"><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div></div></div>';
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
-  document.getElementById('ai-fab').classList.add('thinking');
+  var fab = document.getElementById('ai-fab');
+  if (fab) fab.classList.add('thinking');
 }
 
 function aiPanelRemoveTyping() {
@@ -7979,72 +8018,93 @@ function aiPanelRemoveTyping() {
 }
 
 function aiPanelFormatResponse(text) {
-  if (/<div|<span/.test(text)) return text;
-  var lines = text.split('\n');
-  var html = text.split('**').map(function(s,i){ return i%2===1 ? '<strong>'+s+'</strong>' : s; }).join('');
-  html = html.split('\n').map(function(line) {
-    if (line.indexOf('- ') === 0 || line.indexOf('• ') === 0) {
-      return '<div style="padding:4px 0 4px 14px;border-left:2px solid rgba(124,58,237,.4);margin:3px 0;">' + line.substring(2) + '</div>';
+  if (!text) return '';
+  /* If AI returned HTML cards already — render directly */
+  if (text.indexOf('<div') !== -1) return text;
+  /* Convert markdown bold and bullet lines */
+  var parts = text.split('**');
+  var bold = '';
+  for (var i = 0; i < parts.length; i++) {
+    bold += (i % 2 === 1) ? '<strong>' + parts[i] + '</strong>' : parts[i];
+  }
+  var lines = bold.split('\n');
+  var result = [];
+  for (var j = 0; j < lines.length; j++) {
+    var line = lines[j];
+    if (line.indexOf('- ') === 0 || line.indexOf('\u2022 ') === 0) {
+      result.push('<div style="padding:4px 0 4px 14px;border-left:2px solid rgba(124,58,237,.5);margin:4px 0;line-height:1.6;">' + line.substring(2) + '</div>');
+    } else if (line === '') {
+      result.push('<div style="height:6px;"></div>');
+    } else {
+      result.push(line);
     }
-    return line;
-  }).join('<br>');
-  return html;
+  }
+  return result.join('<br>');
 }
+
 function aiPanelClear() {
   aiPanelHistory = [];
   var container = document.getElementById('ai-panel-messages');
   if (container) {
-    container.innerHTML = '<div class="ai-panel-welcome"><div class="ai-pw-icon">✦</div><div class="ai-pw-title">Chat cleared</div><div class="ai-pw-sub">Ask me anything about the family.</div></div>';
+    container.innerHTML = '<div class="ai-panel-welcome"><div class="ai-pw-icon">\u2726</div><div class="ai-pw-title">Chat cleared</div><div class="ai-pw-sub">Ask me anything about the family.</div></div>';
   }
-  haptic('light');
+  if (typeof haptic === 'function') haptic('light');
 }
 
 async function aiPanelSend() {
   if (aiPanelBusy) return;
-  var input = document.getElementById('ai-panel-input');
+  var input   = document.getElementById('ai-panel-input');
   var sendBtn = document.getElementById('ai-panel-send');
   if (!input) return;
   var text = input.value.trim();
   if (!text) return;
 
-  input.value = ''; input.style.height = 'auto';
+  input.value = '';
+  input.style.height = 'auto';
   aiPanelBusy = true;
   if (sendBtn) sendBtn.disabled = true;
 
   aiPanelAppendMsg('user', text);
-  aiPanelHistory.push({role:'user', content:text});
+  aiPanelHistory.push({role: 'user', content: text});
   aiPanelShowTyping();
 
   try {
-    var key = groqGetKey();
+    var key = (typeof groqGetKey === 'function') ? groqGetKey() : '';
     if (!key) {
       aiPanelRemoveTyping();
-      aiPanelAppendMsg('ai', '🔑 Please enter your Groq API key in Settings → Backup & Security to activate AI features.');
+      aiPanelAppendMsg('ai', '\uD83D\uDD11 No Groq API key found. Add it via the Backup button \u2192 AI Key section.');
       aiPanelBusy = false;
       if (sendBtn) sendBtn.disabled = false;
       return;
     }
-    var resp = await fetch(GROQ_ENDPOINT, {
+    var sysPrompt = (typeof buildAICWSystem === 'function') ? buildAICWSystem() : 'You are a helpful family assistant.';
+    var endpoint  = (typeof GROQ_ENDPOINT !== 'undefined') ? GROQ_ENDPOINT : 'https://api.groq.com/openai/v1/chat/completions';
+    var model     = (typeof GROQ_MODEL    !== 'undefined') ? GROQ_MODEL    : 'llama-3.1-8b-instant';
+
+    var resp = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + key
+      },
       body: JSON.stringify({
-        model: GROQ_MODEL,
+        model: model,
         max_tokens: 900,
         temperature: 0.7,
-        messages: [{role:'system', content: buildAICWSystem()}].concat(aiPanelHistory)
+        messages: [{role: 'system', content: sysPrompt}].concat(aiPanelHistory)
       })
     });
     var data = await resp.json();
-    var reply = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content)
+    var reply = (data.choices && data.choices[0] && data.choices[0].message)
       ? data.choices[0].message.content
-      : "I'm here to help! Could you rephrase that? 🙏";
+      : "I could not get a response. Please try again.";
     aiPanelRemoveTyping();
     aiPanelAppendMsg('ai', aiPanelFormatResponse(reply.trim()));
-    aiPanelHistory.push({role:'assistant', content:reply.trim()});
+    aiPanelHistory.push({role: 'assistant', content: reply.trim()});
     if (aiPanelHistory.length > 20) aiPanelHistory = aiPanelHistory.slice(-20);
   } catch(err) {
     aiPanelRemoveTyping();
-    aiPanelAppendMsg('ai', "Connection error. Please check your internet and try again. 🙏");
+    aiPanelAppendMsg('ai', 'Connection error: ' + (err.message || 'unknown') + '. Check your internet and try again.');
   }
 
   aiPanelBusy = false;
@@ -8057,6 +8117,8 @@ let fabOpen = false;
 
 function toggleFab() {
   haptic('medium');
+  // Close AI panel if open
+  if (aiPanelOpen) toggleAIPanel();
   fabOpen = !fabOpen;
   const menu = document.getElementById('fab-menu');
   const btn = document.getElementById('fab-btn');
@@ -8752,7 +8814,7 @@ function buildAICWSystem() {
     + 'JOSRITHA ATTENDANCE (KL University, Even Sem 2025-26):\n'
     + 'Rule: Min 75% per subject. Formula: can_skip = floor(total x 0.25) - (total - present)\n'
     + attSummary + '\n\n'
-    + 'TODAY\'S TIMETABLE (' + todayName + '):\n'
+    + 'TIMETABLE FOR ' + todayName + ': \n'
     + todaySummary + '\n\n'
     + 'FORMATTING RULES:\n'
     + 'For attendance/skip questions, reply with HTML using these exact CSS classes:\n'
