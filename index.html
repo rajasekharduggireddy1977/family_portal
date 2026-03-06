@@ -1207,30 +1207,39 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 
 
 /* ── Health Pulse Row ── */
-.health-pulse-row{display:flex;gap:8px;justify-content:space-between;}
-.hp-member{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:12px 6px 10px;border-radius:14px;
-  background:var(--surface2);border:1px solid var(--border);
-  cursor:pointer;transition:all .2s;
+.health-pulse-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hp-member {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  padding: 16px 10px 12px; border-radius: 18px;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: transform .18s, box-shadow .18s;
+  overflow: hidden; background: var(--surface2);
 }
-.hp-member:active{transform:scale(.96);}
-.hp-av{
-  width:36px;height:36px;border-radius:11px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;
-  position:relative;overflow:hidden;
+.hp-member::before {
+  content: ''; position: absolute; inset: 0; border-radius: 18px;
+  opacity: .13; transition: opacity .2s;
 }
-.hp-ring-wrap{position:relative;width:44px;height:44px;}
-.hp-ring-svg{transform:rotate(-90deg);display:block;}
-.hp-ring-track{fill:none;stroke:rgba(255,255,255,.07);}
-.hp-ring-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);}
-.hp-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.hp-score{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;line-height:1;}
-.hp-name{font-family:'DM Mono',monospace;font-size:9px;color:var(--text2);text-align:center;white-space:nowrap;overflow:hidden;width:100%;text-overflow:ellipsis;}
-.hp-flag{font-size:8px;font-family:'DM Mono',monospace;font-weight:700;padding:2px 5px;border-radius:5px;margin-top:2px;}
-.hp-flag.ok{background:rgba(62,207,142,.1);color:var(--green);}
-.hp-flag.warn{background:rgba(255,79,79,.12);color:var(--red);}
+.hp-member:active { transform: scale(.95); }
+.hp-member.hp-col-green::before { background: var(--green); }
+.hp-member.hp-col-gold::before  { background: var(--gold); }
+.hp-member.hp-col-red::before   { background: var(--red); }
+.hp-member.hp-col-blue::before  { background: var(--blue); }
+.hp-av{display:none;}
+.hp-ring-wrap { position: relative; width: 68px; height: 68px; margin-bottom: 8px; }
+.hp-ring-svg { transform: rotate(-90deg); display: block; }
+.hp-ring-track { fill: none; stroke: rgba(255,255,255,.07); }
+.hp-ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1); }
+.hp-ring-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.hp-score { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; }
+.hp-score-lbl { font-family: 'DM Mono', monospace; font-size: 7px; color: var(--text3); letter-spacing: .5px; text-transform: uppercase; }
+.hp-name { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); text-align: center; }
+.hp-role { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text3); margin-top: 2px; text-align: center; }
+.hp-flag { font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 700; padding: 3px 8px; border-radius: 20px; margin-top: 6px; }
+.hp-flag.ok   { background: rgba(62,207,142,.12); color: var(--green); }
+.hp-flag.warn { background: rgba(255,79,79,.12); color: var(--red); }
+@keyframes hpPulse { 0%,100%{opacity:1;} 50%{opacity:.5;} }
+.hp-flag.warn { animation: hpPulse 2s ease-in-out infinite; }
+[data-theme="light"] .hp-ring-track { stroke: rgba(0,0,0,.07); }
 
 /* ── Adaptive Member Cards ── */
 .fam-pulse-grid{display:flex;flex-direction:column;gap:8px;padding:4px 0 2px;}
@@ -2692,33 +2701,47 @@ input:focus, button:focus-visible {
 /* ═══════════════════════════════════════════════════
    GROCERY / TASK LIST WIDGET
 ═══════════════════════════════════════════════════ */
-.groc-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; }
-.groc-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 10px; border-bottom: 1px solid var(--border2); }
-.groc-tabs { display: flex; gap: 0; }
-.groc-tab { font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 8px; cursor: pointer; color: var(--text3); font-family: 'Inter', sans-serif; transition: all .15s; }
-.groc-tab.active { background: rgba(79,127,255,.12); color: var(--blue2); }
-.groc-add-btn { width: 26px; height: 26px; border-radius: 8px; background: var(--blue-dim); border: 1px solid rgba(79,127,255,.2); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 300; cursor: pointer; color: var(--blue2); transition: all .15s; line-height: 1; }
-.groc-add-btn:active { transform: scale(.9); }
-.groc-list { max-height: 200px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-.groc-item { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: opacity .2s; }
-.groc-item.done { opacity: .45; }
+/* ══ GROCERY & TASKS — Blinkit-style redesign ══ */
+.groc-card { background: var(--surface); border-radius: 0; overflow: hidden; }
+/* Progress bar */
+.groc-progress-bar { height: 3px; background: var(--border); border-radius: 0; overflow: hidden; }
+.groc-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), #34d399); border-radius: 0; transition: width .4s cubic-bezier(.4,0,.2,1); }
+/* Tab switcher pill */
+.groc-tab-row { display: flex; gap: 0; padding: 12px 14px 8px; align-items: center; justify-content: space-between; }
+.groc-tab-pill { display: flex; background: var(--surface2); border-radius: 10px; padding: 3px; gap: 2px; border: 1px solid var(--border); }
+.groc-tab { font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 7px; cursor: pointer; color: var(--text3); font-family: 'Inter', sans-serif; transition: all .18s; }
+.groc-tab.active { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(79,127,255,.35); }
+/* Add button - pill style */
+.groc-add-btn { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), #7c5cfc); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 300; cursor: pointer; color: #fff; transition: all .15s; box-shadow: 0 2px 10px rgba(79,127,255,.4); line-height: 1; }
+.groc-add-btn:active { transform: scale(.88); }
+/* Items grid */
+.groc-list { max-height: 224px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 10px 4px; display: flex; flex-direction: column; gap: 5px; }
+.groc-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; background: var(--surface2); border: 1px solid var(--border); transition: all .2s; }
+.groc-item.done { opacity: .45; background: transparent; border-color: transparent; }
 .groc-item.done .groc-item-name { text-decoration: line-through; color: var(--text3); }
-.groc-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border2); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all .15s; }
-.groc-item.done .groc-check { background: var(--green); border-color: var(--green); color: #fff; }
-.groc-item-name { flex: 1; font-size: 12px; font-weight: 500; color: var(--text1); font-family: 'Inter', sans-serif; }
+/* Animated check circle */
+.groc-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border2); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all .18s; }
+.groc-item.done .groc-check { background: var(--green); border-color: var(--green); color: #fff; transform: scale(1.1); }
+.groc-item-emoji { font-size: 16px; flex-shrink: 0; }
+.groc-item-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); font-family: 'Inter', sans-serif; }
 .groc-item-meta { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
-.groc-item-del { width: 20px; height: 20px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text3); cursor: pointer; opacity: 0; transition: opacity .15s; }
+.groc-item-del { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text3); cursor: pointer; opacity: 0; transition: opacity .15s; }
 .groc-item:hover .groc-item-del { opacity: 1; }
-.groc-add-row { display: flex; gap: 6px; padding: 8px 14px 12px; }
-.groc-input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 7px 10px; font-size: 12px; color: var(--text1); font-family: 'Inter', sans-serif; outline: none; }
-.groc-input:focus { border-color: rgba(79,127,255,.4); }
-.groc-submit { padding: 7px 12px; border-radius: 8px; background: var(--blue-dim); border: 1px solid rgba(79,127,255,.2); color: var(--blue2); font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all .15s; }
-.groc-submit:active { transform: scale(.96); }
-.groc-empty { padding: 20px; text-align: center; font-size: 11px; color: var(--text3); font-family: 'Inter', sans-serif; }
-.groc-footer { padding: 6px 14px 10px; display: flex; align-items: center; justify-content: space-between; }
-.groc-count { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
-.groc-clear-done { font-size: 10px; color: var(--text3); cursor: pointer; font-family: 'Inter', sans-serif; }
-.groc-clear-done:active { color: var(--red); }
+.groc-item:active { transform: scale(.98); }
+/* Add input row */
+.groc-add-row { display: flex; gap: 8px; padding: 8px 12px 10px; align-items: center; }
+.groc-input { flex: 1; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 12px; padding: 9px 12px; font-size: 13px; color: var(--text); font-family: 'Inter', sans-serif; outline: none; transition: border-color .15s; }
+.groc-input:focus { border-color: var(--blue); background: var(--surface3); }
+.groc-submit { padding: 9px 16px; border-radius: 12px; background: linear-gradient(135deg, var(--blue), #7c5cfc); color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all .15s; box-shadow: 0 2px 8px rgba(79,127,255,.3); }
+.groc-submit:active { transform: scale(.95); }
+/* Empty state */
+.groc-empty { padding: 28px 16px; text-align: center; font-size: 12px; color: var(--text3); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.groc-empty-icon { font-size: 28px; opacity: .4; }
+/* Footer */
+.groc-footer { padding: 6px 14px 10px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); }
+.groc-count { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; letter-spacing: .3px; }
+.groc-clear-done { font-size: 10px; color: var(--text3); cursor: pointer; font-family: 'Inter', sans-serif; padding: 3px 8px; border-radius: 6px; transition: all .15s; }
+.groc-clear-done:active { background: var(--red-dim); color: var(--red); }
 
 /* ═══════════════════════════════════════════════════
    VEHICLE SERVICE TRACKER WIDGET
@@ -5116,18 +5139,18 @@ function buildWidgetHTML(wid) {
     case 'timeline': return buildGravityTimelineShell();
     case 'att_severity': case 'josritha_acad': return buildJosrithaAcadWidget();
     case 'health_pulse': return `<div class="w-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div class="w-hdr" style="margin:0">❤️ &nbsp;Health Pulse</div>
-        <span class="card-action" onclick="goPage('health')" style="font-size:11px">Reports →</span>
+        <span class="card-action" onclick="goPage('health')" style="font-size:11px">Full Reports →</span>
       </div>
       <div class="health-pulse-row" id="health-pulse-row"></div>
     </div>`;
     case 'family': return `<div class="w-card w-card-collapsible" data-wid="family">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
-        <div class="w-hdr" style="margin:0">👨‍👩‍👧‍👦 &nbsp;Family</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="card-action" onclick="goPage('members')" style="font-size:11px">View All →</span>
-          <div class="w-collapse-btn" onclick="wToggle(this)">›</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;cursor:pointer;" onclick="wToggle(this)">
+        <div class="w-hdr" style="margin:0;pointer-events:none;">👨‍👩‍👧‍👦 &nbsp;Family</div>
+        <div style="display:flex;align-items:center;gap:8px;pointer-events:none;">
+          <span class="card-action" style="font-size:11px;pointer-events:auto;" onclick="event.stopPropagation();goPage('members')">View All →</span>
+          <div class="w-collapse-btn">›</div>
         </div>
       </div>
       <div class="w-body"><div style="height:10px;"></div><div id="fam-summary" class="fam-pulse-grid"></div></div></div>`;
@@ -5138,9 +5161,9 @@ function buildWidgetHTML(wid) {
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;" id="urgent-items"></div></div>`;
     case 'actions': return `<div class="w-card w-card-collapsible collapsed" data-wid="actions">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
-        <div class="w-hdr" style="margin:0;">⚡ &nbsp;Quick Actions</div>
-        <div class="w-collapse-btn" onclick="wToggle(this)">›</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;cursor:pointer;" onclick="wToggle(this)">
+        <div class="w-hdr" style="margin:0;pointer-events:none;">⚡ &nbsp;Quick Actions</div>
+        <div class="w-collapse-btn" style="pointer-events:none;">›</div>
       </div>
       <div class="w-body"><div style="height:12px;"></div><div class="qa-list">
         <div class="qa-row pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')">
@@ -5456,42 +5479,52 @@ function aib2AskAI() {
 ═══════════════════════════════════════════════ */
 var _grocTab = 'grocery';
 
-function buildGroceryWidget() {
-  return '<div class="groc-card">'
-    + '<div class="groc-header">'
-    + '<div class="groc-tabs">'
-    + '<div class="groc-tab' + (_grocTab==='grocery'?' active':'') + '" onclick="grocSwitchTab(\'grocery\')">🛒 Grocery</div>'
-    + '<div class="groc-tab' + (_grocTab==='tasks'?' active':'') + '" onclick="grocSwitchTab(\'tasks\')">✅ Tasks</div>'
-    + '</div>'
-    + '<div class="groc-add-btn" onclick="grocFocusAdd()">＋</div>'
-    + '</div>'
-    + '<div id="groc-list" class="groc-list">' + buildGrocList() + '</div>'
-    + '<div class="groc-add-row">'
-    + '<input id="groc-input" class="groc-input" placeholder="' + (_grocTab==='grocery'?'Add item…':'Add task…') + '" onkeydown="grocKeyDown(event)" inputmode="text" autocomplete="off">'
-    + '<div class="groc-submit" onclick="grocAddItem()">Add</div>'
-    + '</div>'
-    + '<div class="groc-footer">'
-    + '<div class="groc-count" id="groc-count">' + grocCountText() + '</div>'
-    + '<div class="groc-clear-done" onclick="grocClearDone()">Clear done</div>'
-    + '</div>'
-    + '</div>';
+function grocProgressPct() {
+  var items = grocData();
+  if (!items.length) return 0;
+  var done = items.filter(function(i){ return i.done; }).length;
+  return Math.round((done / items.length) * 100);
 }
 
+function buildGroceryWidget() {
+  var pct = grocProgressPct();
+  var placeholder = _grocTab === 'grocery' ? 'Add item…' : 'Add task…';
+  return '<div class="groc-card">'    + '<div class="groc-progress-bar"><div class="groc-progress-fill" id="groc-prog" style="width:' + pct + '%"></div></div>'    + '<div class="groc-tab-row">'    + '<div class="groc-tab-pill">'    + '<div class="groc-tab' + (_grocTab === 'grocery' ? ' active' : '') + '" onclick="grocSwitchTab(\'grocery\')">\uD83D\uDED2 Grocery</div>'    + '<div class="groc-tab' + (_grocTab === 'tasks' ? ' active' : '') + '" onclick="grocSwitchTab(\'tasks\')">\u2705 Tasks</div>'    + '</div>'    + '<div class="groc-add-btn" onclick="grocFocusAdd()">+</div>'    + '</div>'    + '<div id="groc-list" class="groc-list">' + buildGrocList() + '</div>'    + '<div class="groc-add-row">'    + '<input id="groc-input" class="groc-input" placeholder="' + placeholder + '" onkeydown="grocKeyDown(event)" inputmode="text" autocomplete="off">'    + '<div class="groc-submit" onclick="grocAddItem()">Add</div>'    + '</div>'    + '<div class="groc-footer">'    + '<div class="groc-count" id="groc-count">' + grocCountText() + '</div>'    + '<div class="groc-clear-done" onclick="grocClearDone()">Clear done</div>'    + '</div>'    + '</div>';
+}
 function grocData() {
   try { return JSON.parse(localStorage.getItem('fp_' + _grocTab) || '[]'); } catch(e) { return []; }
 }
 function grocSave(arr) { localStorage.setItem('fp_' + _grocTab, JSON.stringify(arr)); }
 
+function grocEmoji(name) {
+  var n = name.toLowerCase();
+  if (n.match(/milk|curd|yogurt|cheese|paneer|butter|ghee|cream/)) return '\uD83E\uDD5B';
+  if (n.match(/rice|wheat|flour|rava|suji|poha/)) return '\uD83C\uDF3E';
+  if (n.match(/tomato/)) return '\uD83C\uDF45';
+  if (n.match(/onion/)) return '\uD83E\uDDC5';
+  if (n.match(/potato/)) return '\uD83E\uDD54';
+  if (n.match(/egg/)) return '\uD83E\uDD5A';
+  if (n.match(/bread|roti|naan|bun/)) return '\uD83C\uDF5E';
+  if (n.match(/fruit|apple|banana|mango|grape|orange/)) return '\uD83C\uDF4E';
+  if (n.match(/veg|spinach|palak|carrot|cabbage|brinjal|ladyfinger/)) return '\uD83E\uDD66';
+  if (n.match(/oil|ghee/)) return '\uD83E\uDEB4';
+  if (n.match(/dal|lentil|chana|rajma|moong/)) return '\uD83E\uDEB5';
+  if (n.match(/soap|shampoo|detergent|wash|clean/)) return '\uD83E\uDDFC';
+  if (n.match(/medicine|tablet|syrup/)) return '\uD83D\uDC8A';
+  if (n.match(/sugar|salt|spice|masala|turmeric|chilli|pepper/)) return '\uD83E\uDDC2';
+  if (n.match(/coffee|tea|chai/)) return '\u2615';
+  if (n.match(/water|juice|drink/)) return '\uD83D\uDCA7';
+  if (n.match(/snack|biscuit|chips|chocolate|sweet/)) return '\uD83C\uDF6A';
+  if (n.match(/meat|chicken|fish|mutton/)) return '\uD83C\uDF57';
+  return _grocTab === 'grocery' ? '\uD83D\uDED2' : '\u2705';
+}
+
 function buildGrocList() {
   var items = grocData();
-  if (!items.length) return '<div class="groc-empty">Nothing here — add items below</div>';
+  if (!items.length) return '<div class="groc-empty"><div class="groc-empty-icon">' + (_grocTab==='grocery'?'\uD83D\uDED2':'\u2705') + '</div><div>' + (_grocTab==='grocery'?'Your cart is empty':'No tasks yet') + '</div></div>';
   return items.map(function(item, idx) {
-    return '<div class="groc-item' + (item.done?' done':'') + '" id="groc-item-' + idx + '">'
-      + '<div class="groc-check" onclick="grocToggle(' + idx + ')">' + (item.done?'\u2714':'') + '</div>'
-      + '<div class="groc-item-name">' + item.name + '</div>'
-      + '<div class="groc-item-meta">' + (item.by||'') + '</div>'
-      + '<div class="groc-item-del" onclick="grocDelete(' + idx + ')">\u00D7</div>'
-      + '</div>';
+    var emoji = grocEmoji(item.name);
+    return '<div class="groc-item' + (item.done?' done':'') + '" id="groc-item-' + idx + '">'      + '<div class="groc-check" onclick="grocToggle(' + idx + ')">' + (item.done?'\u2714':'') + '</div>'      + '<div class="groc-item-emoji">' + emoji + '</div>'      + '<div class="groc-item-name">' + item.name + '</div>'      + '<div class="groc-item-meta">' + (item.by||'') + '</div>'      + '<div class="groc-item-del" onclick="grocDelete(' + idx + ')">\u00D7</div>'      + '</div>';
   }).join('');
 }
 
@@ -5542,6 +5575,7 @@ function grocToggle(idx) {
   var count = document.getElementById('groc-count');
   if (groc) groc.innerHTML = buildGrocList();
   if (count) count.textContent = grocCountText();
+  grocRefreshProgress();
 }
 
 function grocDelete(idx) {
@@ -5554,6 +5588,11 @@ function grocDelete(idx) {
   if (count) count.textContent = grocCountText();
 }
 
+function grocRefreshProgress() {
+  var prog = document.getElementById('groc-prog');
+  if (prog) prog.style.width = grocProgressPct() + '%';
+}
+
 function grocClearDone() {
   var items = grocData().filter(function(i){ return !i.done; });
   grocSave(items);
@@ -5561,6 +5600,7 @@ function grocClearDone() {
   var count = document.getElementById('groc-count');
   if (groc) groc.innerHTML = buildGrocList();
   if (count) count.textContent = grocCountText();
+  grocRefreshProgress();
 }
 
 /* ═══════════════════════════════════════════════
@@ -6847,14 +6887,21 @@ function initWidgetDynamic() {
   // ─────────────────────────────────────────
   const hpr = document.getElementById('health-pulse-row');
   if (hpr && typeof computeHealthScore === 'function') {
-    const r = 17, circ = 2 * Math.PI * r;
+    const R = 28, circ = 2 * Math.PI * R;
+    // color class by score
+    function hpColClass(score) {
+      if (score >= 80) return 'hp-col-green';
+      if (score >= 60) return 'hp-col-gold';
+      return 'hp-col-red';
+    }
     hpr.innerHTML = Object.entries(HEALTH_MEMBER_META).map(([id, m]) => {
       const score = computeHealthScore(id);
       const col = typeof scoreColor === 'function' ? scoreColor(score) : '#4f7fff';
       const offset = circ - (score / 100) * circ;
       const member = Object.values(MEMBERS).find(x => x.id === id);
-      const grad = member ? member.gradient : '#374151';
-      const initials = member ? member.initials : '?';
+      const firstName = m.label.split(' ')[0];
+      const role = member ? member.role : '';
+      const colClass = hpColClass(score);
       const hasFlags = typeof getHealthData === 'function' && typeof getBmStatus === 'function';
       let flagCount = 0;
       if (hasFlags) {
@@ -6864,20 +6911,22 @@ function initWidgetDynamic() {
           if (val != null && getBmStatus(def, val, m.gender) !== 'normal') flagCount++;
         });
       }
-      return `<div class="hp-member pressable" onclick="goPage('health')">
+      return `<div class="hp-member ${colClass} pressable" onclick="goPage('health')">
         <div class="hp-ring-wrap">
-          <svg class="hp-ring-svg" width="44" height="44" viewBox="0 0 44 44">
-            <circle class="hp-ring-track" cx="22" cy="22" r="${r}" stroke-width="5"/>
-            <circle class="hp-ring-fill" cx="22" cy="22" r="${r}" stroke="${col}" stroke-width="5"
+          <svg class="hp-ring-svg" width="68" height="68" viewBox="0 0 68 68">
+            <circle class="hp-ring-track" cx="34" cy="34" r="${R}" stroke-width="6"/>
+            <circle class="hp-ring-fill hp-ring-anim" cx="34" cy="34" r="${R}" stroke="${col}" stroke-width="6"
               stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${circ.toFixed(1)}"
-              data-offset="${offset.toFixed(1)}" class="hp-ring-anim"/>
+              data-offset="${offset.toFixed(1)}"/>
           </svg>
           <div class="hp-ring-inner">
             <div class="hp-score" style="color:${col}">${score}</div>
+            <div class="hp-score-lbl">/ 100</div>
           </div>
         </div>
-        <div class="hp-name">${m.label.split(' ')[0]}</div>
-        <div class="hp-flag ${flagCount?'warn':'ok'}">${flagCount?flagCount+'⚠':'✓ OK'}</div>
+        <div class="hp-name">${firstName}</div>
+        <div class="hp-role">${role}</div>
+        <div class="hp-flag ${flagCount?'warn':'ok'}">${flagCount?flagCount+' ⚠️ flags':'✓ Healthy'}</div>
       </div>`;
     }).join('');
     // Animate rings
