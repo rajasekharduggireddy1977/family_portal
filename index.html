@@ -2484,6 +2484,27 @@ input:focus, button:focus-visible {
 .aicw-tdot:nth-child(3){animation-delay:.3s}
 @keyframes aicwTypeBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
 
+/* AI rich response cards */
+.ai-rich { padding: 2px 0; }
+.ai-subject-card { border-radius: 10px; padding: 11px 13px; margin: 7px 0; border: 1px solid var(--border2); }
+.ai-subject-card.safe { background: rgba(62,207,142,.07); border-color: rgba(62,207,142,.25); }
+.ai-subject-card.risk { background: rgba(255,165,0,.07); border-color: rgba(255,165,0,.25); }
+.ai-subject-card.critical { background: rgba(255,79,79,.07); border-color: rgba(255,79,79,.25); }
+.ai-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
+.ai-subject-name { font-size: 12px; font-weight: 700; color: var(--text1); flex: 1; line-height: 1.3; }
+.ai-badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 20px; white-space: nowrap; font-family: 'DM Mono', monospace; letter-spacing: .3px; }
+.ai-badge.safe { background: rgba(62,207,142,.15); color: var(--green); }
+.ai-badge.risk { background: rgba(255,165,0,.15); color: var(--orange); }
+.ai-badge.critical { background: rgba(255,79,79,.15); color: var(--red); }
+.ai-card-body { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.ai-stat { font-size: 11px; color: var(--text2); background: var(--surface2); border-radius: 6px; padding: 3px 8px; font-family: 'DM Mono', monospace; }
+.ai-verdict { font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 7px; display: inline-block; letter-spacing: .3px; }
+.ai-verdict.safe { background: rgba(62,207,142,.15); color: var(--green); }
+.ai-verdict.risk, .ai-verdict.critical { background: rgba(255,79,79,.12); color: var(--red); }
+.ai-summary-box { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 13px; margin-top: 10px; }
+.ai-summary-title { font-size: 11px; font-weight: 800; color: var(--text2); font-family: 'DM Mono', monospace; letter-spacing: .5px; margin-bottom: 6px; }
+.ai-summary-body { font-size: 12px; color: var(--text1); line-height: 1.55; }
+
 /* Input row */
 .aicw-input-row {
   display: flex; align-items: flex-end; gap: 8px;
@@ -4421,11 +4442,11 @@ function buildWidgetHTML(wid) {
         </div>
       </div>
       <div class="aicw-suggestions" id="aicw-suggestions">
+        <div class="aicw-sugg" onclick="aiChatSendQuick(this)">🏃 Can Josritha skip classes today?</div>
+        <div class="aicw-sugg" onclick="aiChatSendQuick(this)">📊 Josritha attendance risk report</div>
+        <div class="aicw-sugg" onclick="aiChatSendQuick(this)">📅 Today's timetable for Josritha</div>
         <div class="aicw-sugg" onclick="aiChatSendQuick(this)">🍛 Meal ideas today</div>
-        <div class="aicw-sugg" onclick="aiChatSendQuick(this)">📅 Schedule summary</div>
-        <div class="aicw-sugg" onclick="aiChatSendQuick(this)">🎉 Indian festivals?</div>
         <div class="aicw-sugg" onclick="aiChatSendQuick(this)">📄 Documents due?</div>
-        <div class="aicw-sugg" onclick="aiChatSendQuick(this)">💡 Family tip</div>
         <div class="aicw-sugg" onclick="aiChatSendQuick(this)">🌤️ Good morning note</div>
       </div>
       <div class="aicw-messages" id="aicw-messages">
@@ -8194,20 +8215,59 @@ let aicwHistory = [];
 let aicwBusy = false;
 
 // System prompt with full family context
-const AICW_SYSTEM = `You are the AI Family Assistant for the Duggireddy Family — Rajasekhar (Head of Family, Software Engineer at Dataspeaks HITEC City), Vasundhara (Homemaker, Hyderabad), Josritha (B.Tech student at KL University, CGPA 9.24), and Jeevan (Son, 14, school student) — living in Flat 807, INDIS OneCity, KPHB, Hyderabad.
+function buildAICWSystem() {
+  var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var todayName = dayNames[new Date().getDay()].toUpperCase();
+  var todayDate = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
-Key documents & details you know:
-- Rajasekhar: Aadhaar 6106 1778 4861, PAN AICPD3992N, DL DLFAP62729122008 (expires Jan 2027), Passport E8690728
-- Vasundhara: Aadhaar 3372 3106 9560, PAN BDXPD9514R, Honda Activa TS08HJ8438, Hyundai i10 AP27AK7873
-- Josritha: Aadhaar 8316 6458 6848, KL University roll 2420030493, CGPA 9.24
-- Jeevan: Aadhaar 6918 2946 7739
-- Family Health Floater: ICICI Lombard 4193i/APRN/400529214/00/000, ₹15L per member, expires Aug 2026
-- Rajasekhar Individual Health: ICICI Lombard 4128i, ₹15L, expires Aug 2026
-- Property: Flat 807 OneCity Hyderabad + Flat 403 Ongole + Shop G5 Ongole (Vasundhara)
-- Property Tax overdue: Flat 403 & Shop G5 (Feb 2026 deadline)
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attData = attRaw ? JSON.parse(attRaw) : (typeof ATTENDANCE !== 'undefined' ? ATTENDANCE : []);
+  var ttRaw = localStorage.getItem('fp_timetable_synced');
+  var ttData = ttRaw ? JSON.parse(ttRaw) : [];
+  var todaySlots = ttData.filter(function(s){ return s.day === todayName; });
 
-Be warm, helpful, concise (2-4 sentences unless list needed), culturally aware of Telugu/Indian family values. Address members by name. Use relevant emojis occasionally.`;
+  var attSummary = attData.map(function(a) {
+    var pct = Math.round(a.present / a.total * 100);
+    var canSkip = Math.floor(a.total * 0.25) - (a.total - a.present);
+    var status = pct >= 75 ? 'SAFE' : pct >= 70 ? 'AT RISK' : 'CRITICAL';
+    return '  - ' + a.subject + ' (' + a.code + ', ' + a.type + '): ' + a.present + '/' + a.total + ' = ' + pct + '% [' + status + '] can skip ' + Math.max(0,canSkip) + ' more';
+  }).join('\n');
 
+  var todaySummary = '';
+  if (todaySlots.length > 0) {
+    todaySummary = todaySlots.map(function(s) {
+      var att = attData.find(function(a){ return a.code === s.code && a.type === s.type; });
+      var pct = att ? Math.round(att.present/att.total*100) : null;
+      var canSkip = att ? Math.max(0, Math.floor(att.total*0.25)-(att.total-att.present)) : null;
+      return '  - Period ' + s.period + ' (' + (s.time||'') + '): ' + s.subject + ' | ' + s.type + ' | Room ' + s.room + (att ? ' | ' + pct + '%, can skip ' + canSkip + ' more' : '');
+    }).join('\n');
+  } else {
+    todaySummary = '  - No classes scheduled today';
+  }
+
+  var sys = 'You are the AI Family Assistant for the Duggireddy Family.\n'
+    + 'Members: Rajasekhar (Software Engineer), Vasundhara (Homemaker), Josritha (KL University B.Tech, CGPA 9.24), Jeevan (14, school).\n'
+    + 'Location: Flat 807, INDIS OneCity, KPHB, Hyderabad.\n\n'
+    + 'KEY DETAILS:\n'
+    + '- Rajasekhar: Aadhaar 6106 1778 4861, PAN AICPD3992N, DL expires Jan 2027, Passport E8690728\n'
+    + '- Vasundhara: Aadhaar 3372 3106 9560, PAN BDXPD9514R, Activa TS08HJ8438, i10 AP27AK7873\n'
+    + '- Josritha: Aadhaar 8316 6458 6848, Roll 2420030493\n'
+    + '- Health Floater: ICICI 4193i/APRN/400529214, Rs15L/member, expires Aug 2026\n'
+    + '- Property Tax overdue: Flat 403 & Shop G5 Ongole\n\n'
+    + 'TODAY: ' + todayDate + '\n\n'
+    + 'JOSRITHA ATTENDANCE (KL University, Even Sem 2025-26):\n'
+    + 'Rule: Min 75% per subject. Formula: can_skip = floor(total x 0.25) - (total - present)\n'
+    + attSummary + '\n\n'
+    + 'TODAY\'S TIMETABLE (' + todayName + '):\n'
+    + todaySummary + '\n\n'
+    + 'FORMATTING RULES:\n'
+    + 'For attendance/skip questions, reply with HTML using these exact CSS classes:\n'
+    + 'Per subject: div.ai-subject-card.safe/.risk/.critical containing div.ai-card-header (span.ai-subject-name + span.ai-badge.safe/.risk/.critical) + div.ai-card-body (span.ai-stat items) + div.ai-verdict.safe/.critical\n'
+    + 'End with: div.ai-summary-box containing div.ai-summary-title and div.ai-summary-body\n'
+    + 'For all other questions: plain warm friendly text, 2-4 sentences, emojis ok, Telugu/Indian family context.';
+
+  return sys;
+}
 function aiChatOpen(prefill) {
   // Find the chat widget input
   const input = document.getElementById('aicw-input');
@@ -8250,11 +8310,17 @@ function aiChatAppendMsg(role, text) {
   const container = document.getElementById('aicw-messages');
   if (!container) return;
   const div = document.createElement('div');
-  div.className = `aicw-msg ${role}`;
-  if (role==='ai') {
-    div.innerHTML = `<div class="aicw-av">🧠</div><div class="aicw-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  div.className = 'aicw-msg ' + role;
+  if (role === 'ai') {
+    let html = text;
+    if (!/<div|<span|<b|<strong/.test(text)) {
+      html = text
+        .split('**').map(function(s,i){return i%2===1?'<strong>'+s+'</strong>':s;}).join('')
+        .split('\n').join('<br>');
+    }
+    div.innerHTML = '<div class="aicw-av">🧠</div><div class="aicw-bubble ai-rich">' + html + '</div>';
   } else {
-    div.innerHTML = `<div class="aicw-bubble">${text}</div>`;
+    div.innerHTML = '<div class="aicw-bubble">' + text + '</div>';
   }
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
@@ -8308,10 +8374,10 @@ async function aiChatSend() {
       },
       body: JSON.stringify({
         model: GROQ_MODEL,
-        max_tokens: 600,
+        max_tokens: 900,
         temperature: 0.7,
         messages: [
-          { role: 'system', content: AICW_SYSTEM },
+          { role: 'system', content: buildAICWSystem() },
           ...aicwHistory
         ]
       })
