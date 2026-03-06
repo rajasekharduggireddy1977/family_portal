@@ -314,7 +314,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 #content{
   position:relative;z-index:1;
   padding-top:calc(var(--topbar-h) + var(--sat));
-  padding-bottom:var(--nav-h);
+  padding-bottom:calc(var(--nav-h) + 80px); /* clearance for FABs */
   min-height:100dvh;
   /* Prevent bottom nav reflow affecting scroll */
   isolation:isolate;
@@ -1912,13 +1912,16 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* ══════════════════════════════════════════════
    IMPROVEMENT 4 — FLOATING ACTION BUTTON (FAB)
 ══════════════════════════════════════════════ */
+#fab-btn-wrap {
+  /* wrap handles positioning */
+}
 #fab-btn {
-  position: fixed;
-  bottom: calc(var(--nav-h) + 16px);
-  left: 16px;
+  position: relative;
+  bottom: auto;
+  left: auto;
   right: auto;
-  z-index: 9100;
-  width: 44px; height: 44px;
+  z-index: auto;
+  width: 46px; height: 46px;
   border-radius: 14px;
   background: var(--surface);
   border: 1.5px solid var(--border2);
@@ -1927,7 +1930,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(0,0,0,.25);
-  transition: all .22s cubic-bezier(.34,1.56,.64,1);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
   user-select: none;
   line-height: 1;
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -1935,11 +1938,13 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 #fab-btn:hover { transform: scale(1.06); box-shadow: 0 4px 18px rgba(79,127,255,.35); border-color: var(--blue2); }
 #fab-btn:active { transform: scale(0.93); }
 #fab-btn.hidden { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(12px); }
+body.ai-panel-open #fab-btn-wrap { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(10px); }
+body.ai-panel-open #fab-menu { opacity: 0; pointer-events: none; }
 /* FAB menu */
 #fab-menu {
   position: fixed;
-  bottom: calc(var(--nav-h) + 62px);
-  left: 10px;
+  bottom: calc(var(--nav-h) + 68px);
+  left: 16px;
   right: auto;
   z-index: 9050;
   display: flex; flex-direction: column; gap: 8px;
@@ -2789,26 +2794,30 @@ input:focus, button:focus-visible {
 ═══════════════════════════════════════════════════════ */
 
 /* AI FAB button */
+#ai-fab-wrap {
+  /* wrap handles positioning */
+}
 #ai-fab {
-  position: fixed;
-  bottom: calc(var(--nav-h) + 16px);
-  right: 16px;
-  z-index: 9101;
-  width: 38px; height: 38px;
-  border-radius: 12px;
+  position: relative;
+  bottom: auto;
+  right: auto;
+  z-index: auto;
+  width: 46px; height: 46px;
+  border-radius: 14px;
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(124,58,237,.5), 0 2px 6px rgba(0,0,0,.25);
-  transition: all .22s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 4px 20px rgba(124,58,237,.55), 0 2px 8px rgba(0,0,0,.3);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, transform .25s ease;
   user-select: none;
 }
 #ai-fab:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(124,58,237,.65); }
 #ai-fab:active { transform: scale(0.93); }
-#ai-fab.panel-open { background: linear-gradient(135deg,#dc2626,#b91c1c); box-shadow: 0 4px 16px rgba(220,38,38,.5); }
+#ai-fab.panel-open { opacity: 0 !important; pointer-events: none !important; transform: scale(0.5) !important; }
+#ai-fab-wrap:has(#ai-fab.panel-open) { opacity: 0; pointer-events: none; transform: translateY(6px); }
 #ai-fab-ring { display: none; }
 #ai-fab-icon {
-  font-size: 16px; color: #fff;
+  font-size: 18px; color: #fff;
   font-weight: 900;
   transition: all .2s;
 }
@@ -3133,9 +3142,12 @@ input:focus, button:focus-visible {
 <!-- ═══════════════════════════════════════════════════════
      AI FAMILY ASSISTANT — FLOATING PANEL
 ═══════════════════════════════════════════════════════ -->
-<div id="ai-fab" onclick="toggleAIPanel()" title="AI Family Assistant">
-  <div id="ai-fab-ring"></div>
-  <div id="ai-fab-icon">✦</div>
+<div id="ai-fab-wrap" style="position:fixed;bottom:calc(var(--nav-h) + 10px);right:16px;z-index:9101;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .25s cubic-bezier(.34,1.56,.64,1);">
+  <div id="ai-fab" onclick="toggleAIPanel()" title="AI Family Assistant" style="position:relative;bottom:auto;right:auto;z-index:auto;">
+    <div id="ai-fab-ring"></div>
+    <div id="ai-fab-icon">✦</div>
+  </div>
+  <div id="ai-fab-label" style="font-size:8px;font-weight:700;color:#a78bfa;font-family:'DM Mono',monospace;letter-spacing:.4px;pointer-events:none;opacity:.8;transition:opacity .2s;">AI</div>
 </div>
 
 <div id="ai-panel" class="ai-panel-closed">
@@ -3194,7 +3206,10 @@ input:focus, button:focus-visible {
     <div class="fab-item-ico">💾</div> Backup Now
   </div>
 </div>
-<div id="fab-btn" onclick="toggleFab()" title="Quick Actions" aria-label="Quick Actions">＋</div>
+<div id="fab-btn-wrap" style="position:fixed;bottom:calc(var(--nav-h) + 10px);left:16px;z-index:9100;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .25s cubic-bezier(.34,1.56,.64,1);">
+  <div id="fab-btn" onclick="toggleFab()" title="Quick Actions" aria-label="Quick Actions" style="position:relative;bottom:auto;left:auto;z-index:auto;">＋</div>
+  <div style="font-size:8px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.4px;pointer-events:none;opacity:.7;">ACTIONS</div>
+</div>
 
 <!-- ═══════════════ COMMAND PALETTE ═══════════════ -->
 <div id="cmd-overlay" onclick="if(event.target===this)closeCommandPalette()">
@@ -3485,7 +3500,10 @@ input:focus, button:focus-visible {
       </div>
       <!-- TIMELINE VIEW -->
       <div id="timeline-pane">
-        <div id="tl-axis" style="padding:4px 0 20px;"></div>
+        <div class="tl-scroll" id="tl-scroll">
+          <div class="tl-canvas" id="tl-axis"></div>
+        </div>
+        <div class="tl-legend" id="tl-legend"></div>
       </div>
     </div>
   </div>
@@ -5696,7 +5714,10 @@ function renderTimeline() {
   var tlList = document.getElementById('timeline-list');
   if (!tlList) return;
   var now = new Date(); now.setHours(0,0,0,0);
-  var allCalEvts = (typeof getCalEvents === 'function') ? getCalEvents() : [];
+  var calRaw = localStorage.getItem('fp_cal_events');
+  var allCalEvts = [];
+  try { allCalEvts = JSON.parse(calRaw || '[]'); } catch(e) { allCalEvts = []; }
+  if (typeof CAL_EVENTS !== 'undefined') allCalEvts = allCalEvts.concat(CAL_EVENTS.filter(function(e){ return !allCalEvts.find(function(x){return x.id===e.id;}); }));
   var activeName = typeof currentMember !== 'undefined' ? currentMember : null;
   if (activeName === 'all') activeName = null;
 
@@ -6173,16 +6194,6 @@ function showMembersList() {
   document.getElementById('members-list-view').style.display='';
 }
 
-function switchAcadView(view) {
-  window._acadView = view;
-  var m = (typeof MEMBERS !== 'undefined' && typeof currentMember !== 'undefined') ? MEMBERS[currentMember] : null;
-  if (!m) return;
-  var tc = document.getElementById('member-tab-content');
-  if (!tc) return;
-  if (typeof renderMemberTab === 'function') renderMemberTab(m, 'academics');
-  if (typeof haptic === 'function') haptic('light');
-}
-
 function showMemberDetail(memberId, tab) {
   currentMember = memberId;
   currentTab = tab || 'identity';
@@ -6372,9 +6383,9 @@ function renderAcademicsTab(m) {
     {id:'timetable',  label:'🗓️ Timetable'},
     {id:'combined',   label:'📅 Day View'},
   ];
-  const switcher = `<div style="position:sticky;top:calc(var(--topbar-h) + var(--sat) + 2px);z-index:50;background:var(--bg);padding:6px 0 10px;"><div style="display:flex;gap:6px;background:var(--surface2);border-radius:10px;padding:4px;">
-    ${tabs.map(t=>`<button onclick="switchAcadView('${t.id}')" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;${_acadView===t.id?'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);':'background:transparent;color:var(--text3);'}">${t.label}</button>`).join('')}
-  </div></div>`;
+  const switcher = `<div style="display:flex;gap:6px;margin-bottom:16px;background:var(--surface2);border-radius:10px;padding:4px;">
+    ${tabs.map(t=>`<button onclick="window._acadView='${t.id}';showMemberDetail('josritha','academics');" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;${_acadView===t.id?'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);':'background:transparent;color:var(--text3);'}">${t.label}</button>`).join('')}
+  </div>`;
 
   // ── ATTENDANCE VIEW ───────────────────────────────────────────────────
   const attView = liveAtt.map(a => {
@@ -6499,18 +6510,11 @@ function renderAcademicsTab(m) {
     content = liveTT ? combView : noTTHint;
   }
 
-  const _totPresent = liveAtt.reduce((s,a)=>s+a.present,0);
-  const _totClasses = liveAtt.reduce((s,a)=>s+a.total,0);
-  const _ovPct = _totClasses ? Math.round(_totPresent/_totClasses*100) : 0;
-  const _ovCol = _ovPct>=75?'var(--green)':_ovPct>=70?'#fbbf24':'var(--red)';
-  const summaryBar = liveAtt.length ? `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border2);"><div style="flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.8px;">OVERALL ATTENDANCE</div><div style="margin-top:4px;height:3px;background:var(--border2);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${_ovPct}%;background:${_ovCol};border-radius:3px;"></div></div></div><div style="font-size:20px;font-weight:800;color:${_ovCol};font-family:'DM Mono',monospace;">${_ovPct}%</div><div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-align:right;line-height:1.5;">${_totPresent}/${_totClasses}<br>classes</div></div>` : '';
-
   return `<div style="padding:4px 0;">
     <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:12px;letter-spacing:.5px;">KL UNIVERSITY · EVEN SEMESTER 2025–26</div>
     ${warnHtml}
     ${uploadBar}
     ${switcher}
-    <div style="position:sticky;top:calc(var(--topbar-h) + var(--sat) + 62px);z-index:48;background:var(--bg);padding:0 0 8px;">${summaryBar}</div>
     ${content}
   </div>`;
 }
@@ -6926,39 +6930,95 @@ function setExpiryView(view) {
 }
 
 function buildTimeline() {
-  var axis = document.getElementById('tl-axis');
+  const axis = document.getElementById('tl-axis');
+  const legend = document.getElementById('tl-legend');
   if (!axis) return;
-  var sorted = EXPIRY.slice().sort(function(a,b){ return daysUntil(a.date)-daysUntil(b.date); });
-  var groups = [
-    { label:'OVERDUE',        col:'#ef4444',      items: sorted.filter(function(e){ return daysUntil(e.date)<0; }) },
-    { label:'DUE THIS MONTH', col:'#f87171',      items: sorted.filter(function(e){ var d=daysUntil(e.date); return d>=0&&d<=30; }) },
-    { label:'NEXT 90 DAYS',   col:'#fbbf24',      items: sorted.filter(function(e){ var d=daysUntil(e.date); return d>30&&d<=90; }) },
-    { label:'THIS YEAR',      col:'var(--blue2)', items: sorted.filter(function(e){ var d=daysUntil(e.date); return d>90&&d<=365; }) },
-    { label:'BEYOND 1 YEAR',  col:'var(--green)', items: sorted.filter(function(e){ var d=daysUntil(e.date); return d>365; }) },
-  ];
-  var html = '<div style="display:flex;flex-direction:column;">';
-  var total = 0;
-  groups.forEach(function(g) {
-    if (!g.items.length) return;
-    total += g.items.length;
-    html += '<div style=\"font-size:9px;font-weight:800;letter-spacing:1.2px;color:'+g.col+';font-family:\'DM Mono\',monospace;padding:16px 2px 6px;border-bottom:1px solid var(--border2);\">'+g.label+'</div>';
-    g.items.forEach(function(e) {
-      var d = daysUntil(e.date);
-      var badge = d<0?(Math.abs(d)+'d overdue'):d===0?'TODAY':('in '+d+'d');
-      var bg = d<0?'rgba(239,68,68,.1)':d<=30?'rgba(248,113,113,.08)':d<=90?'rgba(251,191,36,.08)':'rgba(62,207,142,.07)';
-      html += '<div style=\"display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.04);\">'
-        + '<div style=\"width:36px;height:36px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;\">'+(e.icon||'\U0001f4cb')+'</div>'
-        + '<div style=\"flex:1;min-width:0;\">'
-        + '<div style=\"font-size:13px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">'+e.label+'</div>'
-        + '<div style=\"font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;margin-top:3px;\">'+e.person+' \u00b7 '+fmtDate(e.date)+'</div>'
-        + '</div>'
-        + '<div style=\"font-size:10px;font-weight:700;padding:4px 9px;border-radius:7px;background:'+bg+';color:'+g.col+';font-family:\'DM Mono\',monospace;white-space:nowrap;flex-shrink:0;\">'+badge+'</div>'
-        + '</div>';
-    });
+
+  const sorted = [...EXPIRY].sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
+
+  // Timeline spans from -30 days (past) to +760 days (future)
+  // So the full range is 790 days. We map this to left% within [40px, canvas-40px].
+  // leftPct(days) maps days to a 0-100% position within the padded area.
+  const MIN_DAYS = -30;
+  const MAX_DAYS = 760;
+  const SPAN = MAX_DAYS - MIN_DAYS; // 790
+
+  // Clamp and compute left% relative to full canvas width (min-width 920px)
+  // We leave 40px padding each side, so usable = 840px out of 920px
+  // Express as % of total canvas (920px)
+  const toPct = d => {
+    const clamped = Math.max(MIN_DAYS, Math.min(MAX_DAYS, d));
+    const frac = (clamped - MIN_DAYS) / SPAN; // 0 to 1
+    // Map to 40px..880px range within 920px canvas → 4.35% to 95.65%
+    return 4.35 + frac * 91.3;
+  };
+
+  const hexForDays = d => d < 0 ? '#ff4f4f' : d <= 30 ? '#ff8c42' : d <= 90 ? '#f0b429' : '#3ecf8e';
+  const todayPct = toPct(0);
+
+  let html = '';
+
+  // Axis line
+  html += `<div class="tl-axis-line"></div>`;
+
+  // TODAY marker pole
+  html += `<div class="tl-today-pole" style="left:${todayPct}%"></div>`;
+
+  // Month markers: 1m, 2m, 3m, 6m, 12m, 18m, 24m
+  [30, 60, 90, 180, 365, 540, 720].forEach(d => {
+    if (d <= MAX_DAYS) {
+      const p = toPct(d);
+      const lbl = d === 30 ? '1m' : d === 60 ? '2m' : d === 90 ? '3m' : d === 180 ? '6m' : d === 365 ? '1yr' : d === 540 ? '18m' : '2yr';
+      html += `<div class="tl-mth-tick" style="left:${p}%">${lbl}</div>`;
+    }
   });
-  if (!total) html += '<div style=\"padding:36px;text-align:center;color:var(--text3);font-size:13px;\">No records</div>';
-  html += '</div>';
+
+  // Expiry items — alternate above and below axis
+  sorted.forEach((e, i) => {
+    const days = daysUntil(e.date);
+    const p = toPct(days);
+    const hex = hexForDays(days);
+    const shortLabel = e.label.length > 14 ? e.label.slice(0, 13) + '…' : e.label;
+
+    if (i % 2 === 0) {
+      // ABOVE axis: bubble (32px) → stem (34px) → dot (10px) landing on axis at y=100px
+      // Total height from top: 32+34+10 = 76px → top must be at 100-76+5 = 29px ✓ (matches .tl-above top:28px)
+      html += `<div class="tl-above" style="left:${p}%" onclick="openTlSheet(${i})">
+        <div class="tl-bub" style="border-color:${hex}">${e.icon}</div>
+        <div class="tl-stem" style="background:${hex};height:34px"></div>
+        <div class="tl-dot" style="background:${hex}"></div>
+      </div>
+      <div class="tl-above-lbl" style="left:${p}%">${shortLabel}</div>`;
+    } else {
+      // BELOW axis: dot → stem (28px) → bubble (32px)
+      // top:97px means dot center at ~102px (≈ axis at 100px ✓)
+      html += `<div class="tl-below" style="left:${p}%" onclick="openTlSheet(${i})">
+        <div class="tl-dot" style="background:${hex}"></div>
+        <div class="tl-stem" style="background:${hex};height:28px"></div>
+        <div class="tl-bub" style="border-color:${hex}">${e.icon}</div>
+      </div>
+      <div class="tl-below-lbl" style="left:${p}%">${shortLabel}</div>`;
+    }
+  });
+
   axis.innerHTML = html;
+  axis._expiry = sorted;
+
+  // Legend
+  if (legend) legend.innerHTML = [
+    { col: '#ff4f4f', lbl: 'Overdue' },
+    { col: '#ff8c42', lbl: '≤ 30 days' },
+    { col: '#f0b429', lbl: '≤ 90 days' },
+    { col: '#3ecf8e', lbl: 'Safe (> 90 days)' }
+  ].map(l => `<div class="tl-leg"><div class="tl-leg-dot" style="background:${l.col}"></div>${l.lbl}</div>`).join('');
+
+  // Auto-scroll so TODAY is roughly centred in the visible area
+  const scroll = document.getElementById('tl-scroll');
+  if (scroll) {
+    const canvasW = 920;
+    const todayX = (todayPct / 100) * canvasW;
+    setTimeout(() => { scroll.scrollLeft = Math.max(0, todayX - scroll.clientWidth * 0.4); }, 80);
+  }
 }
 
 function openTlSheet(idx) {
@@ -9176,6 +9236,7 @@ function toggleAIPanel() {
     panel.classList.add('ai-panel-open');
     backdrop.classList.add('visible');
     fab.classList.add('panel-open');
+    document.body.classList.add('ai-panel-open');
     fabIcon.textContent = '\u2715';
     aiPanelUpdateChips();
     aiPanelUpdateStatus();
@@ -9189,6 +9250,7 @@ function toggleAIPanel() {
     panel.classList.remove('ai-panel-open');
     backdrop.classList.remove('visible');
     fab.classList.remove('panel-open');
+    document.body.classList.remove('ai-panel-open');
     fabIcon.textContent = '\u2726';
     // Nothing to restore — fab-btn is on left, always visible
     if (typeof haptic === 'function') haptic('light');
