@@ -2504,6 +2504,106 @@ input:focus, button:focus-visible {
 .ai-summary-box { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 13px; margin-top: 10px; }
 .ai-summary-title { font-size: 11px; font-weight: 800; color: var(--text2); font-family: 'DM Mono', monospace; letter-spacing: .5px; margin-bottom: 6px; }
 .ai-summary-body { font-size: 12px; color: var(--text1); line-height: 1.55; }
+
+/* ═══════════════════════════════════════════════════
+   ATTENDANCE SEVERITY WIDGET
+═══════════════════════════════════════════════════ */
+.asw-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border2); overflow: hidden; }
+.asw-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border2); background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(245,158,11,.04)); }
+.asw-header-left { display: flex; align-items: center; gap: 9px; }
+.asw-title { font-size: 13px; font-weight: 800; color: var(--text1); font-family: 'Inter', sans-serif; letter-spacing: -.1px; }
+.asw-subtitle { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; letter-spacing: .2px; }
+.asw-badge-count { font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 20px; font-family: 'DM Mono', monospace; letter-spacing: .3px; }
+.asw-badge-count.has-critical { background: rgba(220,38,38,.15); color: #f87171; }
+.asw-badge-count.has-risk { background: rgba(245,158,11,.15); color: #fbbf24; }
+.asw-badge-count.all-safe { background: rgba(62,207,142,.15); color: var(--green); }
+
+/* Day columns grid */
+.asw-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; }
+.asw-day-col { border-right: 1px solid rgba(255,255,255,.04); padding: 8px 4px 10px; min-height: 110px; display: flex; flex-direction: column; gap: 5px; }
+.asw-day-col:last-child { border-right: none; }
+.asw-day-col.today-col { background: rgba(124,58,237,.06); }
+.asw-day-lbl { font-size: 9px; font-weight: 800; text-align: center; color: var(--text3); font-family: 'DM Mono', monospace; letter-spacing: .5px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid var(--border2); }
+.asw-day-col.today-col .asw-day-lbl { color: #a78bfa; border-bottom-color: rgba(124,58,237,.3); }
+
+/* Subject card inside day */
+.asw-subj-card {
+  border-radius: 8px; padding: 5px 4px 6px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  border: 1px solid transparent;
+  cursor: pointer; transition: transform .15s, box-shadow .15s;
+  position: relative; overflow: hidden;
+  animation: aswCardIn .3s ease-out both;
+}
+.asw-subj-card:active { transform: scale(.96); }
+.asw-subj-card.critical {
+  background: rgba(220,38,38,.1);
+  border-color: rgba(220,38,38,.3);
+  box-shadow: 0 2px 8px rgba(220,38,38,.15);
+}
+.asw-subj-card.at-risk {
+  background: rgba(245,158,11,.08);
+  border-color: rgba(245,158,11,.25);
+  box-shadow: 0 2px 8px rgba(245,158,11,.1);
+}
+.asw-subj-card.critical::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #dc2626, #f87171);
+  border-radius: 8px 8px 0 0;
+}
+.asw-subj-card.at-risk::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #d97706, #fbbf24);
+  border-radius: 8px 8px 0 0;
+}
+@keyframes aswCardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.asw-subj-icon { font-size: 11px; line-height: 1; }
+.asw-subj-pct {
+  font-size: 15px; font-weight: 900; line-height: 1;
+  font-family: 'DM Mono', monospace; letter-spacing: -.5px;
+}
+.asw-subj-card.critical .asw-subj-pct { color: #f87171; }
+.asw-subj-card.at-risk .asw-subj-pct { color: #fbbf24; }
+.asw-subj-name {
+  font-size: 8px; font-weight: 700; text-align: center; line-height: 1.2;
+  color: var(--text2); font-family: 'Inter', sans-serif;
+  max-width: 100%; word-break: break-word; letter-spacing: -.1px;
+}
+.asw-subj-code {
+  font-size: 7px; color: var(--text3); font-family: 'DM Mono', monospace;
+  text-align: center; letter-spacing: .2px; margin-top: 1px;
+}
+.asw-subj-type {
+  font-size: 7px; color: var(--text3); font-family: 'DM Mono', monospace;
+  text-align: center; opacity: .7;
+}
+
+/* Empty day placeholder */
+.asw-empty-day { flex: 1; display: flex; align-items: center; justify-content: center; }
+.asw-empty-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border2); }
+
+/* Footer */
+.asw-footer { padding: 8px 14px 10px; border-top: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; }
+.asw-footer-ts { font-size: 9px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.asw-sync-btn { font-size: 10px; font-weight: 700; color: #a78bfa; font-family: 'Inter', sans-serif; cursor: pointer; padding: 4px 8px; border-radius: 6px; background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2); transition: all .15s; }
+.asw-sync-btn:active { background: rgba(124,58,237,.2); }
+
+/* No data state */
+.asw-no-data { padding: 28px 16px; text-align: center; }
+.asw-no-data-icon { font-size: 28px; margin-bottom: 8px; opacity: .5; }
+.asw-no-data-text { font-size: 12px; color: var(--text3); font-family: 'Inter', sans-serif; line-height: 1.5; }
+.asw-no-data-btn { margin-top: 12px; display: inline-block; font-size: 11px; font-weight: 700; color: #a78bfa; padding: 7px 16px; border-radius: 8px; background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2); cursor: pointer; }
+
+/* All-safe state */
+.asw-all-safe { padding: 20px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.asw-safe-icon { font-size: 24px; }
+.asw-safe-text { font-size: 12px; font-weight: 700; color: var(--green); font-family: 'Inter', sans-serif; }
+.asw-safe-sub { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
 /* ═══════════════════════════════════════════════════════
    AI FLOATING PANEL
 ═══════════════════════════════════════════════════════ */
@@ -4353,11 +4453,10 @@ const WIDGET_DEFS = {
   cal_mini:   { id:'cal_mini',   icon:'📅', name:'Family Calendar',     desc:'Upcoming family events at a glance' },
   emergency:  { id:'emergency',  icon:'🆘', name:'Emergency Contacts',  desc:'One-tap family contacts & services' },
   actions:    { id:'actions',    icon:'⚡', name:'Quick Actions',       desc:'One-tap shortcuts to key tasks' },
-  ai_briefing:{ id:'ai_briefing',icon:'✨', name:'AI Daily Briefing',   desc:'Claude AI morning summary for the family' },
-  ai_chat:    { id:'ai_chat',    icon:'🤖', name:'AI Family Assistant', desc:'Ask Claude anything about your family' },
+  att_severity:{ id:'att_severity',icon:'📚', name:'Attendance Severity', desc:'Josritha weekly attendance risk by subject' },
   ai_meals:   { id:'ai_meals',   icon:'🍛', name:'AI Meal Planner',     desc:'Claude-generated weekly Indian meal plans' },
 };
-const DEFAULT_WIDGETS=['hero','ai_briefing','priority','family','ai_chat','timeline','health_pulse','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','priority','family','timeline','att_severity','health_pulse','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
@@ -4583,11 +4682,12 @@ function buildWidgetHTML(wid) {
     </div>`;
     case 'timeline': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="w-hdr" style="margin:0">📆 &nbsp;Timeline</div>
+        <div class="w-hdr" style="margin:0">📆 &nbsp;Upcoming</div>
         <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">View All →</span>
       </div>
       <div id="timeline-list" class="timeline-list"></div>
     </div>`;
+    case 'att_severity': return buildAttSeverityWidget();
     case 'health_pulse': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="w-hdr" style="margin:0">❤️ &nbsp;Health Pulse</div>
@@ -4769,6 +4869,155 @@ function buildWidgetHTML(wid) {
   }
 }
 
+function buildAttSeverityWidget() {
+  var DAY_SHORT = ['MON','TUE','WED','THU','FRI','SAT'];
+  var DAY_FULL  = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  var today = new Date(); today.setHours(0,0,0,0);
+  var todayDow = today.getDay(); // 0=Sun..6=Sat
+  // Find this week's Monday
+  var monday = new Date(today);
+  var diffToMon = (todayDow === 0) ? -6 : 1 - todayDow;
+  monday.setDate(today.getDate() + diffToMon);
+
+  // Load data
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var ttRaw  = localStorage.getItem('fp_timetable_synced');
+  var attTs  = localStorage.getItem('fp_attendance_synced_ts') || '';
+
+  if (!attRaw || !ttRaw) {
+    return '<div class="w-card asw-card">'
+      + '<div class="asw-header"><div class="asw-header-left">'
+      + '<div><div class="asw-title">📚 Attendance Severity</div>'
+      + '<div class="asw-subtitle">JOSRITHA \u00B7 THIS WEEK</div></div></div></div>'
+      + '<div class="asw-no-data">'
+      + '<div class="asw-no-data-icon">\uD83D\uDCCA</div>'
+      + '<div class="asw-no-data-text">Upload attendance and timetable<br>to see weekly risk view</div>'
+      + '<div class="asw-no-data-btn" onclick="showMemberDetail(\'josritha\',\'academics\')">Upload Data \u2192</div>'
+      + '</div></div>';
+  }
+
+  var attData = JSON.parse(attRaw);
+  var ttData  = JSON.parse(ttRaw);
+
+  // Build risky subjects map: attKey -> subject info
+  var risky = {};
+  attData.forEach(function(a) {
+    var pct = Math.round(a.present / a.total * 100);
+    if (pct < 75) {
+      var key = a.code + '|' + a.type;
+      risky[key] = {
+        pct: pct,
+        code: a.code,
+        type: a.type,
+        subject: a.subject,
+        critical: pct < 70
+      };
+    }
+  });
+
+  var riskCount = Object.keys(risky).length;
+
+  if (riskCount === 0) {
+    return '<div class="w-card asw-card">'
+      + '<div class="asw-header"><div class="asw-header-left">'
+      + '<div><div class="asw-title">📚 Attendance Severity</div>'
+      + '<div class="asw-subtitle">JOSRITHA \u00B7 THIS WEEK</div></div></div>'
+      + '<span class="asw-badge-count all-safe">\u2705 All Safe</span></div>'
+      + '<div class="asw-all-safe">'
+      + '<div class="asw-safe-icon">\uD83C\uDF89</div>'
+      + '<div class="asw-safe-text">All subjects above 75%</div>'
+      + '<div class="asw-safe-sub">Great job \u2014 keep it up!</div>'
+      + '</div></div>';
+  }
+
+  // Build timetable lookup: DAY_FULL_NAME -> [{attKey, ...}]
+  var ttByDay = {};
+  DAY_FULL.forEach(function(d) { ttByDay[d] = []; });
+  ttData.forEach(function(slot) {
+    var key = slot.att_key || (slot.code + '|' + slot.type);
+    if (risky[key] && slot.day && ttByDay[slot.day]) {
+      // avoid dupes on same day
+      var exists = ttByDay[slot.day].some(function(x) { return x.attKey === key; });
+      if (!exists) ttByDay[slot.day].push({ attKey: key });
+    }
+  });
+
+  // Count critical/risk
+  var critCount = Object.values(risky).filter(function(r){ return r.critical; }).length;
+  var badgeClass = critCount > 0 ? 'has-critical' : 'has-risk';
+  var badgeTxt = critCount > 0
+    ? (critCount + ' Critical, ' + (riskCount - critCount) + ' Risk')
+    : (riskCount + ' At Risk');
+
+  // Week date range label
+  var saturday = new Date(monday); saturday.setDate(monday.getDate() + 5);
+  var fmt = function(d) {
+    return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  };
+  var weekLabel = fmt(monday) + ' \u2014 ' + fmt(saturday);
+
+  // Build header
+  var html = '<div class="w-card asw-card">';
+  html += '<div class="asw-header">'
+    + '<div class="asw-header-left">'
+    + '<div>'
+    + '<div class="asw-title">\uD83D\uDCDA Attendance Severity</div>'
+    + '<div class="asw-subtitle">JOSRITHA \u00B7 ' + weekLabel.toUpperCase() + '</div>'
+    + '</div></div>'
+    + '<span class="asw-badge-count ' + badgeClass + '">' + badgeTxt + '</span>'
+    + '</div>';
+
+  // Build 6-column grid Mon-Sat
+  html += '<div class="asw-grid">';
+  for (var di = 0; di < 6; di++) {
+    var dayName = DAY_FULL[di];
+    var dayShort = DAY_SHORT[di];
+    var colDate = new Date(monday); colDate.setDate(monday.getDate() + di);
+    var isToday = colDate.getTime() === today.getTime();
+    var colClass = 'asw-day-col' + (isToday ? ' today-col' : '');
+    var slots = ttByDay[dayName] || [];
+
+    html += '<div class="' + colClass + '">';
+    html += '<div class="asw-day-lbl">' + dayShort + (isToday ? ' \u25CF' : '') + '</div>';
+
+    if (slots.length === 0) {
+      html += '<div class="asw-empty-day"><div class="asw-empty-dot"></div></div>';
+    } else {
+      slots.forEach(function(slot, idx) {
+        var r = risky[slot.attKey];
+        if (!r) return;
+        var cardClass = r.critical ? 'asw-subj-card critical' : 'asw-subj-card at-risk';
+        var icon = r.critical ? '\uD83D\uDEA8' : '\u26A0\uFE0F';
+        // Shorten subject name: use first meaningful word(s)
+        var words = r.subject.split(' ');
+        var shortName = words.length > 2 ? words[0] + ' ' + words[1] : r.subject;
+        if (shortName.length > 12) shortName = shortName.substring(0, 11) + '\u2026';
+        var delay = (di * 60 + idx * 80) + 'ms';
+        html += '<div class="' + cardClass + '" style="animation-delay:' + delay + '" onclick="showMemberDetail(\'josritha\',\'academics\')">'
+          + '<div class="asw-subj-icon">' + icon + '</div>'
+          + '<div class="asw-subj-pct">' + r.pct + '%</div>'
+          + '<div class="asw-subj-name">' + shortName + '</div>'
+          + '<div class="asw-subj-code">' + r.code + '</div>'
+          + '<div class="asw-subj-type">' + r.type.substring(0,3).toUpperCase() + '</div>'
+          + '</div>';
+      });
+    }
+    html += '</div>'; // asw-day-col
+  }
+  html += '</div>'; // asw-grid
+
+  // Footer
+  html += '<div class="asw-footer">'
+    + '<div class="asw-footer-ts">'
+    + (attTs ? 'Synced ' + attTs : 'Not synced')
+    + '</div>'
+    + '<div class="asw-sync-btn" onclick="showMemberDetail(\'josritha\',\'academics\')">\u2191 Sync</div>'
+    + '</div>';
+
+  html += '</div>'; // asw-card
+  return html;
+}
+
 function initWidgetDynamic() {
   const allCalEvts = getCalEvents();
   const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
@@ -4944,12 +5193,20 @@ function initWidgetDynamic() {
   // ─────────────────────────────────────────
   // UNIFIED TIMELINE
   // ─────────────────────────────────────────
+  // Refresh att_severity widget if present
+  const aswItem = document.querySelector('.widget-item[data-wid="att_severity"]');
+  if (aswItem) {
+    const aswBody = aswItem.children[2]; // [0]=del btn [1]=drag handle [2]=body div
+    if (aswBody) aswBody.innerHTML = buildAttSeverityWidget();
+  }
+
   const tlList = document.getElementById('timeline-list');
   if (tlList) {
     const now = new Date(); now.setHours(0,0,0,0);
 
-    // Cal events
+    // Cal events — exclude att_risk_ auto events (handled by att_severity widget)
     const calFiltered = allCalEvts.filter(ev => {
+      if (ev.id && ev.id.indexOf('att_risk_') === 0) return false;
       const d = daysUntil(ev.date);
       if (d < -3 || d > 60) return false;
       if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
