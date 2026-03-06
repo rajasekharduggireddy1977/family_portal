@@ -1123,6 +1123,89 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .tl-badge.upcoming{background:rgba(79,127,255,.1);color:var(--blue2);}
 .tl-days{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;}
 
+/* ═══════════════════════════════════════════════════════════
+   GRAVITY TIMELINE  (gtl-*)
+═══════════════════════════════════════════════════════════ */
+
+/* Card shell */
+.gtl-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden;}
+
+/* Header */
+.gtl-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0;}
+.gtl-title{font-size:13px;font-weight:800;font-family:'Syne',sans-serif;color:var(--text);letter-spacing:-.2px;}
+.gtl-count{font-size:9px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);padding:2px 7px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;margin-left:6px;letter-spacing:.3px;}
+.gtl-cal-link{font-size:10px;font-weight:700;color:var(--blue2);font-family:'DM Mono',monospace;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .12s;}
+.gtl-cal-link:active{background:var(--blue-dim);}
+
+/* Horizon strip */
+.gtl-horizon{padding:10px 16px 0;position:relative;}
+.gtl-horizon-inner{position:relative;height:20px;}
+.gtl-horizon-track{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--border2);border-radius:2px;transform:translateY(-50%);}
+.gtl-horizon-fill{position:absolute;top:50%;left:0;height:2px;border-radius:2px;transform:translateY(-50%);background:linear-gradient(90deg,rgba(79,127,255,.3),rgba(167,139,250,.4));}
+.gtl-horizon-today{position:absolute;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(240,180,41,.6);border:2px solid rgba(240,180,41,.3);}
+.gtl-horizon-today::after{content:'NOW';position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:6px;font-weight:800;color:var(--gold);font-family:'DM Mono',monospace;letter-spacing:.4px;white-space:nowrap;}
+.gtl-horizon-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;cursor:pointer;transition:transform .12s;}
+.gtl-horizon-dot:hover{transform:translate(-50%,-50%) scale(1.6);}
+
+/* Month nav */
+.gtl-month-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 0;}
+.gtl-month-lbl{font-size:10px;font-weight:800;color:var(--text2);font-family:'DM Mono',monospace;letter-spacing:.6px;}
+.gtl-month-btn{width:22px;height:22px;border-radius:6px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);cursor:pointer;transition:all .12s;user-select:none;}
+.gtl-month-btn:active{background:var(--blue-dim);color:var(--blue2);transform:scale(.9);}
+.gtl-month-btn.off{opacity:.25;pointer-events:none;}
+
+/* Overdue banner */
+.gtl-overdue-banner{margin:10px 16px 0;background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.2);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.gtl-overdue-banner:active{background:rgba(255,79,79,.14);}
+.gtl-ob-icon{font-size:16px;flex-shrink:0;}
+.gtl-ob-body{flex:1;min-width:0;}
+.gtl-ob-title{font-size:11px;font-weight:700;color:var(--red);}
+.gtl-ob-sub{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px;}
+.gtl-ob-arrow{font-size:11px;color:var(--red);opacity:.6;}
+
+/* Hero event card */
+.gtl-hero{margin:10px 16px 0;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;}
+.gtl-hero:active{opacity:.85;}
+.gtl-hero-bg{padding:14px 14px 12px;position:relative;}
+.gtl-hero-eyebrow{font-size:8px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:6px;opacity:.85;}
+.gtl-hero-title{font-size:14px;font-weight:800;font-family:'Syne',sans-serif;color:#fff;line-height:1.25;margin-bottom:6px;}
+.gtl-hero-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.gtl-hero-time{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.7);}
+.gtl-hero-members{display:flex;gap:4px;}
+.gtl-hero-av{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#fff;flex-shrink:0;border:1.5px solid rgba(255,255,255,.3);}
+.gtl-hero-countdown{position:absolute;top:12px;right:12px;text-align:right;}
+.gtl-hero-days{font-size:22px;font-weight:900;font-family:'DM Mono',monospace;color:#fff;line-height:1;}
+.gtl-hero-dlbl{font-size:8px;font-weight:700;font-family:'DM Mono',monospace;color:rgba(255,255,255,.65);letter-spacing:.5px;margin-top:1px;}
+.gtl-hero-today-badge{font-size:10px;font-weight:800;background:rgba(255,255,255,.2);color:#fff;padding:3px 9px;border-radius:20px;font-family:'DM Mono',monospace;}
+.gtl-hero-shine{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);pointer-events:none;}
+
+/* Event list */
+.gtl-list{padding:8px 16px 4px;}
+.gtl-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:opacity .12s;}
+.gtl-row:last-child{border-bottom:none;}
+.gtl-row:active{opacity:.6;}
+.gtl-row-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.gtl-row-body{flex:1;min-width:0;}
+.gtl-row-title{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.gtl-row-meta{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px;}
+.gtl-row-right{flex-shrink:0;text-align:right;}
+.gtl-row-date{font-size:9px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text3);}
+.gtl-tension{display:flex;align-items:center;gap:1.5px;margin-top:3px;justify-content:flex-end;}
+.gtl-tdot{width:3px;height:3px;border-radius:50%;}
+.gtl-far-label{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;padding:8px 0 4px;opacity:.6;}
+
+/* Pulse animation for overdue icons */
+@keyframes gtlPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.gtl-pulse{animation:gtlPulse 1.8s ease-in-out infinite;}
+@keyframes gtlHeroIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.gtl-hero-anim{animation:gtlHeroIn .3s ease both;}
+@keyframes gtlRowIn{from{opacity:0;transform:translateX(-4px);}to{opacity:1;transform:translateX(0);}}
+.gtl-row-anim{animation:gtlRowIn .2s ease both;}
+
+/* Empty state */
+.gtl-empty{padding:28px 16px;text-align:center;color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;opacity:.7;}
+
+
 /* ── Health Pulse Row ── */
 .health-pulse-row{display:flex;gap:8px;justify-content:space-between;}
 .hp-member{
@@ -5022,18 +5105,7 @@ function buildWidgetHTML(wid) {
       </div>
       <div class="priority-strip-wrap" id="priority-strip"></div>
     </div>`;
-    case 'timeline': return `<div class="w-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
-        <div class="w-hdr" style="margin:0">📆 &nbsp;Upcoming</div>
-        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">Calendar →</span>
-      </div>
-      <div class="tl-month-nav">
-        <div class="tl-month-btn" id="tl-prev-btn" onclick="tlNavMonth(-1)">‹</div>
-        <div class="tl-month-label" id="tl-month-label">Loading…</div>
-        <div class="tl-month-btn" id="tl-next-btn" onclick="tlNavMonth(1)">›</div>
-      </div>
-      <div id="timeline-list" class="timeline-list"></div>
-    </div>`;
+    case 'timeline': return buildGravityTimelineShell();
     case 'att_severity': case 'josritha_acad': return buildJosrithaAcadWidget();
     case 'health_pulse': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -5694,6 +5766,12 @@ function memDeletePhoto() {
    JOSRITHA ACADEMIC CARD  — dashboard widget
    Combines: SVG ring + day navigator + slot rows + heatmap
 ═══════════════════════════════════════════════════════════ */
+
+function jacOpenAcademics() {
+  window._skipScroll = true;
+  showMemberDetail('josritha', 'academics');
+}
+
 function buildJosrithaAcadWidget() {
   var DAY_SHORT = ['MON','TUE','WED','THU','FRI','SAT'];
   var DAY_FULL  = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
@@ -5725,12 +5803,12 @@ function buildJosrithaAcadWidget() {
       + '<div class="jac-hero-name">Josritha</div>'
       + '<div class="jac-hero-sub">KL UNIVERSITY \u00b7 EVEN SEM 2025\u201326</div>'
       + '</div>'
-      + '<div class="jac-fullview" onclick="showMemberDetail(\'josritha\',\'academics\')">Full View \u2192</div>'
+      + '<div class="jac-fullview" onclick="jacOpenAcademics()">Full View \u2192</div>'
       + '</div>'
       + '<div class="jac-nodata">'
       + '<div class="jac-nodata-icon">\U0001f4ca</div>'
       + '<div class="jac-nodata-txt">Upload attendance &amp; timetable<br>to unlock the academics card</div>'
-      + '<div class="jac-nodata-btn" onclick="showMemberDetail(\'josritha\',\'academics\')">\U0001f4c2 Upload Data \u2192</div>'
+      + '<div class="jac-nodata-btn" onclick="jacOpenAcademics()">\U0001f4c2 Upload Data \u2192</div>'
       + '</div></div>';
   }
 
@@ -5781,7 +5859,7 @@ function buildJosrithaAcadWidget() {
     + '<div class="jac-hero-sub">KL UNIVERSITY \u00b7 ' + weekLabel.toUpperCase() + '</div>'
     + '<div class="jac-hero-chips">' + chips + '</div>'
     + '</div>'
-    + '<div class="jac-fullview" onclick="showMemberDetail(\'josritha\',\'academics\')">Full \u2192</div>'
+    + '<div class="jac-fullview" onclick="jacOpenAcademics()">Full \u2192</div>'
     + '</div>';
 
   // ── Day navigator + slots ──────────────────────────────────────────
@@ -5870,7 +5948,7 @@ function buildJosrithaAcadWidget() {
     var colCls = 'jac-hm-col' + (isTod ? ' tod-col' : '');
     var daySlots = ttByDay[dn] || [];
 
-    hmHtml += '<div class="' + colCls + '" onclick="showMemberDetail(\'josritha\',\'academics\')">';
+    hmHtml += '<div class="' + colCls + '" onclick="jacOpenAcademics()">';
     hmHtml += '<div class="jac-hm-lbl">' + ds + (isTod ? '\u25cf' : '') + '</div>';
     hmHtml += '<div class="jac-hm-dots">';
 
@@ -5892,7 +5970,7 @@ function buildJosrithaAcadWidget() {
   // ── Footer ────────────────────────────────────────────────────────
   var footer = '<div class="jac-footer">'
     + '<div class="jac-footer-ts">' + (attTs ? '\U0001f7e2 Synced ' + attTs : '\u26aa Not synced') + '</div>'
-    + '<div class="jac-footer-sync" onclick="showMemberDetail(\'josritha\',\'academics\')">\u2191 Sync &amp; View</div>'
+    + '<div class="jac-footer-sync" onclick="jacOpenAcademics()">\u2191 Sync &amp; View</div>'
     + '</div>';
 
   return '<div class="jac-card w-card">'
@@ -6036,7 +6114,7 @@ function buildAttSeverityWidget() {
       + '<div class="asw-no-data">'
       + '<div class="asw-no-data-icon">\uD83D\uDCCA</div>'
       + '<div class="asw-no-data-text">Upload attendance and timetable<br>to see weekly risk view</div>'
-      + '<div class="asw-no-data-btn" onclick="showMemberDetail(\'josritha\',\'academics\')">Upload Data \u2192</div>'
+      + '<div class="asw-no-data-btn" onclick="jacOpenAcademics()">Upload Data \u2192</div>'
       + '</div></div>';
   }
 
@@ -6137,7 +6215,7 @@ function buildAttSeverityWidget() {
         var shortName = words.length > 2 ? words[0] + ' ' + words[1] : r.subject;
         if (shortName.length > 12) shortName = shortName.substring(0, 11) + '\u2026';
         var delay = (di * 60 + idx * 80) + 'ms';
-        html += '<div class="' + cardClass + '" style="animation-delay:' + delay + '" onclick="showMemberDetail(\'josritha\',\'academics\')">'
+        html += '<div class="' + cardClass + '" style="animation-delay:' + delay + '" onclick="jacOpenAcademics()">'
           + '<div class="asw-subj-icon">' + icon + '</div>'
           + '<div class="asw-subj-pct">' + r.pct + '%</div>'
           + '<div class="asw-subj-name">' + shortName + '</div>'
@@ -6155,86 +6233,300 @@ function buildAttSeverityWidget() {
     + '<div class="asw-footer-ts">'
     + (attTs ? 'Synced ' + attTs : 'Not synced')
     + '</div>'
-    + '<div class="asw-sync-btn" onclick="showMemberDetail(\'josritha\',\'academics\')">\u2191 Sync</div>'
+    + '<div class="asw-sync-btn" onclick="jacOpenAcademics()">\u2191 Sync</div>'
     + '</div>';
 
   html += '</div>'; // asw-card
   return html;
 }
 
+
+/* ═══════════════════════════════════════════════════════════
+   GRAVITY TIMELINE — shell builder + renderer
+═══════════════════════════════════════════════════════════ */
+function buildGravityTimelineShell() {
+  return '<div class="gtl-card w-card" id="gtl-card">'
+    + '<div class="gtl-header">'
+    + '<div style="display:flex;align-items:center;">'
+    + '<div class="gtl-title">\u23f3\u00a0 Upcoming</div>'
+    + '<span class="gtl-count" id="gtl-count">...</span>'
+    + '</div>'
+    + '<div class="gtl-cal-link" onclick="goPage(\'calendar\')">Calendar \u2192</div>'
+    + '</div>'
+    + '<div class="gtl-horizon"><div class="gtl-horizon-inner" id="gtl-horizon-inner"></div></div>'
+    + '<div class="gtl-month-nav">'
+    + '<div class="gtl-month-btn" id="gtl-prev-btn" onclick="tlNavMonth(-1)">\u2039</div>'
+    + '<div class="gtl-month-lbl" id="tl-month-label">Loading\u2026</div>'
+    + '<div class="gtl-month-btn" id="gtl-next-btn" onclick="tlNavMonth(1)">\u203a</div>'
+    + '</div>'
+    + '<div id="timeline-list"></div>'
+    + '</div>';
+}
+
+/* Member avatar colors */
+var GTL_MEMBER_COLORS = {
+  Rajasekhar:  { bg:'#3b6fd4', init:'RR' },
+  Vasundhara:  { bg:'#7c3aed', init:'VD' },
+  Josritha:    { bg:'#db2777', init:'JD' },
+  Jeevan:      { bg:'#0891b2', init:'JR' },
+  Family:      { bg:'#6b7280', init:'ALL'}
+};
+
+/* Category icon backgrounds */
+var GTL_CAT_BG = {
+  health:     'rgba(255,79,79,.15)',
+  government: 'rgba(255,140,66,.15)',
+  education:  'rgba(167,139,250,.15)',
+  finance:    'rgba(240,180,41,.15)',
+  travel:     'rgba(79,127,255,.15)',
+  birthday:   'rgba(244,114,182,.15)',
+  expiry:     'rgba(255,140,66,.15)'
+};
+var GTL_CAT_ICON = {
+  health:'🏥', government:'\uD83C\uDFDB\uFE0F', education:'\uD83C\uDF93',
+  finance:'\uD83D\uDCB0', travel:'\u2708\uFE0F', birthday:'\uD83C\uDF82', expiry:'\uD83D\uDCCB'
+};
+
 function renderTimeline() {
   var tlList = document.getElementById('timeline-list');
   if (!tlList) return;
+
   var now = new Date(); now.setHours(0,0,0,0);
-  // Use getCalEvents() to get seeded + stored events reliably
+
   var allCalEvts = [];
   try { allCalEvts = (typeof getCalEvents === 'function') ? getCalEvents() : JSON.parse(localStorage.getItem('fp_cal_events') || '[]'); } catch(e) { allCalEvts = []; }
-  // Show all family events on dashboard (not filtered by member)
-  var activeName = null;
 
   var tlOffset = typeof _tlMonthOffset !== 'undefined' ? _tlMonthOffset : 0;
   var tlTargetDate = new Date(now.getFullYear(), now.getMonth() + tlOffset, 1);
-  var tlYear = tlTargetDate.getFullYear();
+  var tlYear  = tlTargetDate.getFullYear();
   var tlMonth = tlTargetDate.getMonth();
   var tlMonthStart = new Date(tlYear, tlMonth, 1);
   var tlMonthEnd   = new Date(tlYear, tlMonth + 1, 0); tlMonthEnd.setHours(23,59,59,999);
-  var tlMonthName = tlTargetDate.toLocaleString('en-IN',{month:'long',year:'numeric'}).toUpperCase();
+  var tlMonthName  = tlTargetDate.toLocaleString('en-IN',{month:'long',year:'numeric'}).toUpperCase();
   var isCurrentMonth = (tlOffset === 0);
 
+  /* Update month nav controls */
   var tlLabel = document.getElementById('tl-month-label');
-  var tlPrev  = document.getElementById('tl-prev-btn');
-  var tlNext  = document.getElementById('tl-next-btn');
+  var tlPrev  = document.getElementById('gtl-prev-btn') || document.getElementById('tl-prev-btn');
+  var tlNext  = document.getElementById('gtl-next-btn') || document.getElementById('tl-next-btn');
   if (tlLabel) tlLabel.textContent = tlMonthName;
-  if (tlPrev)  tlPrev.className = 'tl-month-btn' + (tlOffset <= -3 ? ' disabled' : '');
-  if (tlNext)  tlNext.className = 'tl-month-btn' + (tlOffset >= 3  ? ' disabled' : '');
+  if (tlPrev)  tlPrev.className = 'gtl-month-btn' + (tlOffset <= -3 ? ' off' : '');
+  if (tlNext)  tlNext.className = 'gtl-month-btn' + (tlOffset >= 3  ? ' off' : '');
 
+  /* Gather + filter events */
   var calFiltered = allCalEvts.filter(function(ev) {
     if (ev.id && ev.id.indexOf('att_risk_') === 0) return false;
     var evDate = new Date(ev.date + 'T12:00:00');
-    if (evDate < tlMonthStart || evDate > tlMonthEnd) return false;
-    return true;
+    return evDate >= tlMonthStart && evDate <= tlMonthEnd;
   });
 
   var expiryAll = (typeof EXPIRY !== 'undefined' ? EXPIRY : []);
   var expiryFiltered = expiryAll.filter(function(e) {
     var evDate = new Date(e.date + 'T12:00:00');
-    if (evDate < tlMonthStart || evDate > tlMonthEnd) return false;
-    return true;
-  }).map(function(e){ return { _isExpiry:true, title:e.label, date:e.date, members:[e.person], icon:e.icon||'📋', id:e.id }; });
+    return evDate >= tlMonthStart && evDate <= tlMonthEnd;
+  }).map(function(e) {
+    return { _isExpiry:true, title:e.label, date:e.date, members:[e.person],
+             icon:e.icon||'\uD83D\uDCCB', id:e.id, cat:'expiry', color:'#ff8c42' };
+  });
 
   var overdueExpiry = isCurrentMonth ? expiryAll.filter(function(e) {
     if (typeof daysUntil !== 'function') return false;
-    return daysUntil(e.date) < 0 && daysUntil(e.date) >= -90;
-  }).map(function(e){ return { _isExpiry:true, title:e.label, date:e.date, members:[e.person], icon:e.icon||'📋', id:e.id }; }) : [];
+    var d = daysUntil(e.date);
+    return d < 0 && d >= -90;
+  }).map(function(e) {
+    return { _isExpiry:true, title:e.label, date:e.date, members:[e.person],
+             icon:e.icon||'\uD83D\uDCCB', id:e.id, cat:'expiry', color:'#ff4f4f' };
+  }) : [];
 
   var evts = calFiltered.concat(expiryFiltered).concat(overdueExpiry)
     .filter(function(v,i,a){ return a.findIndex(function(x){ return x.id===v.id; })===i; })
     .sort(function(a,b){ return (typeof daysUntil==='function')?(daysUntil(a.date)-daysUntil(b.date)):0; });
 
+  /* Update event count chip */
+  var countEl = document.getElementById('gtl-count');
+  if (countEl) countEl.textContent = evts.length + ' event' + (evts.length !== 1 ? 's' : '');
+
+  /* Build horizon strip */
+  var horizEl = document.getElementById('gtl-horizon-inner');
+  if (horizEl) {
+    if (isCurrentMonth && evts.length) {
+      var horizHtml = '<div class="gtl-horizon-track"></div>';
+      /* fill line up to today */
+      horizHtml += '<div class="gtl-horizon-fill" style="width:0;"></div>';
+      /* today marker at right edge (today = end of visible window) */
+      horizHtml += '<div class="gtl-horizon-today" style="right:0;left:auto;transform:translateY(-50%);"></div>';
+      /* event dots — position based on days-before: events in past 90d spread left to right */
+      var horizSpan = 90;
+      evts.slice(0,12).forEach(function(ev) {
+        var d = daysUntil(ev.date);
+        /* Show events within +-30 days of today on the strip */
+        if (d < -30 || d > 60) return;
+        var pct = Math.round(((d + 30) / 90) * 100);
+        if (pct < 0) pct = 0; if (pct > 100) pct = 100;
+        var col = ev.color || (ev.cat && GTL_CAT_ICON[ev.cat] ? '#a78bfa' : '#7aa0ff');
+        horizHtml += '<div class="gtl-horizon-dot" style="left:' + pct + '%;background:' + col + ';box-shadow:0 0 5px ' + col + '60;" title="' + ev.title + '"></div>';
+      });
+      horizEl.innerHTML = horizHtml;
+    } else {
+      horizEl.innerHTML = '';
+    }
+  }
+
+  /* Split into groups */
+  var overdue  = isCurrentMonth ? evts.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)<0; }) : [];
+  var todayEvs = evts.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)===0; });
+  var upcoming = evts.filter(function(ev){ return !isCurrentMonth||(typeof daysUntil==='function'&&daysUntil(ev.date)>0); });
+
   if (!evts.length) {
-    tlList.innerHTML = '<div style="padding:22px 0;text-align:center;color:var(--text3);font-family:DM-Mono,monospace;font-size:11px;opacity:.7;">No events in ' + tlMonthName + '</div>';
+    tlList.innerHTML = '<div class="gtl-empty">No events in ' + tlMonthName + '</div>';
     return;
   }
 
-  var overdue   = isCurrentMonth ? evts.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)<0; }) : [];
-  var today_evts = evts.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)===0; });
-  var upcoming  = evts.filter(function(ev){ return !isCurrentMonth||(typeof daysUntil==='function'&&daysUntil(ev.date)>0); });
-
   var html = '';
+
+  /* ── Overdue banner (compact, collapsed into one row if multiple) ── */
   if (overdue.length) {
-    html += '<div class="tl-group-label" style="color:var(--red)">OVERDUE</div>';
-    html += overdue.map(tlItemHTML).join('');
+    var obTitle = overdue.length === 1
+      ? ('\u26a0\ufe0f ' + overdue[0].title)
+      : ('\u26a0\ufe0f ' + overdue.length + ' overdue items');
+    var obSub = overdue.length === 1
+      ? (Math.abs(daysUntil(overdue[0].date)) + ' days past due')
+      : overdue.map(function(e){ return e.title.split(' ').slice(0,2).join(' '); }).join(' \u00b7 ');
+    html += '<div class="gtl-overdue-banner" onclick="goPage(\'' + (overdue[0]._isExpiry ? 'expiry' : 'calendar') + '\')">'
+      + '<div class="gtl-ob-icon gtl-pulse">\uD83D\uDEA8</div>'
+      + '<div class="gtl-ob-body">'
+      + '<div class="gtl-ob-title">' + obTitle + '</div>'
+      + '<div class="gtl-ob-sub">' + obSub + '</div>'
+      + '</div>'
+      + '<div class="gtl-ob-arrow">\u203a</div>'
+      + '</div>';
   }
-  if (today_evts.length) {
-    html += '<div class="tl-group-label" style="color:var(--gold)">TODAY</div>';
-    html += today_evts.map(tlItemHTML).join('');
+
+  /* ── Today events ── */
+  if (todayEvs.length) {
+    todayEvs.forEach(function(ev) {
+      html += buildGtlHero(ev, true);
+    });
   }
-  if (upcoming.length) {
-    html += '<div class="tl-group-label" style="color:var(--blue2)">' + tlMonthName + '</div>';
-    html += upcoming.map(tlItemHTML).join('');
+
+  /* ── Hero: first upcoming event ── */
+  if (upcoming.length && !todayEvs.length) {
+    html += buildGtlHero(upcoming[0], false);
+    upcoming = upcoming.slice(1);
+  } else if (upcoming.length && todayEvs.length) {
+    /* if today events exist, hero is first upcoming */
+    html += buildGtlHero(upcoming[0], false);
+    upcoming = upcoming.slice(1);
   }
+
+  /* ── Remaining rows ── */
+  /* Split near (<=30d) and far (>30d) */
+  var near = upcoming.filter(function(ev){ return typeof daysUntil!=='function'||daysUntil(ev.date)<=30; });
+  var far  = upcoming.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)>30; });
+
+  if (near.length || far.length) {
+    html += '<div class="gtl-list">';
+    near.forEach(function(ev, i) {
+      html += buildGtlRow(ev, i * 40);
+    });
+    if (far.length) {
+      html += '</div>';
+      html += '<div class="gtl-far-label">\u00b7\u00b7\u00b7\u00b7\u00b7 beyond 30 days \u00b7\u00b7\u00b7\u00b7\u00b7</div>';
+      html += '<div class="gtl-list" style="opacity:.55;">';
+      far.slice(0,4).forEach(function(ev, i) {
+        html += buildGtlRow(ev, (near.length + i) * 40);
+      });
+      if (far.length > 4) {
+        html += '<div class="gtl-far-label">+' + (far.length - 4) + ' more \u2192 <span style="color:var(--blue2);cursor:pointer;" onclick="goPage(\'calendar\')">Calendar</span></div>';
+      }
+    }
+    html += '</div>';
+  }
+
   tlList.innerHTML = html;
 }
+
+function buildGtlHero(ev, isToday) {
+  var d   = daysUntil(ev.date);
+  var col = ev.color || '#7c5cfc';
+  var cat = ev.cat || (ev._isExpiry ? 'expiry' : 'upcoming');
+  var dest = ev._isExpiry ? 'expiry' : 'calendar';
+
+  /* gradient from event color */
+  var r = parseInt(col.slice(1,3),16)||120;
+  var g = parseInt(col.slice(3,5),16)||80;
+  var b = parseInt(col.slice(5,7),16)||200;
+  var gradBg = 'linear-gradient(135deg, rgba(' + r + ',' + g + ',' + b + ',.95) 0%, rgba(' + Math.round(r*.7) + ',' + Math.round(g*.7) + ',' + Math.round(b*1.1) + ',.9) 100%)';
+
+  var eyebrow = isToday ? 'TODAY' : ('\u23f3 NEXT UP \u00b7 ' + (cat ? cat.toUpperCase() : 'EVENT'));
+
+  var countdownHtml = isToday
+    ? '<div class="gtl-hero-today-badge">TODAY</div>'
+    : '<div class="gtl-hero-days">' + d + '</div><div class="gtl-hero-dlbl">days away</div>';
+
+  /* member avatar pills */
+  var mems = (ev.members || []).filter(function(m){ return m && m !== 'all'; }).slice(0,3);
+  var avHtml = '';
+  mems.forEach(function(m) {
+    var info = GTL_MEMBER_COLORS[m] || { bg:'#6b7280', init: m.slice(0,2).toUpperCase() };
+    avHtml += '<div class="gtl-hero-av" style="background:' + info.bg + ';">' + info.init + '</div>';
+  });
+  if ((ev.members||[]).indexOf('all') >= 0) {
+    avHtml = '<div class="gtl-hero-av" style="background:#6b7280;">ALL</div>';
+  }
+
+  var timeStr = ev.start ? ev.start + (ev.end ? '\u2013' + ev.end : '') : '';
+  var dateStr = fmtDate(ev.date);
+
+  return '<div class="gtl-hero gtl-hero-anim" onclick="goPage(\'' + dest + '\')">'
+    + '<div class="gtl-hero-bg" style="background:' + gradBg + ';">'
+    + '<div class="gtl-hero-shine"></div>'
+    + '<div class="gtl-hero-eyebrow" style="color:rgba(255,255,255,.75);">' + eyebrow + '</div>'
+    + '<div class="gtl-hero-title">' + ev.title + '</div>'
+    + '<div class="gtl-hero-meta">'
+    + (avHtml ? '<div class="gtl-hero-members">' + avHtml + '</div>' : '')
+    + '<div class="gtl-hero-time">' + (timeStr ? timeStr + ' \u00b7 ' : '') + dateStr + '</div>'
+    + '</div>'
+    + '<div class="gtl-hero-countdown">' + countdownHtml + '</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function buildGtlRow(ev, animDelay) {
+  var d    = daysUntil(ev.date);
+  var col  = ev.color || '#7aa0ff';
+  var cat  = ev.cat  || (ev._isExpiry ? 'expiry' : 'upcoming');
+  var icon = (ev._isExpiry && ev.icon) ? ev.icon : (GTL_CAT_ICON[cat] || '\uD83D\uDCC5');
+  var bg   = GTL_CAT_BG[cat] || 'rgba(79,127,255,.12)';
+  var dest = ev._isExpiry ? 'expiry' : 'calendar';
+
+  /* Tension dots: 1 dot per ~5 days, max 8, color shifts warm→cool */
+  var dotCount = Math.min(8, Math.round(d / 5));
+  var dotsHtml = '';
+  for (var i = 0; i < dotCount; i++) {
+    var frac = i / Math.max(dotCount - 1, 1);
+    /* interpolate red→gold→blue */
+    var dotCol = d < 14 ? 'rgba(255,140,66,.5)' : d < 30 ? 'rgba(240,180,41,.5)' : 'rgba(122,160,255,.35)';
+    dotsHtml += '<div class="gtl-tdot" style="background:' + dotCol + ';"></div>';
+  }
+
+  var dateShort = new Date(ev.date + 'T12:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  var members = (ev.members||[]).filter(function(m){ return m&&m!=='all'; }).join(' \u00b7 ');
+  if ((ev.members||[]).indexOf('all') >= 0) members = 'Everyone';
+
+  return '<div class="gtl-row gtl-row-anim" style="animation-delay:' + animDelay + 'ms;" onclick="goPage(\'' + dest + '\')">'
+    + '<div class="gtl-row-icon" style="background:' + bg + ';">' + icon + '</div>'
+    + '<div class="gtl-row-body">'
+    + '<div class="gtl-row-title">' + ev.title + '</div>'
+    + '<div class="gtl-row-meta">' + (members ? members + ' \u00b7 ' : '') + dateShort + '</div>'
+    + '</div>'
+    + '<div class="gtl-row-right">'
+    + '<div class="gtl-tension">' + dotsHtml + '</div>'
+    + '<div class="gtl-row-date">in ' + d + 'd</div>'
+    + '</div>'
+    + '</div>';
+}
+
 
 function tlItemHTML(ev) {
   var d = daysUntil(ev.date);
@@ -6682,7 +6974,8 @@ function showMemberDetail(memberId, tab) {
     </div>`).join('')}</div>`;
 
   renderMemberTab(m, currentTab);
-  window.scrollTo(0,0);
+  if (!window._skipScroll) window.scrollTo(0,0);
+  window._skipScroll = false;
 }
 
 function switchMemberTab(tab, el) {
