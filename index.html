@@ -2508,6 +2508,170 @@ input:focus, button:focus-visible {
 /* ═══════════════════════════════════════════════════
    ATTENDANCE SEVERITY WIDGET
 ═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   CATEGORY SECTION HEADERS (widget grouping)
+═══════════════════════════════════════════════════ */
+.wcat-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 18px 4px 6px;
+  font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+  color: var(--text3); font-family: 'DM Mono', monospace;
+  text-transform: uppercase; border-bottom: 1px solid var(--border2);
+  margin-bottom: 2px;
+}
+.wcat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════
+   AI DAILY BRIEFING V2
+═══════════════════════════════════════════════════ */
+.aib2-card { background: linear-gradient(135deg, rgba(124,58,237,.08), rgba(79,70,229,.06)); border: 1px solid rgba(124,58,237,.2); border-radius: 16px; overflow: hidden; }
+.aib2-toprow { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 8px; }
+.aib2-left { display: flex; align-items: center; gap: 8px; }
+.aib2-icon { width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg,#7c3aed,#4f46e5); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.aib2-title { font-size: 13px; font-weight: 800; color: var(--text1); font-family: 'Inter', sans-serif; }
+.aib2-subtitle { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 1px; }
+.aib2-actions { display: flex; gap: 6px; align-items: center; }
+.aib2-refresh-btn { width: 28px; height: 28px; border-radius: 8px; background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.2); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: all .15s; color: #a78bfa; }
+.aib2-refresh-btn:active { transform: scale(.9); background: rgba(124,58,237,.22); }
+.aib2-refresh-btn.spinning { animation: aib2Spin .7s linear infinite; }
+@keyframes aib2Spin { to { transform: rotate(360deg); } }
+
+/* Interest category pills */
+.aib2-cats { display: flex; gap: 5px; overflow-x: auto; padding: 0 14px 10px; scrollbar-width: none; }
+.aib2-cats::-webkit-scrollbar { display: none; }
+.aib2-cat { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border2); color: var(--text3); font-family: 'Inter', sans-serif; cursor: pointer; white-space: nowrap; transition: all .15s; background: var(--surface2); flex-shrink: 0; }
+.aib2-cat.active { background: rgba(124,58,237,.15); border-color: rgba(124,58,237,.4); color: #a78bfa; }
+.aib2-cat:active { transform: scale(.96); }
+
+/* Content area */
+.aib2-content { padding: 0 14px 12px; min-height: 60px; }
+.aib2-idle { text-align: center; padding: 18px 0 8px; }
+.aib2-idle-icon { font-size: 24px; margin-bottom: 6px; opacity: .5; }
+.aib2-idle-txt { font-size: 11px; color: var(--text3); font-family: 'Inter', sans-serif; line-height: 1.5; }
+.aib2-idle-btn { margin-top: 10px; display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #a78bfa; padding: 7px 14px; border-radius: 8px; background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2); cursor: pointer; }
+.aib2-skel { height: 10px; border-radius: 5px; background: var(--border2); margin: 6px 0; animation: shimmer 1.4s infinite; }
+.aib2-skel:nth-child(2) { width: 85%; animation-delay: .15s; }
+.aib2-skel:nth-child(3) { width: 70%; animation-delay: .3s; }
+@keyframes shimmer { 0%,100%{opacity:.4} 50%{opacity:.9} }
+.aib2-text { font-size: 12px; color: var(--text1); line-height: 1.7; font-family: 'Inter', sans-serif; }
+.aib2-text strong { color: var(--text1); }
+.aib2-footer { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px 12px; border-top: 1px solid rgba(124,58,237,.1); margin-top: 4px; }
+.aib2-ts { font-size: 9px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.aib2-ask-btn { font-size: 10px; font-weight: 700; color: #a78bfa; padding: 4px 9px; border-radius: 6px; background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2); cursor: pointer; }
+
+/* ═══════════════════════════════════════════════════
+   GROCERY / TASK LIST WIDGET
+═══════════════════════════════════════════════════ */
+.groc-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; }
+.groc-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 10px; border-bottom: 1px solid var(--border2); }
+.groc-tabs { display: flex; gap: 0; }
+.groc-tab { font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 8px; cursor: pointer; color: var(--text3); font-family: 'Inter', sans-serif; transition: all .15s; }
+.groc-tab.active { background: rgba(79,127,255,.12); color: var(--blue2); }
+.groc-add-btn { width: 26px; height: 26px; border-radius: 8px; background: var(--blue-dim); border: 1px solid rgba(79,127,255,.2); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 300; cursor: pointer; color: var(--blue2); transition: all .15s; line-height: 1; }
+.groc-add-btn:active { transform: scale(.9); }
+.groc-list { max-height: 200px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.groc-item { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: opacity .2s; }
+.groc-item.done { opacity: .45; }
+.groc-item.done .groc-item-name { text-decoration: line-through; color: var(--text3); }
+.groc-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border2); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all .15s; }
+.groc-item.done .groc-check { background: var(--green); border-color: var(--green); color: #fff; }
+.groc-item-name { flex: 1; font-size: 12px; font-weight: 500; color: var(--text1); font-family: 'Inter', sans-serif; }
+.groc-item-meta { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.groc-item-del { width: 20px; height: 20px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text3); cursor: pointer; opacity: 0; transition: opacity .15s; }
+.groc-item:hover .groc-item-del { opacity: 1; }
+.groc-add-row { display: flex; gap: 6px; padding: 8px 14px 12px; }
+.groc-input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 7px 10px; font-size: 12px; color: var(--text1); font-family: 'Inter', sans-serif; outline: none; }
+.groc-input:focus { border-color: rgba(79,127,255,.4); }
+.groc-submit { padding: 7px 12px; border-radius: 8px; background: var(--blue-dim); border: 1px solid rgba(79,127,255,.2); color: var(--blue2); font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all .15s; }
+.groc-submit:active { transform: scale(.96); }
+.groc-empty { padding: 20px; text-align: center; font-size: 11px; color: var(--text3); font-family: 'Inter', sans-serif; }
+.groc-footer { padding: 6px 14px 10px; display: flex; align-items: center; justify-content: space-between; }
+.groc-count { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.groc-clear-done { font-size: 10px; color: var(--text3); cursor: pointer; font-family: 'Inter', sans-serif; }
+.groc-clear-done:active { color: var(--red); }
+
+/* ═══════════════════════════════════════════════════
+   VEHICLE SERVICE TRACKER WIDGET
+═══════════════════════════════════════════════════ */
+.veh-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; }
+.veh-header { padding: 12px 14px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border2); }
+.veh-list { display: flex; flex-direction: column; gap: 0; }
+.veh-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,.04); cursor: pointer; transition: background .15s; }
+.veh-row:last-child { border-bottom: none; }
+.veh-row:active { background: var(--surface2); }
+.veh-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.veh-info { flex: 1; min-width: 0; }
+.veh-name { font-size: 12px; font-weight: 700; color: var(--text1); font-family: 'Inter', sans-serif; }
+.veh-reg { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 1px; }
+.veh-right { text-align: right; }
+.veh-due-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-family: 'DM Mono', monospace; }
+.veh-due-badge.overdue { background: rgba(220,38,38,.12); color: #f87171; }
+.veh-due-badge.soon { background: rgba(245,158,11,.12); color: #fbbf24; }
+.veh-due-badge.ok { background: rgba(62,207,142,.1); color: var(--green); }
+.veh-due-date { font-size: 9px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 3px; }
+/* Vehicle detail sheet */
+.veh-sheet { position: fixed; inset: 0; z-index: 9200; display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none; opacity: 0; transition: opacity .25s; }
+.veh-sheet.open { pointer-events: all; opacity: 1; }
+.veh-sheet-bg { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
+.veh-sheet-card { position: relative; background: var(--surface); border-radius: 22px 22px 0 0; padding: 20px 18px max(28px,env(safe-area-inset-bottom)); border-top: 1px solid var(--border2); transform: translateY(100%); transition: transform .28s cubic-bezier(.34,1.56,.64,1); max-height: 80vh; overflow-y: auto; }
+.veh-sheet.open .veh-sheet-card { transform: translateY(0); }
+.veh-sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 0 auto 16px; }
+.veh-service-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border2); }
+.veh-service-row:last-child { border-bottom: none; }
+.veh-service-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue2); flex-shrink: 0; margin-top: 4px; }
+.veh-service-body { flex: 1; }
+.veh-service-type { font-size: 12px; font-weight: 700; color: var(--text1); font-family: 'Inter', sans-serif; }
+.veh-service-date { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.veh-service-note { font-size: 11px; color: var(--text2); margin-top: 3px; font-family: 'Inter', sans-serif; }
+.veh-add-service { width: 100%; margin-top: 12px; padding: 10px; border-radius: 10px; background: var(--blue-dim); border: 1px solid rgba(79,127,255,.2); color: var(--blue2); font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; font-family: 'Inter', sans-serif; }
+
+/* ═══════════════════════════════════════════════════
+   MEMORY WALL WIDGET
+═══════════════════════════════════════════════════ */
+.mem-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; }
+.mem-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 10px; border-bottom: 1px solid var(--border2); }
+.mem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px; }
+.mem-thumb { aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; background: var(--surface2); transition: transform .15s; }
+.mem-thumb:active { transform: scale(.96); }
+.mem-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mem-thumb-add { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 1.5px dashed var(--border2); cursor: pointer; transition: all .15s; }
+.mem-thumb-add:active { background: var(--surface2); }
+.mem-thumb-add-icon { font-size: 20px; opacity: .4; }
+.mem-thumb-add-lbl { font-size: 9px; color: var(--text3); font-family: 'Inter', sans-serif; }
+.mem-thumb-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.7)); padding: 4px 4px 4px; }
+.mem-thumb-caption { font-size: 8px; color: rgba(255,255,255,.9); font-family: 'Inter', sans-serif; line-height: 1.2; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mem-empty { padding: 24px 16px; text-align: center; }
+.mem-empty-icon { font-size: 28px; opacity: .3; }
+.mem-empty-txt { font-size: 11px; color: var(--text3); margin-top: 8px; font-family: 'Inter', sans-serif; }
+/* Lightbox */
+.mem-lightbox { position: fixed; inset: 0; z-index: 9500; background: rgba(0,0,0,.92); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 20px; }
+.mem-lightbox.open { opacity: 1; pointer-events: all; }
+.mem-lightbox img { max-width: 100%; max-height: 70vh; border-radius: 12px; object-fit: contain; }
+.mem-lb-caption { color: rgba(255,255,255,.8); font-size: 13px; margin-top: 12px; font-family: 'Inter', sans-serif; text-align: center; }
+.mem-lb-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; cursor: pointer; }
+.mem-lb-del { margin-top: 14px; font-size: 11px; color: #f87171; cursor: pointer; font-family: 'Inter', sans-serif; }
+
+/* ═══════════════════════════════════════════════════
+   WEEKLY AI RECAP + FESTIVAL BANNERS (inside AI panel)
+═══════════════════════════════════════════════════ */
+.ai-recap-banner { background: linear-gradient(135deg,rgba(124,58,237,.1),rgba(79,70,229,.08)); border: 1px solid rgba(124,58,237,.2); border-radius: 12px; padding: 12px 14px; margin: 0 0 10px; }
+.ai-recap-title { font-size: 12px; font-weight: 800; color: #a78bfa; font-family: 'Inter', sans-serif; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.ai-recap-body { font-size: 11px; color: var(--text2); line-height: 1.65; font-family: 'Inter', sans-serif; }
+.ai-festival-banner { background: linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.06)); border: 1px solid rgba(245,158,11,.2); border-radius: 12px; padding: 10px 14px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.ai-festival-emoji { font-size: 22px; flex-shrink: 0; }
+.ai-festival-info { flex: 1; }
+.ai-festival-name { font-size: 12px; font-weight: 800; color: #fbbf24; font-family: 'Inter', sans-serif; }
+.ai-festival-sub { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.ai-panel-section-lbl { font-size: 9px; font-weight: 800; letter-spacing: 1px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; padding: 8px 4px 4px; }
+/* Attendance prediction card in AI panel */
+.att-pred-card { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 10px 12px; margin: 4px 0; }
+.att-pred-subj { font-size: 12px; font-weight: 700; color: var(--text1); font-family: 'Inter', sans-serif; }
+.att-pred-row { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.att-pred-stat { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.att-pred-verdict { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
+.att-pred-verdict.safe { background: rgba(62,207,142,.1); color: var(--green); }
+.att-pred-verdict.risk { background: rgba(245,158,11,.1); color: #fbbf24; }
+.att-pred-verdict.critical { background: rgba(220,38,38,.1); color: #f87171; }
 .asw-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border2); overflow: hidden; }
 .asw-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border2); background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(245,158,11,.04)); }
 .asw-header-left { display: flex; align-items: center; gap: 9px; }
@@ -4455,8 +4619,12 @@ const WIDGET_DEFS = {
   actions:    { id:'actions',    icon:'⚡', name:'Quick Actions',       desc:'One-tap shortcuts to key tasks' },
   att_severity:{ id:'att_severity',icon:'📚', name:'Attendance Severity', desc:'Josritha weekly attendance risk by subject' },
   ai_meals:   { id:'ai_meals',   icon:'🍛', name:'AI Meal Planner',     desc:'Claude-generated weekly Indian meal plans' },
+  ai_briefing2:{ id:'ai_briefing2',icon:'✨', name:'AI Daily Briefing',  desc:'On-demand AI morning summary with interest categories' },
+  grocery:    { id:'grocery',    icon:'🛒', name:'Family Grocery & Tasks', desc:'Shared checklist for grocery and family tasks' },
+  vehicle:    { id:'vehicle',    icon:'🚗', name:'Vehicle Service',     desc:'Track service history and next due for family vehicles' },
+  photos:     { id:'photos',     icon:'📸', name:'Memory Wall',         desc:'Family photo memories pinboard' },
 };
-const DEFAULT_WIDGETS=['hero','priority','family','timeline','att_severity','health_pulse','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','ai_briefing2','priority','family','grocery','timeline','att_severity','vehicle','health_pulse','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
@@ -4841,6 +5009,10 @@ function buildWidgetHTML(wid) {
       </div>
     </div>`;
 
+    case 'ai_briefing2': return buildBriefing2Widget();
+    case 'grocery':     return buildGroceryWidget();
+    case 'vehicle':     return buildVehicleWidget();
+    case 'photos':      return buildMemoryWallWidget();
     case 'ai_meals': return `<div class="ai-meal-widget">
       <div class="aimw-header">
         <div class="w-hdr" style="margin:0">🍛 &nbsp;AI Meal Planner</div>
@@ -4867,6 +5039,481 @@ function buildWidgetHTML(wid) {
       </div>
     </div>`;
   }
+}
+
+/* ═══════════════════════════════════════════════
+   BRIEFING V2 WIDGET
+═══════════════════════════════════════════════ */
+var _BRIEFING_INTERESTS = [
+  {id:'family',  label:'Family',  emoji:'\uD83C\uDFE0'},
+  {id:'cricket', label:'Cricket', emoji:'\uD83C\uDFCF'},
+  {id:'movies',  label:'Movies',  emoji:'\uD83C\uDFAC'},
+  {id:'tech',    label:'Tech',    emoji:'\uD83D\uDCBB'},
+  {id:'health',  label:'Health',  emoji:'\uD83C\uDFCB'},
+  {id:'finance', label:'Finance', emoji:'\uD83D\uDCB8'},
+  {id:'hyderabad',label:'Hyd',   emoji:'\uD83C\uDFD9'}
+];
+
+function buildBriefing2Widget() {
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('fp_interests') || '["family"]'); } catch(e) { saved = ['family']; }
+  var cache = null;
+  try { cache = JSON.parse(localStorage.getItem('fp_briefing_cache') || 'null'); } catch(e) {}
+  var todayKey = new Date().toISOString().slice(0,10);
+  var hasToday = cache && cache.date === todayKey && cache.cats && saved.join(',') === cache.cats;
+
+  var catHtml = _BRIEFING_INTERESTS.map(function(c) {
+    var active = saved.indexOf(c.id) !== -1 ? ' active' : '';
+    return '<div class="aib2-cat' + active + '" onclick="aib2ToggleCat(' + _BRIEFING_INTERESTS.indexOf(c) + ')">'
+      + c.emoji + ' ' + c.label + '</div>';
+  }).join('');
+
+  var contentHtml = '';
+  if (hasToday && cache.text) {
+    contentHtml = '<div class="aib2-text">' + cache.text + '</div>'
+      + '<div class="aib2-footer">'
+      + '<div class="aib2-ts">Generated ' + (cache.ts || '') + '</div>'
+      + '<div class="aib2-ask-btn" onclick="aib2AskAI()">Ask AI \u2192</div>'
+      + '</div>';
+  } else {
+    var hour = new Date().getHours();
+    var greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    contentHtml = '<div class="aib2-idle">'
+      + '<div class="aib2-idle-icon">\u2728</div>'
+      + '<div class="aib2-idle-txt">' + greet + '! Select your interests above,<br>then tap Refresh for your daily briefing.</div>'
+      + '<div class="aib2-idle-btn" onclick="aib2Load()">\u21BB Generate Briefing</div>'
+      + '</div>';
+  }
+
+  return '<div class="aib2-card">'
+    + '<div class="aib2-toprow">'
+    + '<div class="aib2-left"><div class="aib2-icon">\u2728</div>'
+    + '<div><div class="aib2-title">Daily Briefing</div>'
+    + '<div class="aib2-subtitle">TAP CATEGORIES \u00B7 THEN REFRESH</div></div></div>'
+    + '<div class="aib2-actions">'
+    + '<div class="aib2-refresh-btn" id="aib2-spin" onclick="aib2Load()" title="Refresh">\u21BB</div>'
+    + '</div></div>'
+    + '<div class="aib2-cats" id="aib2-cats">' + catHtml + '</div>'
+    + '<div class="aib2-content" id="aib2-content">' + contentHtml + '</div>'
+    + '</div>';
+}
+
+function aib2ToggleCat(idx) {
+  var c = _BRIEFING_INTERESTS[idx];
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('fp_interests') || '["family"]'); } catch(e) { saved = ['family']; }
+  var pos = saved.indexOf(c.id);
+  if (pos !== -1) { if (saved.length > 1) saved.splice(pos, 1); }
+  else { saved.push(c.id); }
+  localStorage.setItem('fp_interests', JSON.stringify(saved));
+  var el = document.querySelectorAll('.aib2-cat')[idx];
+  if (el) el.classList.toggle('active', saved.indexOf(c.id) !== -1);
+}
+
+async function aib2Load() {
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('fp_interests') || '["family"]'); } catch(e) { saved = ['family']; }
+  var key = typeof groqGetKey === 'function' ? groqGetKey() : '';
+  var content = document.getElementById('aib2-content');
+  var spin = document.getElementById('aib2-spin');
+  if (!content) return;
+  if (!key) { content.innerHTML = '<div class="aib2-idle"><div class="aib2-idle-txt">\uD83D\uDD11 Add Groq API key in Settings to use AI Briefing.</div></div>'; return; }
+  if (spin) spin.classList.add('spinning');
+  content.innerHTML = '<div class="aib2-content"><div class="aib2-skel"></div><div class="aib2-skel"></div><div class="aib2-skel"></div></div>';
+
+  var catNames = saved.map(function(id) {
+    var c = _BRIEFING_INTERESTS.find(function(x){ return x.id === id; });
+    return c ? c.label : id;
+  }).join(', ');
+
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attBrief = '';
+  if (attRaw) {
+    try {
+      var att = JSON.parse(attRaw);
+      var risky = att.filter(function(a){ return Math.round(a.present/a.total*100) < 75; });
+      if (risky.length) attBrief = '\nJosritha has ' + risky.length + ' subject(s) below 75% attendance.';
+    } catch(e) {}
+  }
+  var expiry = (typeof EXPIRY !== 'undefined' ? EXPIRY : []).filter(function(e){ return typeof daysUntil === 'function' && daysUntil(e.date) <= 30 && daysUntil(e.date) >= 0; });
+  var exBrief = expiry.length ? '\n' + expiry.length + ' document(s) expiring within 30 days.' : '';
+
+  var todayStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  var hour = new Date().getHours();
+  var greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  var prompt = greet + ', Rajasekhar! Today is ' + todayStr + '.'
+    + '\nFamily: Rajasekhar (Software Engineer, Hyderabad), Vasundhara, Josritha (KL University), Jeevan (14, school).'
+    + attBrief + exBrief
+    + '\n\nGenerate a warm, concise daily briefing (5-7 bullet points) covering these interest areas: ' + catNames + '.'
+    + '\nFor each category, give ONE relevant tip, update, or insight relevant to an Indian family in Hyderabad.'
+    + '\nFormat: use <strong>Category:</strong> then the insight. Keep each point to 1-2 lines. Warm, helpful, Telugu family context. No markdown.';
+
+  try {
+    var endpoint = typeof GROQ_ENDPOINT !== 'undefined' ? GROQ_ENDPOINT : 'https://api.groq.com/openai/v1/chat/completions';
+    var model = typeof GROQ_MODEL !== 'undefined' ? GROQ_MODEL : 'llama-3.1-8b-instant';
+    var resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({ model: model, max_tokens: 400, temperature: 0.75,
+        messages: [{ role: 'user', content: prompt }] })
+    });
+    var data = await resp.json();
+    var text = data.choices && data.choices[0] ? data.choices[0].message.content : '';
+    if (!text) throw new Error('empty');
+    var formatted = '<ul style="margin:0;padding:0 0 0 14px;">'
+      + text.split('\n').filter(function(l){ return l.trim(); }).map(function(l){
+          return '<li style="margin-bottom:6px;font-size:12px;line-height:1.6;color:var(--text1);">' + l.replace(/^[\-\*\u2022]\s*/,'') + '</li>';
+        }).join('') + '</ul>';
+    var ts = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    localStorage.setItem('fp_briefing_cache', JSON.stringify({ date: new Date().toISOString().slice(0,10), cats: saved.join(','), text: formatted, ts: ts }));
+    content.innerHTML = '<div class="aib2-text">' + formatted + '</div>'
+      + '<div class="aib2-footer"><div class="aib2-ts">Generated ' + ts + '</div>'
+      + '<div class="aib2-ask-btn" onclick="aib2AskAI()">Ask AI \u2192</div></div>';
+  } catch(e) {
+    content.innerHTML = '<div class="aib2-idle"><div class="aib2-idle-txt">Could not load briefing. Check your API key and internet.</div>'
+      + '<div class="aib2-idle-btn" onclick="aib2Load()">\u21BB Retry</div></div>';
+  }
+  if (spin) spin.classList.remove('spinning');
+}
+
+function aib2AskAI() {
+  if (typeof toggleAIPanel === 'function') {
+    if (!aiPanelOpen) toggleAIPanel();
+    var inp = document.getElementById('ai-panel-input');
+    if (inp) { inp.value = 'Give me more details about my daily briefing and any advice for the family today'; }
+    setTimeout(function(){ if (typeof aiPanelSend === 'function') aiPanelSend(); }, 200);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   GROCERY / TASK LIST WIDGET
+═══════════════════════════════════════════════ */
+var _grocTab = 'grocery';
+
+function buildGroceryWidget() {
+  return '<div class="groc-card">'
+    + '<div class="groc-header">'
+    + '<div class="groc-tabs">'
+    + '<div class="groc-tab' + (_grocTab==='grocery'?' active':'') + '" onclick="grocSwitchTab(\'grocery\')">🛒 Grocery</div>'
+    + '<div class="groc-tab' + (_grocTab==='tasks'?' active':'') + '" onclick="grocSwitchTab(\'tasks\')">✅ Tasks</div>'
+    + '</div>'
+    + '<div class="groc-add-btn" onclick="grocFocusAdd()">＋</div>'
+    + '</div>'
+    + '<div id="groc-list" class="groc-list">' + buildGrocList() + '</div>'
+    + '<div class="groc-add-row">'
+    + '<input id="groc-input" class="groc-input" placeholder="' + (_grocTab==='grocery'?'Add item…':'Add task…') + '" onkeydown="grocKeyDown(event)" inputmode="text" autocomplete="off">'
+    + '<div class="groc-submit" onclick="grocAddItem()">Add</div>'
+    + '</div>'
+    + '<div class="groc-footer">'
+    + '<div class="groc-count" id="groc-count">' + grocCountText() + '</div>'
+    + '<div class="groc-clear-done" onclick="grocClearDone()">Clear done</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function grocData() {
+  try { return JSON.parse(localStorage.getItem('fp_' + _grocTab) || '[]'); } catch(e) { return []; }
+}
+function grocSave(arr) { localStorage.setItem('fp_' + _grocTab, JSON.stringify(arr)); }
+
+function buildGrocList() {
+  var items = grocData();
+  if (!items.length) return '<div class="groc-empty">Nothing here — add items below</div>';
+  return items.map(function(item, idx) {
+    return '<div class="groc-item' + (item.done?' done':'') + '" id="groc-item-' + idx + '">'
+      + '<div class="groc-check" onclick="grocToggle(' + idx + ')">' + (item.done?'\u2714':'') + '</div>'
+      + '<div class="groc-item-name">' + item.name + '</div>'
+      + '<div class="groc-item-meta">' + (item.by||'') + '</div>'
+      + '<div class="groc-item-del" onclick="grocDelete(' + idx + ')">\u00D7</div>'
+      + '</div>';
+  }).join('');
+}
+
+function grocCountText() {
+  var items = grocData();
+  var done = items.filter(function(i){ return i.done; }).length;
+  return done + '/' + items.length + ' done';
+}
+
+function grocSwitchTab(tab) {
+  _grocTab = tab;
+  var groc = document.getElementById('groc-list');
+  var count = document.getElementById('groc-count');
+  var inp = document.getElementById('groc-input');
+  var tabs = document.querySelectorAll('.groc-tab');
+  if (tabs[0]) tabs[0].classList.toggle('active', tab==='grocery');
+  if (tabs[1]) tabs[1].classList.toggle('active', tab==='tasks');
+  if (groc) groc.innerHTML = buildGrocList();
+  if (count) count.textContent = grocCountText();
+  if (inp) inp.placeholder = tab==='grocery'?'Add item\u2026':'Add task\u2026';
+}
+
+function grocFocusAdd() { var inp = document.getElementById('groc-input'); if (inp) inp.focus(); }
+
+function grocKeyDown(e) { if (e.key==='Enter') { e.preventDefault(); grocAddItem(); } }
+
+function grocAddItem() {
+  var inp = document.getElementById('groc-input');
+  if (!inp) return;
+  var val = inp.value.trim();
+  if (!val) return;
+  var items = grocData();
+  items.push({ name: val, done: false, by: '' });
+  grocSave(items);
+  inp.value = '';
+  var groc = document.getElementById('groc-list');
+  var count = document.getElementById('groc-count');
+  if (groc) groc.innerHTML = buildGrocList();
+  if (count) count.textContent = grocCountText();
+  if (typeof haptic === 'function') haptic('light');
+}
+
+function grocToggle(idx) {
+  var items = grocData();
+  if (items[idx]) items[idx].done = !items[idx].done;
+  grocSave(items);
+  var groc = document.getElementById('groc-list');
+  var count = document.getElementById('groc-count');
+  if (groc) groc.innerHTML = buildGrocList();
+  if (count) count.textContent = grocCountText();
+}
+
+function grocDelete(idx) {
+  var items = grocData();
+  items.splice(idx, 1);
+  grocSave(items);
+  var groc = document.getElementById('groc-list');
+  var count = document.getElementById('groc-count');
+  if (groc) groc.innerHTML = buildGrocList();
+  if (count) count.textContent = grocCountText();
+}
+
+function grocClearDone() {
+  var items = grocData().filter(function(i){ return !i.done; });
+  grocSave(items);
+  var groc = document.getElementById('groc-list');
+  var count = document.getElementById('groc-count');
+  if (groc) groc.innerHTML = buildGrocList();
+  if (count) count.textContent = grocCountText();
+}
+
+/* ═══════════════════════════════════════════════
+   VEHICLE SERVICE TRACKER WIDGET
+═══════════════════════════════════════════════ */
+var VEHICLES_DEF = [
+  { id:'activa', name:'Activa', reg:'TS08HJ8438', icon:'\uD83D\uDEF5', color:'rgba(124,58,237,.12)', owner:'Vasundhara' },
+  { id:'i10',    name:'i10',   reg:'AP27AK7873', icon:'\uD83D\uDE97', color:'rgba(79,127,255,.12)', owner:'Vasundhara' }
+];
+
+function getVehData() {
+  try { return JSON.parse(localStorage.getItem('fp_vehicle_service') || '{}'); } catch(e) { return {}; }
+}
+function saveVehData(d) { localStorage.setItem('fp_vehicle_service', JSON.stringify(d)); }
+
+function buildVehicleWidget() {
+  var data = getVehData();
+  var rows = VEHICLES_DEF.map(function(v) {
+    var vdata = data[v.id] || {};
+    var lastDate = vdata.lastService || null;
+    var nextDate = vdata.nextService || null;
+    var days = nextDate ? (typeof daysUntil === 'function' ? daysUntil(nextDate) : null) : null;
+    var badgeClass = 'ok', badgeTxt = 'Up to date';
+    if (days !== null) {
+      if (days < 0) { badgeClass = 'overdue'; badgeTxt = Math.abs(days) + 'd overdue'; }
+      else if (days <= 30) { badgeClass = 'soon'; badgeTxt = 'Due in ' + days + 'd'; }
+      else { badgeClass = 'ok'; badgeTxt = 'Due ' + (typeof fmtDate==='function'?fmtDate(nextDate):nextDate); }
+    } else if (!lastDate) { badgeClass = 'soon'; badgeTxt = 'Not tracked'; }
+    return '<div class="veh-row" onclick="vehOpenSheet(\'' + v.id + '\')">'
+      + '<div class="veh-icon" style="background:' + v.color + '">' + v.icon + '</div>'
+      + '<div class="veh-info">'
+      + '<div class="veh-name">' + v.name + '</div>'
+      + '<div class="veh-reg">' + v.reg + ' \u00B7 ' + v.owner + '</div>'
+      + '</div>'
+      + '<div class="veh-right">'
+      + '<div class="veh-due-badge ' + badgeClass + '">' + badgeTxt + '</div>'
+      + (lastDate ? '<div class="veh-due-date">Last: ' + (typeof fmtDate==='function'?fmtDate(lastDate):lastDate) + '</div>' : '')
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  return '<div class="veh-card">'
+    + '<div class="veh-header">'
+    + '<div class="w-hdr" style="margin:0">\uD83D\uDE97 Vehicle Service</div>'
+    + '<span class="card-action" onclick="vehOpenSheet(\'activa\')" style="font-size:11px">+ Log Service</span>'
+    + '</div>'
+    + '<div class="veh-list">' + rows + '</div>'
+    + '</div>'
+    + '<div class="veh-sheet" id="veh-sheet">'
+    + '<div class="veh-sheet-bg" onclick="vehCloseSheet()"></div>'
+    + '<div class="veh-sheet-card" id="veh-sheet-card">'
+    + '<div class="veh-sheet-handle"></div>'
+    + '<div id="veh-sheet-body"></div>'
+    + '</div></div>';
+}
+
+var _vehActiveId = null;
+function vehOpenSheet(id) {
+  _vehActiveId = id;
+  var sheet = document.getElementById('veh-sheet');
+  var body = document.getElementById('veh-sheet-body');
+  var v = VEHICLES_DEF.find(function(x){ return x.id===id; });
+  var data = getVehData();
+  var vdata = data[id] || { history: [] };
+  if (!vdata.history) vdata.history = [];
+
+  var historyHtml = vdata.history.length
+    ? vdata.history.slice().reverse().map(function(h) {
+        return '<div class="veh-service-row">'
+          + '<div class="veh-service-dot"></div>'
+          + '<div class="veh-service-body">'
+          + '<div class="veh-service-type">' + (h.type||'Service') + '</div>'
+          + '<div class="veh-service-date">' + (h.date||'') + (h.km?' \u00B7 '+h.km+' km':'') + '</div>'
+          + (h.note?'<div class="veh-service-note">'+h.note+'</div>':'')
+          + '</div></div>';
+      }).join('')
+    : '<div style="padding:14px 0;text-align:center;font-size:11px;color:var(--text3);">No service history yet</div>';
+
+  body.innerHTML = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">'
+    + '<div style="font-size:28px">' + (v?v.icon:'') + '</div>'
+    + '<div><div style="font-size:15px;font-weight:800;color:var(--text1);font-family:\'Inter\',sans-serif;">' + (v?v.name:'') + '</div>'
+    + '<div style="font-size:11px;color:var(--text3);font-family:\'DM Mono\',monospace;">' + (v?v.reg:'') + '</div></div>'
+    + '</div>'
+    + '<div style="font-size:11px;font-weight:700;color:var(--text2);font-family:\'Inter\',sans-serif;margin-bottom:8px;">SERVICE HISTORY</div>'
+    + historyHtml
+    + '<div style="margin-top:12px;">'
+    + '<div style="font-size:11px;font-weight:700;color:var(--text2);font-family:\'Inter\',sans-serif;margin-bottom:8px;">LOG NEW SERVICE</div>'
+    + '<div style="display:flex;flex-direction:column;gap:8px;">'
+    + '<select id="veh-type" style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text1);width:100%;">'
+    + '<option>Oil Change</option><option>Tyre Rotation</option><option>PUC Renewal</option><option>General Service</option><option>Battery</option><option>Other</option>'
+    + '</select>'
+    + '<div style="display:flex;gap:8px;">'
+    + '<input id="veh-date" type="date" value="' + new Date().toISOString().slice(0,10) + '" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text1);">'
+    + '<input id="veh-km" type="number" placeholder="KM" style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text1);">'
+    + '</div>'
+    + '<input id="veh-note" placeholder="Notes (optional)" style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text1);width:100%;box-sizing:border-box;">'
+    + '<input id="veh-next" type="date" placeholder="Next service due" style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text1);width:100%;box-sizing:border-box;">'
+    + '<div onclick="vehSaveService()" style="padding:11px;border-radius:10px;background:var(--blue-dim);border:1px solid rgba(79,127,255,.25);color:var(--blue2);font-size:13px;font-weight:700;text-align:center;cursor:pointer;font-family:\'Inter\',sans-serif;">Save Service Log</div>'
+    + '</div></div>';
+
+  if (sheet) sheet.classList.add('open');
+  if (typeof haptic==='function') haptic('medium');
+}
+
+function vehCloseSheet() {
+  var sheet = document.getElementById('veh-sheet');
+  if (sheet) sheet.classList.remove('open');
+}
+
+function vehSaveService() {
+  var type = document.getElementById('veh-type');
+  var date = document.getElementById('veh-date');
+  var km   = document.getElementById('veh-km');
+  var note = document.getElementById('veh-note');
+  var next = document.getElementById('veh-next');
+  if (!type||!date||!date.value) return;
+  var data = getVehData();
+  if (!data[_vehActiveId]) data[_vehActiveId] = { history: [] };
+  if (!data[_vehActiveId].history) data[_vehActiveId].history = [];
+  data[_vehActiveId].history.push({ type: type.value, date: date.value, km: km?km.value:'', note: note?note.value:'' });
+  data[_vehActiveId].lastService = date.value;
+  if (next && next.value) data[_vehActiveId].nextService = next.value;
+  saveVehData(data);
+  vehCloseSheet();
+  if (typeof showToast==='function') showToast('\uD83D\uDE97 Service logged for ' + _vehActiveId);
+  if (typeof initWidgetDynamic==='function') setTimeout(initWidgetDynamic, 100);
+  if (typeof haptic==='function') haptic('success');
+}
+
+/* ═══════════════════════════════════════════════
+   MEMORY WALL WIDGET
+═══════════════════════════════════════════════ */
+function getPhotos() { try { return JSON.parse(localStorage.getItem('fp_photos')||'[]'); } catch(e){ return []; } }
+function savePhotos(arr) { localStorage.setItem('fp_photos', JSON.stringify(arr)); }
+
+function buildMemoryWallWidget() {
+  var photos = getPhotos();
+  var grid = '';
+  photos.slice(0,8).forEach(function(p,idx) {
+    grid += '<div class="mem-thumb" onclick="memViewPhoto(' + idx + ')">'
+      + '<img src="' + p.src + '" alt="' + (p.caption||'') + '" loading="lazy">'
+      + (p.caption?'<div class="mem-thumb-overlay"><div class="mem-thumb-caption">' + p.caption + '</div></div>':'')
+      + '</div>';
+  });
+  grid += '<label class="mem-thumb mem-thumb-add" title="Add photo">'
+    + '<input type="file" accept="image/*" style="display:none" onchange="memAddPhoto(this)">'
+    + '<div class="mem-thumb-add-icon">\uD83D\uDCF8</div>'
+    + '<div class="mem-thumb-add-lbl">Add</div>'
+    + '</label>';
+
+  var inner = photos.length===0
+    ? '<div class="mem-empty"><div class="mem-empty-icon">\uD83D\uDCF8</div><div class="mem-empty-txt">Add family photos to your memory wall</div></div>'
+      + '<div class="mem-grid">' + grid + '</div>'
+    : '<div class="mem-grid">' + grid + '</div>';
+
+  return '<div class="mem-card">'
+    + '<div class="mem-header">'
+    + '<div class="w-hdr" style="margin:0">\uD83D\uDCF8 Memory Wall</div>'
+    + '<span style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;">' + photos.length + ' photo' + (photos.length!==1?'s':'') + '</span>'
+    + '</div>'
+    + inner
+    + '</div>'
+    + '<div class="mem-lightbox" id="mem-lightbox" onclick="memCloseLightbox()">'
+    + '<div class="mem-lb-close" onclick="memCloseLightbox()">\u00D7</div>'
+    + '<img id="mem-lb-img" src="" alt="">'
+    + '<div class="mem-lb-caption" id="mem-lb-caption"></div>'
+    + '<div class="mem-lb-del" onclick="memDeletePhoto()">Delete this photo</div>'
+    + '</div>';
+}
+
+var _memViewIdx = -1;
+
+function memAddPhoto(input) {
+  var file = input.files[0]; if (!file) return;
+  if (file.size > 3*1024*1024) { if (typeof showToast==='function') showToast('\u26A0\uFE0F Image too large (max 3MB)'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var caption = prompt('Add a caption (optional):') || '';
+    var photos = getPhotos();
+    photos.unshift({ src: e.target.result, caption: caption, ts: new Date().toISOString() });
+    if (photos.length > 20) photos = photos.slice(0,20);
+    savePhotos(photos);
+    if (typeof initWidgetDynamic==='function') setTimeout(initWidgetDynamic, 100);
+    if (typeof showToast==='function') showToast('\uD83D\uDCF8 Photo added to Memory Wall');
+    if (typeof haptic==='function') haptic('success');
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function memViewPhoto(idx) {
+  _memViewIdx = idx;
+  var photos = getPhotos();
+  var p = photos[idx]; if (!p) return;
+  var lb = document.getElementById('mem-lightbox');
+  var img = document.getElementById('mem-lb-img');
+  var cap = document.getElementById('mem-lb-caption');
+  if (lb) lb.classList.add('open');
+  if (img) img.src = p.src;
+  if (cap) cap.textContent = p.caption || '';
+  if (typeof haptic==='function') haptic('light');
+}
+
+function memCloseLightbox() {
+  var lb = document.getElementById('mem-lightbox');
+  if (lb) lb.classList.remove('open');
+  _memViewIdx = -1;
+}
+
+function memDeletePhoto() {
+  if (_memViewIdx < 0) return;
+  if (!confirm('Delete this photo?')) return;
+  var photos = getPhotos();
+  photos.splice(_memViewIdx, 1);
+  savePhotos(photos);
+  memCloseLightbox();
+  if (typeof initWidgetDynamic==='function') setTimeout(initWidgetDynamic, 100);
+  if (typeof showToast==='function') showToast('Photo deleted');
 }
 
 function buildAttSeverityWidget() {
@@ -5193,12 +5840,17 @@ function initWidgetDynamic() {
   // ─────────────────────────────────────────
   // UNIFIED TIMELINE
   // ─────────────────────────────────────────
-  // Refresh att_severity widget if present
-  const aswItem = document.querySelector('.widget-item[data-wid="att_severity"]');
-  if (aswItem) {
-    const aswBody = aswItem.children[2]; // [0]=del btn [1]=drag handle [2]=body div
-    if (aswBody) aswBody.innerHTML = buildAttSeverityWidget();
-  }
+  // Refresh dynamic widgets
+  ['att_severity','grocery','vehicle','photos','ai_briefing2'].forEach(function(wid) {
+    var item = document.querySelector('.widget-item[data-wid="' + wid + '"]');
+    if (!item) return;
+    var body = item.children[2];
+    if (!body) return;
+    if (wid === 'att_severity') body.innerHTML = buildAttSeverityWidget();
+    else if (wid === 'vehicle')  body.innerHTML = buildVehicleWidget();
+    else if (wid === 'photos')   body.innerHTML = buildMemoryWallWidget();
+    // grocery + briefing only refresh on tab switch — don't wipe user input
+  });
 
   const tlList = document.getElementById('timeline-list');
   if (tlList) {
@@ -8031,7 +8683,8 @@ const BACKUP_KEYS = [
   'fp_timetable_synced','fp_timetable_synced_ts',
   'fp_widgets','fp_widgets_ver',
   'fp_theme','fp_active_member','fp_pin','emg_collapsed',
-  'fp_groq_key'   // ← AI key — included in backup so it survives redeployment
+  'fp_groq_key',  // ← AI key — included in backup so it survives redeployment
+  'fp_grocery','fp_tasks','fp_vehicle_service','fp_photos','fp_interests','fp_briefing_cache','fp_weekly_recap'
 ];
 
 function openBackupModal() {
@@ -8220,14 +8873,16 @@ function runDashboardCountUps() {
 let aiPanelOpen = false;
 let aiPanelBusy = false;
 let aiPanelHistory = [];
+var _aiGreetedToday = '';
+var _aiWeeklyRecapDay = -1;
 
 /* Chip data — NO apostrophes in strings to avoid HTML attribute breakage */
 var AI_CHIPS = {
   dashboard: [
     ["skip", "Can Josritha skip classes today?"],
+    ["predict", "Predict Josritha attendance for each subject by semester end and tell me which subjects are at risk of being barred"],
     ["report", "Give Josritha full attendance risk report"],
-    ["docs", "Which family documents are expiring soon?"],
-    ["brief", "Give a quick family briefing for today"]
+    ["docs", "Which family documents are expiring soon?"]
   ],
   members: [
     ["skip", "Can Josritha skip classes today?"],
@@ -8251,6 +8906,7 @@ var AI_CHIPS = {
 
 var AI_CHIP_LABELS = {
   skip: "🏃 Can she skip today?",
+  predict: "🔮 Predict semester end",
   report: "📊 Attendance risk",
   docs: "📄 Expiring documents",
   brief: "🌤️ Family briefing",
@@ -8267,6 +8923,180 @@ var AI_CHIP_LABELS = {
 
 /* Store chip questions by index so onclick just passes an index — no string in attribute */
 var _aiChipQuestions = [];
+
+/* ════════════════════════════════════════════════
+   AI PANEL — SMART GREETING + WEEKLY RECAP + FESTIVAL
+════════════════════════════════════════════════ */
+var INDIAN_FESTIVALS = [
+  { date:'03-14', name:'Ugadi',        emoji:'\uD83C\uDF3A', sub:'Telugu New Year' },
+  { date:'03-25', name:'Holi',         emoji:'\uD83C\uDF08', sub:'Festival of Colors' },
+  { date:'04-14', name:'Ambedkar Jayanti', emoji:'\uD83C\uDDEE\uD83C\uDDF3', sub:'National Holiday' },
+  { date:'04-19', name:'Good Friday',  emoji:'\u271D\uFE0F',  sub:'Public Holiday' },
+  { date:'08-15', name:'Independence Day', emoji:'\uD83C\uDDEE\uD83C\uDDF3', sub:'National Holiday' },
+  { date:'08-26', name:'Janmashtami', emoji:'\uD83D\uDC2E', sub:'Lord Krishna Birthday' },
+  { date:'09-07', name:'Ganesh Chaturthi', emoji:'\uD83D\uDC18', sub:'10-day festival begins' },
+  { date:'10-02', name:'Gandhi Jayanti', emoji:'\uD83C\uDDEE\uD83C\uDDF3', sub:'National Holiday' },
+  { date:'10-12', name:'Navratri begins', emoji:'\uD83D\uDCA5', sub:'9-night festival' },
+  { date:'10-20', name:'Dussehra',     emoji:'\uD83C\uDF1F', sub:'Victory of Good over Evil' },
+  { date:'11-01', name:'Diwali',       emoji:'\uD83E\uDE94', sub:'Festival of Lights' },
+  { date:'11-15', name:'Karthika Pournami', emoji:'\uD83D\uDD6F\uFE0F', sub:'Telugu festival' },
+  { date:'12-25', name:'Christmas',   emoji:'\uD83C\uDF84', sub:'Public Holiday' },
+  { date:'01-14', name:'Sankranti',   emoji:'\uD83E\uDD85', sub:'Telugu harvest festival' },
+  { date:'01-26', name:'Republic Day', emoji:'\uD83C\uDDEE\uD83C\uDDF3', sub:'National Holiday' }
+];
+
+function aiGetFestival() {
+  var now = new Date();
+  var mmdd = String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  var tomorrow = new Date(now); tomorrow.setDate(now.getDate()+1);
+  var tmmdd = String(tomorrow.getMonth()+1).padStart(2,'0') + '-' + String(tomorrow.getDate()).padStart(2,'0');
+  var found = INDIAN_FESTIVALS.find(function(f){ return f.date===mmdd; });
+  var foundTomorrow = !found ? INDIAN_FESTIVALS.find(function(f){ return f.date===tmmdd; }) : null;
+  if (found) return { festival: found, when: 'today' };
+  if (foundTomorrow) return { festival: foundTomorrow, when: 'tomorrow' };
+  return null;
+}
+
+function aiPanelAutoGreet() {
+  var todayKey = new Date().toISOString().slice(0,10);
+  if (_aiGreetedToday === todayKey) return;
+  _aiGreetedToday = todayKey;
+
+  var msgs = document.getElementById('ai-panel-messages');
+  if (!msgs) return;
+
+  var hour = new Date().getHours();
+  var dow = new Date().getDay(); // 0=Sun
+  var greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  var names = ['Rajasekhar','Vasundhara','Josritha','Jeevan'];
+  var name = names[Math.floor(Math.random()*2)]; // Rajasekhar or Vasundhara
+
+  // Build banner HTML
+  var bannerHtml = '';
+
+  // Festival banner
+  var fest = aiGetFestival();
+  if (fest) {
+    bannerHtml += '<div class="ai-festival-banner">'
+      + '<div class="ai-festival-emoji">' + fest.festival.emoji + '</div>'
+      + '<div class="ai-festival-info">'
+      + '<div class="ai-festival-name">' + fest.festival.name + ' ' + (fest.when==='today'?'Today!':'Tomorrow') + '</div>'
+      + '<div class="ai-festival-sub">' + fest.festival.sub + '</div>'
+      + '</div></div>';
+  }
+
+  // Quick attendance alert
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attAlert = '';
+  if (attRaw) {
+    try {
+      var att = JSON.parse(attRaw);
+      var critical = att.filter(function(a){ return Math.round(a.present/a.total*100) < 70; });
+      var risk = att.filter(function(a){ var p=Math.round(a.present/a.total*100); return p>=70&&p<75; });
+      if (critical.length) attAlert = '\uD83D\uDEA8 ' + critical.length + ' subject' + (critical.length>1?'s':'') + ' CRITICAL (<70%)';
+      else if (risk.length) attAlert = '\u26A0\uFE0F ' + risk.length + ' subject' + (risk.length>1?'s':'') + ' at risk (70\u201374%)';
+    } catch(e) {}
+  }
+
+  // Expiry alert
+  var expiryAlert = '';
+  if (typeof EXPIRY !== 'undefined' && typeof daysUntil === 'function') {
+    var urgent = EXPIRY.filter(function(e){ return daysUntil(e.date)>=0 && daysUntil(e.date)<=30; });
+    if (urgent.length) expiryAlert = '\uD83D\uDCCB ' + urgent.length + ' document' + (urgent.length>1?'s':'') + ' expiring within 30 days';
+  }
+
+  var greetMsg = greet + ', ' + name + '! \uD83D\uDE4F\n';
+  if (attAlert) greetMsg += attAlert + '\n';
+  if (expiryAlert) greetMsg += expiryAlert + '\n';
+  greetMsg += 'How can I help the family today?';
+
+  // Weekly recap on Sunday
+  if (dow === 0) {
+    var weekKey = todayKey.slice(0,7) + '-W' + Math.ceil(new Date().getDate()/7);
+    if (_aiWeeklyRecapDay !== weekKey) {
+      _aiWeeklyRecapDay = weekKey;
+      bannerHtml += '<div class="ai-recap-banner">'
+        + '<div class="ai-recap-title">\uD83D\uDCC5 Weekly Family Recap</div>'
+        + '<div class="ai-recap-body" id="ai-recap-body">Loading Sunday recap\u2026</div>'
+        + '</div>';
+      setTimeout(aiLoadWeeklyRecap, 800);
+    }
+  }
+
+  if (bannerHtml) {
+    var bannerDiv = document.createElement('div');
+    bannerDiv.innerHTML = bannerHtml;
+    var welcome = msgs.querySelector('.ai-panel-welcome');
+    if (welcome) msgs.insertBefore(bannerDiv, welcome);
+    else msgs.insertBefore(bannerDiv, msgs.firstChild);
+  }
+
+  aiPanelAppendMsg('ai', greetMsg.replace(/\n/g,'<br>'));
+}
+
+async function aiLoadWeeklyRecap() {
+  var el = document.getElementById('ai-recap-body');
+  if (!el) return;
+  var key = typeof groqGetKey === 'function' ? groqGetKey() : '';
+  if (!key) { if (el) el.textContent = 'Add Groq API key to get weekly recap.'; return; }
+
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attBrief = 'No attendance data.';
+  if (attRaw) {
+    try {
+      var att = JSON.parse(attRaw);
+      var risky = att.filter(function(a){ return Math.round(a.present/a.total*100)<75; });
+      attBrief = risky.length
+        ? risky.map(function(a){ return a.subject + ' ' + Math.round(a.present/a.total*100) + '%'; }).join(', ')
+        : 'All subjects above 75%.';
+    } catch(e) {}
+  }
+
+  var prompt = 'Generate a brief warm Sunday weekly recap for the Duggireddy family (Rajasekhar-software engineer, Vasundhara-homemaker, Josritha-KL University student, Jeevan-14yr school). '
+    + 'Josritha attendance status: ' + attBrief + '. '
+    + 'Give 4-5 bullet points: achievements, reminders, motivation for next week. Telugu family context, warm tone, 2 lines max per point. No markdown.';
+
+  try {
+    var endpoint = typeof GROQ_ENDPOINT !== 'undefined' ? GROQ_ENDPOINT : 'https://api.groq.com/openai/v1/chat/completions';
+    var model = typeof GROQ_MODEL !== 'undefined' ? GROQ_MODEL : 'llama-3.1-8b-instant';
+    var resp = await fetch(endpoint, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body: JSON.stringify({model:model, max_tokens:300, temperature:0.7,
+        messages:[{role:'user',content:prompt}]})
+    });
+    var data = await resp.json();
+    var text = data.choices&&data.choices[0]?data.choices[0].message.content:'';
+    if (el) el.innerHTML = text.split('\n').filter(function(l){return l.trim();}).map(function(l){
+      return '<div style="margin-bottom:5px;">' + l.replace(/^[\-\*\u2022]\s*/,'') + '</div>';
+    }).join('');
+    localStorage.setItem('fp_weekly_recap', JSON.stringify({date:new Date().toISOString().slice(0,10), text:text}));
+  } catch(e) {
+    if (el) el.textContent = 'Could not load recap.';
+  }
+}
+
+/* Attendance Prediction — injected into buildAICWSystem */
+function buildAttPredictionContext() {
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  if (!attRaw) return '';
+  try {
+    var att = JSON.parse(attRaw);
+    // Estimate remaining classes: assume 60 total per semester, remaining = 60 - total
+    var SEMESTER_TOTAL = 60;
+    var lines = att.map(function(a) {
+      var pct = Math.round(a.present/a.total*100);
+      var remaining = Math.max(0, SEMESTER_TOTAL - a.total);
+      var neededMore = Math.max(0, Math.ceil(0.75*(a.total+remaining)) - a.present);
+      var projectedIfAllAttended = Math.round((a.present+remaining)/(a.total+remaining)*100);
+      var projectedIfNoneAttended = Math.round(a.present/(a.total+remaining)*100);
+      return a.subject + ' (' + a.code + '/' + a.type + '): now=' + pct + '%, ~' + remaining
+        + ' classes left, if all attended=' + projectedIfAllAttended + '%, if none=' + projectedIfNoneAttended
+        + '%, still needs ' + neededMore + ' to reach 75%';
+    });
+    return '\n\nATTENDANCE PREDICTION DATA (est. ' + SEMESTER_TOTAL + ' total/sem):\n' + lines.join('\n');
+  } catch(e) { return ''; }
+}
 
 function toggleAIPanel() {
   /* Close FAB menu if open */
@@ -8291,6 +9121,7 @@ function toggleAIPanel() {
     fabIcon.textContent = '\u2715';
     aiPanelUpdateChips();
     aiPanelUpdateStatus();
+    aiPanelAutoGreet();
     if (typeof haptic === 'function') haptic('medium');
   } else {
     panel.classList.add('ai-panel-closed');
@@ -9182,7 +10013,8 @@ function buildAICWSystem() {
     + 'For attendance/skip questions, reply with HTML using these exact CSS classes:\n'
     + 'Per subject: div.ai-subject-card.safe/.risk/.critical containing div.ai-card-header (span.ai-subject-name + span.ai-badge.safe/.risk/.critical) + div.ai-card-body (span.ai-stat items) + div.ai-verdict.safe/.critical\n'
     + 'End with: div.ai-summary-box containing div.ai-summary-title and div.ai-summary-body\n'
-    + 'For all other questions: plain warm friendly text, 2-4 sentences, emojis ok, Telugu/Indian family context.';
+    + 'For all other questions: plain warm friendly text, 2-4 sentences, emojis ok, Telugu/Indian family context.'
+    + buildAttPredictionContext();
 
   return sys;
 }
