@@ -523,6 +523,9 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 
 /* Section Icon Grid 2×3 */
 .section-icon-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;}
+.acad-sticky-bar{position:sticky;top:var(--topbar-h);z-index:50;background:var(--bg);padding:8px 0 4px;margin-bottom:0;}
+.acad-sticky-stats{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border2);font-size:10px;font-family:'DM Mono',monospace;}
+.acad-stat-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-weight:700;font-size:10px;}
 .sig-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid var(--border);background:var(--surface2);transition:all .18s;min-height:52px;}
 .sig-item:hover,.sig-item:active{border-color:var(--border2);background:var(--surface3);}
 .sig-item.active{background:var(--blue-dim);border-color:rgba(79,127,255,.35);color:var(--blue2);}
@@ -665,23 +668,29 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .evtb.active{background:var(--blue-dim,rgba(79,127,255,.12));color:var(--blue2);border-color:rgba(79,127,255,.3);}
 /* Expiry timeline view */
 #timeline-pane{display:none;}
-.tl-scroll{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding-bottom:12px;}
-.tl-scroll::-webkit-scrollbar{height:4px;}
-.tl-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.tl-canvas{position:relative;width:920px;height:200px;margin:0 auto;}
-.tl-axis-line{position:absolute;top:100px;left:0;right:0;height:2px;background:var(--border2);}
-.tl-today-pole{position:absolute;top:60px;width:2px;height:80px;background:var(--gold);transform:translateX(-50%);}
-.tl-mth-tick{position:absolute;top:108px;transform:translateX(-50%);font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);white-space:nowrap;}
-.tl-above{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);top:28px;cursor:pointer;}
-.tl-below{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);top:97px;cursor:pointer;}
-.tl-above-lbl{position:absolute;top:6px;transform:translateX(-50%);font-size:9px;font-family:'DM Mono',monospace;color:var(--text2);white-space:nowrap;text-align:center;}
-.tl-below-lbl{position:absolute;top:155px;transform:translateX(-50%);font-size:9px;font-family:'DM Mono',monospace;color:var(--text2);white-space:nowrap;text-align:center;}
-.tl-bub{width:30px;height:30px;border-radius:50%;border:2px solid;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.tl-stem{width:2px;flex-shrink:0;}
-.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.tl-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;padding:0 4px;}
-.tl-leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;}
-.tl-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+/* Vertical expiry timeline */
+.vtl-list{display:flex;flex-direction:column;gap:0;padding:4px 0;}
+.vtl-group-label{font-size:10px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;padding:10px 0 6px 44px;color:var(--text3);}
+.vtl-item{display:flex;align-items:stretch;gap:0;position:relative;cursor:pointer;padding:0 4px;}
+.vtl-item:active{opacity:.8;}
+.vtl-spine{display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;padding-top:4px;}
+.vtl-spine-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+.vtl-spine-line{width:2px;flex:1;min-height:16px;margin-top:2px;}
+.vtl-item:last-child .vtl-spine-line{display:none;}
+.vtl-body{flex:1;background:var(--surface2);border-radius:12px;border:1px solid var(--border2);padding:12px 14px;margin:0 0 10px 0;transition:border-color .15s;}
+.vtl-item:active .vtl-body{border-color:var(--border2);}
+.vtl-body-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.vtl-icon-title{display:flex;align-items:center;gap:8px;}
+.vtl-icon{font-size:20px;flex-shrink:0;}
+.vtl-title{font-size:13px;font-weight:700;color:var(--text1);line-height:1.3;}
+.vtl-sub{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4;}
+.vtl-badge{font-size:9px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.5px;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.vtl-date-row{display:flex;align-items:center;gap:6px;margin-top:8px;}
+.vtl-date{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);}
+.vtl-days{font-size:11px;font-weight:700;font-family:'DM Mono',monospace;}
+.vtl-legend{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0 0 44px;}
+.vtl-leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2);font-family:'DM Mono',monospace;}
+.vtl-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 .exp-chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid var(--border);font-size:11px;font-weight:600;font-family:'DM Mono',monospace;}
 
@@ -3498,12 +3507,10 @@ input:focus, button:focus-visible {
         </div>
         <div id="exp-docs-pane" class="eli-items"></div>
       </div>
-      <!-- TIMELINE VIEW -->
+      <!-- TIMELINE VIEW (vertical) -->
       <div id="timeline-pane">
-        <div class="tl-scroll" id="tl-scroll">
-          <div class="tl-canvas" id="tl-axis"></div>
-        </div>
-        <div class="tl-legend" id="tl-legend"></div>
+        <div class="vtl-list" id="vtl-list"></div>
+        <div class="vtl-legend" id="vtl-legend"></div>
       </div>
     </div>
   </div>
@@ -5714,19 +5721,18 @@ function renderTimeline() {
   var tlList = document.getElementById('timeline-list');
   if (!tlList) return;
   var now = new Date(); now.setHours(0,0,0,0);
-  var calRaw = localStorage.getItem('fp_cal_events');
+  // Use getCalEvents() to get seeded + stored events reliably
   var allCalEvts = [];
-  try { allCalEvts = JSON.parse(calRaw || '[]'); } catch(e) { allCalEvts = []; }
-  if (typeof CAL_EVENTS !== 'undefined') allCalEvts = allCalEvts.concat(CAL_EVENTS.filter(function(e){ return !allCalEvts.find(function(x){return x.id===e.id;}); }));
-  var activeName = typeof currentMember !== 'undefined' ? currentMember : null;
-  if (activeName === 'all') activeName = null;
+  try { allCalEvts = (typeof getCalEvents === 'function') ? getCalEvents() : JSON.parse(localStorage.getItem('fp_cal_events') || '[]'); } catch(e) { allCalEvts = []; }
+  // Show all family events on dashboard (not filtered by member)
+  var activeName = null;
 
   var tlOffset = typeof _tlMonthOffset !== 'undefined' ? _tlMonthOffset : 0;
   var tlTargetDate = new Date(now.getFullYear(), now.getMonth() + tlOffset, 1);
   var tlYear = tlTargetDate.getFullYear();
   var tlMonth = tlTargetDate.getMonth();
   var tlMonthStart = new Date(tlYear, tlMonth, 1);
-  var tlMonthEnd   = new Date(tlYear, tlMonth + 1, 0);
+  var tlMonthEnd   = new Date(tlYear, tlMonth + 1, 0); tlMonthEnd.setHours(23,59,59,999);
   var tlMonthName = tlTargetDate.toLocaleString('en-IN',{month:'long',year:'numeric'}).toUpperCase();
   var isCurrentMonth = (tlOffset === 0);
 
@@ -5739,17 +5745,15 @@ function renderTimeline() {
 
   var calFiltered = allCalEvts.filter(function(ev) {
     if (ev.id && ev.id.indexOf('att_risk_') === 0) return false;
-    var evDate = new Date(ev.date);
+    var evDate = new Date(ev.date + 'T12:00:00');
     if (evDate < tlMonthStart || evDate > tlMonthEnd) return false;
-    if (activeName) return ev.members && (ev.members.indexOf(activeName)!==-1 || ev.members.indexOf('all')!==-1);
     return true;
   });
 
   var expiryAll = (typeof EXPIRY !== 'undefined' ? EXPIRY : []);
   var expiryFiltered = expiryAll.filter(function(e) {
-    var evDate = new Date(e.date);
+    var evDate = new Date(e.date + 'T12:00:00');
     if (evDate < tlMonthStart || evDate > tlMonthEnd) return false;
-    if (activeName) return e.person === activeName || e.person === 'Family';
     return true;
   }).map(function(e){ return { _isExpiry:true, title:e.label, date:e.date, members:[e.person], icon:e.icon||'📋', id:e.id }; });
 
@@ -6325,6 +6329,13 @@ function renderInsuranceTab(m) {
   return html||'<div style="padding:20px;text-align:center;color:var(--text3);">No insurance data</div>';
 }
 
+function switchAcadView(viewId) {
+  window._acadView = viewId;
+  // Re-render only the tab content — no scroll reset
+  var m = typeof currentMember !== 'undefined' ? MEMBERS[currentMember] : null;
+  if (m) renderMemberTab(m, 'academics');
+}
+
 function renderAcademicsTab(m) {
   if (m.id !== 'josritha') return '<div style="padding:20px;text-align:center;color:var(--text3);">Academics data is specific to Josritha</div>';
 
@@ -6384,7 +6395,7 @@ function renderAcademicsTab(m) {
     {id:'combined',   label:'📅 Day View'},
   ];
   const switcher = `<div style="display:flex;gap:6px;margin-bottom:16px;background:var(--surface2);border-radius:10px;padding:4px;">
-    ${tabs.map(t=>`<button onclick="window._acadView='${t.id}';showMemberDetail('josritha','academics');" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;${_acadView===t.id?'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);':'background:transparent;color:var(--text3);'}">${t.label}</button>`).join('')}
+    ${tabs.map(t=>`<button onclick="switchAcadView('${t.id}')" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;${_acadView===t.id?'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);':'background:transparent;color:var(--text3);'}">${t.label}</button>`).join('')}
   </div>`;
 
   // ── ATTENDANCE VIEW ───────────────────────────────────────────────────
@@ -6510,13 +6521,30 @@ function renderAcademicsTab(m) {
     content = liveTT ? combView : noTTHint;
   }
 
-  return `<div style="padding:4px 0;">
-    <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:12px;letter-spacing:.5px;">KL UNIVERSITY · EVEN SEMESTER 2025–26</div>
-    ${warnHtml}
-    ${uploadBar}
-    ${switcher}
-    ${content}
-  </div>`;
+  // Build sticky stats bar
+  var totalSubjects = liveAtt.length;
+  var atRisk = liveAtt.filter(function(a){ return Math.round(a.present/a.total*100) < 75; }).length;
+  var critical = liveAtt.filter(function(a){ return Math.round(a.present/a.total*100) < 70; }).length;
+  var good = totalSubjects - atRisk;
+  var overallP = liveAtt.length ? Math.round(liveAtt.reduce(function(s,a){ return s + a.present; },0) / liveAtt.reduce(function(s,a){ return s + a.total; },0) * 100) : 0;
+  var overallCol = overallP >= 75 ? 'var(--green)' : overallP >= 70 ? 'var(--orange)' : 'var(--red)';
+  var statsBar = liveAtt.length ? ('<div class="acad-sticky-stats">'
+    + '<div class="acad-stat-chip" style="background:rgba(79,127,255,.1);color:var(--blue2)">' + totalSubjects + ' subjects</div>'
+    + (good > 0 ? '<div class="acad-stat-chip" style="background:rgba(62,207,142,.1);color:var(--green)">✓ ' + good + ' good</div>' : '')
+    + (atRisk > 0 ? '<div class="acad-stat-chip" style="background:rgba(255,79,79,.1);color:var(--red)">⚠ ' + atRisk + ' at risk</div>' : '')
+    + '<div class="acad-stat-chip" style="background:rgba(' + (overallP>=75?'62,207,142':overallP>=70?'255,165,0':'255,79,79') + ',.12);color:' + overallCol + '">Overall ' + overallP + '%</div>'
+    + '</div>') : '';
+
+  return '<div style="padding:4px 0;">'
+    + '<div style="font-size:11px;color:var(--text3);font-family:DM Mono,monospace;margin-bottom:12px;letter-spacing:.5px;">KL UNIVERSITY · EVEN SEMESTER 2025–26</div>'
+    + warnHtml
+    + uploadBar
+    + '<div class="acad-sticky-bar">'
+    + statsBar
+    + switcher
+    + '</div>'
+    + content
+    + '</div>';
 }
 
 
@@ -6930,100 +6958,81 @@ function setExpiryView(view) {
 }
 
 function buildTimeline() {
-  const axis = document.getElementById('tl-axis');
-  const legend = document.getElementById('tl-legend');
-  if (!axis) return;
+  var vtlList = document.getElementById('vtl-list');
+  var legend  = document.getElementById('vtl-legend');
+  if (!vtlList) return;
 
-  const sorted = [...EXPIRY].sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
+  var sorted = EXPIRY.slice().sort(function(a,b){ return daysUntil(a.date) - daysUntil(b.date); });
+  // Store sorted on element for openTlSheet
+  vtlList._expiry = sorted;
 
-  // Timeline spans from -30 days (past) to +760 days (future)
-  // So the full range is 790 days. We map this to left% within [40px, canvas-40px].
-  // leftPct(days) maps days to a 0-100% position within the padded area.
-  const MIN_DAYS = -30;
-  const MAX_DAYS = 760;
-  const SPAN = MAX_DAYS - MIN_DAYS; // 790
+  function hexForDays(d){ return d < 0 ? '#ff4f4f' : d <= 30 ? '#ff8c42' : d <= 90 ? '#f0b429' : '#3ecf8e'; }
+  function badgeTxt(d){ return d < 0 ? (Math.abs(d)+'d overdue') : d === 0 ? 'TODAY' : (d+'d left'); }
+  function badgeBg(d){ return d < 0 ? 'rgba(255,79,79,.15)' : d <= 30 ? 'rgba(255,140,66,.15)' : d <= 90 ? 'rgba(240,180,41,.15)' : 'rgba(62,207,142,.12)'; }
+  function fmtD(dateStr){
+    var dt = new Date(dateStr + 'T12:00:00');
+    return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  }
+  function groupLabel(d){
+    return d < 0 ? 'OVERDUE' : d === 0 ? 'TODAY' : d <= 30 ? 'CRITICAL · ≤30 DAYS' : d <= 90 ? 'URGENT · ≤90 DAYS' : d <= 180 ? 'WARNING · 6 MONTHS' : 'SAFE';
+  }
 
-  // Clamp and compute left% relative to full canvas width (min-width 920px)
-  // We leave 40px padding each side, so usable = 840px out of 920px
-  // Express as % of total canvas (920px)
-  const toPct = d => {
-    const clamped = Math.max(MIN_DAYS, Math.min(MAX_DAYS, d));
-    const frac = (clamped - MIN_DAYS) / SPAN; // 0 to 1
-    // Map to 40px..880px range within 920px canvas → 4.35% to 95.65%
-    return 4.35 + frac * 91.3;
-  };
-
-  const hexForDays = d => d < 0 ? '#ff4f4f' : d <= 30 ? '#ff8c42' : d <= 90 ? '#f0b429' : '#3ecf8e';
-  const todayPct = toPct(0);
-
-  let html = '';
-
-  // Axis line
-  html += `<div class="tl-axis-line"></div>`;
-
-  // TODAY marker pole
-  html += `<div class="tl-today-pole" style="left:${todayPct}%"></div>`;
-
-  // Month markers: 1m, 2m, 3m, 6m, 12m, 18m, 24m
-  [30, 60, 90, 180, 365, 540, 720].forEach(d => {
-    if (d <= MAX_DAYS) {
-      const p = toPct(d);
-      const lbl = d === 30 ? '1m' : d === 60 ? '2m' : d === 90 ? '3m' : d === 180 ? '6m' : d === 365 ? '1yr' : d === 540 ? '18m' : '2yr';
-      html += `<div class="tl-mth-tick" style="left:${p}%">${lbl}</div>`;
+  // Group items
+  var groups = [];
+  var lastGroup = null;
+  sorted.forEach(function(e, i) {
+    var d = daysUntil(e.date);
+    var gl = groupLabel(d);
+    if (gl !== lastGroup) {
+      groups.push({ label: gl, items: [], hex: hexForDays(d) });
+      lastGroup = gl;
     }
+    groups[groups.length-1].items.push({ e: e, d: d, idx: i });
   });
 
-  // Expiry items — alternate above and below axis
-  sorted.forEach((e, i) => {
-    const days = daysUntil(e.date);
-    const p = toPct(days);
-    const hex = hexForDays(days);
-    const shortLabel = e.label.length > 14 ? e.label.slice(0, 13) + '…' : e.label;
-
-    if (i % 2 === 0) {
-      // ABOVE axis: bubble (32px) → stem (34px) → dot (10px) landing on axis at y=100px
-      // Total height from top: 32+34+10 = 76px → top must be at 100-76+5 = 29px ✓ (matches .tl-above top:28px)
-      html += `<div class="tl-above" style="left:${p}%" onclick="openTlSheet(${i})">
-        <div class="tl-bub" style="border-color:${hex}">${e.icon}</div>
-        <div class="tl-stem" style="background:${hex};height:34px"></div>
-        <div class="tl-dot" style="background:${hex}"></div>
-      </div>
-      <div class="tl-above-lbl" style="left:${p}%">${shortLabel}</div>`;
-    } else {
-      // BELOW axis: dot → stem (28px) → bubble (32px)
-      // top:97px means dot center at ~102px (≈ axis at 100px ✓)
-      html += `<div class="tl-below" style="left:${p}%" onclick="openTlSheet(${i})">
-        <div class="tl-dot" style="background:${hex}"></div>
-        <div class="tl-stem" style="background:${hex};height:28px"></div>
-        <div class="tl-bub" style="border-color:${hex}">${e.icon}</div>
-      </div>
-      <div class="tl-below-lbl" style="left:${p}%">${shortLabel}</div>`;
-    }
+  var html = '';
+  groups.forEach(function(g) {
+    html += '<div class="vtl-group-label" style="color:' + g.hex + '">' + g.label + '</div>';
+    g.items.forEach(function(item, ii) {
+      var e = item.e; var d = item.d; var idx = item.idx;
+      var hex = hexForDays(d);
+      var isLast = (ii === g.items.length - 1);
+      html += '<div class="vtl-item pressable" onclick="openTlSheet(' + idx + ')">'
+        + '<div class="vtl-spine">'
+        + '<div class="vtl-spine-dot" style="background:' + hex + ';box-shadow:0 0 0 3px ' + badgeBg(d) + '"></div>'
+        + '<div class="vtl-spine-line" style="background:linear-gradient(' + hex + ',transparent)' + (isLast ? ';opacity:.3' : '') + '"></div>'
+        + '</div>'
+        + '<div class="vtl-body" style="border-left:3px solid ' + hex + '">'
+        + '<div class="vtl-body-top">'
+        + '<div class="vtl-icon-title">'
+        + '<span class="vtl-icon">' + e.icon + '</span>'
+        + '<div><div class="vtl-title">' + e.label + '</div>'
+        + '<div class="vtl-sub">' + (e.sub || e.person) + '</div></div>'
+        + '</div>'
+        + '<div class="vtl-badge" style="background:' + badgeBg(d) + ';color:' + hex + '">' + badgeTxt(d) + '</div>'
+        + '</div>'
+        + '<div class="vtl-date-row">'
+        + '<span class="vtl-date">' + fmtD(e.date) + '</span>'
+        + (e.policy ? '<span style="font-size:9px;color:var(--text3);font-family:DM Mono,monospace;">· ' + e.policy + '</span>' : '')
+        + '</div>'
+        + '</div>'
+        + '</div>';
+    });
   });
 
-  axis.innerHTML = html;
-  axis._expiry = sorted;
+  vtlList.innerHTML = html || '<div style="padding:32px 16px;text-align:center;color:var(--text3);font-size:12px;">No expiry items found</div>';
 
-  // Legend
   if (legend) legend.innerHTML = [
     { col: '#ff4f4f', lbl: 'Overdue' },
-    { col: '#ff8c42', lbl: '≤ 30 days' },
-    { col: '#f0b429', lbl: '≤ 90 days' },
-    { col: '#3ecf8e', lbl: 'Safe (> 90 days)' }
-  ].map(l => `<div class="tl-leg"><div class="tl-leg-dot" style="background:${l.col}"></div>${l.lbl}</div>`).join('');
-
-  // Auto-scroll so TODAY is roughly centred in the visible area
-  const scroll = document.getElementById('tl-scroll');
-  if (scroll) {
-    const canvasW = 920;
-    const todayX = (todayPct / 100) * canvasW;
-    setTimeout(() => { scroll.scrollLeft = Math.max(0, todayX - scroll.clientWidth * 0.4); }, 80);
-  }
+    { col: '#ff8c42', lbl: '≤30 days' },
+    { col: '#f0b429', lbl: '≤90 days' },
+    { col: '#3ecf8e', lbl: 'Safe (>90d)' }
+  ].map(function(l){ return '<div class="vtl-leg"><div class="vtl-leg-dot" style="background:' + l.col + '"></div>' + l.lbl + '</div>'; }).join('');
 }
 
 function openTlSheet(idx) {
-  const axis=document.getElementById('tl-axis');
-  const sorted=axis?._expiry;
+  var axis=document.getElementById('vtl-list');
+  var sorted=axis?._expiry;
   if(!sorted) return;
   const e=sorted[idx];
   if(!e) return;
@@ -9205,9 +9214,13 @@ function wToggle(btn) {
 function restoreWidgetCollapse() {
   // DEFAULT collapsed: grocery, vehicle, photos, ai_briefing2, actions, family
   var DEFAULTS_COLLAPSED = { grocery:true, vehicle:true, photos:true, ai_briefing2:true, actions:true, family:true };
+  // ALWAYS_COLLAPSED: these reset to collapsed on every page load regardless of user preference
+  var ALWAYS_COLLAPSED = { vehicle:true };
   try {
     var states = JSON.parse(localStorage.getItem('fp_widget_collapse') || '{}');
     var merged = Object.assign({}, DEFAULTS_COLLAPSED, states);
+    // Override always-collapsed widgets
+    Object.keys(ALWAYS_COLLAPSED).forEach(function(k) { merged[k] = true; });
     document.querySelectorAll('.w-card-collapsible').forEach(function(card) {
       var wid = card.getAttribute('data-wid');
       if (wid && merged[wid] === true)  card.classList.add('collapsed');
