@@ -3562,6 +3562,139 @@ input:focus, button:focus-visible {
 @keyframes attPulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 .att-risk-fill-red { animation: attPulse 1.8s ease infinite; }
 
+/* ═══════════════════════════════════════════════
+   FINANCE SYNC WIDGET
+═══════════════════════════════════════════════ */
+.fin-card { padding: 0; }
+
+/* ── Setup / Not configured state ── */
+.fin-setup {
+  padding: 18px 16px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.fin-setup-icon { font-size: 32px; text-align: center; margin-bottom: 4px; }
+.fin-setup-title { font-size: 15px; font-weight: 800; color: var(--text1); text-align: center; }
+.fin-setup-sub { font-size: 12px; color: var(--text2); text-align: center; line-height: 1.6; }
+.fin-setup-steps { background: var(--surface2); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.fin-step { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text2); line-height: 1.5; }
+.fin-step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--blue2); color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.fin-setup-input-row { display: flex; gap: 8px; }
+.fin-sheet-input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 10px 12px; font-size: 12px;
+  font-family: 'DM Mono', monospace; color: var(--text1); outline: none;
+}
+.fin-sheet-input:focus { border-color: var(--blue2); }
+.fin-sheet-input.error { border-color: var(--red); }
+.fin-connect-btn {
+  padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 800;
+  background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff;
+  cursor: pointer; white-space: nowrap; border: none;
+  transition: opacity .15s;
+}
+.fin-connect-btn:active { opacity: .8; }
+
+/* ── Connected / Main view ── */
+.fin-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+}
+.fin-sync-row { display: flex; align-items: center; gap: 6px; }
+.fin-sync-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+  flex-shrink: 0;
+}
+.fin-sync-dot.stale { background: var(--gold); }
+.fin-sync-dot.error { background: var(--red); }
+.fin-sync-ts { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.fin-sync-btn {
+  font-size: 11px; font-weight: 700; color: var(--blue2);
+  cursor: pointer; padding: 4px 10px; border-radius: 20px;
+  background: rgba(79,127,255,.1); border: 1px solid rgba(79,127,255,.2);
+  transition: background .15s; -webkit-tap-highlight-color: transparent;
+}
+.fin-sync-btn:active { background: rgba(79,127,255,.25); }
+.fin-sync-btn.syncing { color: var(--text3); pointer-events: none; }
+@keyframes finSpin { to { transform: rotate(360deg); } }
+.fin-spin { display: inline-block; animation: finSpin .7s linear infinite; }
+
+/* ── Summary strip ── */
+.fin-summary-strip {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; padding: 0 14px 12px;
+}
+.fin-sum-tile {
+  background: var(--surface2); border-radius: 12px;
+  padding: 10px 10px 8px; text-align: center;
+}
+.fin-sum-val { font-size: 14px; font-weight: 800; letter-spacing: -.3px; }
+.fin-sum-lbl { font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+.fin-sum-income { color: var(--green); }
+.fin-sum-spend  { color: var(--red); }
+.fin-sum-save   { color: var(--gold); }
+
+/* ── Category breakdown bar ── */
+.fin-cats { padding: 0 14px 12px; display: flex; flex-direction: column; gap: 6px; }
+.fin-cat-row { display: flex; align-items: center; gap: 8px; }
+.fin-cat-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+.fin-cat-name { font-size: 11px; color: var(--text2); width: 90px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fin-cat-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.fin-cat-fill  { height: 100%; border-radius: 3px; transition: width .6s ease; }
+.fin-cat-amt   { font-size: 10px; font-weight: 700; color: var(--text2); width: 46px; text-align: right; flex-shrink: 0; }
+
+/* ── Transaction list ── */
+.fin-txn-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 14px 8px;
+}
+.fin-txn-title { font-size: 11px; font-weight: 800; color: var(--text3); text-transform: uppercase; letter-spacing: .6px; }
+.fin-txn-more  { font-size: 11px; color: var(--blue2); cursor: pointer; }
+.fin-txn-list  { display: flex; flex-direction: column; padding: 0 10px 14px; gap: 2px; }
+.fin-txn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 6px; border-radius: 10px;
+  transition: background .1s; cursor: default;
+}
+.fin-txn:active { background: var(--surface2); }
+.fin-txn-ico {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.fin-txn-body { flex: 1; min-width: 0; }
+.fin-txn-merchant { font-size: 13px; font-weight: 700; color: var(--text1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fin-txn-meta    { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.fin-txn-amt     { font-size: 13px; font-weight: 800; flex-shrink: 0; }
+.fin-txn-amt.debit  { color: var(--red); }
+.fin-txn-amt.credit { color: var(--green); }
+
+/* ── Empty state ── */
+.fin-empty {
+  padding: 24px 16px; text-align: center;
+  font-size: 12px; color: var(--text3); line-height: 1.6;
+}
+.fin-empty-icon { font-size: 28px; margin-bottom: 8px; }
+
+/* ── Error banner ── */
+.fin-error {
+  margin: 0 14px 12px; padding: 10px 12px;
+  background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2);
+  border-radius: 10px; font-size: 11px; color: var(--red); line-height: 1.5;
+}
+
+/* ── Finance full-page sheet ── */
+.fin-sheet { position: fixed; inset: 0; z-index: 9100; display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none; opacity: 0; transition: opacity .25s; visibility: hidden; }
+.fin-sheet.open { pointer-events: all; opacity: 1; visibility: visible; }
+.fin-sheet-bg { position: absolute; inset: 0; background: rgba(0,0,0,.6); }
+.fin-sheet-card {
+  position: relative; background: var(--surface);
+  border-radius: 22px 22px 0 0; padding: 20px 18px max(32px,env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border2);
+  animation: sheetUp .28s cubic-bezier(.34,1.56,.64,1) both;
+  max-height: 88vh; overflow-y: auto;
+}
+.fin-sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 0 auto 18px; }
+
 </style>
 </head>
 <body>
@@ -4360,6 +4493,15 @@ input:focus, button:focus-visible {
   </div>
 </div>
 
+<!-- Finance full sheet (all transactions + settings) -->
+<div class="fin-sheet" id="fin-sheet" onclick="if(event.target===this)closeFinSheet()">
+  <div class="fin-sheet-bg" onclick="closeFinSheet()"></div>
+  <div class="fin-sheet-card">
+    <div class="fin-sheet-handle"></div>
+    <div id="fin-sheet-body"></div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════
 // DATA
@@ -5134,8 +5276,9 @@ const WIDGET_DEFS = {
   photos:     { id:'photos',     icon:'📸', name:'Memory Wall',         desc:'Family photo memories pinboard' },
   bills:      { id:'bills',      icon:'💸', name:'Bills & Reminders',   desc:'Monthly bill tracker with paid/unpaid toggle' },
   att_risk:   { id:'att_risk',   icon:'📊', name:'Attendance Risk Meter', desc:'Live subject-wise attendance % bar for Josritha' },
+  finance:    { id:'finance',    icon:'💳', name:'Finance Sync',          desc:'Google Sheets transaction feed with spend summary' },
 };
-const DEFAULT_WIDGETS=['hero','att_risk','ai_briefing2','priority','family','grocery','timeline','att_severity','vehicle','health_pulse','bills','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','att_risk','ai_briefing2','priority','family','grocery','timeline','att_severity','vehicle','health_pulse','bills','finance','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
@@ -5526,6 +5669,7 @@ function buildWidgetHTML(wid) {
     case 'photos':      return buildCollapsibleWidget('📸 Memory Wall', buildMemoryWallWidget(), 'photos', true);
     case 'bills':       return '<div class="w-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="w-hdr" style="margin:0">💸 &nbsp;Bills & Reminders</div><span class="card-action" onclick="billsResetMonth()" style="font-size:11px;">Reset Month</span></div><div id="bills-body">' + buildBillsWidget() + '</div></div>';
     case 'att_risk':    return '<div class="w-card" style="padding:14px 16px 12px;" id="att-risk-card">' + buildAttRiskMeter() + '</div>';
+    case 'finance':     return buildFinanceWidget();
     case 'ai_meals': return `<div class="ai-meal-widget">
       <div class="aimw-header">
         <div class="w-hdr" style="margin:0">🍛 &nbsp;AI Meal Planner</div>
@@ -5893,6 +6037,430 @@ function grocClearDone() {
   if (groc) groc.innerHTML = buildGrocList();
   if (count) count.textContent = grocCountText();
   grocRefreshProgress();
+}
+
+/* ═══════════════════════════════════════════════
+   FINANCE SYNC WIDGET — Google Sheets → Portal
+═══════════════════════════════════════════════ */
+
+// ── Storage helpers ──
+function finGetSheetId()  { return localStorage.getItem('fp_fin_sheet_id') || ''; }
+function finSaveSheetId(id) { localStorage.setItem('fp_fin_sheet_id', id.trim()); }
+function finGetTxns()     { try { return JSON.parse(localStorage.getItem('fp_transactions') || '[]'); } catch(e) { return []; } }
+function finSaveTxns(arr) { localStorage.setItem('fp_transactions', JSON.stringify(arr)); }
+function finGetSyncTs()   { return localStorage.getItem('fp_fin_sync_ts') || ''; }
+function finSaveSyncTs()  { localStorage.setItem('fp_fin_sync_ts', new Date().toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})); }
+function finGetSyncErr()  { return localStorage.getItem('fp_fin_sync_err') || ''; }
+function finSaveSyncErr(e){ if(e) localStorage.setItem('fp_fin_sync_err', e); else localStorage.removeItem('fp_fin_sync_err'); }
+
+// ── Category config ──
+var FIN_CATS = [
+  { name:'Food & Dining',    icon:'\uD83C\uDF7D', color:'#f97316', keys:'swiggy|zomato|hotel|restaurant|food|dining|cafe|kitchen|biryani|pizza|burger' },
+  { name:'Groceries',        icon:'\uD83D\uDED2', color:'#22c55e', keys:'dmart|bigbasket|blinkit|zepto|grocer|kirana|supermarket|fresh|vegetables' },
+  { name:'Transport',        icon:'\uD83D\uDE97', color:'#3b82f6', keys:'uber|ola|rapido|petrol|fuel|diesel|auto|cab|parking|toll|bunk' },
+  { name:'Utilities',        icon:'\u26A1',       color:'#f5a623', keys:'electricity|bescom|tsspdcl|apspdcl|water|gas|lpg|cylinder|indane|bharat' },
+  { name:'Shopping',         icon:'\uD83D\uDECD', color:'#ec4899', keys:'amazon|flipkart|myntra|meesho|ajio|nykaa|decathlon|shopping|store|mall' },
+  { name:'Healthcare',       icon:'\uD83D\uDC8A', color:'#ef4444', keys:'medplus|apollo|pharmacy|hospital|clinic|doctor|medicine|health|diagnostic' },
+  { name:'Education',        icon:'\uD83D\uDCDA', color:'#8b5cf6', keys:'school|college|university|klh|fees|tuition|coaching|education|course' },
+  { name:'OTT & Mobile',     icon:'\uD83D\uDCF1', color:'#06b6d4', keys:'netflix|hotstar|prime|spotify|youtube|jio|airtel|vodafone|bsnl|tata|mobile|recharge|dth' },
+  { name:'Banking & Finance', icon:'\uD83C\uDFE6', color:'#6366f1', keys:'emi|loan|insurance|premium|nps|mutual|sip|fd|rd|bank|transfer|neft|imps|upi' },
+  { name:'Salary & Income',  icon:'\uD83D\uDCB0', color:'#34d399', keys:'salary|dataspeaks|income|credit|cashback|refund|interest|dividend' }
+];
+
+function finCategorize(merchant, type) {
+  var m = (merchant || '').toLowerCase();
+  if (type === 'credit' && m.match(/salary|dataspeaks|income|refund|cashback|interest/)) return FIN_CATS[9];
+  for (var i = 0; i < FIN_CATS.length - 1; i++) {
+    if (m.match(new RegExp(FIN_CATS[i].keys))) return FIN_CATS[i];
+  }
+  return { name:'Other', icon:'\uD83D\uDCB3', color:'#6b7280' };
+}
+
+function finFmtAmt(n) {
+  if (n >= 100000) return '\u20B9' + (n/100000).toFixed(1) + 'L';
+  if (n >= 1000)   return '\u20B9' + (n/1000).toFixed(1) + 'K';
+  return '\u20B9' + n.toLocaleString('en-IN');
+}
+
+// ── Parse CSV from Google Sheets ──
+function finParseCSV(csvText) {
+  var lines = csvText.trim().split('\n');
+  if (lines.length < 2) return [];
+  // First row = headers. Normalize to lowercase, trim.
+  var headers = lines[0].split(',').map(function(h){ return h.trim().toLowerCase().replace(/"/g,''); });
+  var txns = [];
+  for (var i = 1; i < lines.length; i++) {
+    var cols = lines[i].split(',').map(function(c){ return c.trim().replace(/^"|"$/g,''); });
+    var row = {};
+    headers.forEach(function(h, idx){ row[h] = cols[idx] || ''; });
+    // Accept flexible column names: date, amount, type, merchant, category, bank, balance
+    var date     = row['date'] || row['txn_date'] || row['transaction_date'] || '';
+    var amount   = parseFloat((row['amount'] || row['amt'] || '0').replace(/[^\d.]/g,'')) || 0;
+    var type     = (row['type'] || row['txn_type'] || '').toLowerCase();
+    var merchant = row['merchant'] || row['description'] || row['narration'] || row['particulars'] || '';
+    var bank     = row['bank'] || row['bank_name'] || '';
+    var balance  = parseFloat((row['balance'] || '0').replace(/[^\d.]/g,'')) || 0;
+    if (!date || !amount) continue;
+    // Infer type from amount sign if not explicit
+    if (!type) type = amount < 0 ? 'debit' : 'credit';
+    amount = Math.abs(amount);
+    var cat = finCategorize(merchant, type);
+    txns.push({ date: date, amount: amount, type: type, merchant: merchant, category: cat.name, icon: cat.icon, catColor: cat.color, bank: bank, balance: balance });
+  }
+  return txns;
+}
+
+// ── Sync from Google Sheets ──
+var _finSyncing = false;
+function finSync(silent) {
+  var sheetId = finGetSheetId();
+  if (!sheetId) { showToast('\uD83D\uDCC4 Set your Sheet ID first', 'info'); return; }
+  if (_finSyncing) return;
+  _finSyncing = true;
+
+  // Update button to show spinning
+  var btn = document.getElementById('fin-sync-btn');
+  if (btn) { btn.innerHTML = '<span class="fin-spin">\u21BB</span> Syncing'; btn.className = 'fin-sync-btn syncing'; }
+
+  var url = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/export?format=csv&t=' + Date.now();
+
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' — check Sheet ID and that it is published as CSV');
+      return r.text();
+    })
+    .then(function(csv) {
+      var txns = finParseCSV(csv);
+      if (!txns.length) throw new Error('No transactions found. Check sheet has columns: date, amount, type, merchant');
+      finSaveTxns(txns);
+      finSaveSyncTs();
+      finSaveSyncErr(null);
+      _finSyncing = false;
+      if (!silent) showToast('\u2705 Synced ' + txns.length + ' transactions', 'success');
+      // Re-render widget
+      var item = document.querySelector('.widget-item[data-wid="finance"]');
+      if (item && item.children[2]) item.children[2].innerHTML = buildFinanceWidget();
+    })
+    .catch(function(err) {
+      _finSyncing = false;
+      var msg = err.message || 'Sync failed';
+      finSaveSyncErr(msg);
+      if (!silent) showToast('\u274C ' + msg.slice(0,60), 'error');
+      var item = document.querySelector('.widget-item[data-wid="finance"]');
+      if (item && item.children[2]) item.children[2].innerHTML = buildFinanceWidget();
+    });
+}
+
+// ── Connect: save Sheet ID and first sync ──
+function finConnect() {
+  var inp = document.getElementById('fin-sheet-id-input');
+  if (!inp) return;
+  var val = inp.value.trim();
+  // Accept full URL or just the ID
+  var match = val.match(/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if (match) val = match[1];
+  if (!val || val.length < 20) {
+    inp.classList.add('error');
+    inp.placeholder = 'Looks too short — paste full URL or ID';
+    return;
+  }
+  finSaveSheetId(val);
+  // Re-render widget to connected state before syncing
+  var item = document.querySelector('.widget-item[data-wid="finance"]');
+  if (item && item.children[2]) item.children[2].innerHTML = buildFinanceWidget();
+  setTimeout(function(){ finSync(false); }, 200);
+}
+
+// ── Open full finance sheet ──
+function openFinSheet(view) {
+  var sheet = document.getElementById('fin-sheet');
+  if (!sheet) return;
+  sheet.classList.add('open');
+  var scrollY = window.scrollY || window.pageYOffset;
+  document.body.dataset.scrollY = scrollY;
+  document.body.style.top = '-' + scrollY + 'px';
+  document.body.classList.add('modal-open');
+  document.getElementById('fin-sheet-body').innerHTML = buildFinSheetBody(view || 'txns');
+}
+
+function closeFinSheet() {
+  var sheet = document.getElementById('fin-sheet');
+  if (!sheet) return;
+  sheet.classList.remove('open');
+  document.body.classList.remove('modal-open');
+  var scrollY = parseInt(document.body.dataset.scrollY || '0', 10);
+  document.body.style.top = '';
+  window.scrollTo(0, scrollY);
+}
+
+function finSheetTab(view) {
+  document.getElementById('fin-sheet-body').innerHTML = buildFinSheetBody(view);
+}
+
+// ── Full sheet body ──
+function buildFinSheetBody(view) {
+  var txns = finGetTxns();
+  var sheetId = finGetSheetId();
+
+  var tabs = '<div style="display:flex;gap:8px;margin-bottom:16px;">'
+    + ['txns','cats','settings'].map(function(v) {
+        var labels = { txns:'\uD83D\uDCCB All Transactions', cats:'\uD83D\uDCC8 By Category', settings:'\u2699\uFE0F Settings' };
+        var active = v === view;
+        return '<div onclick="finSheetTab(\'' + v + '\')" style="flex:1;text-align:center;padding:8px 4px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;'
+          + (active ? 'background:var(--blue2);color:#fff;' : 'background:var(--surface2);color:var(--text2);') + '">'
+          + labels[v] + '</div>';
+      }).join('')
+    + '</div>';
+
+  var body = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">'
+    + '<div style="font-size:16px;font-weight:800;">\uD83D\uDCB3 Family Finance</div>'
+    + '<div onclick="closeFinSheet()" style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:var(--text2);">\u00D7</div>'
+    + '</div>' + tabs;
+
+  if (view === 'txns') {
+    if (!txns.length) {
+      body += '<div style="text-align:center;padding:32px 0;color:var(--text3);font-size:13px;">No transactions yet.<br>Sync from Google Sheets first.</div>';
+    } else {
+      // Show all txns sorted by date desc
+      var sorted = txns.slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
+      body += '<div style="display:flex;flex-direction:column;gap:2px;">';
+      sorted.forEach(function(t) {
+        body += '<div style="display:flex;align-items:center;gap:10px;padding:9px 4px;border-radius:10px;">'
+          + '<div style="width:34px;height:34px;border-radius:10px;background:' + (t.catColor||'#6b7280') + '22;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">' + (t.icon||'\uD83D\uDCB3') + '</div>'
+          + '<div style="flex:1;min-width:0;">'
+          + '<div style="font-size:13px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (t.merchant||'Unknown') + '</div>'
+          + '<div style="font-size:10px;color:var(--text3);">' + t.date + ' \u00B7 ' + (t.bank||'') + ' \u00B7 ' + (t.category||'Other') + '</div>'
+          + '</div>'
+          + '<div style="font-size:13px;font-weight:800;flex-shrink:0;color:' + (t.type==='credit'?'var(--green)':'var(--red)') + ';">'
+          + (t.type==='credit'?'+':'-') + finFmtAmt(t.amount)
+          + '</div></div>';
+      });
+      body += '</div>';
+    }
+  }
+
+  if (view === 'cats') {
+    if (!txns.length) {
+      body += '<div style="text-align:center;padding:32px 0;color:var(--text3);font-size:13px;">No transactions to analyze yet.</div>';
+    } else {
+      var catMap = {};
+      var thisMonth = new Date().toISOString().slice(0,7);
+      txns.filter(function(t){ return t.type==='debit' && t.date && t.date.startsWith(thisMonth); })
+          .forEach(function(t){
+            var c = t.category || 'Other';
+            catMap[c] = (catMap[c]||0) + t.amount;
+          });
+      var catEntries = Object.keys(catMap).map(function(c){ return { name:c, amt:catMap[c] }; })
+                             .sort(function(a,b){ return b.amt-a.amt; });
+      var maxAmt = catEntries.length ? catEntries[0].amt : 1;
+      var month = new Date().toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+      body += '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">' + month + ' Spend by Category</div>';
+      body += '<div style="display:flex;flex-direction:column;gap:10px;">';
+      catEntries.forEach(function(c) {
+        var cat = FIN_CATS.find(function(x){ return x.name===c.name; }) || { icon:'\uD83D\uDCB3', color:'#6b7280' };
+        var pct = Math.round(c.amt/maxAmt*100);
+        body += '<div style="display:flex;align-items:center;gap:10px;">'
+          + '<div style="font-size:16px;width:22px;text-align:center;flex-shrink:0;">' + cat.icon + '</div>'
+          + '<div style="flex:1;min-width:0;">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">'
+          + '<span style="font-size:12px;font-weight:700;color:var(--text1);">' + c.name + '</span>'
+          + '<span style="font-size:12px;font-weight:800;color:var(--text2);">' + finFmtAmt(c.amt) + '</span>'
+          + '</div>'
+          + '<div style="height:6px;background:var(--border);border-radius:4px;overflow:hidden;">'
+          + '<div style="height:100%;border-radius:4px;background:' + cat.color + ';width:' + pct + '%;transition:width .6s ease;"></div>'
+          + '</div></div></div>';
+      });
+      body += '</div>';
+    }
+  }
+
+  if (view === 'settings') {
+    var currentId = sheetId;
+    body += '<div style="display:flex;flex-direction:column;gap:14px;">'
+      + '<div style="background:var(--surface2);border-radius:12px;padding:14px;">'
+      + '<div style="font-size:12px;font-weight:800;color:var(--text1);margin-bottom:8px;">\uD83D\uDCC4 Google Sheet ID</div>'
+      + '<div style="font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:10px;">Paste your Sheet ID or full URL. The sheet must be <strong style="color:var(--gold);">published as CSV</strong> (File \u2192 Share \u2192 Publish to web \u2192 CSV).</div>'
+      + '<input id="fin-settings-input" type="text" value="' + currentId + '" placeholder="1BxiMVs0XRA5nFM..." style="width:100%;box-sizing:border-box;background:var(--surface3);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text1);outline:none;margin-bottom:8px;">'
+      + '<div style="display:flex;gap:8px;">'
+      + '<div onclick="finSettingsSave()" style="flex:1;text-align:center;padding:10px;border-radius:10px;background:var(--blue2);color:#fff;font-size:12px;font-weight:800;cursor:pointer;">\u2713 Save & Sync</div>'
+      + (currentId ? '<div onclick="finSettingsClear()" style="padding:10px 14px;border-radius:10px;background:rgba(239,68,68,.1);color:var(--red);font-size:12px;font-weight:700;cursor:pointer;">\uD83D\uDDD1 Clear</div>' : '')
+      + '</div></div>'
+
+      + '<div style="background:var(--surface2);border-radius:12px;padding:14px;">'
+      + '<div style="font-size:12px;font-weight:800;color:var(--text1);margin-bottom:8px;">\uD83D\uDCCB Expected Sheet Columns</div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--text3);line-height:2;background:var(--surface3);border-radius:8px;padding:10px 12px;">'
+      + 'date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(YYYY-MM-DD)<br>'
+      + 'amount &nbsp;&nbsp;&nbsp;(numeric, e.g. 1500)<br>'
+      + 'type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(debit / credit)<br>'
+      + 'merchant &nbsp;(Swiggy, Amazon...)<br>'
+      + 'bank &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(HDFC, ICICI...)<br>'
+      + 'balance &nbsp;&nbsp;(optional)'
+      + '</div></div>'
+
+      + '<div style="background:var(--surface2);border-radius:12px;padding:14px;">'
+      + '<div style="font-size:12px;font-weight:800;color:var(--text1);margin-bottom:6px;">\uD83E\uDD16 Cowork Task Prompt</div>'
+      + '<div style="font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:8px;">Paste this into Cowork as a scheduled daily task:</div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--text3);background:var(--surface3);border-radius:8px;padding:10px 12px;line-height:1.8;word-break:break-word;">'
+      + 'Read all bank alert emails received in the last 24 hours from HDFC, ICICI, Axis, Indian Bank. Extract each transaction: date (YYYY-MM-DD), amount (number), type (debit or credit), merchant name, bank name. Append new rows to Google Sheet \u201cFamilyFinance\u201d with columns: date, amount, type, merchant, bank. Skip duplicates.'
+      + '</div>'
+      + '<div onclick="finCopyCoworkPrompt()" style="margin-top:8px;text-align:center;padding:8px;border-radius:9px;background:rgba(79,127,255,.1);color:var(--blue2);font-size:11px;font-weight:700;cursor:pointer;" id="fin-copy-cowork-btn">\uD83D\uDCCB Copy Cowork Prompt</div>'
+      + '</div>'
+
+      + '</div>';
+  }
+
+  return body;
+}
+
+function finSettingsSave() {
+  var inp = document.getElementById('fin-settings-input');
+  if (!inp) return;
+  var val = inp.value.trim();
+  var match = val.match(/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if (match) val = match[1];
+  if (!val || val.length < 20) {
+    inp.style.borderColor = 'var(--red)';
+    return;
+  }
+  finSaveSheetId(val);
+  closeFinSheet();
+  setTimeout(function(){ finSync(false); }, 300);
+}
+
+function finSettingsClear() {
+  localStorage.removeItem('fp_fin_sheet_id');
+  localStorage.removeItem('fp_transactions');
+  localStorage.removeItem('fp_fin_sync_ts');
+  localStorage.removeItem('fp_fin_sync_err');
+  closeFinSheet();
+  var item = document.querySelector('.widget-item[data-wid="finance"]');
+  if (item && item.children[2]) item.children[2].innerHTML = buildFinanceWidget();
+}
+
+function finCopyCoworkPrompt() {
+  var prompt = 'Read all bank alert emails received in the last 24 hours from HDFC, ICICI, Axis, Indian Bank. Extract each transaction: date (YYYY-MM-DD), amount (number), type (debit or credit), merchant name, bank name. Append new rows to Google Sheet "FamilyFinance" with columns: date, amount, type, merchant, bank. Skip duplicates.';
+  navigator.clipboard.writeText(prompt).then(function() {
+    var btn = document.getElementById('fin-copy-cowork-btn');
+    if (btn) { btn.textContent = '\u2714 Copied!'; setTimeout(function(){ btn.textContent = '\uD83D\uDCCB Copy Cowork Prompt'; }, 2000); }
+  });
+}
+
+// ── Main widget builder ──
+function buildFinanceWidget() {
+  var sheetId = finGetSheetId();
+  var txns    = finGetTxns();
+  var syncTs  = finGetSyncTs();
+  var syncErr = finGetSyncErr();
+
+  // ── NOT configured yet ──
+  if (!sheetId) {
+    return '<div class="w-card fin-card">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0;">'
+      + '<div class="w-hdr" style="margin:0;">\uD83D\uDCB3 Finance Sync</div>'
+      + '<span style="font-size:10px;color:var(--text3);">Google Sheets</span>'
+      + '</div>'
+      + '<div class="fin-setup">'
+      + '<div class="fin-setup-icon">\uD83D\uDCC4</div>'
+      + '<div class="fin-setup-title">Connect your transaction sheet</div>'
+      + '<div class="fin-setup-sub">Paste your Google Sheet ID (or full URL) below.<br>The sheet must be <strong style="color:var(--gold);">published as CSV</strong>.</div>'
+      + '<div class="fin-setup-steps">'
+      + '<div class="fin-step"><div class="fin-step-num">1</div><div>In Google Sheets: <strong>File \u2192 Share \u2192 Publish to web \u2192 CSV</strong></div></div>'
+      + '<div class="fin-step"><div class="fin-step-num">2</div><div>Copy the Sheet ID from the URL bar (the long string after <code style="color:var(--blue2);">/d/</code>)</div></div>'
+      + '<div class="fin-step"><div class="fin-step-num">3</div><div>Paste below and tap Connect. Sheet columns: <code style="color:var(--gold);">date, amount, type, merchant, bank</code></div></div>'
+      + '</div>'
+      + '<div class="fin-setup-input-row">'
+      + '<input id="fin-sheet-id-input" class="fin-sheet-input" type="text" placeholder="Paste Sheet ID or full URL\u2026" onkeydown="if(event.key===\'Enter\')finConnect()">'
+      + '<button class="fin-connect-btn" onclick="finConnect()">\u2192 Connect</button>'
+      + '</div>'
+      + '</div></div>';
+  }
+
+  // ── Connected — build live view ──
+  var html = '<div class="w-card fin-card">';
+
+  // Header row
+  var dotClass = syncErr ? 'error' : (syncTs ? 'fin-sync-dot' : 'stale');
+  html += '<div class="fin-header">'
+    + '<div class="w-hdr" style="margin:0;">\uD83D\uDCB3 Finance Sync</div>'
+    + '<div class="fin-sync-row">'
+    + '<div class="fin-sync-dot ' + dotClass + '"></div>'
+    + '<span class="fin-sync-ts">' + (syncTs ? syncTs : 'Never synced') + '</span>'
+    + '<div class="fin-sync-btn" id="fin-sync-btn" onclick="finSync(false)">\u21BB Sync</div>'
+    + '</div>'
+    + '</div>';
+
+  // Error banner
+  if (syncErr) {
+    html += '<div class="fin-error">\u26A0\uFE0F ' + syncErr + '</div>';
+  }
+
+  if (!txns.length) {
+    html += '<div class="fin-empty"><div class="fin-empty-icon">\uD83D\uDCCA</div>No transactions yet.<br>Tap \u21BB Sync to fetch from your sheet.</div>';
+  } else {
+    // Summary strip — this month
+    var thisMonth = new Date().toISOString().slice(0,7);
+    var monthTxns = txns.filter(function(t){ return t.date && t.date.startsWith(thisMonth); });
+    var income  = monthTxns.filter(function(t){ return t.type==='credit'; }).reduce(function(s,t){ return s+t.amount; }, 0);
+    var spend   = monthTxns.filter(function(t){ return t.type==='debit';  }).reduce(function(s,t){ return s+t.amount; }, 0);
+    var savings = income - spend;
+
+    html += '<div class="fin-summary-strip">'
+      + '<div class="fin-sum-tile"><div class="fin-sum-val fin-sum-income">' + finFmtAmt(income) + '</div><div class="fin-sum-lbl">Income</div></div>'
+      + '<div class="fin-sum-tile"><div class="fin-sum-val fin-sum-spend">'  + finFmtAmt(spend)  + '</div><div class="fin-sum-lbl">Spent</div></div>'
+      + '<div class="fin-sum-tile"><div class="fin-sum-val fin-sum-save" style="color:' + (savings>=0?'var(--gold)':'var(--red)') + ';">' + finFmtAmt(Math.abs(savings)) + '</div><div class="fin-sum-lbl">' + (savings>=0?'Saved':'Over') + '</div></div>'
+      + '</div>';
+
+    // Top categories this month
+    var catMap = {};
+    monthTxns.filter(function(t){ return t.type==='debit'; }).forEach(function(t){
+      var c = t.category || 'Other';
+      catMap[c] = { amt:(catMap[c]?catMap[c].amt:0)+t.amount, icon:t.icon||'\uD83D\uDCB3', color:t.catColor||'#6b7280' };
+    });
+    var topCats = Object.keys(catMap).map(function(c){ return Object.assign({name:c}, catMap[c]); })
+                        .sort(function(a,b){ return b.amt-a.amt; }).slice(0,4);
+    if (topCats.length) {
+      var maxAmt = topCats[0].amt;
+      html += '<div class="fin-cats">';
+      topCats.forEach(function(c) {
+        var pct = Math.round(c.amt/maxAmt*100);
+        html += '<div class="fin-cat-row">'
+          + '<div class="fin-cat-icon">' + c.icon + '</div>'
+          + '<div class="fin-cat-name">' + c.name + '</div>'
+          + '<div class="fin-cat-track"><div class="fin-cat-fill" style="width:' + pct + '%;background:' + c.color + ';"></div></div>'
+          + '<div class="fin-cat-amt">' + finFmtAmt(c.amt) + '</div>'
+          + '</div>';
+      });
+      html += '</div>';
+    }
+
+    // Recent transactions (last 5)
+    var recent = txns.slice().sort(function(a,b){ return b.date.localeCompare(a.date); }).slice(0,5);
+    html += '<div class="fin-txn-hdr">'
+      + '<div class="fin-txn-title">Recent</div>'
+      + '<div class="fin-txn-more" onclick="openFinSheet(\'txns\')">All ' + txns.length + ' \u2192</div>'
+      + '</div>'
+      + '<div class="fin-txn-list">';
+    recent.forEach(function(t) {
+      html += '<div class="fin-txn">'
+        + '<div class="fin-txn-ico" style="background:' + (t.catColor||'#6b7280') + '22;">' + (t.icon||'\uD83D\uDCB3') + '</div>'
+        + '<div class="fin-txn-body">'
+        + '<div class="fin-txn-merchant">' + (t.merchant || 'Unknown') + '</div>'
+        + '<div class="fin-txn-meta">' + t.date + (t.bank?' \u00B7 '+t.bank:'') + '</div>'
+        + '</div>'
+        + '<div class="fin-txn-amt ' + t.type + '">' + (t.type==='credit'?'+':'-') + finFmtAmt(t.amount) + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Footer actions
+  html += '<div style="display:flex;gap:8px;padding:4px 14px 14px;">'
+    + '<div onclick="openFinSheet(\'cats\')" style="flex:1;text-align:center;padding:8px;border-radius:10px;background:var(--surface2);font-size:11px;font-weight:700;color:var(--text2);cursor:pointer;">\uD83D\uDCC8 Categories</div>'
+    + '<div onclick="openFinSheet(\'settings\')" style="flex:1;text-align:center;padding:8px;border-radius:10px;background:var(--surface2);font-size:11px;font-weight:700;color:var(--text2);cursor:pointer;">\u2699\uFE0F Settings</div>'
+    + '</div>';
+
+  html += '</div>';
+  return html;
 }
 
 /* ═══════════════════════════════════════════════
@@ -7327,13 +7895,14 @@ function initWidgetDynamic() {
   // UNIFIED TIMELINE
   // ─────────────────────────────────────────
   // Refresh dynamic widgets
-  ['att_severity','att_risk','grocery','vehicle','photos','ai_briefing2'].forEach(function(wid) {
+  ['att_severity','att_risk','finance','grocery','vehicle','photos','ai_briefing2'].forEach(function(wid) {
     var item = document.querySelector('.widget-item[data-wid="' + wid + '"]');
     if (!item) return;
     var body = item.children[2];
     if (!body) return;
     if (wid === 'att_severity' || wid === 'josritha_acad') { body.innerHTML = buildJosrithaAcadWidget(); requestAnimationFrame(function(){ jacInitSwipe(); }); }
     else if (wid === 'att_risk')   { var c = body.querySelector('#att-risk-card'); if (c) c.innerHTML = buildAttRiskMeter(); }
+    else if (wid === 'finance')    { body.innerHTML = buildFinanceWidget(); }
     else if (wid === 'vehicle')  body.innerHTML = buildVehicleWidget();
     else if (wid === 'photos')   body.innerHTML = buildMemoryWallWidget();
     // grocery + briefing only refresh on tab switch — don't wipe user input
