@@ -291,12 +291,8 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   border-top:1px solid var(--border2);
   padding:8px 0;
   padding-bottom:max(8px, env(safe-area-inset-bottom));
-  -webkit-transform:translateZ(0);
-  transform:translateZ(0);
-  will-change:transform;
-  -webkit-backface-visibility:hidden;
-  backface-visibility:hidden;
-  contain:layout style paint;
+  -webkit-transform:translate3d(0,0,0);
+  transform:translate3d(0,0,0);
 }
 #bottom-nav::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,rgba(10,12,22,.97));pointer-events:none;z-index:1;}
 .bnav-inner{display:flex;justify-content:flex-start;align-items:center;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:100%;padding:0 4px;}
@@ -1919,32 +1915,35 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 #fab-btn {
   position: fixed;
   bottom: calc(var(--nav-h) + 16px);
-  right: 18px;
+  left: 16px;
+  right: auto;
   z-index: 9100;
-  width: 38px; height: 38px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--blue), #3a6aff);
-  color: #fff;
-  font-size: 18px;
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  color: var(--blue2);
+  font-size: 22px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(79,127,255,.45), 0 2px 6px rgba(0,0,0,.25);
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
   transition: all .22s cubic-bezier(.34,1.56,.64,1);
-  border: none;
   user-select: none;
   line-height: 1;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
 }
-#fab-btn:hover { transform: scale(1.08) rotate(8deg); box-shadow: 0 8px 24px rgba(79,127,255,.6); }
+#fab-btn:hover { transform: scale(1.06); box-shadow: 0 4px 18px rgba(79,127,255,.35); border-color: var(--blue2); }
 #fab-btn:active { transform: scale(0.93); }
 #fab-btn.hidden { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(12px); }
 /* FAB menu */
 #fab-menu {
   position: fixed;
   bottom: calc(var(--nav-h) + 62px);
-  right: 14px;
+  left: 10px;
+  right: auto;
   z-index: 9050;
   display: flex; flex-direction: column; gap: 8px;
-  align-items: flex-end;
+  align-items: flex-start;
   transition: all .22s;
 }
 #fab-menu.hidden { opacity: 0; pointer-events: none; transform: translateY(12px) scale(0.95); }
@@ -1967,7 +1966,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .fab-item:active { transform: scale(0.96); }
 .fab-item-ico { font-size: 18px; width: 32px; height: 32px; border-radius: 9px; background: var(--blue-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 @media(min-width:768px) {
-  #fab-btn { bottom: 24px; }
+  #fab-btn { bottom: 24px; left: 20px; }
   #fab-menu { bottom: 74px; }
 }
 
@@ -2610,11 +2609,11 @@ input:focus, button:focus-visible {
 .veh-due-badge.ok { background: rgba(62,207,142,.1); color: var(--green); }
 .veh-due-date { font-size: 9px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 3px; }
 /* Vehicle detail sheet */
-.veh-sheet { position: fixed; inset: 0; z-index: 9200; display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none; opacity: 0; transition: opacity .25s; }
-.veh-sheet.open { pointer-events: all; opacity: 1; }
+.veh-sheet { position: fixed; inset: 0; z-index: 9200; display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none; opacity: 0; transition: opacity .25s; visibility: hidden; }
+.veh-sheet.open { pointer-events: all; opacity: 1; visibility: visible; }
 .veh-sheet-bg { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
-.veh-sheet-card { position: relative; background: var(--surface); border-radius: 22px 22px 0 0; padding: 20px 18px max(28px,env(safe-area-inset-bottom)); border-top: 1px solid var(--border2); transform: translateY(100%); transition: transform .28s cubic-bezier(.34,1.56,.64,1); max-height: 80vh; overflow-y: auto; }
-.veh-sheet.open .veh-sheet-card { transform: translateY(0); }
+.veh-sheet-card { position: relative; background: var(--surface); border-radius: 22px 22px 0 0; padding: 20px 18px max(28px,env(safe-area-inset-bottom)); border-top: 1px solid var(--border2); transition: transform .3s cubic-bezier(.34,1.56,.64,1); max-height: 80vh; overflow-y: auto; transform: translateY(100%); }
+.veh-sheet.open .veh-sheet-card { transform: translateY(0%); }
 .veh-sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 0 auto 16px; }
 .veh-service-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border2); }
 .veh-service-row:last-child { border-bottom: none; }
@@ -2644,8 +2643,8 @@ input:focus, button:focus-visible {
 .mem-empty-icon { font-size: 28px; opacity: .3; }
 .mem-empty-txt { font-size: 11px; color: var(--text3); margin-top: 8px; font-family: 'Inter', sans-serif; }
 /* Lightbox */
-.mem-lightbox { position: fixed; inset: 0; z-index: 9500; background: rgba(0,0,0,.92); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 20px; }
-.mem-lightbox.open { opacity: 1; pointer-events: all; }
+.mem-lightbox { position: fixed; inset: 0; z-index: 9500; background: rgba(0,0,0,.92); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 20px; visibility: hidden; }
+.mem-lightbox.open { opacity: 1; pointer-events: all; visibility: visible; }
 .mem-lightbox img { max-width: 100%; max-height: 70vh; border-radius: 12px; object-fit: contain; }
 .mem-lb-caption { color: rgba(255,255,255,.8); font-size: 13px; margin-top: 12px; font-family: 'Inter', sans-serif; text-align: center; }
 .mem-lb-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; cursor: pointer; }
@@ -2673,6 +2672,23 @@ input:focus, button:focus-visible {
 .att-pred-verdict.risk { background: rgba(245,158,11,.1); color: #fbbf24; }
 .att-pred-verdict.critical { background: rgba(220,38,38,.1); color: #f87171; }
 .asw-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border2); overflow: hidden; }
+/* ═══════════════════════════════════════════════════
+   COLLAPSIBLE WIDGET CARDS
+═══════════════════════════════════════════════════ */
+.w-card-collapsible .w-body { overflow: hidden; transition: max-height .35s cubic-bezier(.4,0,.2,1), opacity .28s; max-height: 2000px; opacity: 1; }
+.w-card-collapsible.collapsed .w-body { max-height: 0 !important; opacity: 0; pointer-events: none; }
+.w-collapse-btn { width: 26px; height: 26px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: var(--text2); transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .15s; flex-shrink: 0; line-height: 1; transform: rotate(90deg); }
+.w-collapse-btn:active { background: var(--blue-dim); }
+.w-card-collapsible.collapsed .w-collapse-btn { transform: rotate(0deg); }
+
+/* ═══════════════════════════════════════════════════
+   TIMELINE MONTH NAVIGATION
+═══════════════════════════════════════════════════ */
+.tl-month-nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 10px; }
+.tl-month-label { font-size: 12px; font-weight: 800; color: var(--text1); font-family: 'Inter', sans-serif; }
+.tl-month-btn { width: 26px; height: 26px; border-radius: 7px; background: var(--surface2); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text2); cursor: pointer; transition: all .15s; }
+.tl-month-btn:active { background: var(--blue-dim); color: var(--blue2); transform: scale(.92); }
+.tl-month-btn.disabled { opacity: .3; pointer-events: none; }
 .asw-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border2); background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(245,158,11,.04)); }
 .asw-header-left { display: flex; align-items: center; gap: 9px; }
 .asw-title { font-size: 13px; font-weight: 800; color: var(--text1); font-family: 'Inter', sans-serif; letter-spacing: -.1px; }
@@ -2776,7 +2792,7 @@ input:focus, button:focus-visible {
 #ai-fab {
   position: fixed;
   bottom: calc(var(--nav-h) + 16px);
-  right: 64px;
+  right: 16px;
   z-index: 9101;
   width: 38px; height: 38px;
   border-radius: 12px;
@@ -2990,7 +3006,7 @@ input:focus, button:focus-visible {
 #ai-panel-send:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 
 @media(min-width:768px) {
-  #ai-fab { bottom: 24px; right: 64px; }
+  #ai-fab { bottom: 24px; right: 20px; }
   #ai-panel { bottom: 0; }
 }
 
@@ -3098,6 +3114,21 @@ input:focus, button:focus-visible {
   <span id="ptr-label">Pull to refresh</span>
 </div>
 
+<!-- ═══════════════ GLOBAL OVERLAYS (body-level, never inside transformed elements) ═══════════════ -->
+<div class="veh-sheet" id="veh-sheet">
+  <div class="veh-sheet-bg" onclick="vehCloseSheet()"></div>
+  <div class="veh-sheet-card" id="veh-sheet-card">
+    <div class="veh-sheet-handle"></div>
+    <div id="veh-sheet-body"></div>
+  </div>
+</div>
+<div class="mem-lightbox" id="mem-lightbox" onclick="memCloseLightbox()">
+  <div class="mem-lb-close" onclick="memCloseLightbox()">✕</div>
+  <img id="mem-lb-img" src="" alt="">
+  <div class="mem-lb-caption" id="mem-lb-caption"></div>
+  <div class="mem-lb-del" onclick="memDeletePhoto()">Delete this photo</div>
+</div>
+
 <!-- ═══════════════ FAB BUTTON & MENU ═══════════════ -->
 <!-- ═══════════════════════════════════════════════════════
      AI FAMILY ASSISTANT — FLOATING PANEL
@@ -3163,7 +3194,7 @@ input:focus, button:focus-visible {
     <div class="fab-item-ico">💾</div> Backup Now
   </div>
 </div>
-<div id="fab-btn" onclick="toggleFab()" title="Quick Actions">＋</div>
+<div id="fab-btn" onclick="toggleFab()" title="Quick Actions" aria-label="Quick Actions">＋</div>
 
 <!-- ═══════════════ COMMAND PALETTE ═══════════════ -->
 <div id="cmd-overlay" onclick="if(event.target===this)closeCommandPalette()">
@@ -4849,9 +4880,14 @@ function buildWidgetHTML(wid) {
       <div class="priority-strip-wrap" id="priority-strip"></div>
     </div>`;
     case 'timeline': return `<div class="w-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
         <div class="w-hdr" style="margin:0">📆 &nbsp;Upcoming</div>
-        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">View All →</span>
+        <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">Calendar →</span>
+      </div>
+      <div class="tl-month-nav">
+        <div class="tl-month-btn" id="tl-prev-btn" onclick="tlNavMonth(-1)">‹</div>
+        <div class="tl-month-label" id="tl-month-label">Loading…</div>
+        <div class="tl-month-btn" id="tl-next-btn" onclick="tlNavMonth(1)">›</div>
       </div>
       <div id="timeline-list" class="timeline-list"></div>
     </div>`;
@@ -4863,21 +4899,27 @@ function buildWidgetHTML(wid) {
       </div>
       <div class="health-pulse-row" id="health-pulse-row"></div>
     </div>`;
-    case 'family': return `<div class="w-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    case 'family': return `<div class="w-card w-card-collapsible" data-wid="family">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
         <div class="w-hdr" style="margin:0">👨‍👩‍👧‍👦 &nbsp;Family</div>
-        <span class="card-action" onclick="goPage('members')" style="font-size:11px">View All →</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="card-action" onclick="goPage('members')" style="font-size:11px">View All →</span>
+          <div class="w-collapse-btn" onclick="wToggle(this)">›</div>
+        </div>
       </div>
-      <div id="fam-summary" class="fam-pulse-grid"></div></div>`;
+      <div class="w-body"><div style="height:10px;"></div><div id="fam-summary" class="fam-pulse-grid"></div></div></div>`;
     case 'urgent': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="w-hdr" style="margin:0">⏳ &nbsp;Urgent Items</div>
         <span class="card-action" onclick="goPage('calendar')" style="font-size:11px">View Calendar →</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;" id="urgent-items"></div></div>`;
-    case 'actions': return `<div class="w-card">
-      <div class="w-hdr" style="margin-bottom:12px;">⚡ &nbsp;Quick Actions</div>
-      <div class="qa-list">
+    case 'actions': return `<div class="w-card w-card-collapsible collapsed" data-wid="actions">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+        <div class="w-hdr" style="margin:0;">⚡ &nbsp;Quick Actions</div>
+        <div class="w-collapse-btn" onclick="wToggle(this)">›</div>
+      </div>
+      <div class="w-body"><div style="height:12px;"></div><div class="qa-list">
         <div class="qa-row pressable" onclick="window.open('https://cdma.ap.gov.in','_blank')">
           <div class="qa-row-icon" style="background:rgba(255,79,79,.15);color:var(--red);">💸</div>
           <div class="qa-row-body">
@@ -4926,7 +4968,7 @@ function buildWidgetHTML(wid) {
           </div>
           <div class="qa-row-arrow">›</div>
         </div>
-      </div></div>`;
+      </div></div></div></div>`;
     case 'emergency': return buildEmgCard();
     case 'health_mini': return buildHealthWidget();
     case 'cal_mini': return `<div class="w-card">
@@ -5009,10 +5051,10 @@ function buildWidgetHTML(wid) {
       </div>
     </div>`;
 
-    case 'ai_briefing2': return buildBriefing2Widget();
-    case 'grocery':     return buildGroceryWidget();
-    case 'vehicle':     return buildVehicleWidget();
-    case 'photos':      return buildMemoryWallWidget();
+    case 'ai_briefing2': return buildCollapsibleWidget('✨ Daily Briefing', buildBriefing2Widget(), 'ai_briefing2', true);
+    case 'grocery':     return buildCollapsibleWidget('🛒 Grocery & Tasks', buildGroceryWidget(), 'grocery', true);
+    case 'vehicle':     return buildCollapsibleWidget('🚗 Vehicle Service', buildVehicleWidget(), 'vehicle', true);
+    case 'photos':      return buildCollapsibleWidget('📸 Memory Wall', buildMemoryWallWidget(), 'photos', true);
     case 'ai_meals': return `<div class="ai-meal-widget">
       <div class="aimw-header">
         <div class="w-hdr" style="margin:0">🍛 &nbsp;AI Meal Planner</div>
@@ -5343,13 +5385,7 @@ function buildVehicleWidget() {
     + '<span class="card-action" onclick="vehOpenSheet(\'activa\')" style="font-size:11px">+ Log Service</span>'
     + '</div>'
     + '<div class="veh-list">' + rows + '</div>'
-    + '</div>'
-    + '<div class="veh-sheet" id="veh-sheet">'
-    + '<div class="veh-sheet-bg" onclick="vehCloseSheet()"></div>'
-    + '<div class="veh-sheet-card" id="veh-sheet-card">'
-    + '<div class="veh-sheet-handle"></div>'
-    + '<div id="veh-sheet-body"></div>'
-    + '</div></div>';
+    + '</div>';
 }
 
 var _vehActiveId = null;
@@ -5457,12 +5493,6 @@ function buildMemoryWallWidget() {
     + '<span style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;">' + photos.length + ' photo' + (photos.length!==1?'s':'') + '</span>'
     + '</div>'
     + inner
-    + '</div>'
-    + '<div class="mem-lightbox" id="mem-lightbox" onclick="memCloseLightbox()">'
-    + '<div class="mem-lb-close" onclick="memCloseLightbox()">\u00D7</div>'
-    + '<img id="mem-lb-img" src="" alt="">'
-    + '<div class="mem-lb-caption" id="mem-lb-caption"></div>'
-    + '<div class="mem-lb-del" onclick="memDeletePhoto()">Delete this photo</div>'
     + '</div>';
 }
 
@@ -5665,6 +5695,102 @@ function buildAttSeverityWidget() {
   return html;
 }
 
+function renderTimeline() {
+  var tlList = document.getElementById('timeline-list');
+  if (!tlList) return;
+  var now = new Date(); now.setHours(0,0,0,0);
+  var calRaw = localStorage.getItem('fp_cal_events');
+  var allCalEvts = [];
+  try { allCalEvts = JSON.parse(calRaw || '[]'); } catch(e) { allCalEvts = []; }
+  if (typeof CAL_EVENTS !== 'undefined') allCalEvts = allCalEvts.concat(CAL_EVENTS.filter(function(e){ return !allCalEvts.find(function(x){return x.id===e.id;}); }));
+  var activeName = typeof currentMember !== 'undefined' ? currentMember : null;
+  if (activeName === 'all') activeName = null;
+
+  var tlOffset = typeof _tlMonthOffset !== 'undefined' ? _tlMonthOffset : 0;
+  var tlTargetDate = new Date(now.getFullYear(), now.getMonth() + tlOffset, 1);
+  var tlYear = tlTargetDate.getFullYear();
+  var tlMonth = tlTargetDate.getMonth();
+  var tlMonthStart = new Date(tlYear, tlMonth, 1);
+  var tlMonthEnd   = new Date(tlYear, tlMonth + 1, 0);
+  var tlMonthName = tlTargetDate.toLocaleString('en-IN',{month:'long',year:'numeric'}).toUpperCase();
+  var isCurrentMonth = (tlOffset === 0);
+
+  var tlLabel = document.getElementById('tl-month-label');
+  var tlPrev  = document.getElementById('tl-prev-btn');
+  var tlNext  = document.getElementById('tl-next-btn');
+  if (tlLabel) tlLabel.textContent = tlMonthName;
+  if (tlPrev)  tlPrev.className = 'tl-month-btn' + (tlOffset <= -3 ? ' disabled' : '');
+  if (tlNext)  tlNext.className = 'tl-month-btn' + (tlOffset >= 3  ? ' disabled' : '');
+
+  var calFiltered = allCalEvts.filter(function(ev) {
+    if (ev.id && ev.id.indexOf('att_risk_') === 0) return false;
+    var evDate = new Date(ev.date);
+    if (evDate < tlMonthStart || evDate > tlMonthEnd) return false;
+    if (activeName) return ev.members && (ev.members.indexOf(activeName)!==-1 || ev.members.indexOf('all')!==-1);
+    return true;
+  });
+
+  var expiryAll = (typeof EXPIRY !== 'undefined' ? EXPIRY : []);
+  var expiryFiltered = expiryAll.filter(function(e) {
+    var evDate = new Date(e.date);
+    if (evDate < tlMonthStart || evDate > tlMonthEnd) return false;
+    if (activeName) return e.person === activeName || e.person === 'Family';
+    return true;
+  }).map(function(e){ return { _isExpiry:true, title:e.label, date:e.date, members:[e.person], icon:e.icon||'📋', id:e.id }; });
+
+  var overdueExpiry = isCurrentMonth ? expiryAll.filter(function(e) {
+    if (typeof daysUntil !== 'function') return false;
+    return daysUntil(e.date) < 0 && daysUntil(e.date) >= -90;
+  }).map(function(e){ return { _isExpiry:true, title:e.label, date:e.date, members:[e.person], icon:e.icon||'📋', id:e.id }; }) : [];
+
+  var evts = calFiltered.concat(expiryFiltered).concat(overdueExpiry)
+    .filter(function(v,i,a){ return a.findIndex(function(x){ return x.id===v.id; })===i; })
+    .sort(function(a,b){ return (typeof daysUntil==='function')?(daysUntil(a.date)-daysUntil(b.date)):0; });
+
+  if (!evts.length) {
+    tlList.innerHTML = '<div style="padding:22px 0;text-align:center;color:var(--text3);font-family:DM-Mono,monospace;font-size:11px;opacity:.7;">No events in ' + tlMonthName + '</div>';
+    return;
+  }
+
+  var overdue   = isCurrentMonth ? evts.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)<0; }) : [];
+  var today_evts = evts.filter(function(ev){ return typeof daysUntil==='function'&&daysUntil(ev.date)===0; });
+  var upcoming  = evts.filter(function(ev){ return !isCurrentMonth||(typeof daysUntil==='function'&&daysUntil(ev.date)>0); });
+
+  var html = '';
+  if (overdue.length) {
+    html += '<div class="tl-group-label" style="color:var(--red)">OVERDUE</div>';
+    html += overdue.map(tlItemHTML).join('');
+  }
+  if (today_evts.length) {
+    html += '<div class="tl-group-label" style="color:var(--gold)">TODAY</div>';
+    html += today_evts.map(tlItemHTML).join('');
+  }
+  if (upcoming.length) {
+    html += '<div class="tl-group-label" style="color:var(--blue2)">' + tlMonthName + '</div>';
+    html += upcoming.map(tlItemHTML).join('');
+  }
+  tlList.innerHTML = html;
+}
+
+function tlItemHTML(ev) {
+  var d = daysUntil(ev.date);
+  var col = d < 0 ? 'var(--red)' : d === 0 ? 'var(--gold)' : ev.color || 'var(--blue2)';
+  var badge = d < 0 ? 'overdue' : d === 0 ? 'today' : 'upcoming';
+  var badgeTxt = d < 0 ? (Math.abs(d)+'d overdue') : d === 0 ? 'TODAY' : ('in '+d+'d');
+  var members = (ev.members||[]).filter(function(x){return x&&x!=='all';}).slice(0,2).join(', ');
+  return '<div class="tl-item pressable" onclick="goPage(\''+(ev._isExpiry?'expiry':'calendar')+'\')">'
+    + '<div class="tl-bar-wrap">'
+    + '<div class="tl-dot" style="background:'+col+'"></div>'
+    + '<div class="tl-bar" style="background:'+col+';opacity:.15"></div>'
+    + '</div>'
+    + '<div class="tl-body">'
+    + '<div class="tl-title">'+(ev._isExpiry?(ev.icon+' '):'')+ev.title+'</div>'
+    + '<div class="tl-meta">'+(members?members+' \u00B7 ':'')+fmtDate(ev.date)+'</div>'
+    + '</div>'
+    + '<div class="tl-right"><div class="tl-badge '+badge+'">'+badgeTxt+'</div></div>'
+    + '</div>';
+}
+
 function initWidgetDynamic() {
   const allCalEvts = getCalEvents();
   const activeName = (activePortalMember !== 'all') ? GM_META[activePortalMember].label : null;
@@ -5856,85 +5982,8 @@ function initWidgetDynamic() {
   if (tlList) {
     const now = new Date(); now.setHours(0,0,0,0);
 
-    // Cal events — exclude att_risk_ auto events (handled by att_severity widget)
-    const calFiltered = allCalEvts.filter(ev => {
-      if (ev.id && ev.id.indexOf('att_risk_') === 0) return false;
-      const d = daysUntil(ev.date);
-      if (d < -3 || d > 60) return false;
-      if (activeName) return ev.members.includes(activeName) || ev.members.includes('all');
-      return true;
-    });
-
-    // Doc expiry items merged in — show those within 60 days or overdue (≥ -3)
-    const expiryFiltered = (typeof EXPIRY !== 'undefined' ? EXPIRY : []).filter(e => {
-      const d = daysUntil(e.date);
-      if (d < -3 || d > 60) return false;
-      if (activeName) return e.person === activeName || e.person === 'Family';
-      return true;
-    }).map(e => ({ _isExpiry: true, title: e.label, date: e.date, members: [e.person], icon: e.icon || '📋', id: e.id }));
-
-    const evts = [...calFiltered, ...expiryFiltered].sort((a,b) => daysUntil(a.date) - daysUntil(b.date));
-
-    if (!evts.length) {
-      tlList.innerHTML = `<div style="padding:18px 0;text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">No events in the next 60 days</div>`;
-    } else {
-      // Group into Overdue / Today / This Week / This Month / Next Month / Later
-      const groups = { overdue:[], today:[], week:[], month:[], nextmonth:[], later:[] };
-      const nowMonth = now.getMonth();
-      const nowYear = now.getFullYear();
-      evts.forEach(ev => {
-        const d = daysUntil(ev.date);
-        const evDate = new Date(ev.date);
-        const evMonth = evDate.getMonth();
-        const evYear = evDate.getFullYear();
-        if (d < 0) groups.overdue.push(ev);
-        else if (d === 0) groups.today.push(ev);
-        else if (d <= 7) groups.week.push(ev);
-        else if (evYear === nowYear && evMonth === nowMonth) groups.month.push(ev);
-        else if ((evYear === nowYear && evMonth === nowMonth + 1) || (nowMonth === 11 && evYear === nowYear + 1 && evMonth === 0)) groups.nextmonth.push(ev);
-        else groups.later.push(ev);
-      });
-
-      const thisMonthName = now.toLocaleString('default',{month:'long'}).toUpperCase();
-      const nextMonthDate = new Date(nowYear, nowMonth + 1, 1);
-      const nextMonthName = nextMonthDate.toLocaleString('default',{month:'long'}).toUpperCase();
-
-      const groupDefs = [
-        { key:'overdue',   label:'OVERDUE',     col:'var(--red)' },
-        { key:'today',     label:'TODAY',       col:'var(--gold)' },
-        { key:'week',      label:'THIS WEEK',   col:'var(--blue2)' },
-        { key:'month',     label:thisMonthName, col:'var(--text2)' },
-        { key:'nextmonth', label:nextMonthName, col:'var(--text3)' },
-        { key:'later',     label:'LATER',       col:'var(--text3)' },
-      ];
-
-      let html = '';
-      groupDefs.forEach(g => {
-        if (!groups[g.key].length) return;
-        html += `<div class="tl-group-label" style="color:${g.col}">${g.label}</div>`;
-        html += groups[g.key].slice(0,5).map(ev => {
-          const d = daysUntil(ev.date);
-          const col = d < 0 ? 'var(--red)' : d === 0 ? 'var(--gold)' : ev.color || 'var(--blue2)';
-          const badge = d < 0 ? 'overdue' : d === 0 ? 'today' : 'upcoming';
-          const badgeTxt = d < 0 ? `${Math.abs(d)}d overdue` : d === 0 ? 'TODAY' : `in ${d}d`;
-          const members = (ev.members||[]).filter(x=>x&&x!=='all').slice(0,2).join(', ');
-          return `<div class="tl-item pressable" onclick="goPage('${ev._isExpiry ? 'expiry' : 'calendar'}')">
-            <div class="tl-bar-wrap">
-              <div class="tl-dot" style="background:${col}"></div>
-              <div class="tl-bar" style="background:${col};opacity:.15"></div>
-            </div>
-            <div class="tl-body">
-              <div class="tl-title">${ev._isExpiry ? (ev.icon+' ') : ''}${ev.title}</div>
-              <div class="tl-meta">${members ? members + ' · ' : ''}${fmtDate(ev.date)}</div>
-            </div>
-            <div class="tl-right">
-              <div class="tl-badge ${badge}">${badgeTxt}</div>
-            </div>
-          </div>`;
-        }).join('');
-      });
-      tlList.innerHTML = html;
-    }
+    // Timeline — delegate to renderTimeline() for single source of truth
+    if (typeof renderTimeline === 'function') renderTimeline();
   }
 
   // ─────────────────────────────────────────
@@ -8442,6 +8491,7 @@ function applyGmCalendar() {
 
 function init() {
   initDashboard();
+  setTimeout(restoreWidgetCollapse, 100);
   initMembers();
   initDocuments();
   initExpiry();
@@ -8875,6 +8925,7 @@ let aiPanelBusy = false;
 let aiPanelHistory = [];
 var _aiGreetedToday = '';
 var _aiWeeklyRecapDay = -1;
+var _tlMonthOffset = 0; // 0=current month, 1=next, -1=prev
 
 /* Chip data — NO apostrophes in strings to avoid HTML attribute breakage */
 var AI_CHIPS = {
@@ -9098,6 +9149,58 @@ function buildAttPredictionContext() {
   } catch(e) { return ''; }
 }
 
+function tlNavMonth(dir) {
+  _tlMonthOffset += dir;
+  if (_tlMonthOffset < -3) _tlMonthOffset = -3;
+  if (_tlMonthOffset > 3)  _tlMonthOffset = 3;
+  // Re-render only the timeline portion, not full widget refresh
+  if (typeof renderTimeline === 'function') renderTimeline();
+  else if (typeof initWidgetDynamic === 'function') initWidgetDynamic();
+  if (typeof haptic === 'function') haptic('light');
+}
+
+function buildCollapsibleWidget(title, innerHtml, wid, collapsed) {
+  var state = collapsed ? ' collapsed' : '';
+  return '<div class="w-card w-card-collapsible' + state + '" data-wid="' + wid + '">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;">'
+    + '<div class="w-hdr" style="margin:0;">' + title + '</div>'
+    + '<div class="w-collapse-btn" onclick="wToggle(this)">&#x203A;</div>'
+    + '</div>'
+    + '<div class="w-body"><div style="height:10px;"></div>' + innerHtml + '</div>'
+    + '</div>';
+}
+
+function wToggle(btn) {
+  var card = btn.closest('.w-card-collapsible');
+  if (!card) return;
+  card.classList.toggle('collapsed');
+  // Persist per-widget collapse state
+  var wid = card.getAttribute('data-wid');
+  if (wid) {
+    var collapsed = card.classList.contains('collapsed');
+    try {
+      var states = JSON.parse(localStorage.getItem('fp_widget_collapse') || '{}');
+      states[wid] = collapsed;
+      localStorage.setItem('fp_widget_collapse', JSON.stringify(states));
+    } catch(e) {}
+  }
+  if (typeof haptic === 'function') haptic('light');
+}
+
+function restoreWidgetCollapse() {
+  // DEFAULT collapsed: grocery, vehicle, photos, ai_briefing2, actions, family
+  var DEFAULTS_COLLAPSED = { grocery:true, vehicle:true, photos:true, ai_briefing2:true, actions:true, family:true };
+  try {
+    var states = JSON.parse(localStorage.getItem('fp_widget_collapse') || '{}');
+    var merged = Object.assign({}, DEFAULTS_COLLAPSED, states);
+    document.querySelectorAll('.w-card-collapsible').forEach(function(card) {
+      var wid = card.getAttribute('data-wid');
+      if (wid && merged[wid] === true)  card.classList.add('collapsed');
+      if (wid && merged[wid] === false) card.classList.remove('collapsed');
+    });
+  } catch(e) {}
+}
+
 function toggleAIPanel() {
   /* Close FAB menu if open */
   if (typeof fabOpen !== 'undefined' && fabOpen) {
@@ -9122,6 +9225,9 @@ function toggleAIPanel() {
     aiPanelUpdateChips();
     aiPanelUpdateStatus();
     aiPanelAutoGreet();
+    // Close + menu if open (don't hide the button itself — it's on the left, no overlap)
+    var plusMenu = document.getElementById('fab-menu');
+    if (plusMenu && fabOpen) { plusMenu.classList.add('hidden'); fabOpen=false; }
     if (typeof haptic === 'function') haptic('medium');
   } else {
     panel.classList.add('ai-panel-closed');
@@ -9129,6 +9235,7 @@ function toggleAIPanel() {
     backdrop.classList.remove('visible');
     fab.classList.remove('panel-open');
     fabIcon.textContent = '\u2726';
+    // Nothing to restore — fab-btn is on left, always visible
     if (typeof haptic === 'function') haptic('light');
   }
 }
