@@ -4567,10 +4567,31 @@ function initWidgetDynamic() {
          </div>`
       : '';
 
-    if (!filtered.length && !showAcadChip) {
+    // Timetable chip — show today's classes if timetable uploaded
+    const _ttRaw = localStorage.getItem('fp_timetable_synced');
+    const todayDayName = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][new Date().getDay()];
+    let ttChip = '';
+    if (_ttRaw && (activePortalMember === 'all' || activePortalMember === 'josritha')) {
+      try {
+        const _ttData = JSON.parse(_ttRaw);
+        const todaySlots = _ttData.filter(s => s.day === todayDayName);
+        if (todaySlots.length > 0 && !showAcadChip) {
+          ttChip = `<div class="priority-chip upcoming pressable" onclick="goPage('members');setTimeout(()=>{window._acadView='combined';showMemberDetail('josritha','academics');},80)">
+            <div class="pc-icon">🗓️</div>
+            <div class="pc-body">
+              <div class="pc-title">${todaySlots.length} class${todaySlots.length!==1?'es':''} today</div>
+              <div class="pc-meta">Josritha · Timetable</div>
+            </div>
+            <div class="pc-days">${todaySlots.length}<span class="pc-days-sub">today</span></div>
+          </div>`;
+        }
+      } catch(e) {}
+    }
+
+    if (!filtered.length && !showAcadChip && !ttChip) {
       priorityStrip.innerHTML = `<div class="priority-empty">✅&nbsp; All clear for the next 30 days</div>`;
     } else {
-      priorityStrip.innerHTML = acadChip + filtered.slice(0, showAcadChip ? 5 : 6).map(ev => {
+      priorityStrip.innerHTML = acadChip + ttChip + filtered.slice(0, (showAcadChip||ttChip) ? 5 : 6).map(ev => {
         const d = daysUntil(ev.date);
         const cls = d < 0 ? 'overdue' : d <= 7 ? 'due-soon' : 'upcoming';
         const daysNum = d < 0 ? Math.abs(d) : d;
@@ -5034,8 +5055,14 @@ function renderInsuranceTab(m) {
 
 function renderAcademicsTab(m) {
   if (m.id !== 'josritha') return '<div style="padding:20px;text-align:center;color:var(--text3);">Academics data is specific to Josritha</div>';
+
+  // ── Data sources ─────────────────────────────────────────────────────
   const _attSynced = localStorage.getItem('fp_attendance_synced');
   const liveAtt = _attSynced ? JSON.parse(_attSynced) : ATTENDANCE;
+  const _ttSynced = localStorage.getItem('fp_timetable_synced');
+  const liveTT = _ttSynced ? JSON.parse(_ttSynced) : null;
+
+  // ── Status banner ────────────────────────────────────────────────────
   const below75 = liveAtt.filter(a => Math.round(a.present/a.total*100) < 75).length;
   const warnHtml = below75 > 0
     ? `<div style="background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
@@ -5049,20 +5076,59 @@ function renderAcademicsTab(m) {
         <span style="font-size:20px;">✅</span>
         <div style="font-size:13px;font-weight:700;color:var(--green);">All subjects above 75% — on track</div>
        </div>`;
-  const rows = liveAtt.map(a => {
+
+  // ── Upload bar ────────────────────────────────────────────────────────
+  const uploadBar = `
+    <div style="background:var(--surface2);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.5px;margin-bottom:10px;">📡 DATA SYNC</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);">Attendance JSON</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px;">${localStorage.getItem('fp_attendance_synced_ts') ? '🟢 '+localStorage.getItem('fp_attendance_synced_ts') : '⚪ Never synced'}</div>
+        </div>
+        <label style="background:var(--purple);color:#fff;font-size:11px;font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+          📂 Upload
+          <input type="file" accept=".json" style="display:none;" onchange="syncAttendanceFile(this)">
+        </label>
+      </div>
+      <div style="height:1px;background:var(--border2);margin:8px 0;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);">Timetable JSON</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px;">${localStorage.getItem('fp_timetable_synced_ts') ? '🟢 '+localStorage.getItem('fp_timetable_synced_ts') : '⚪ Never uploaded — use the KL Portal bookmark'}</div>
+        </div>
+        <label style="background:linear-gradient(135deg,#a78bfa,#818cf8);color:#fff;font-size:11px;font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+          🗓️ Upload
+          <input type="file" accept=".json" style="display:none;" onchange="syncTimetableFile(this)">
+        </label>
+      </div>
+    </div>`;
+
+  // ── View switcher ─────────────────────────────────────────────────────
+  const _acadView = window._acadView || (window._acadView = liveTT ? 'combined' : 'attendance');
+  const tabs = [
+    {id:'attendance', label:'📊 Attendance'},
+    {id:'timetable',  label:'🗓️ Timetable'},
+    {id:'combined',   label:'📅 Day View'},
+  ];
+  const switcher = `<div style="display:flex;gap:6px;margin-bottom:16px;background:var(--surface2);border-radius:10px;padding:4px;">
+    ${tabs.map(t=>`<button onclick="window._acadView='${t.id}';showMemberDetail('josritha','academics');" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;${_acadView===t.id?'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);':'background:transparent;color:var(--text3);'}">${t.label}</button>`).join('')}
+  </div>`;
+
+  // ── ATTENDANCE VIEW ───────────────────────────────────────────────────
+  const attView = liveAtt.map(a => {
     const pct = Math.round(a.present/a.total*100);
     const col = pct>=75?'var(--green)':pct>=70?'var(--orange)':'var(--red)';
     const lbl = pct>=75?'GOOD':pct>=70?'AT RISK':'CRITICAL';
-    const barW = pct;
     return `<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:14px;border-left:3px solid ${col}${pct<75?';background:rgba(255,79,79,.03)':''}">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
         <div style="flex:1">
           <div style="font-size:13px;font-weight:700;color:${pct<75?'var(--red)':'var(--text1)'};">${a.subject}</div>
           <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px;">${a.code} · ${a.type}</div>
           <div style="margin-top:8px;height:4px;background:var(--border2);border-radius:4px;overflow:hidden;">
-            <div style="height:100%;width:${barW}%;background:${col};border-radius:4px;transition:width .4s ease;"></div>
+            <div style="height:100%;width:${pct}%;background:${col};border-radius:4px;transition:width .4s ease;"></div>
           </div>
-          <div style="font-size:11px;color:var(--text2);margin-top:5px;">${a.present} present / ${a.total} total classes</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:5px;">${a.present} present / ${a.total} total</div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
           <div style="font-size:22px;font-weight:800;color:${col};font-family:'DM Mono',monospace;">${pct}%</div>
@@ -5071,20 +5137,113 @@ function renderAcademicsTab(m) {
       </div>
     </div>`;
   }).join('');
+
+  // ── TIMETABLE + COMBINED VIEWS ────────────────────────────────────────
+  const DAY_ORDER = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  const TYPE_ICONS = {Lecture:'📖',Lab:'🔬',Tutorial:'📝',Seminar:'🎓'};
+  const todayName = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][new Date().getDay()];
+
+  let ttView = '', combView = '';
+  if (liveTT) {
+    // Group timetable by day
+    const byDay = {};
+    DAY_ORDER.forEach(d => byDay[d] = []);
+    liveTT.forEach(slot => { if (byDay[slot.day]) byDay[slot.day].push(slot); });
+    DAY_ORDER.forEach(d => byDay[d].sort((a,b) => a.period - b.period));
+
+    // Build att lookup map by att_key
+    const attMap = {};
+    liveAtt.forEach(a => { attMap[a.code+'|'+a.type] = a; });
+
+    // Render timetable-only view
+    ttView = DAY_ORDER.map(day => {
+      const slots = byDay[day];
+      if (!slots.length) return '';
+      const isToday = day === todayName;
+      return `<div style="border-radius:12px;overflow:hidden;border:${isToday?'2px solid var(--purple)':'1px solid var(--border2)'};${isToday?'box-shadow:0 4px 16px rgba(139,92,246,.2);':''}margin-bottom:12px;">
+        <div style="padding:10px 14px;background:${isToday?'linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.12))':'var(--surface2)'};display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:${isToday?'var(--purple)':'var(--text2)'};">${day}</span>
+          ${isToday?'<span style="font-size:10px;font-weight:700;background:var(--purple);color:#fff;padding:2px 8px;border-radius:20px;">TODAY</span>':''}
+        </div>
+        ${slots.map((slot,i) => `
+          <div style="padding:11px 14px;${i<slots.length-1?'border-bottom:1px solid var(--border2)':''}display:flex;align-items:flex-start;gap:12px;">
+            <div style="flex-shrink:0;text-align:center;min-width:28px;">
+              <div style="font-size:18px;">${TYPE_ICONS[slot.type]||'📌'}</div>
+              <div style="font-size:10px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;">${slot.period}</div>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${slot.subject||slot.code}</div>
+              <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;">${slot.time||''} · ${slot.type} · ${slot.section||''}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:1px;">📍 ${slot.room||''}</div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    }).join('');
+
+    // Render combined view (day-wise with attendance correlation)
+    combView = DAY_ORDER.map(day => {
+      const slots = byDay[day];
+      if (!slots.length) return '';
+      const isToday = day === todayName;
+      return `<div style="border-radius:12px;overflow:hidden;border:${isToday?'2px solid var(--purple)':'1px solid var(--border2)'};${isToday?'box-shadow:0 4px 16px rgba(139,92,246,.2);':''}margin-bottom:14px;">
+        <div style="padding:10px 14px;background:${isToday?'linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.12))':'var(--surface2)'};display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:${isToday?'var(--purple)':'var(--text2)'};">${day}</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span style="font-size:10px;color:var(--text3);">${slots.length} class${slots.length!==1?'es':''}</span>
+            ${isToday?'<span style="font-size:10px;font-weight:700;background:var(--purple);color:#fff;padding:2px 8px;border-radius:20px;">TODAY</span>':''}
+          </div>
+        </div>
+        ${slots.map((slot,i) => {
+          const att = attMap[slot.att_key];
+          const pct = att ? Math.round(att.present/att.total*100) : null;
+          const col = pct===null ? 'var(--text3)' : pct>=75 ? 'var(--green)' : pct>=70 ? 'var(--orange)' : 'var(--red)';
+          const attBadge = att
+            ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;border-radius:6px;background:${pct>=75?'rgba(62,207,142,.1)':pct>=70?'rgba(255,165,0,.1)':'rgba(255,79,79,.1)'};">
+                <span style="font-size:11px;font-weight:800;color:${col};font-family:'DM Mono',monospace;">${pct}%</span>
+                <span style="font-size:10px;color:${col};">${att.present}/${att.total}</span>
+                ${pct<75?'<span style="font-size:9px;color:var(--red);font-weight:700;">⚠ RISK</span>':''}
+               </div>`
+            : `<div style="margin-top:5px;font-size:10px;color:var(--text3);font-style:italic;">No attendance data</div>`;
+          return `<div style="padding:11px 14px;${i<slots.length-1?'border-bottom:1px solid var(--border2)':''}display:flex;align-items:flex-start;gap:12px;">
+            <div style="flex-shrink:0;text-align:center;min-width:28px;">
+              <div style="font-size:18px;">${TYPE_ICONS[slot.type]||'📌'}</div>
+              <div style="font-size:10px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;">${slot.period}</div>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${slot.subject||slot.code}</div>
+              <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;">${slot.time||''} · ${slot.type} · ${slot.room||''}</div>
+              ${attBadge}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('');
+  }
+
+  const noTTHint = !liveTT
+    ? `<div style="text-align:center;padding:24px 16px;background:var(--surface2);border-radius:12px;border:1px dashed var(--border2);">
+        <div style="font-size:28px;margin-bottom:8px;">🗓️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text2);">No timetable uploaded yet</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5;">Use the KL Portal bookmark to extract your timetable JSON,<br>then upload it above to enable Day View.</div>
+       </div>`
+    : '';
+
+  // ── Content by active view ────────────────────────────────────────────
+  let content = '';
+  if (_acadView === 'attendance') {
+    content = `<div style="display:flex;flex-direction:column;gap:10px;">${attView}</div>`;
+  } else if (_acadView === 'timetable') {
+    content = liveTT ? ttView : noTTHint;
+  } else {
+    content = liveTT ? combView : noTTHint;
+  }
+
   return `<div style="padding:4px 0;">
     <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:12px;letter-spacing:.5px;">KL UNIVERSITY · EVEN SEMESTER 2025–26</div>
     ${warnHtml}
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;background:var(--surface2);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:10px 14px;">
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">🔄 Sync Attendance</div>
-        <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;" id="att-last-synced">${localStorage.getItem('fp_attendance_synced_ts') ? 'Last synced: '+localStorage.getItem('fp_attendance_synced_ts') : 'Last synced: never'}</div>
-      </div>
-      <label style="background:var(--purple);color:#fff;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;padding:7px 14px;border-radius:8px;cursor:pointer;white-space:nowrap;display:inline-block;">
-        📂 Upload JSON
-        <input type="file" accept=".json" style="display:none;" onchange="syncAttendanceFile(this)">
-      </label>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">${rows}</div>
+    ${uploadBar}
+    ${switcher}
+    ${content}
   </div>`;
 }
 
@@ -5104,6 +5263,26 @@ function syncAttendanceFile(input) {
       setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); }, 50);
       input.value = "";
     } catch(err) { showToast("❌ Could not parse file"); }
+  };
+  reader.readAsText(file);
+}
+function syncTimetableFile(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data) || !data.length || !data[0].hasOwnProperty("day") || !data[0].hasOwnProperty("att_key")) {
+        showToast("❌ Invalid timetable file — use the KL Portal bookmark"); return;
+      }
+      localStorage.setItem("fp_timetable_synced", JSON.stringify(data));
+      const ts = new Date().toLocaleString("en-IN", {day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+      localStorage.setItem("fp_timetable_synced_ts", ts);
+      window._acadView = 'combined';
+      showToast("✅ Timetable synced — " + data.length + " slots loaded");
+      setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); }, 50);
+      input.value = "";
+    } catch(err) { showToast("❌ Could not parse timetable file"); }
   };
   reader.readAsText(file);
 }
@@ -7170,6 +7349,7 @@ const BACKUP_KEYS = [
   'fp_cal_events','fp_cal_seed_ver',
   'fp_health_v3','fp_health_appts_v3','fp_health_reports_v3',
   'fp_attendance_synced','fp_attendance_synced_ts',
+  'fp_timetable_synced','fp_timetable_synced_ts',
   'fp_widgets','fp_widgets_ver',
   'fp_theme','fp_active_member','fp_pin','emg_collapsed',
   'fp_groq_key'   // ← AI key — included in backup so it survives redeployment
