@@ -1940,7 +1940,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* FAB menu */
 #fab-menu {
   position: fixed;
-  bottom: calc(var(--nav-h) + 64px);
+  bottom: calc(var(--nav-h) + 62px);
   right: 14px;
   z-index: 9050;
   display: flex; flex-direction: column; gap: 8px;
@@ -2511,43 +2511,26 @@ input:focus, button:focus-visible {
 /* AI FAB button */
 #ai-fab {
   position: fixed;
-  bottom: calc(var(--nav-h) + 64px);
-  right: 18px;
+  bottom: calc(var(--nav-h) + 16px);
+  right: 64px;
   z-index: 9101;
-  width: 52px; height: 52px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5, #2563eb);
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 0 0 0 rgba(124,58,237,.5), 0 8px 32px rgba(124,58,237,.55), 0 2px 8px rgba(0,0,0,.4);
-  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 4px 16px rgba(124,58,237,.5), 0 2px 6px rgba(0,0,0,.25);
+  transition: all .22s cubic-bezier(.34,1.56,.64,1);
   user-select: none;
-  animation: aiFabPulse 3s ease-in-out infinite;
 }
-#ai-fab:hover { transform: scale(1.07); box-shadow: 0 0 0 8px rgba(124,58,237,.15), 0 12px 40px rgba(124,58,237,.7); animation: none; }
-#ai-fab:active { transform: scale(0.94); }
-#ai-fab.panel-open { animation: none; background: linear-gradient(135deg,#dc2626,#b91c1c); box-shadow: 0 8px 28px rgba(220,38,38,.5); }
-#ai-fab-ring {
-  position: absolute; inset: -6px;
-  border-radius: 22px;
-  border: 1.5px solid rgba(124,58,237,.35);
-  animation: aiFabRing 3s ease-in-out infinite;
-  pointer-events: none;
-}
+#ai-fab:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(124,58,237,.65); }
+#ai-fab:active { transform: scale(0.93); }
+#ai-fab.panel-open { background: linear-gradient(135deg,#dc2626,#b91c1c); box-shadow: 0 4px 16px rgba(220,38,38,.5); }
+#ai-fab-ring { display: none; }
 #ai-fab-icon {
-  font-size: 22px; color: #fff;
+  font-size: 16px; color: #fff;
   font-weight: 900;
   transition: all .2s;
-  text-shadow: 0 0 12px rgba(255,255,255,.6);
-}
-#ai-fab.panel-open #ai-fab-icon { content: '✕'; font-size: 16px; }
-@keyframes aiFabPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,.4), 0 8px 32px rgba(124,58,237,.5); }
-  50% { box-shadow: 0 0 0 10px rgba(124,58,237,.0), 0 8px 32px rgba(124,58,237,.6); }
-}
-@keyframes aiFabRing {
-  0%,100% { transform: scale(1); opacity: .5; }
-  50% { transform: scale(1.12); opacity: .15; }
 }
 #ai-fab.thinking #ai-fab-icon { animation: aiThink .8s linear infinite; }
 @keyframes aiThink { to { transform: rotate(360deg); } }
@@ -2743,7 +2726,7 @@ input:focus, button:focus-visible {
 #ai-panel-send:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 
 @media(min-width:768px) {
-  #ai-fab { bottom: 82px; }
+  #ai-fab { bottom: 24px; right: 64px; }
   #ai-panel { bottom: 0; }
 }
 
@@ -5565,6 +5548,75 @@ function renderAcademicsTab(m) {
 
 
 
+// ═══════════════════════════════════════════════════════
+// AUTO ATTENDANCE EVENTS — creates/updates/deletes calendar
+// events for Josritha subjects below 75%
+// ═══════════════════════════════════════════════════════
+function autoManageAttendanceEvents(attData) {
+  if (!attData || !attData.length) return;
+  var SEMESTER_END = '2026-03-31';
+  var PREFIX = 'att_risk_';
+  var events = getCalEvents();
+  var changed = false;
+
+  attData.forEach(function(a) {
+    if (!a.code || !a.type || !a.subject) return;
+    var pct = Math.round(a.present / a.total * 100);
+    var attKey = a.code + '|' + a.type;
+    var eventId = PREFIX + attKey.replace('|','_');
+
+    // How many classes needed to reach 75%
+    var need = Math.ceil(0.75 * a.total) - a.present;
+    var canSkip = Math.max(0, Math.floor(a.total * 0.25) - (a.total - a.present));
+
+    var existingIdx = events.findIndex(function(e) { return e.id === eventId; });
+
+    if (pct < 75) {
+      // Subject is at risk — create or update event
+      var shortSubject = a.subject.length > 28 ? a.subject.substring(0, 26) + '…' : a.subject;
+      var statusLabel = pct < 70 ? '🚨 CRITICAL' : '⚠️ AT RISK';
+      var noteText = a.type + ' · ' + pct + '% now · need ' + Math.max(0,need) + ' more class' + (need!==1?'es':'') + ' to reach 75%' + (canSkip > 0 ? ' · can skip ' + canSkip + ' more' : ' · DO NOT skip any');
+
+      if (existingIdx === -1) {
+        // Create new event
+        events.push({
+          id: eventId,
+          title: statusLabel + ' ' + shortSubject,
+          date: SEMESTER_END,
+          type: 'Academic',
+          icon: pct < 70 ? '🚨' : '📚',
+          members: ['Josritha'],
+          auto: true,
+          att_key: attKey,
+          note: noteText
+        });
+        changed = true;
+      } else {
+        // Update existing — refresh pct and note in case data changed
+        events[existingIdx].title = statusLabel + ' ' + shortSubject;
+        events[existingIdx].icon = pct < 70 ? '🚨' : '📚';
+        events[existingIdx].note = noteText;
+        changed = true;
+      }
+    } else {
+      // Subject is safe — delete risk event if it exists
+      if (existingIdx !== -1) {
+        events.splice(existingIdx, 1);
+        changed = true;
+      }
+    }
+  });
+
+  if (changed) {
+    saveCalEvents(events);
+    // Count how many risk events exist now
+    var riskCount = events.filter(function(e) { return e.id && e.id.indexOf(PREFIX) === 0; }).length;
+    if (riskCount > 0) {
+      showToast('📚 ' + riskCount + ' attendance risk event' + (riskCount!==1?'s':'') + ' updated in calendar');
+    }
+  }
+}
+
 function syncAttendanceFile(input) {
   const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
@@ -5575,6 +5627,7 @@ function syncAttendanceFile(input) {
       localStorage.setItem("fp_attendance_synced", JSON.stringify(data));
       const ts = new Date().toLocaleString("en-IN", {day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
       localStorage.setItem("fp_attendance_synced_ts", ts);
+      autoManageAttendanceEvents(data);
       showToast("✅ " + data.length + " subjects synced");
       setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); }, 50);
       input.value = "";
@@ -7432,6 +7485,11 @@ function init() {
   initDocuments();
   initExpiry();
   buildSearchIdx();
+  // Auto-manage attendance events on startup
+  try {
+    var _bootAtt = localStorage.getItem('fp_attendance_synced');
+    if (_bootAtt) autoManageAttendanceEvents(JSON.parse(_bootAtt));
+  } catch(e) {}
   // Apply saved member context after full init
   updateGmPill();
   applyMemberContextToCurrentPage();
@@ -7792,6 +7850,11 @@ function doRestore(input) {
       });
       const ts = new Date().toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
       localStorage.setItem('fp_backup_ts', ts);
+      // Auto-manage attendance events from restored data
+      try {
+        var restoredAtt = localStorage.getItem('fp_attendance_synced');
+        if (restoredAtt) autoManageAttendanceEvents(JSON.parse(restoredAtt));
+      } catch(e) {}
       showToast('✅ Restored ' + count + ' items — reloading…');
       setTimeout(() => location.reload(), 1200);
     } catch(err) { showToast('❌ Could not read backup file'); }
