@@ -6550,7 +6550,7 @@ function renderAcademicsTab(m) {
   // View switcher (2 tabs: Attendance + Week View)
   var _acadView = window._acadView || 'attendance';
   var switcher = '<div style="display:flex;gap:6px;margin-bottom:0;background:var(--surface2);border-radius:10px;padding:4px;">';
-  [['attendance','\U0001F4CA Attendance'],['weekview','\U0001F4C5 Week View']].forEach(function(t) {
+  [['attendance','📊 Attendance'],['weekview','📅 Week View']].forEach(function(t) {
     var isAct = _acadView === t[0];
     switcher += '<button onclick="switchAcadView(\'' + t[0] + '\')" style="flex:1;padding:7px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;cursor:pointer;transition:all .2s;' + (isAct ? 'background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.35);' : 'background:transparent;color:var(--text3);') + '">' + t[1] + '</button>';
   });
@@ -6581,7 +6581,7 @@ function renderAcademicsTab(m) {
 
   // ── WEEK VIEW — single-block navigator Mon-Sat ──────────────────────
   var DAY_ORDER = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  var TYPE_ICONS = {Lecture:'\U0001F4D6',Lab:'\U0001F52C',Tutorial:'\U0001F4DD',Seminar:'\U0001F393'};
+  var TYPE_ICONS = {Lecture:'📖',Lab:'🔬',Tutorial:'📝',Seminar:'🎓'};
   var todayName = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][new Date().getDay()];
 
   var weekViewHtml = '';
