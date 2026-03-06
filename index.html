@@ -3411,6 +3411,157 @@ input:focus, button:focus-visible {
   margin-top: 8px;
 }
 
+/* ═══════════════════════════════════════════════
+   FEATURE: GROCERY SMART CATEGORIES
+═══════════════════════════════════════════════ */
+.groc-cat-header {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--text3);
+  padding: 10px 2px 4px; margin-top: 2px;
+}
+.groc-cat-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   FEATURE: BILLS & REMINDER TRACKER
+═══════════════════════════════════════════════ */
+.bills-widget { padding: 0 2px 4px; }
+.bills-month-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2px 10px;
+}
+.bills-month-lbl { font-size: 12px; font-weight: 700; color: var(--text2); }
+.bills-summary-chips { display: flex; gap: 6px; }
+.bills-chip {
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 20px; letter-spacing: .3px;
+}
+.bills-chip-green { background: rgba(34,197,94,.12); color: var(--green); }
+.bills-chip-red   { background: rgba(239,68,68,.12); color: var(--red); }
+.bills-chip-gold  { background: rgba(234,179,8,.12);  color: var(--gold); }
+.bills-list { display: flex; flex-direction: column; gap: 8px; }
+.bill-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface2); border-radius: 12px;
+  padding: 10px 12px; position: relative; overflow: hidden;
+  transition: opacity .2s;
+}
+.bill-item.paid { opacity: .55; }
+.bill-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.bill-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.bill-info { flex: 1; min-width: 0; }
+.bill-name { font-size: 13px; font-weight: 700; color: var(--text1); }
+.bill-due  { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.bill-amount { font-size: 13px; font-weight: 800; color: var(--text1); flex-shrink: 0; }
+.bill-pay-btn {
+  width: 28px; height: 28px; border-radius: 8px; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  background: rgba(34,197,94,.15); color: var(--green); flex-shrink: 0;
+  transition: background .15s; -webkit-tap-highlight-color: transparent;
+}
+.bill-pay-btn:active { background: rgba(34,197,94,.3); }
+.bill-item.paid .bill-pay-btn { background: rgba(34,197,94,.25); }
+.bill-overdue-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--red);
+}
+.bills-add-row {
+  display: flex; gap: 8px; margin-top: 10px; align-items: center;
+}
+.bills-add-input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 12px; font-size: 13px; color: var(--text1);
+  outline: none;
+}
+.bills-add-input:focus { border-color: var(--blue2); }
+.bills-add-btn {
+  background: var(--blue2); color: #fff; border: none; border-radius: 10px;
+  padding: 9px 14px; font-size: 12px; font-weight: 700; cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════
+   FEATURE: NIGHT NUDGE BANNER
+═══════════════════════════════════════════════ */
+#night-nudge {
+  display: none;
+  position: fixed; bottom: 72px; left: 12px; right: 12px; z-index: 1200;
+  background: linear-gradient(135deg, #1a1040, #2d1b69);
+  border-radius: 18px; padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  animation: nudgeSlideUp .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes nudgeSlideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.nudge-row { display: flex; align-items: flex-start; gap: 12px; }
+.nudge-moon { font-size: 28px; flex-shrink: 0; }
+.nudge-body { flex: 1; min-width: 0; }
+.nudge-title { font-size: 14px; font-weight: 800; color: #e9d5ff; margin-bottom: 2px; }
+.nudge-sub   { font-size: 11px; color: #c4b5fd; line-height: 1.4; }
+.nudge-tomorrow { font-size: 11px; font-weight: 700; color: #fbbf24; margin-top: 5px; }
+.nudge-close {
+  width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,.12);
+  border: none; color: #c4b5fd; font-size: 14px; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════
+   FEATURE: CALL / WHATSAPP SHORTCUTS IN FAMILY WIDGET
+═══════════════════════════════════════════════ */
+.fpc-contact-row {
+  display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap;
+}
+.fpc-contact-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transition: opacity .15s;
+}
+.fpc-contact-btn:active { opacity: .7; }
+.fpc-btn-call { background: rgba(34,197,94,.18); color: #22c55e; }
+.fpc-btn-wa   { background: rgba(37,211,102,.18); color: #25d366; }
+.fpc-btn-sms  { background: rgba(99,102,241,.18); color: #818cf8; }
+
+/* ═══════════════════════════════════════════════
+   FEATURE: LIVE ATTENDANCE RISK METER
+═══════════════════════════════════════════════ */
+.att-risk-meter {
+  background: var(--surface2); border-radius: 14px;
+  padding: 12px 14px; margin-bottom: 2px;
+}
+.att-risk-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.att-risk-title { font-size: 12px; font-weight: 800; color: var(--text2); letter-spacing: .3px; }
+.att-risk-overall {
+  font-size: 11px; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px;
+}
+.att-risk-bar-list { display: flex; flex-direction: column; gap: 7px; }
+.att-risk-row { display: flex; align-items: center; gap: 8px; }
+.att-risk-subj { font-size: 11px; color: var(--text2); width: 120px; flex-shrink: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.att-risk-track {
+  flex: 1; height: 6px; background: var(--border); border-radius: 4px; overflow: hidden;
+}
+.att-risk-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+.att-risk-pct  { font-size: 10px; font-weight: 800; width: 32px; text-align: right; flex-shrink: 0; }
+.att-risk-fill-green { background: var(--green); }
+.att-risk-fill-gold  { background: var(--gold); }
+.att-risk-fill-red   { background: var(--red); }
+@keyframes attPulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.att-risk-fill-red { animation: attPulse 1.8s ease infinite; }
+
 </style>
 </head>
 <body>
@@ -3419,6 +3570,19 @@ input:focus, button:focus-visible {
 <div id="ptr-indicator">
   <span class="ptr-ico">↓</span>
   <span id="ptr-label">Pull to refresh</span>
+</div>
+
+<!-- ═══════════════ NIGHT NUDGE BANNER ═══════════════ -->
+<div id="night-nudge">
+  <div class="nudge-row">
+    <div class="nudge-moon">🌙</div>
+    <div class="nudge-body">
+      <div class="nudge-title" id="nudge-title">Good Night, Duggireddy Family!</div>
+      <div class="nudge-sub" id="nudge-sub">Time to wind down. Put the phone down and rest well.</div>
+      <div class="nudge-tomorrow" id="nudge-tomorrow"></div>
+    </div>
+    <button class="nudge-close" onclick="closeNightNudge()">✕</button>
+  </div>
 </div>
 
 <!-- ═══════════════ GLOBAL OVERLAYS (body-level, never inside transformed elements) ═══════════════ -->
@@ -4968,8 +5132,10 @@ const WIDGET_DEFS = {
   grocery:    { id:'grocery',    icon:'🛒', name:'Family Grocery & Tasks', desc:'Shared checklist for grocery and family tasks' },
   vehicle:    { id:'vehicle',    icon:'🚗', name:'Vehicle Service',     desc:'Track service history and next due for family vehicles' },
   photos:     { id:'photos',     icon:'📸', name:'Memory Wall',         desc:'Family photo memories pinboard' },
+  bills:      { id:'bills',      icon:'💸', name:'Bills & Reminders',   desc:'Monthly bill tracker with paid/unpaid toggle' },
+  att_risk:   { id:'att_risk',   icon:'📊', name:'Attendance Risk Meter', desc:'Live subject-wise attendance % bar for Josritha' },
 };
-const DEFAULT_WIDGETS=['hero','ai_briefing2','priority','family','grocery','timeline','att_severity','vehicle','health_pulse','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','att_risk','ai_briefing2','priority','family','grocery','timeline','att_severity','vehicle','health_pulse','bills','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
@@ -5358,6 +5524,8 @@ function buildWidgetHTML(wid) {
     case 'grocery':     return buildCollapsibleWidget('🛒 Grocery & Tasks', buildGroceryWidget(), 'grocery', true);
     case 'vehicle':     return buildCollapsibleWidget('🚗 Vehicle Service', buildVehicleWidget(), 'vehicle', true);
     case 'photos':      return buildCollapsibleWidget('📸 Memory Wall', buildMemoryWallWidget(), 'photos', true);
+    case 'bills':       return '<div class="w-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="w-hdr" style="margin:0">💸 &nbsp;Bills & Reminders</div><span class="card-action" onclick="billsResetMonth()" style="font-size:11px;">Reset Month</span></div><div id="bills-body">' + buildBillsWidget() + '</div></div>';
+    case 'att_risk':    return '<div class="w-card" style="padding:14px 16px 12px;" id="att-risk-card">' + buildAttRiskMeter() + '</div>';
     case 'ai_meals': return `<div class="ai-meal-widget">
       <div class="aimw-header">
         <div class="w-hdr" style="margin:0">🍛 &nbsp;AI Meal Planner</div>
@@ -5576,13 +5744,80 @@ function grocEmoji(name) {
   return _grocTab === 'grocery' ? '\uD83D\uDED2' : '\u2705';
 }
 
+function grocCategory(name) {
+  var n = name.toLowerCase();
+  if (n.match(/milk|curd|yogurt|cheese|paneer|butter|ghee|cream/)) return 'Dairy';
+  if (n.match(/rice|wheat|flour|rava|suji|poha|dal|lentil|chana|rajma|moong/)) return 'Staples';
+  if (n.match(/tomato|onion|potato|carrot|cabbage|brinjal|ladyfinger|spinach|palak|veg|leafy/)) return 'Vegetables';
+  if (n.match(/fruit|apple|banana|mango|grape|orange|watermelon/)) return 'Fruits';
+  if (n.match(/chicken|meat|fish|mutton|egg/)) return 'Meat & Eggs';
+  if (n.match(/bread|roti|naan|bun/)) return 'Bakery';
+  if (n.match(/oil|sugar|salt|spice|masala|turmeric|chilli|pepper|tamarind/)) return 'Pantry';
+  if (n.match(/coffee|tea|chai|juice|drink|water|soda/)) return 'Beverages';
+  if (n.match(/snack|biscuit|chips|chocolate|sweet|candy/)) return 'Snacks';
+  if (n.match(/soap|shampoo|detergent|wash|clean|toothpaste|sanitizer/)) return 'Household';
+  if (n.match(/medicine|tablet|syrup|cream|balm/)) return 'Medicine';
+  return 'Other';
+}
+
+var GROC_CAT_COLORS = {
+  'Dairy':'\u2b50','Staples':'\uD83C\uDF3E','Vegetables':'\uD83E\uDD66','Fruits':'\uD83C\uDF4E',
+  'Meat & Eggs':'\uD83C\uDF57','Bakery':'\uD83C\uDF5E','Pantry':'\uD83E\uDDC2','Beverages':'\u2615',
+  'Snacks':'\uD83C\uDF6A','Household':'\uD83E\uDDFC','Medicine':'\uD83D\uDC8A','Other':'\uD83D\uDED2'
+};
+var GROC_CAT_BG = {
+  'Dairy':'#f5a623','Staples':'#8b5cf6','Vegetables':'#22c55e','Fruits':'#f97316',
+  'Meat & Eggs':'#ef4444','Bakery':'#d97706','Pantry':'#6366f1','Beverages':'#06b6d4',
+  'Snacks':'#ec4899','Household':'#14b8a6','Medicine':'#3b82f6','Other':'#6b7280'
+};
+
 function buildGrocList() {
   var items = grocData();
   if (!items.length) return '<div class="groc-empty"><div class="groc-empty-icon">' + (_grocTab==='grocery'?'\uD83D\uDED2':'\u2705') + '</div><div>' + (_grocTab==='grocery'?'Your cart is empty':'No tasks yet') + '</div></div>';
-  return items.map(function(item, idx) {
-    var emoji = grocEmoji(item.name);
-    return '<div class="groc-item' + (item.done?' done':'') + '" id="groc-item-' + idx + '">'      + '<div class="groc-check" onclick="grocToggle(' + idx + ')">' + (item.done?'\u2714':'') + '</div>'      + '<div class="groc-item-emoji">' + emoji + '</div>'      + '<div class="groc-item-name">' + item.name + '</div>'      + '<div class="groc-item-meta">' + (item.by||'') + '</div>'      + '<div class="groc-item-del" onclick="grocDelete(' + idx + ')">\u00D7</div>'      + '</div>';
-  }).join('');
+
+  if (_grocTab !== 'grocery') {
+    // Tasks tab — flat list (no categorization)
+    return items.map(function(item, idx) {
+      var emoji = grocEmoji(item.name);
+      return '<div class="groc-item' + (item.done?' done':'') + '" id="groc-item-' + idx + '">'
+        + '<div class="groc-check" onclick="grocToggle(' + idx + ')">' + (item.done?'\u2714':'') + '</div>'
+        + '<div class="groc-item-emoji">' + emoji + '</div>'
+        + '<div class="groc-item-name">' + item.name + '</div>'
+        + '<div class="groc-item-del" onclick="grocDelete(' + idx + '">\u00D7</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Grocery tab — group by category
+  var cats = {};
+  items.forEach(function(item, idx) {
+    var cat = grocCategory(item.name);
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push({ item: item, idx: idx });
+  });
+
+  var html = '';
+  Object.keys(cats).forEach(function(cat) {
+    var entries = cats[cat];
+    var bg = GROC_CAT_BG[cat] || '#6b7280';
+    html += '<div class="groc-cat-header">'
+      + '<div class="groc-cat-dot" style="background:' + bg + ';"></div>'
+      + cat
+      + '<span style="margin-left:auto;font-size:9px;color:var(--text3);">'
+      + entries.filter(function(e){ return e.item.done; }).length + '/' + entries.length
+      + '</span></div>';
+    entries.forEach(function(e) {
+      var item = e.item; var idx = e.idx;
+      var emoji = grocEmoji(item.name);
+      html += '<div class="groc-item' + (item.done?' done':'') + '" id="groc-item-' + idx + '">'
+        + '<div class="groc-check" onclick="grocToggle(' + idx + ')">' + (item.done?'\u2714':'') + '</div>'
+        + '<div class="groc-item-emoji">' + emoji + '</div>'
+        + '<div class="groc-item-name">' + item.name + '</div>'
+        + '<div class="groc-item-del" onclick="grocDelete(' + idx + ')">\u00D7</div>'
+        + '</div>';
+    });
+  });
+  return html;
 }
 
 function grocCountText() {
@@ -5658,6 +5893,80 @@ function grocClearDone() {
   if (groc) groc.innerHTML = buildGrocList();
   if (count) count.textContent = grocCountText();
   grocRefreshProgress();
+}
+
+/* ═══════════════════════════════════════════════
+   BILLS & REMINDER TRACKER WIDGET
+═══════════════════════════════════════════════ */
+var BILLS_DEFAULT = [
+  { id:'elec',   name:'Electricity', icon:'\u26A1', amount:'\u20B91,800', day:1,  color:'#f5a623' },
+  { id:'wifi',   name:'Internet / WiFi', icon:'\uD83D\uDCF6', amount:'\u20B9999', day:5,  color:'#06b6d4' },
+  { id:'mobile1',name:'Rajasekhar Mobile', icon:'\uD83D\uDCF1', amount:'\u20B9599', day:10, color:'#3b82f6' },
+  { id:'mobile2',name:'Vasundhara Mobile', icon:'\uD83D\uDCF1', amount:'\u20B9399', day:12, color:'#8b5cf6' },
+  { id:'lp',     name:'LPG Cylinder', icon:'\uD83D\uDD25', amount:'\u20B9950', day:15, color:'#ef4444' },
+  { id:'ott',    name:'OTT Subscriptions', icon:'\uD83C\uDFA5', amount:'\u20B9649', day:20, color:'#ec4899' }
+];
+
+function getBillsData() {
+  try { return JSON.parse(localStorage.getItem('fp_bills') || 'null') || BILLS_DEFAULT.map(function(b){ return Object.assign({}, b, {paid:false}); }); }
+  catch(e) { return BILLS_DEFAULT.map(function(b){ return Object.assign({}, b, {paid:false}); }); }
+}
+function saveBillsData(arr) { localStorage.setItem('fp_bills', JSON.stringify(arr)); }
+
+function buildBillsWidget() {
+  var bills = getBillsData();
+  var today = new Date().getDate();
+  var month = new Date().toLocaleDateString('en-IN', {month:'long', year:'numeric'});
+  var paid = bills.filter(function(b){ return b.paid; }).length;
+  var overdue = bills.filter(function(b){ return !b.paid && b.day < today; }).length;
+  var pending = bills.length - paid;
+
+  var html = '<div class="bills-widget">'
+    + '<div class="bills-month-row">'
+    + '<div class="bills-month-lbl">' + month + '</div>'
+    + '<div class="bills-summary-chips">'
+    + (paid > 0 ? '<span class="bills-chip bills-chip-green">\u2714 ' + paid + ' paid</span>' : '')
+    + (overdue > 0 ? '<span class="bills-chip bills-chip-red">! ' + overdue + ' overdue</span>' : '')
+    + (pending > 0 && overdue === 0 ? '<span class="bills-chip bills-chip-gold">' + pending + ' pending</span>' : '')
+    + '</div></div>'
+    + '<div class="bills-list">';
+
+  bills.forEach(function(b, idx) {
+    var isOverdue = !b.paid && b.day < today;
+    var dueStr = b.paid ? 'Paid \u2714' : ('Due: ' + b.day + (b.day===1?'st':b.day===2?'nd':b.day===3?'rd':'th'));
+    html += '<div class="bill-item' + (b.paid ? ' paid' : '') + '">'
+      + (isOverdue ? '<div class="bill-overdue-bar"></div>' : '')
+      + '<div class="bill-item-left">'
+      + '<div class="bill-icon" style="background:' + b.color + '22;">' + b.icon + '</div>'
+      + '<div class="bill-info">'
+      + '<div class="bill-name">' + b.name + '</div>'
+      + '<div class="bill-due" style="color:' + (isOverdue ? 'var(--red)' : b.paid ? 'var(--green)' : 'var(--text3)') + ';">' + dueStr + '</div>'
+      + '</div>'
+      + '<div class="bill-amount">' + b.amount + '</div>'
+      + '</div>'
+      + '<button class="bill-pay-btn" onclick="billTogglePaid(' + idx + ')" title="' + (b.paid ? 'Mark unpaid' : 'Mark paid') + '">'
+      + (b.paid ? '\u2714' : '\u25CB')
+      + '</button>'
+      + '</div>';
+  });
+
+  html += '</div></div>';
+  return html;
+}
+
+function billTogglePaid(idx) {
+  var bills = getBillsData();
+  if (bills[idx]) bills[idx].paid = !bills[idx].paid;
+  saveBillsData(bills);
+  var body = document.getElementById('bills-body');
+  if (body) body.innerHTML = buildBillsWidget();
+}
+
+function billsResetMonth() {
+  var bills = getBillsData().map(function(b){ return Object.assign({}, b, {paid:false}); });
+  saveBillsData(bills);
+  var body = document.getElementById('bills-body');
+  if (body) body.innerHTML = buildBillsWidget();
 }
 
 /* ═══════════════════════════════════════════════
@@ -6288,6 +6597,57 @@ function jacRefresh() {
   requestAnimationFrame(function(){ jacInitSwipe(); });
 }
 
+/* ─── LIVE ATTENDANCE RISK METER ─── */
+function buildAttRiskMeter() {
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attData = attRaw ? JSON.parse(attRaw) : (typeof ATTENDANCE !== 'undefined' ? ATTENDANCE : []);
+
+  // Merge by subject+type, pick unique subjects (take first of each code)
+  var seen = {};
+  var subjects = [];
+  attData.forEach(function(a) {
+    if (!seen[a.code]) {
+      seen[a.code] = true;
+      subjects.push(a);
+    }
+  });
+
+  var overallPresent = attData.reduce(function(s,a){ return s+a.present; }, 0);
+  var overallTotal   = attData.reduce(function(s,a){ return s+a.total; }, 0);
+  var overallPct = overallTotal ? Math.round(overallPresent/overallTotal*100) : 0;
+  var atRisk = subjects.filter(function(a){ return Math.round(a.present/a.total*100) < 75; }).length;
+
+  var overallClass = overallPct >= 80 ? 'bills-chip-green' : overallPct >= 75 ? 'bills-chip-gold' : 'bills-chip-red';
+  var overallLabel = overallPct >= 80 ? '\u2714 Safe' : overallPct >= 75 ? '\u26A0 Warning' : '\u26D4 At Risk';
+
+  var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">'
+    + '<div class="w-hdr" style="margin:0;">\uD83D\uDCCA\u00A0Josritha Attendance</div>'
+    + '<span class="bills-chip ' + overallClass + '" style="font-size:10px;">' + overallPct + '% ' + overallLabel + '</span>'
+    + '</div>'
+    + '<div class="att-risk-bar-list">';
+
+  subjects.forEach(function(a) {
+    var pct = a.total ? Math.round(a.present/a.total*100) : 0;
+    var fillClass = pct >= 80 ? 'att-risk-fill-green' : pct >= 75 ? 'att-risk-fill-gold' : 'att-risk-fill-red';
+    var shortName = a.subject.length > 18 ? a.subject.slice(0,17) + '\u2026' : a.subject;
+    html += '<div class="att-risk-row">'
+      + '<div class="att-risk-subj" title="' + a.subject + '">' + shortName + '</div>'
+      + '<div class="att-risk-track"><div class="att-risk-fill ' + fillClass + '" style="width:' + pct + '%;"></div></div>'
+      + '<div class="att-risk-pct" style="color:' + (pct>=80?'var(--green)':pct>=75?'var(--gold)':'var(--red)') + ';">' + pct + '%</div>'
+      + '</div>';
+  });
+
+  html += '</div>';
+
+  if (atRisk > 0) {
+    html += '<div style="margin-top:10px;padding:8px 10px;background:rgba(239,68,68,.1);border-radius:10px;font-size:11px;font-weight:700;color:var(--red);">'
+      + '\u26A0\uFE0F ' + atRisk + ' subject' + (atRisk>1?'s':' ') + ' below 75% — risk of being barred'
+      + '</div>';
+  }
+
+  return html;
+}
+
 function buildAttSeverityWidget() {
   var DAY_SHORT = ['MON','TUE','WED','THU','FRI','SAT'];
   var DAY_FULL  = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
@@ -6914,6 +7274,16 @@ function initWidgetDynamic() {
       return '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:' + radius + 'px;background:' + m.gradient + ';flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-size:' + fontSize + 'px;font-weight:800;color:#fff;overflow:hidden;">' + inner + '</div>';
     }
 
+    function fpcContactBtns(m) {
+      var phone = m.mobile || (m.id==='vasundhara' ? '9652948966' : '');
+      if (!phone) return '';
+      var clean = phone.replace(/\s/g,'');
+      return '<div class="fpc-contact-row" onclick="event.stopPropagation();">'
+        + '<a class="fpc-contact-btn fpc-btn-call" href="tel:+91' + clean + '">\uD83D\uDCDE Call</a>'
+        + '<a class="fpc-contact-btn fpc-btn-wa" href="https://wa.me/91' + clean + '" target="_blank">\uD83D\uDCAC WhatsApp</a>'
+        + '</div>';
+    }
+
     function fpcHeroCard(m) {
       var calCount = allCalEvts.filter(function(ev){ return ev.members.includes(m.shortName) && daysUntil(ev.date) >= 0 && daysUntil(ev.date) <= 30; }).length;
       var nav = 'goPage(\'members\');setTimeout(function(){showMemberDetail(\'' + m.id + '\',\'identity\');},50)';
@@ -6926,6 +7296,7 @@ function initWidgetDynamic() {
         + '<div class="fpc-hero-name">' + m.shortName + '</div>'
         + '<div class="fpc-hero-role">' + m.role + ' \u00B7 ' + age(m.dob) + ' yrs</div>'
         + '<div class="fpc-hero-chips">' + fpcChips(m, calCount) + '</div>'
+        + fpcContactBtns(m)
         + '</div>'
         + '<div style="color:rgba(255,255,255,.4);font-size:20px;">&#x203A;</div>'
         + '</div></div>';
@@ -6940,6 +7311,7 @@ function initWidgetDynamic() {
         + '<div class="fpc-mini-name">' + m.shortName + '</div>'
         + '<div class="fpc-mini-role">' + m.role + '</div>'
         + '<div class="fpc-mini-chips">' + fpcChips(m, calCount) + '</div>'
+        + fpcContactBtns(m)
         + '</div>';
     }
 
@@ -6955,12 +7327,13 @@ function initWidgetDynamic() {
   // UNIFIED TIMELINE
   // ─────────────────────────────────────────
   // Refresh dynamic widgets
-  ['att_severity','grocery','vehicle','photos','ai_briefing2'].forEach(function(wid) {
+  ['att_severity','att_risk','grocery','vehicle','photos','ai_briefing2'].forEach(function(wid) {
     var item = document.querySelector('.widget-item[data-wid="' + wid + '"]');
     if (!item) return;
     var body = item.children[2];
     if (!body) return;
     if (wid === 'att_severity' || wid === 'josritha_acad') { body.innerHTML = buildJosrithaAcadWidget(); requestAnimationFrame(function(){ jacInitSwipe(); }); }
+    else if (wid === 'att_risk')   { var c = body.querySelector('#att-risk-card'); if (c) c.innerHTML = buildAttRiskMeter(); }
     else if (wid === 'vehicle')  body.innerHTML = buildVehicleWidget();
     else if (wid === 'photos')   body.innerHTML = buildMemoryWallWidget();
     // grocery + briefing only refresh on tab switch — don't wipe user input
@@ -7141,11 +7514,42 @@ function initDashboard() {
   const dEl = document.getElementById('dash-date');
   if(dEl) dEl.textContent = TODAY.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
+  // Night nudge — show after 11pm if not dismissed today
+  initNightNudge();
+
   // Load widget order preference and render widgets
   loadWidgetOrder();
   renderWidgets();
   // Init AI widgets after DOM is rendered
   setTimeout(aiWidgetsInit, 200);
+}
+
+function initNightNudge() {
+  var hour = new Date().getHours();
+  if (hour < 23 && hour >= 6) return; // only 11pm-6am
+  var todayKey = 'fp_nudge_' + new Date().toISOString().slice(0,10);
+  if (localStorage.getItem(todayKey)) return; // already dismissed today
+  var nudge = document.getElementById('night-nudge');
+  if (!nudge) return;
+  // Find tomorrow's first event
+  var stored = localStorage.getItem('fp_cal_events');
+  var evts = stored ? JSON.parse(stored) : [];
+  var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+  var tmStr = tomorrow.toISOString().slice(0,10);
+  var tmEvts = evts.filter(function(e){ return e.date === tmStr; });
+  var tmEl = document.getElementById('nudge-tomorrow');
+  if (tmEl && tmEvts.length) {
+    tmEl.textContent = '\uD83D\uDCC5 Tomorrow: ' + tmEvts[0].title + (tmEvts.length > 1 ? ' +' + (tmEvts.length-1) + ' more' : '');
+  }
+  nudge.style.display = 'block';
+  setTimeout(function(){ nudge.style.display = 'none'; localStorage.setItem(todayKey, '1'); }, 30000);
+}
+
+function closeNightNudge() {
+  var nudge = document.getElementById('night-nudge');
+  if (nudge) nudge.style.display = 'none';
+  var todayKey = 'fp_nudge_' + new Date().toISOString().slice(0,10);
+  localStorage.setItem(todayKey, '1');
 }
 
 // ═══════════════════════════════════════════════════
