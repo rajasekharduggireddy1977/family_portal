@@ -5553,69 +5553,121 @@ function renderAcademicsTab(m) {
 // events for Josritha subjects below 75%
 // ═══════════════════════════════════════════════════════
 function autoManageAttendanceEvents(attData) {
-  if (!attData || !attData.length) return;
-  var SEMESTER_END = '2026-03-31';
-  var PREFIX = 'att_risk_';
-  var events = getCalEvents();
-  var changed = false;
+  // Guard — never run during backup operation
+  if (!attData || !Array.isArray(attData) || !attData.length) return;
 
+  var PREFIX = 'att_risk_';
+  var DAY_MAP = {0:'SUNDAY',1:'MONDAY',2:'TUESDAY',3:'WEDNESDAY',4:'THURSDAY',5:'FRIDAY',6:'SATURDAY'};
+
+  // Load timetable from localStorage
+  var ttData = [];
+  try {
+    var ttRaw = localStorage.getItem('fp_timetable_synced');
+    if (ttRaw) ttData = JSON.parse(ttRaw);
+  } catch(e) { ttData = []; }
+
+  // Load current calendar events (safe wrapper)
+  var events = [];
+  try { events = getCalEvents(); } catch(e) { return; }
+
+  // Step 1: Remove ALL existing auto att_risk events (full refresh)
+  events = events.filter(function(e) {
+    return !(e.id && e.id.indexOf(PREFIX) === 0 && e.auto === true);
+  });
+
+  // Step 2: Build set of risky subjects
+  var riskySubjects = {};
   attData.forEach(function(a) {
     if (!a.code || !a.type || !a.subject) return;
     var pct = Math.round(a.present / a.total * 100);
-    var attKey = a.code + '|' + a.type;
-    var eventId = PREFIX + attKey.replace('|','_');
-
-    // How many classes needed to reach 75%
-    var need = Math.ceil(0.75 * a.total) - a.present;
-    var canSkip = Math.max(0, Math.floor(a.total * 0.25) - (a.total - a.present));
-
-    var existingIdx = events.findIndex(function(e) { return e.id === eventId; });
-
     if (pct < 75) {
-      // Subject is at risk — create or update event
-      var shortSubject = a.subject.length > 28 ? a.subject.substring(0, 26) + '…' : a.subject;
-      var statusLabel = pct < 70 ? '🚨 CRITICAL' : '⚠️ AT RISK';
-      var noteText = a.type + ' · ' + pct + '% now · need ' + Math.max(0,need) + ' more class' + (need!==1?'es':'') + ' to reach 75%' + (canSkip > 0 ? ' · can skip ' + canSkip + ' more' : ' · DO NOT skip any');
-
-      if (existingIdx === -1) {
-        // Create new event
-        events.push({
-          id: eventId,
-          title: statusLabel + ' ' + shortSubject,
-          date: SEMESTER_END,
-          type: 'Academic',
-          icon: pct < 70 ? '🚨' : '📚',
-          members: ['Josritha'],
-          auto: true,
-          att_key: attKey,
-          note: noteText
-        });
-        changed = true;
-      } else {
-        // Update existing — refresh pct and note in case data changed
-        events[existingIdx].title = statusLabel + ' ' + shortSubject;
-        events[existingIdx].icon = pct < 70 ? '🚨' : '📚';
-        events[existingIdx].note = noteText;
-        changed = true;
-      }
-    } else {
-      // Subject is safe — delete risk event if it exists
-      if (existingIdx !== -1) {
-        events.splice(existingIdx, 1);
-        changed = true;
-      }
+      var attKey = a.code + '|' + a.type;
+      var need = Math.max(0, Math.ceil(0.75 * (a.total + 1)) - a.present);
+      var canSkip = Math.max(0, Math.floor(a.total * 0.25) - (a.total - a.present));
+      riskySubjects[attKey] = {
+        code: a.code,
+        type: a.type,
+        subject: a.subject,
+        pct: pct,
+        need: need,
+        canSkip: canSkip,
+        critical: pct < 70
+      };
     }
   });
 
-  if (changed) {
-    saveCalEvents(events);
-    // Count how many risk events exist now
-    var riskCount = events.filter(function(e) { return e.id && e.id.indexOf(PREFIX) === 0; }).length;
-    if (riskCount > 0) {
-      showToast('📚 ' + riskCount + ' attendance risk event' + (riskCount!==1?'s':'') + ' updated in calendar');
-    }
+  var riskCount = Object.keys(riskySubjects).length;
+  if (riskCount === 0) {
+    // All subjects safe — save cleaned events and return
+    try { saveCalEvents(events); } catch(e) {}
+    return;
   }
+
+  // Step 3: Generate day-wise events for next 2 months
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var cutoff = new Date(today);
+  cutoff.setDate(cutoff.getDate() + 62); // ~2 months
+
+  // Build lookup: attKey -> list of timetable day names
+  var ttByKey = {};
+  ttData.forEach(function(slot) {
+    var key = slot.att_key || (slot.code + '|' + slot.type);
+    if (!ttByKey[key]) ttByKey[key] = {};
+    ttByKey[key][slot.day] = true; // slot.day = 'MONDAY' etc
+  });
+
+  // Walk each day for next 2 months
+  var d = new Date(today);
+  var newEvents = [];
+  while (d <= cutoff) {
+    var dayName = DAY_MAP[d.getDay()];
+    var dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+
+    Object.keys(riskySubjects).forEach(function(attKey) {
+      var subj = riskySubjects[attKey];
+      // Only create event if this subject has a class on this day of week
+      var hasClassToday = ttByKey[attKey] && ttByKey[attKey][dayName];
+      if (!hasClassToday) return;
+
+      var shortName = subj.subject.length > 24 ? subj.subject.substring(0,22) + '\u2026' : subj.subject;
+      var icon = subj.critical ? '\uD83D\uDEA8' : '\uD83D\uDCDA';
+      var label = subj.critical ? '\uD83D\uDEA8 CRITICAL' : '\u26A0\uFE0F AT RISK';
+      var note = subj.type + ' \u00B7 ' + subj.pct + '% \u00B7 '
+        + (subj.canSkip > 0
+            ? 'Can skip ' + subj.canSkip + ' more · need ' + subj.need + ' to reach 75%'
+            : 'DO NOT skip · need ' + subj.need + ' more classes');
+
+      // Unique id per subject + date
+      var safeKey = attKey.replace(/[^a-zA-Z0-9]/g, '_');
+      newEvents.push({
+        id: PREFIX + safeKey + '_' + dateStr,
+        title: label + ' ' + shortName,
+        date: dateStr,
+        type: 'Academic',
+        icon: icon,
+        members: ['Josritha'],
+        auto: true,
+        att_key: attKey,
+        note: note
+      });
+    });
+
+    d.setDate(d.getDate() + 1);
+  }
+
+  // Step 4: Merge and save
+  var finalEvents = events.concat(newEvents);
+  try {
+    saveCalEvents(finalEvents);
+    if (newEvents.length > 0) {
+      setTimeout(function() {
+        showToast('\uD83D\uDCDA ' + newEvents.length + ' class alerts created for ' + riskCount + ' at-risk subject' + (riskCount!==1?'s':''));
+      }, 400);
+    }
+  } catch(e) {}
 }
+
 
 function syncAttendanceFile(input) {
   const file = input.files[0]; if (!file) return;
@@ -5627,8 +5679,8 @@ function syncAttendanceFile(input) {
       localStorage.setItem("fp_attendance_synced", JSON.stringify(data));
       const ts = new Date().toLocaleString("en-IN", {day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
       localStorage.setItem("fp_attendance_synced_ts", ts);
-      autoManageAttendanceEvents(data);
       showToast("✅ " + data.length + " subjects synced");
+      setTimeout(function() { autoManageAttendanceEvents(data); }, 200);
       setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); }, 50);
       input.value = "";
     } catch(err) { showToast("❌ Could not parse file"); }
@@ -7485,11 +7537,6 @@ function init() {
   initDocuments();
   initExpiry();
   buildSearchIdx();
-  // Auto-manage attendance events on startup
-  try {
-    var _bootAtt = localStorage.getItem('fp_attendance_synced');
-    if (_bootAtt) autoManageAttendanceEvents(JSON.parse(_bootAtt));
-  } catch(e) {}
   // Apply saved member context after full init
   updateGmPill();
   applyMemberContextToCurrentPage();
@@ -7850,11 +7897,6 @@ function doRestore(input) {
       });
       const ts = new Date().toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
       localStorage.setItem('fp_backup_ts', ts);
-      // Auto-manage attendance events from restored data
-      try {
-        var restoredAtt = localStorage.getItem('fp_attendance_synced');
-        if (restoredAtt) autoManageAttendanceEvents(JSON.parse(restoredAtt));
-      } catch(e) {}
       showToast('✅ Restored ' + count + ' items — reloading…');
       setTimeout(() => location.reload(), 1200);
     } catch(err) { showToast('❌ Could not read backup file'); }
