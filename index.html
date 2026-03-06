@@ -2832,6 +2832,93 @@ input:focus, button:focus-visible {
 .asw-safe-icon { font-size: 24px; }
 .asw-safe-text { font-size: 12px; font-weight: 700; color: var(--green); font-family: 'Inter', sans-serif; }
 .asw-safe-sub { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+/* ═══════════════════════════════════════════════════════════
+   JOSRITHA ACADEMIC CARD  (jac-*)
+═══════════════════════════════════════════════════════════ */
+.jac-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden;position:relative;}
+
+/* ── Hero band ── */
+.jac-hero{padding:14px 16px 12px;background:linear-gradient(135deg,rgba(167,139,250,.14) 0%,rgba(99,102,241,.08) 50%,rgba(79,127,255,.05) 100%);border-bottom:1px solid rgba(167,139,250,.18);display:flex;align-items:center;gap:12px;}
+.jac-ring-wrap{flex-shrink:0;position:relative;width:56px;height:56px;}
+.jac-ring-wrap svg{display:block;}
+.jac-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.jac-ring-num{font-size:14px;font-weight:900;font-family:'DM Mono',monospace;line-height:1;letter-spacing:-1px;}
+.jac-ring-lbl{font-size:7px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.3px;margin-top:1px;}
+.jac-hero-info{flex:1;min-width:0;}
+.jac-hero-name{font-size:15px;font-weight:800;font-family:'Syne',sans-serif;color:var(--text);letter-spacing:-.2px;}
+.jac-hero-sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;letter-spacing:.3px;}
+.jac-hero-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.jac-chip{font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;letter-spacing:.2px;}
+.jac-chip-ok{background:rgba(62,207,142,.12);color:var(--green);border:1px solid rgba(62,207,142,.2);}
+.jac-chip-warn{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.2);}
+.jac-chip-crit{background:rgba(255,79,79,.12);color:var(--red);border:1px solid rgba(255,79,79,.2);}
+.jac-fullview{flex-shrink:0;font-size:10px;font-weight:700;color:var(--purple);font-family:'DM Mono',monospace;padding:6px 10px;border-radius:8px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);cursor:pointer;white-space:nowrap;transition:all .12s;}
+.jac-fullview:active{background:rgba(167,139,250,.2);}
+
+/* ── Day navigator row ── */
+.jac-daynav{display:flex;align-items:center;gap:0;padding:10px 14px 0;border-bottom:1px solid var(--border2);}
+.jac-nav-arrow{width:28px;height:28px;border-radius:7px;border:1px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;color:var(--text2);flex-shrink:0;transition:all .12s;user-select:none;-webkit-user-select:none;}
+.jac-nav-arrow:active{opacity:.6;transform:scale(.92);}
+.jac-nav-arrow.off{opacity:.22;pointer-events:none;}
+.jac-nav-center{flex:1;text-align:center;padding:0 6px;}
+.jac-nav-dayname{font-size:11px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:var(--text);}
+.jac-nav-today{font-size:8px;font-weight:800;background:var(--purple);color:#fff;padding:1px 6px;border-radius:10px;margin-left:5px;vertical-align:middle;}
+.jac-nav-dots{display:flex;justify-content:center;align-items:center;gap:7px;padding:5px 0 8px;}
+.jac-dot{width:5px;height:5px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;transition:all .12s;}
+.jac-dot.on{background:var(--purple);border-color:var(--purple);transform:scale(1.3);}
+.jac-dot.has{border-color:var(--text3);}
+.jac-dot.tod{border-color:var(--purple);}
+
+/* ── Slot list ── */
+.jac-slots{padding:4px 0 6px;}
+.jac-slot{display:flex;align-items:center;gap:0;padding:0;position:relative;}
+.jac-slot + .jac-slot{border-top:1px solid rgba(255,255,255,.04);}
+.jac-slot-bar{width:3px;flex-shrink:0;align-self:stretch;border-radius:0;}
+.jac-slot-inner{display:flex;align-items:center;gap:10px;padding:9px 14px 9px 10px;flex:1;min-width:0;}
+.jac-slot-time{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);width:42px;flex-shrink:0;line-height:1.3;}
+.jac-slot-body{flex:1;min-width:0;}
+.jac-slot-name{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.jac-slot-meta{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px;}
+.jac-slot-pct{flex-shrink:0;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;padding:3px 7px;border-radius:6px;margin-left:4px;}
+.jac-noclss{padding:18px 16px;text-align:center;color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;}
+
+/* ── Severity heatmap strip ── */
+.jac-sev{border-top:1px solid var(--border2);padding:10px 14px 12px;}
+.jac-sev-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.jac-sev-title{font-size:9px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.6px;}
+.jac-sev-legend{display:flex;align-items:center;gap:8px;}
+.jac-sev-leg-item{display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text3);font-family:'DM Mono',monospace;}
+.jac-sev-leg-dot{width:6px;height:6px;border-radius:50%;}
+.jac-heatmap{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;}
+.jac-hm-col{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.jac-hm-lbl{font-size:8px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.4px;}
+.jac-hm-col.tod-col .jac-hm-lbl{color:var(--purple);}
+.jac-hm-dots{display:flex;flex-direction:column;gap:2px;align-items:center;min-height:14px;}
+.jac-hm-dot{width:8px;height:8px;border-radius:2px;transition:all .12s;cursor:pointer;}
+.jac-hm-dot:active{transform:scale(.85);}
+.jac-hm-dot.safe{background:rgba(62,207,142,.25);border:1px solid rgba(62,207,142,.35);}
+.jac-hm-dot.warn{background:rgba(245,158,11,.3);border:1px solid rgba(245,158,11,.45);}
+.jac-hm-dot.crit{background:rgba(255,79,79,.3);border:1px solid rgba(255,79,79,.45);}
+.jac-hm-dot.none{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);}
+.jac-hm-col.tod-col .jac-hm-dot.safe{background:rgba(62,207,142,.38);box-shadow:0 0 6px rgba(62,207,142,.25);}
+.jac-hm-col.tod-col .jac-hm-dot.warn{background:rgba(245,158,11,.45);box-shadow:0 0 6px rgba(245,158,11,.25);}
+.jac-hm-col.tod-col .jac-hm-dot.crit{background:rgba(255,79,79,.45);box-shadow:0 0 6px rgba(255,79,79,.25);}
+
+/* ── Footer ── */
+.jac-footer{border-top:1px solid var(--border2);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;}
+.jac-footer-ts{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;}
+.jac-footer-sync{font-size:10px;font-weight:700;color:var(--purple);cursor:pointer;padding:4px 8px;border-radius:6px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.18);transition:all .12s;}
+.jac-footer-sync:active{background:rgba(167,139,250,.18);}
+
+/* no-data state */
+.jac-nodata{padding:28px 16px;text-align:center;}
+.jac-nodata-icon{font-size:32px;opacity:.45;margin-bottom:10px;}
+.jac-nodata-txt{font-size:12px;color:var(--text3);line-height:1.6;}
+.jac-nodata-btn{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;color:var(--purple);padding:7px 18px;border-radius:8px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);cursor:pointer;}
+
+@keyframes jacFade{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+.jac-anim{animation:jacFade .15s ease both;}
 /* ═══════════════════════════════════════════════════════
    AI FLOATING PANEL
 ═══════════════════════════════════════════════════════ */
@@ -4947,7 +5034,7 @@ function buildWidgetHTML(wid) {
       </div>
       <div id="timeline-list" class="timeline-list"></div>
     </div>`;
-    case 'att_severity': return buildAttSeverityWidget();
+    case 'att_severity': case 'josritha_acad': return buildJosrithaAcadWidget();
     case 'health_pulse': return `<div class="w-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="w-hdr" style="margin:0">❤️ &nbsp;Health Pulse</div>
@@ -5602,6 +5689,330 @@ function memDeletePhoto() {
   if (typeof showToast==='function') showToast('Photo deleted');
 }
 
+
+/* ═══════════════════════════════════════════════════════════
+   JOSRITHA ACADEMIC CARD  — dashboard widget
+   Combines: SVG ring + day navigator + slot rows + heatmap
+═══════════════════════════════════════════════════════════ */
+function buildJosrithaAcadWidget() {
+  var DAY_SHORT = ['MON','TUE','WED','THU','FRI','SAT'];
+  var DAY_FULL  = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  var TYPE_ICONS = {Lecture:'\U0001f4d6',Lab:'\U0001f52c',Tutorial:'\U0001f4dd',Seminar:'\U0001f393'};
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  var todayDow = today.getDay();
+  var todayName = todayDow === 0 ? '' : DAY_FULL[todayDow - 1] || '';
+
+  // Mon of this week
+  var monday = new Date(today);
+  var diffToMon = (todayDow === 0) ? -6 : 1 - todayDow;
+  monday.setDate(today.getDate() + diffToMon);
+  var fmt = function(d){ return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); };
+  var saturday = new Date(monday); saturday.setDate(monday.getDate() + 5);
+  var weekLabel = fmt(monday) + ' \u2014 ' + fmt(saturday);
+
+  // Load data
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var ttRaw  = localStorage.getItem('fp_timetable_synced');
+  var attTs  = localStorage.getItem('fp_attendance_synced_ts') || '';
+
+  // ── No-data state ──────────────────────────────────────────────────
+  if (!attRaw) {
+    return '<div class="jac-card w-card">'
+      + '<div class="jac-hero" style="padding:16px;">'
+      + '<div style="font-size:32px;margin-right:2px;">\U0001f393</div>'
+      + '<div class="jac-hero-info">'
+      + '<div class="jac-hero-name">Josritha</div>'
+      + '<div class="jac-hero-sub">KL UNIVERSITY \u00b7 EVEN SEM 2025\u201326</div>'
+      + '</div>'
+      + '<div class="jac-fullview" onclick="showMemberDetail(\'josritha\',\'academics\')">Full View \u2192</div>'
+      + '</div>'
+      + '<div class="jac-nodata">'
+      + '<div class="jac-nodata-icon">\U0001f4ca</div>'
+      + '<div class="jac-nodata-txt">Upload attendance &amp; timetable<br>to unlock the academics card</div>'
+      + '<div class="jac-nodata-btn" onclick="showMemberDetail(\'josritha\',\'academics\')">\U0001f4c2 Upload Data \u2192</div>'
+      + '</div></div>';
+  }
+
+  var attData = JSON.parse(attRaw);
+  var ttData  = ttRaw ? JSON.parse(ttRaw) : null;
+
+  // ── Overall stats ──────────────────────────────────────────────────
+  var totalPresent = attData.reduce(function(s,a){ return s + a.present; }, 0);
+  var totalClasses = attData.reduce(function(s,a){ return s + a.total; }, 0);
+  var overallPct   = totalClasses ? Math.round(totalPresent / totalClasses * 100) : 0;
+  var atRisk   = attData.filter(function(a){ return Math.round(a.present/a.total*100) < 75; }).length;
+  var critical = attData.filter(function(a){ return Math.round(a.present/a.total*100) < 70; }).length;
+  var safe     = attData.length - atRisk;
+
+  // Ring color
+  var ringColor = overallPct >= 75 ? '#3ecf8e' : overallPct >= 70 ? '#fbbf24' : '#ff4f4f';
+  var ringTrack = overallPct >= 75 ? 'rgba(62,207,142,.18)' : overallPct >= 70 ? 'rgba(245,158,11,.18)' : 'rgba(255,79,79,.18)';
+
+  // SVG ring — 56x56, r=24, circumference=150.8
+  var circ = 150.8;
+  var dash = Math.round(overallPct / 100 * circ * 10) / 10;
+  var ringHtml = '<div class="jac-ring-wrap">'
+    + '<svg width="56" height="56" viewBox="0 0 56 56">'
+    + '<circle cx="28" cy="28" r="24" fill="none" stroke="' + ringTrack + '" stroke-width="4.5"/>'
+    + '<circle cx="28" cy="28" r="24" fill="none" stroke="' + ringColor + '" stroke-width="4.5"'
+    + ' stroke-linecap="round"'
+    + ' stroke-dasharray="' + dash + ' ' + circ + '"'
+    + ' transform="rotate(-90 28 28)"'
+    + ' style="transition:stroke-dasharray .6s ease;"/>'
+    + '</svg>'
+    + '<div class="jac-ring-pct">'
+    + '<div class="jac-ring-num" style="color:' + ringColor + ';">' + overallPct + '</div>'
+    + '<div class="jac-ring-lbl">%</div>'
+    + '</div>'
+    + '</div>';
+
+  // Chips
+  var chips = '';
+  chips += '<div class="jac-chip jac-chip-ok">\u2713 ' + safe + ' safe</div>';
+  if (atRisk > 0) chips += '<div class="jac-chip jac-chip-' + (critical > 0 ? 'crit' : 'warn') + '">\u26a0\ufe0f ' + atRisk + ' at risk</div>';
+  chips += '<div class="jac-chip" style="background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);">' + attData.length + ' subj</div>';
+
+  // ── Hero ──────────────────────────────────────────────────────────
+  var hero = '<div class="jac-hero">'
+    + ringHtml
+    + '<div class="jac-hero-info">'
+    + '<div class="jac-hero-name">Josritha</div>'
+    + '<div class="jac-hero-sub">KL UNIVERSITY \u00b7 ' + weekLabel.toUpperCase() + '</div>'
+    + '<div class="jac-hero-chips">' + chips + '</div>'
+    + '</div>'
+    + '<div class="jac-fullview" onclick="showMemberDetail(\'josritha\',\'academics\')">Full \u2192</div>'
+    + '</div>';
+
+  // ── Day navigator + slots ──────────────────────────────────────────
+  var dayNav = '';
+  var slotSection = '';
+  if (ttData) {
+    // Build byDay + attMap
+    var byDay = {};
+    DAY_FULL.forEach(function(d){ byDay[d] = []; });
+    ttData.forEach(function(sl){ if (byDay[sl.day]) byDay[sl.day].push(sl); });
+    DAY_FULL.forEach(function(d){ byDay[d].sort(function(a,b){ return a.period - b.period; }); });
+    var attMap = {};
+    attData.forEach(function(a){ attMap[a.code + '|' + a.type] = a; });
+
+    // Determine initial day
+    var todayIdx = DAY_FULL.indexOf(todayName);
+    var initIdx  = todayIdx >= 0 ? todayIdx : 0;
+
+    // Store state for arrow handlers — separate namespace from full weekview
+    window._jacData = {
+      byDay: byDay, attMap: attMap,
+      DAY_FULL: DAY_FULL, DAY_SHORT: DAY_SHORT,
+      TYPE_ICONS: TYPE_ICONS, todayName: todayName,
+      curIdx: initIdx
+    };
+
+    dayNav = buildJacNav(window._jacData);
+    slotSection = buildJacSlots(window._jacData);
+  } else {
+    // No timetable — show att list in compact form
+    slotSection = '<div class="jac-slots">';
+    attData.slice(0,5).forEach(function(a) {
+      var pct = Math.round(a.present / a.total * 100);
+      var col = pct >= 75 ? 'var(--green)' : pct >= 70 ? '#fbbf24' : 'var(--red)';
+      var bg  = pct >= 75 ? 'rgba(62,207,142,.12)' : pct >= 70 ? 'rgba(245,158,11,.12)' : 'rgba(255,79,79,.12)';
+      var barCol = col;
+      slotSection += '<div class="jac-slot">'
+        + '<div class="jac-slot-bar" style="background:' + barCol + ';"></div>'
+        + '<div class="jac-slot-inner">'
+        + '<div class="jac-slot-body">'
+        + '<div class="jac-slot-name">' + a.subject + '</div>'
+        + '<div class="jac-slot-meta">' + a.code + ' \u00b7 ' + a.type + '</div>'
+        + '</div>'
+        + '<div class="jac-slot-pct" style="background:' + bg + ';color:' + col + ';">' + pct + '%</div>'
+        + '</div></div>';
+    });
+    slotSection += '</div>';
+  }
+
+  // ── Severity heatmap ──────────────────────────────────────────────
+  // Build risky subjects per day
+  var risky = {};
+  attData.forEach(function(a) {
+    var pct = Math.round(a.present / a.total * 100);
+    var key = a.code + '|' + a.type;
+    risky[key] = { pct: pct, critical: pct < 70, atrisk: pct < 75 };
+  });
+
+  var ttByDay = {};
+  DAY_FULL.forEach(function(d){ ttByDay[d] = []; });
+  if (ttData) {
+    ttData.forEach(function(sl) {
+      var key = sl.att_key || (sl.code + '|' + sl.type);
+      if (sl.day && ttByDay[sl.day]) {
+        var exists = ttByDay[sl.day].some(function(x){ return x.key === key; });
+        if (!exists) ttByDay[sl.day].push({ key: key });
+      }
+    });
+  }
+
+  var hmHtml = '<div class="jac-sev">'
+    + '<div class="jac-sev-hdr">'
+    + '<div class="jac-sev-title">WEEKLY SEVERITY</div>'
+    + '<div class="jac-sev-legend">'
+    + '<div class="jac-sev-leg-item"><div class="jac-sev-leg-dot" style="background:#3ecf8e;border-radius:2px;"></div>safe</div>'
+    + '<div class="jac-sev-leg-item"><div class="jac-sev-leg-dot" style="background:#fbbf24;border-radius:2px;"></div>risk</div>'
+    + '<div class="jac-sev-leg-item"><div class="jac-sev-leg-dot" style="background:#ff4f4f;border-radius:2px;"></div>crit</div>'
+    + '</div></div>'
+    + '<div class="jac-heatmap">';
+
+  for (var di = 0; di < 6; di++) {
+    var dn   = DAY_FULL[di];
+    var ds   = DAY_SHORT[di];
+    var colD = new Date(monday); colD.setDate(monday.getDate() + di);
+    var isTod = colD.getTime() === today.getTime();
+    var colCls = 'jac-hm-col' + (isTod ? ' tod-col' : '');
+    var daySlots = ttByDay[dn] || [];
+
+    hmHtml += '<div class="' + colCls + '" onclick="showMemberDetail(\'josritha\',\'academics\')">';
+    hmHtml += '<div class="jac-hm-lbl">' + ds + (isTod ? '\u25cf' : '') + '</div>';
+    hmHtml += '<div class="jac-hm-dots">';
+
+    if (!daySlots.length) {
+      hmHtml += '<div class="jac-hm-dot none" title="No classes"></div>';
+    } else {
+      daySlots.forEach(function(sl) {
+        var r = risky[sl.key];
+        if (!r) { hmHtml += '<div class="jac-hm-dot safe" title="OK"></div>'; return; }
+        var dc = r.critical ? 'crit' : r.atrisk ? 'warn' : 'safe';
+        var pctStr = r.pct + '%';
+        hmHtml += '<div class="jac-hm-dot ' + dc + '" title="' + pctStr + '"></div>';
+      });
+    }
+    hmHtml += '</div></div>';
+  }
+  hmHtml += '</div></div>';
+
+  // ── Footer ────────────────────────────────────────────────────────
+  var footer = '<div class="jac-footer">'
+    + '<div class="jac-footer-ts">' + (attTs ? '\U0001f7e2 Synced ' + attTs : '\u26aa Not synced') + '</div>'
+    + '<div class="jac-footer-sync" onclick="showMemberDetail(\'josritha\',\'academics\')">\u2191 Sync &amp; View</div>'
+    + '</div>';
+
+  return '<div class="jac-card w-card">'
+    + hero
+    + dayNav
+    + slotSection
+    + hmHtml
+    + footer
+    + '</div>';
+}
+
+function buildJacNav(d) {
+  var curIdx   = d.curIdx;
+  var DAY_FULL = d.DAY_FULL;
+  var DAY_SHORT= d.DAY_SHORT;
+  var byDay    = d.byDay;
+  var todayName= d.todayName;
+  var day      = DAY_FULL[curIdx];
+  var isToday  = day === todayName;
+
+  var prevOff = curIdx <= 0 ? ' off' : '';
+  var nextOff = curIdx >= DAY_FULL.length - 1 ? ' off' : '';
+  var todayPill = isToday ? '<span class="jac-nav-today">TODAY</span>' : '';
+
+  var nav = '<div class="jac-daynav">'
+    + '<div class="jac-nav-arrow' + prevOff + '" onclick="jacNav(-1)">\u2039</div>'
+    + '<div class="jac-nav-center">'
+    + '<div class="jac-nav-dayname">' + DAY_SHORT[curIdx] + todayPill + '</div>'
+    + '</div>'
+    + '<div class="jac-nav-arrow' + nextOff + '" onclick="jacNav(1)">\u203a</div>'
+    + '</div>';
+
+  // Dots row
+  nav += '<div class="jac-nav-dots">';
+  DAY_FULL.forEach(function(dd, ii) {
+    var cls = 'jac-dot';
+    if (ii === curIdx)                              { cls += ' on'; }
+    else if (byDay[dd] && byDay[dd].length)         { cls += ' has'; }
+    if (dd === todayName && ii !== curIdx)           { cls += ' tod'; }
+    nav += '<div class="' + cls + '" onclick="jacNavTo(' + ii + ')"></div>';
+  });
+  nav += '</div>';
+  return nav;
+}
+
+function buildJacSlots(d) {
+  var curIdx   = d.curIdx;
+  var DAY_FULL = d.DAY_FULL;
+  var byDay    = d.byDay;
+  var attMap   = d.attMap;
+  var TYPE_ICONS = d.TYPE_ICONS;
+  var slots    = byDay[DAY_FULL[curIdx]] || [];
+
+  if (!slots.length) {
+    return '<div class="jac-slots"><div class="jac-noclss">\U0001f389 No classes today</div></div>';
+  }
+
+  var html = '<div class="jac-slots jac-anim">';
+  slots.forEach(function(sl) {
+    var att = attMap[sl.att_key || (sl.code + '|' + sl.type)];
+    var pct = att ? Math.round(att.present / att.total * 100) : null;
+    var col = pct === null ? 'var(--text3)' : pct >= 75 ? '#3ecf8e' : pct >= 70 ? '#fbbf24' : '#ff4f4f';
+    var bg  = pct === null ? 'transparent'  : pct >= 75 ? 'rgba(62,207,142,.12)' : pct >= 70 ? 'rgba(245,158,11,.12)' : 'rgba(255,79,79,.12)';
+    var pctLabel = pct !== null ? pct + '%' : '--';
+    var riskMark = (pct !== null && pct < 75) ? ' \u26a0' : '';
+    var timeStr  = sl.time ? sl.time.split('-')[0].trim() : '';
+    html += '<div class="jac-slot">'
+      + '<div class="jac-slot-bar" style="background:' + col + ';"></div>'
+      + '<div class="jac-slot-inner">'
+      + '<div class="jac-slot-time">' + timeStr + '</div>'
+      + '<div class="jac-slot-body">'
+      + '<div class="jac-slot-name">' + (sl.subject || sl.code) + '</div>'
+      + '<div class="jac-slot-meta">' + (TYPE_ICONS[sl.type] || '\U0001f4cc') + ' ' + sl.type + ' \u00b7 ' + (sl.room || 'P' + sl.period) + '</div>'
+      + '</div>'
+      + '<div class="jac-slot-pct" style="background:' + bg + ';color:' + col + ';">' + pctLabel + riskMark + '</div>'
+      + '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function jacNav(dir) {
+  var d = window._jacData;
+  if (!d) return;
+  var n = d.curIdx + dir;
+  if (n < 0 || n >= d.DAY_FULL.length) return;
+  d.curIdx = n;
+  jacRefresh();
+}
+function jacNavTo(idx) {
+  var d = window._jacData;
+  if (!d) return;
+  d.curIdx = idx;
+  jacRefresh();
+}
+function jacRefresh() {
+  var d = window._jacData;
+  if (!d) return;
+  var card = document.querySelector('.jac-card');
+  if (!card) return;
+  // Replace daynav + slots only — find the .jac-daynav and onwards up to .jac-sev
+  var navEl = card.querySelector('.jac-daynav');
+  var sevEl = card.querySelector('.jac-sev');
+  if (!navEl || !sevEl) return;
+  // Remove everything between jac-daynav (incl. dots row) and jac-sev
+  var toRemove = [];
+  var el = navEl;
+  while (el && el !== sevEl) {
+    toRemove.push(el);
+    el = el.nextElementSibling;
+  }
+  toRemove.forEach(function(e){ e.remove(); });
+  // Insert fresh nav + slots before sevEl
+  var tmp = document.createElement('div');
+  tmp.innerHTML = buildJacNav(d) + buildJacSlots(d);
+  while (tmp.firstChild) {
+    card.insertBefore(tmp.firstChild, sevEl);
+  }
+}
+
 function buildAttSeverityWidget() {
   var DAY_SHORT = ['MON','TUE','WED','THU','FRI','SAT'];
   var DAY_FULL  = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
@@ -6025,7 +6436,7 @@ function initWidgetDynamic() {
     if (!item) return;
     var body = item.children[2];
     if (!body) return;
-    if (wid === 'att_severity') body.innerHTML = buildAttSeverityWidget();
+    if (wid === 'att_severity' || wid === 'josritha_acad') body.innerHTML = buildJosrithaAcadWidget();
     else if (wid === 'vehicle')  body.innerHTML = buildVehicleWidget();
     else if (wid === 'photos')   body.innerHTML = buildMemoryWallWidget();
     // grocery + briefing only refresh on tab switch — don't wipe user input
