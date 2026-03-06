@@ -524,38 +524,40 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 /* Section Icon Grid 2×3 */
 .section-icon-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;}
 .acad-sticky-bar{position:sticky;top:var(--topbar-h);z-index:50;background:var(--bg);padding:8px 0 4px;margin-bottom:0;}
-.wknav-card{background:var(--surface2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;margin-bottom:14px;}
-.wknav-card.today-day{border:2px solid var(--purple);box-shadow:0 4px 20px rgba(139,92,246,.18);}
-.wknav-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);}
-.wknav-card.today-day .wknav-hdr{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.1));}
-.wknav-arrow{width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--text2);flex-shrink:0;transition:all .15s;user-select:none;-webkit-user-select:none;}
-.wknav-arrow:active{background:var(--border2);transform:scale(.92);}
-.wknav-arrow.disabled{opacity:.3;pointer-events:none;}
-.wknav-day-info{text-align:center;flex:1;}
-.wknav-day-name{font-size:14px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.8px;color:var(--text1);}
+.wknav-wrap{margin-bottom:8px;}
+.wknav-card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;overflow:hidden;}
+.wknav-card.today-day{border:2px solid var(--purple);}
+.wknav-hdr{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border2);background:var(--surface2);}
+.wknav-card.today-day .wknav-hdr{background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(99,102,241,.08));}
+.wknav-arrow{width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;color:var(--text2);flex-shrink:0;transition:all .12s;user-select:none;-webkit-user-select:none;}
+.wknav-arrow:active{opacity:.6;transform:scale(.93);}
+.wknav-arrow.disabled{opacity:.25;pointer-events:none;}
+.wknav-day-info{flex:1;text-align:center;}
+.wknav-day-name{font-size:13px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:.6px;color:var(--text1);}
 .wknav-card.today-day .wknav-day-name{color:var(--purple);}
-.wknav-day-meta{font-size:10px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;}
-.wknav-today-pill{display:inline-block;font-size:9px;font-weight:800;background:var(--purple);color:#fff;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;letter-spacing:.4px;}
-.wknav-att-toggle{font-size:10px;font-weight:700;font-family:'DM Mono',monospace;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s;}
-.wknav-att-toggle.on{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.35);color:var(--purple);}
-.wknav-slots{padding:0;}
-.wknav-slot{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-top:1px solid var(--border2);transition:background .12s;}
-.wknav-slot:first-child{border-top:none;}
-.wknav-slot-icon-col{flex-shrink:0;text-align:center;width:30px;}
-.wknav-slot-icon{font-size:18px;line-height:1;}
-.wknav-slot-period{font-size:9px;font-weight:800;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
+.wknav-day-meta{font-size:10px;color:var(--text3);margin-top:1px;font-family:'DM Mono',monospace;}
+.wknav-today-pill{display:inline-block;font-size:8px;font-weight:800;background:var(--purple);color:#fff;padding:2px 7px;border-radius:20px;margin-left:5px;vertical-align:middle;letter-spacing:.3px;}
+.wknav-toolbar{display:flex;justify-content:flex-end;padding:7px 12px 0;}
+.wknav-att-toggle{font-size:10px;font-weight:700;font-family:'DM Mono',monospace;padding:3px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;color:var(--text3);transition:all .12s;}
+.wknav-att-toggle.on{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.3);color:var(--purple);}
+.wknav-slot-list{display:flex;flex-direction:column;gap:0;padding:6px 0 8px;}
+.wknav-slot{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;}
+.wknav-slot+.wknav-slot{border-top:1px solid var(--border2);}
+.wknav-slot-icon-col{flex-shrink:0;text-align:center;width:28px;padding-top:1px;}
+.wknav-slot-icon{font-size:17px;line-height:1;}
+.wknav-slot-period{font-size:9px;font-weight:800;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px;}
 .wknav-slot-body{flex:1;min-width:0;}
-.wknav-slot-subject{font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wknav-slot-subject{font-size:12px;font-weight:700;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
 .wknav-slot-meta{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
-.wknav-att-badge{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;}
-.wknav-no-class{padding:28px 16px;text-align:center;color:var(--text3);font-size:12px;}
-.wknav-dots{display:flex;justify-content:center;gap:8px;padding:6px 0 2px;}
-.wknav-dot{width:8px;height:8px;border-radius:50%;border:2px solid var(--border2);background:transparent;cursor:pointer;transition:all .15s;}
-.wknav-dot.active{background:var(--purple);border-color:var(--purple);}
+.wknav-att-badge{display:inline-flex;align-items:center;gap:3px;margin-top:5px;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;}
+.wknav-no-class{padding:30px 16px;text-align:center;color:var(--text3);font-size:12px;font-family:'DM Mono',monospace;}
+.wknav-dots{display:flex;justify-content:center;align-items:center;gap:10px;padding:8px 0 4px;}
+.wknav-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;transition:all .12s;}
+.wknav-dot.active{background:var(--purple);border-color:var(--purple);transform:scale(1.2);}
 .wknav-dot.has-class{border-color:var(--text3);}
 .wknav-dot.today-dot{border-color:var(--purple);}
-.wknav-body-anim{animation:wknavFade .18s ease both;}
-@keyframes wknavFade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.wknav-body-anim{animation:wknavFade .15s ease both;}
+@keyframes wknavFade{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
 .acad-sticky-stats{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border2);font-size:10px;font-family:'DM Mono',monospace;}
 .acad-stat-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-weight:700;font-size:10px;}
 .sig-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid var(--border);background:var(--surface2);transition:all .18s;min-height:52px;}
@@ -6373,42 +6375,50 @@ function buildWkNavCard(d) {
   var slots = byDay[day] || [];
   var isToday = day === todayName;
 
-  var prevDisabled = curIdx <= 0 ? ' disabled' : '';
-  var nextDisabled = curIdx >= DAY_ORDER.length - 1 ? ' disabled' : '';
+  // Header with nav arrows
+  var prevDis = curIdx <= 0 ? ' disabled' : '';
+  var nextDis = curIdx >= DAY_ORDER.length - 1 ? ' disabled' : '';
   var dayMeta = slots.length ? (slots.length + ' class' + (slots.length !== 1 ? 'es' : '')) : 'No classes';
+  var todayPill = isToday ? '<span class="wknav-today-pill">TODAY</span>' : '';
   var hdr = '<div class="wknav-hdr">'
-    + '<div class="wknav-arrow' + prevDisabled + '" onclick="wkNav(-1)">‹</div>'
+    + '<div class="wknav-arrow' + prevDis + '" onclick="wkNav(-1)">‹</div>'
     + '<div class="wknav-day-info">'
-    + '<div class="wknav-day-name">' + day + (isToday ? '<span class="wknav-today-pill">TODAY</span>' : '') + '</div>'
+    + '<div class="wknav-day-name">' + day + todayPill + '</div>'
     + '<div class="wknav-day-meta">' + dayMeta + '</div>'
     + '</div>'
-    + '<div class="wknav-arrow' + nextDisabled + '" onclick="wkNav(1)">›</div>'
+    + '<div class="wknav-arrow' + nextDis + '" onclick="wkNav(1)">›</div>'
     + '</div>';
 
-  var attToggle = '<div style="display:flex;justify-content:flex-end;padding:6px 14px 0;">'
+  // Attendance toggle
+  var attToggle = '<div class="wknav-toolbar">'
     + '<button class="wknav-att-toggle' + (showAtt ? ' on' : '') + '" onclick="wkToggleAtt()">'
-    + (showAtt ? '📊 Hide Att.' : '📊 Show Att.')
+    + (showAtt ? '📊 Att. ON' : '📊 Att. OFF')
     + '</button></div>';
 
-  var slotHtml = '';
+  // Slot rows
+  var slotRows = '';
   if (!slots.length) {
-    slotHtml = '<div class="wknav-no-class">🎉 No classes scheduled</div>';
+    slotRows = '<div class="wknav-no-class">🎉 No classes today</div>';
   } else {
     slots.forEach(function(slot) {
       var att = attMap[slot.att_key];
       var pct = att ? Math.round(att.present / att.total * 100) : null;
-      var col = pct === null ? 'var(--text3)' : pct >= 75 ? 'var(--green)' : pct >= 70 ? 'var(--orange)' : 'var(--red)';
-      var badgeBg = pct === null ? 'transparent' : pct >= 75 ? 'rgba(62,207,142,.12)' : pct >= 70 ? 'rgba(255,165,0,.12)' : 'rgba(255,79,79,.12)';
+      var col = pct === null ? 'var(--text3)'
+        : pct >= 75 ? 'var(--green)' : pct >= 70 ? 'var(--orange)' : 'var(--red)';
+      var bbg = pct === null ? 'transparent'
+        : pct >= 75 ? 'rgba(62,207,142,.12)' : pct >= 70 ? 'rgba(255,165,0,.12)' : 'rgba(255,79,79,.12)';
       var attBadge = '';
-      if (showAtt && att) {
-        var risk = pct < 75 ? ' ⚠️ RISK' : '';
-        attBadge = '<div class="wknav-att-badge" style="background:' + badgeBg + ';color:' + col + '">'
-          + pct + '% · ' + att.present + '/' + att.total + risk
-          + '</div>';
-      } else if (showAtt && !att) {
-        attBadge = '<div style="font-size:10px;color:var(--text3);margin-top:4px;font-style:italic;">No att data</div>';
+      if (showAtt) {
+        if (att) {
+          var riskLabel = pct < 75 ? ' ⚠️' : '';
+          attBadge = '<div class="wknav-att-badge" style="background:' + bbg + ';color:' + col + '">'
+            + pct + '% · ' + att.present + '/' + att.total + riskLabel
+            + '</div>';
+        } else {
+          attBadge = '<div style="font-size:10px;color:var(--text3);margin-top:4px;font-style:italic;">No att. data</div>';
+        }
       }
-      slotHtml += '<div class="wknav-slot">'
+      slotRows += '<div class="wknav-slot">'
         + '<div class="wknav-slot-icon-col">'
         + '<div class="wknav-slot-icon">' + (TYPE_ICONS[slot.type] || '📌') + '</div>'
         + '<div class="wknav-slot-period">P' + slot.period + '</div>'
@@ -6422,26 +6432,30 @@ function buildWkNavCard(d) {
     });
   }
 
+  // Dot navigation row
   var dots = '<div class="wknav-dots">';
   DAY_ORDER.forEach(function(dd, ii) {
     var cls = 'wknav-dot';
-    if (ii === curIdx) cls += ' active';
-    else if (byDay[dd] && byDay[dd].length) cls += ' has-class';
-    if (dd === todayName && ii !== curIdx) cls += ' today-dot';
+    if (ii === curIdx) { cls += ' active'; }
+    else if (byDay[dd] && byDay[dd].length) { cls += ' has-class'; }
+    if (dd === todayName && ii !== curIdx) { cls += ' today-dot'; }
     dots += '<div class="' + cls + '" title="' + dd + '" onclick="wkNavTo(' + ii + ')"></div>';
   });
   dots += '</div>';
 
-  return '<div class="wknav-card' + (isToday ? ' today-day' : '') + '">'
+  // Assemble: outer wrap keeps card + dots together, no overflow:hidden on outer
+  return '<div class="wknav-wrap">'
+    + '<div class="wknav-card' + (isToday ? ' today-day' : '') + '">'
     + hdr
-    + '<div class="wknav-slots wknav-body-anim" id="wknav-body">'
     + attToggle
-    + '<div style="height:6px;"></div>'
-    + slotHtml
+    + '<div class="wknav-slot-list wknav-body-anim">'
+    + slotRows
     + '</div>'
     + '</div>'
-    + dots;
+    + dots
+    + '</div>';
 }
+
 
 function wkNav(dir) {
   var d = window._wkDayData;
