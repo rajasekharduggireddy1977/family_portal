@@ -1921,26 +1921,26 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
   bottom: calc(var(--nav-h) + 16px);
   right: 18px;
   z-index: 300;
-  width: 56px; height: 56px;
-  border-radius: 18px;
+  width: 38px; height: 38px;
+  border-radius: 12px;
   background: linear-gradient(135deg, var(--blue), #3a6aff);
   color: #fff;
-  font-size: 26px;
+  font-size: 18px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 28px rgba(79,127,255,.55), 0 2px 8px rgba(0,0,0,.3);
+  box-shadow: 0 4px 16px rgba(79,127,255,.45), 0 2px 6px rgba(0,0,0,.25);
   transition: all .22s cubic-bezier(.34,1.56,.64,1);
   border: none;
   user-select: none;
   line-height: 1;
 }
-#fab-btn:hover { transform: scale(1.08) rotate(8deg); box-shadow: 0 10px 36px rgba(79,127,255,.7); }
+#fab-btn:hover { transform: scale(1.08) rotate(8deg); box-shadow: 0 8px 24px rgba(79,127,255,.6); }
 #fab-btn:active { transform: scale(0.93); }
 #fab-btn.hidden { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(12px); }
 /* FAB menu */
 #fab-menu {
   position: fixed;
-  bottom: calc(var(--nav-h) + 82px);
+  bottom: calc(var(--nav-h) + 64px);
   right: 14px;
   z-index: 299;
   display: flex; flex-direction: column; gap: 8px;
@@ -1968,7 +1968,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 .fab-item-ico { font-size: 18px; width: 32px; height: 32px; border-radius: 9px; background: var(--blue-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 @media(min-width:768px) {
   #fab-btn { bottom: 24px; }
-  #fab-menu { bottom: 90px; }
+  #fab-menu { bottom: 74px; }
 }
 
 /* ══════════════════════════════════════════════
@@ -2504,6 +2504,245 @@ input:focus, button:focus-visible {
 .ai-summary-box { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 13px; margin-top: 10px; }
 .ai-summary-title { font-size: 11px; font-weight: 800; color: var(--text2); font-family: 'DM Mono', monospace; letter-spacing: .5px; margin-bottom: 6px; }
 .ai-summary-body { font-size: 12px; color: var(--text1); line-height: 1.55; }
+/* ═══════════════════════════════════════════════════════
+   AI FLOATING PANEL
+═══════════════════════════════════════════════════════ */
+
+/* AI FAB button */
+#ai-fab {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 64px);
+  right: 18px;
+  z-index: 301;
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5, #2563eb);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 0 0 rgba(124,58,237,.5), 0 8px 32px rgba(124,58,237,.55), 0 2px 8px rgba(0,0,0,.4);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  user-select: none;
+  animation: aiFabPulse 3s ease-in-out infinite;
+}
+#ai-fab:hover { transform: scale(1.07); box-shadow: 0 0 0 8px rgba(124,58,237,.15), 0 12px 40px rgba(124,58,237,.7); animation: none; }
+#ai-fab:active { transform: scale(0.94); }
+#ai-fab.panel-open { animation: none; background: linear-gradient(135deg,#dc2626,#b91c1c); box-shadow: 0 8px 28px rgba(220,38,38,.5); }
+#ai-fab-ring {
+  position: absolute; inset: -6px;
+  border-radius: 22px;
+  border: 1.5px solid rgba(124,58,237,.35);
+  animation: aiFabRing 3s ease-in-out infinite;
+  pointer-events: none;
+}
+#ai-fab-icon {
+  font-size: 22px; color: #fff;
+  font-weight: 900;
+  transition: all .2s;
+  text-shadow: 0 0 12px rgba(255,255,255,.6);
+}
+#ai-fab.panel-open #ai-fab-icon { content: '✕'; font-size: 16px; }
+@keyframes aiFabPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,.4), 0 8px 32px rgba(124,58,237,.5); }
+  50% { box-shadow: 0 0 0 10px rgba(124,58,237,.0), 0 8px 32px rgba(124,58,237,.6); }
+}
+@keyframes aiFabRing {
+  0%,100% { transform: scale(1); opacity: .5; }
+  50% { transform: scale(1.12); opacity: .15; }
+}
+#ai-fab.thinking #ai-fab-icon { animation: aiThink .8s linear infinite; }
+@keyframes aiThink { to { transform: rotate(360deg); } }
+
+/* Panel backdrop */
+#ai-panel-backdrop {
+  position: fixed; inset: 0; z-index: 899;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .28s ease;
+}
+#ai-panel-backdrop.visible { opacity: 1; pointer-events: all; }
+
+/* Panel container */
+#ai-panel {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 0px);
+  right: 0;
+  width: min(380px, 100vw);
+  height: min(82vh, 720px);
+  z-index: 900;
+  display: flex; flex-direction: column;
+  transition: transform .3s cubic-bezier(.32,.72,0,1), opacity .3s ease;
+  transform-origin: bottom right;
+}
+#ai-panel.ai-panel-closed {
+  transform: translateY(32px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+}
+#ai-panel.ai-panel-open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+#ai-panel-inner {
+  margin: 0 10px 10px 0;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid rgba(124,58,237,.3);
+  border-radius: 20px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(124,58,237,.15), inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Panel header */
+#ai-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 12px;
+  background: linear-gradient(135deg, rgba(124,58,237,.18), rgba(79,70,229,.12));
+  border-bottom: 1px solid rgba(124,58,237,.2);
+  flex-shrink: 0;
+}
+#ai-panel-header-left { display: flex; align-items: center; gap: 11px; }
+#ai-panel-avatar {
+  width: 36px; height: 36px; border-radius: 11px;
+  background: linear-gradient(135deg,#7c3aed,#4f46e5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff; font-weight: 900;
+  box-shadow: 0 4px 12px rgba(124,58,237,.5);
+  flex-shrink: 0;
+  text-shadow: 0 0 8px rgba(255,255,255,.5);
+}
+#ai-panel-title { font-size: 13px; font-weight: 800; color: var(--text1); font-family: 'Inter', sans-serif; letter-spacing: -.1px; }
+#ai-panel-status { display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+#ai-panel-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: aiDotPulse 2s ease-in-out infinite;
+}
+#ai-panel-dot.offline { background: var(--text3); box-shadow: none; animation: none; }
+@keyframes aiDotPulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+#ai-panel-status-text { font-size: 10px; color: var(--text3); font-family: 'DM Mono',monospace; }
+#ai-panel-header-right { display: flex; align-items: center; gap: 6px; }
+#ai-panel-clear, #ai-panel-close {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; color: var(--text3);
+  background: transparent;
+  transition: all .15s;
+}
+#ai-panel-clear:hover, #ai-panel-close:hover { background: var(--surface2); color: var(--text1); }
+
+/* Messages area */
+#ai-panel-messages {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding: 16px 14px 8px;
+  display: flex; flex-direction: column; gap: 14px;
+  scroll-behavior: smooth;
+}
+#ai-panel-messages::-webkit-scrollbar { width: 3px; }
+#ai-panel-messages::-webkit-scrollbar-track { background: transparent; }
+#ai-panel-messages::-webkit-scrollbar-thumb { background: rgba(124,58,237,.3); border-radius: 4px; }
+
+/* Welcome state */
+.ai-panel-welcome { text-align: center; padding: 20px 16px; margin: auto; }
+.ai-pw-icon { font-size: 32px; margin-bottom: 10px; opacity: .7; }
+.ai-pw-title { font-size: 14px; font-weight: 700; color: var(--text1); margin-bottom: 6px; }
+.ai-pw-sub { font-size: 11px; color: var(--text3); line-height: 1.6; }
+
+/* Message bubbles */
+.ai-pm { display: flex; gap: 9px; animation: aiMsgIn .22s ease-out; }
+@keyframes aiMsgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.ai-pm.user { flex-direction: row-reverse; }
+.ai-pm-av {
+  width: 28px; height: 28px; border-radius: 9px; flex-shrink: 0;
+  background: linear-gradient(135deg,#7c3aed,#4f46e5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; font-weight: 900; margin-top: 2px;
+  text-shadow: 0 0 6px rgba(255,255,255,.4);
+}
+.ai-pm-bubble {
+  max-width: calc(100% - 44px);
+  padding: 11px 14px;
+  border-radius: 14px;
+  font-size: 13px; line-height: 1.7;
+  font-family: 'Inter', sans-serif;
+  color: var(--text1);
+}
+.ai-pm.ai .ai-pm-bubble {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-top-left-radius: 4px;
+}
+.ai-pm.user .ai-pm-bubble {
+  background: linear-gradient(135deg,#7c3aed,#4f46e5);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  font-size: 12px;
+}
+
+/* Typing indicator */
+.ai-typing-dots { display: flex; gap: 4px; padding: 4px 2px; }
+.ai-typing-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text3);
+  animation: aiDotBounce .9s ease-in-out infinite;
+}
+.ai-typing-dot:nth-child(2) { animation-delay: .15s; }
+.ai-typing-dot:nth-child(3) { animation-delay: .3s; }
+@keyframes aiDotBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+/* Rich content inside AI bubble */
+.ai-pm-bubble .ai-subject-card { margin: 6px 0; }
+.ai-pm-bubble .ai-subject-card:first-child { margin-top: 2px; }
+
+/* Chips */
+#ai-panel-chips {
+  padding: 6px 14px 8px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border2);
+}
+.ai-pc {
+  font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif;
+  padding: 6px 11px; border-radius: 20px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text2); cursor: pointer;
+  transition: all .15s; white-space: nowrap;
+}
+.ai-pc:hover, .ai-pc:active { background: rgba(124,58,237,.12); border-color: rgba(124,58,237,.4); color: #a78bfa; }
+
+/* Input row */
+#ai-panel-input-row {
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 10px 12px 14px;
+  border-top: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+#ai-panel-input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 10px 13px;
+  font-size: 13px; color: var(--text1); font-family: 'Inter', sans-serif;
+  resize: none; outline: none; line-height: 1.5;
+  max-height: 90px; transition: border-color .15s;
+}
+#ai-panel-input:focus { border-color: rgba(124,58,237,.5); box-shadow: 0 0 0 3px rgba(124,58,237,.1); }
+#ai-panel-input::placeholder { color: var(--text3); }
+#ai-panel-send {
+  width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+  background: linear-gradient(135deg,#7c3aed,#4f46e5);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .18s; box-shadow: 0 4px 14px rgba(124,58,237,.45);
+}
+#ai-panel-send:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(124,58,237,.6); }
+#ai-panel-send:active { transform: scale(0.94); }
+#ai-panel-send:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+@media(min-width:768px) {
+  #ai-fab { bottom: 82px; }
+  #ai-panel { bottom: 0; }
+}
 
 /* Input row */
 .aicw-input-row {
@@ -2610,6 +2849,58 @@ input:focus, button:focus-visible {
 </div>
 
 <!-- ═══════════════ FAB BUTTON & MENU ═══════════════ -->
+<!-- ═══════════════════════════════════════════════════════
+     AI FAMILY ASSISTANT — FLOATING PANEL
+═══════════════════════════════════════════════════════ -->
+<div id="ai-fab" onclick="toggleAIPanel()" title="AI Family Assistant">
+  <div id="ai-fab-ring"></div>
+  <div id="ai-fab-icon">✦</div>
+</div>
+
+<div id="ai-panel" class="ai-panel-closed">
+  <div id="ai-panel-inner">
+
+    <!-- Header -->
+    <div id="ai-panel-header">
+      <div id="ai-panel-header-left">
+        <div id="ai-panel-avatar">✦</div>
+        <div>
+          <div id="ai-panel-title">AI Family Assistant</div>
+          <div id="ai-panel-status"><span id="ai-panel-dot"></span><span id="ai-panel-status-text">Ready</span></div>
+        </div>
+      </div>
+      <div id="ai-panel-header-right">
+        <div id="ai-panel-clear" onclick="aiPanelClear()" title="Clear chat">⟳</div>
+        <div id="ai-panel-close" onclick="toggleAIPanel()">✕</div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="ai-panel-messages">
+      <div class="ai-panel-welcome">
+        <div class="ai-pw-icon">✦</div>
+        <div class="ai-pw-title">How can I help the family today?</div>
+        <div class="ai-pw-sub">Ask about attendance, documents, schedules, or anything else.</div>
+      </div>
+    </div>
+
+    <!-- Context-aware chips -->
+    <div id="ai-panel-chips"></div>
+
+    <!-- Input -->
+    <div id="ai-panel-input-row">
+      <textarea id="ai-panel-input" placeholder="Ask anything…" rows="1"
+        onkeydown="aiPanelKeyDown(event)"
+        oninput="aiPanelAutoResize(this)"></textarea>
+      <button id="ai-panel-send" onclick="aiPanelSend()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L14 2L10 8L14 14L2 8Z" fill="white"/></svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+<div id="ai-panel-backdrop" onclick="toggleAIPanel()"></div>
+
 <div id="fab-menu" class="hidden">
   <div class="fab-item" onclick="fabAction('event')">
     <div class="fab-item-ico">📅</div> Add Event
@@ -7557,6 +7848,209 @@ function runDashboardCountUps() {
 }
 
 // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// AI FLOATING PANEL
+// ═══════════════════════════════════════════════════════
+let aiPanelOpen = false;
+let aiPanelBusy = false;
+let aiPanelHistory = [];
+
+const AI_PANEL_CHIPS = {
+  dashboard: [
+    {label: "🏃 Can Josritha skip today?", q: "Can Josritha skip classes today?"},
+    {label: "📊 Attendance risk report", q: "Give me a full attendance risk report for Josritha"},
+    {label: "📄 Documents expiring soon?", q: "Which family documents are expiring soon?"},
+    {label: "🌤️ Family briefing", q: "Give me a quick family briefing for today"}
+  ],
+  members: [
+    {label: "🏃 Skip classes today?", q: "Can Josritha skip classes today?"},
+    {label: "📅 Today's timetable", q: "Show me today's timetable for Josritha"},
+    {label: "📊 Attendance summary", q: "Give me Josritha full attendance summary with safe or risk status per subject"},
+    {label: "🎯 How many can she miss?", q: "For each subject, how many more classes can Josritha miss before hitting 75 percent?"}
+  ],
+  calendar: [
+    {label: "📅 Events coming up?", q: "What important events are coming up for the family?"},
+    {label: "💡 Family tip", q: "Give me a useful tip or reminder for the family this week"}
+  ],
+  expiry: [
+    {label: "⚠️ What is expiring?", q: "Which documents or policies are expiring soon and what should we do?"},
+    {label: "🏥 Insurance summary", q: "Summarize all family insurance policies and their status"}
+  ],
+  health: [
+    {label: "🏥 Health summary", q: "Give me a health records summary for the family"},
+    {label: "💊 Appointments due?", q: "Are there any health appointments or checkups due?"}
+  ]
+}
+
+function toggleAIPanel() {
+  aiPanelOpen = !aiPanelOpen;
+  const panel = document.getElementById('ai-panel');
+  const backdrop = document.getElementById('ai-panel-backdrop');
+  const fab = document.getElementById('ai-fab');
+  const fabIcon = document.getElementById('ai-fab-icon');
+  if (aiPanelOpen) {
+    panel.classList.remove('ai-panel-closed');
+    panel.classList.add('ai-panel-open');
+    backdrop.classList.add('visible');
+    fab.classList.add('panel-open');
+    fabIcon.textContent = '✕';
+    aiPanelUpdateChips();
+    aiPanelUpdateStatus();
+    setTimeout(function() { document.getElementById('ai-panel-input').focus(); }, 300);
+    haptic('medium');
+  } else {
+    panel.classList.add('ai-panel-closed');
+    panel.classList.remove('ai-panel-open');
+    backdrop.classList.remove('visible');
+    fab.classList.remove('panel-open');
+    fabIcon.textContent = '✦';
+    haptic('light');
+  }
+}
+
+function aiPanelUpdateStatus() {
+  const dot = document.getElementById('ai-panel-dot');
+  const txt = document.getElementById('ai-panel-status-text');
+  const hasKey = !!groqGetKey();
+  if (dot) { dot.className = hasKey ? '' : 'offline'; }
+  if (txt) { txt.textContent = hasKey ? 'Groq · LLaMA 3.1' : 'No API key — tap to set'; }
+}
+
+function aiPanelUpdateChips() {
+  const container = document.getElementById('ai-panel-chips');
+  if (!container) return;
+  const page = typeof currentPage !== 'undefined' ? currentPage : 'dashboard';
+  const chips = AI_PANEL_CHIPS[page] || AI_PANEL_CHIPS.dashboard;
+  container.innerHTML = chips.map(function(c) {
+    return '<div class="ai-pc" onclick="aiPanelSendQuick(' + JSON.stringify(c.q) + ')">' + c.label + '</div>';
+  }).join('');
+}
+
+function aiPanelSendQuick(q) {
+  var input = document.getElementById('ai-panel-input');
+  if (input) { input.value = q; aiPanelAutoResize(input); }
+  aiPanelSend();
+}
+
+function aiPanelKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); aiPanelSend(); }
+}
+
+function aiPanelAutoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
+}
+
+function aiPanelAppendMsg(role, html) {
+  var container = document.getElementById('ai-panel-messages');
+  if (!container) return;
+  // Remove welcome screen on first message
+  var welcome = container.querySelector('.ai-panel-welcome');
+  if (welcome) welcome.remove();
+  var div = document.createElement('div');
+  div.className = 'ai-pm ' + role;
+  if (role === 'ai') {
+    div.innerHTML = '<div class="ai-pm-av">✦</div><div class="ai-pm-bubble">' + html + '</div>';
+  } else {
+    div.innerHTML = '<div class="ai-pm-bubble">' + html + '</div>';
+  }
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function aiPanelShowTyping() {
+  var container = document.getElementById('ai-panel-messages');
+  if (!container) return;
+  var welcome = container.querySelector('.ai-panel-welcome');
+  if (welcome) welcome.remove();
+  var div = document.createElement('div');
+  div.className = 'ai-pm ai'; div.id = 'ai-panel-typing';
+  div.innerHTML = '<div class="ai-pm-av">✦</div><div class="ai-pm-bubble"><div class="ai-typing-dots"><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div><div class="ai-typing-dot"></div></div></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  document.getElementById('ai-fab').classList.add('thinking');
+}
+
+function aiPanelRemoveTyping() {
+  var el = document.getElementById('ai-panel-typing');
+  if (el) el.remove();
+  var fab = document.getElementById('ai-fab');
+  if (fab) fab.classList.remove('thinking');
+}
+
+function aiPanelFormatResponse(text) {
+  if (/<div|<span/.test(text)) return text;
+  var lines = text.split('\n');
+  var html = text.split('**').map(function(s,i){ return i%2===1 ? '<strong>'+s+'</strong>' : s; }).join('');
+  html = html.split('\n').map(function(line) {
+    if (line.indexOf('- ') === 0 || line.indexOf('• ') === 0) {
+      return '<div style="padding:4px 0 4px 14px;border-left:2px solid rgba(124,58,237,.4);margin:3px 0;">' + line.substring(2) + '</div>';
+    }
+    return line;
+  }).join('<br>');
+  return html;
+}
+function aiPanelClear() {
+  aiPanelHistory = [];
+  var container = document.getElementById('ai-panel-messages');
+  if (container) {
+    container.innerHTML = '<div class="ai-panel-welcome"><div class="ai-pw-icon">✦</div><div class="ai-pw-title">Chat cleared</div><div class="ai-pw-sub">Ask me anything about the family.</div></div>';
+  }
+  haptic('light');
+}
+
+async function aiPanelSend() {
+  if (aiPanelBusy) return;
+  var input = document.getElementById('ai-panel-input');
+  var sendBtn = document.getElementById('ai-panel-send');
+  if (!input) return;
+  var text = input.value.trim();
+  if (!text) return;
+
+  input.value = ''; input.style.height = 'auto';
+  aiPanelBusy = true;
+  if (sendBtn) sendBtn.disabled = true;
+
+  aiPanelAppendMsg('user', text);
+  aiPanelHistory.push({role:'user', content:text});
+  aiPanelShowTyping();
+
+  try {
+    var key = groqGetKey();
+    if (!key) {
+      aiPanelRemoveTyping();
+      aiPanelAppendMsg('ai', '🔑 Please enter your Groq API key in Settings → Backup & Security to activate AI features.');
+      aiPanelBusy = false;
+      if (sendBtn) sendBtn.disabled = false;
+      return;
+    }
+    var resp = await fetch(GROQ_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        max_tokens: 900,
+        temperature: 0.7,
+        messages: [{role:'system', content: buildAICWSystem()}].concat(aiPanelHistory)
+      })
+    });
+    var data = await resp.json();
+    var reply = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content)
+      ? data.choices[0].message.content
+      : "I'm here to help! Could you rephrase that? 🙏";
+    aiPanelRemoveTyping();
+    aiPanelAppendMsg('ai', aiPanelFormatResponse(reply.trim()));
+    aiPanelHistory.push({role:'assistant', content:reply.trim()});
+    if (aiPanelHistory.length > 20) aiPanelHistory = aiPanelHistory.slice(-20);
+  } catch(err) {
+    aiPanelRemoveTyping();
+    aiPanelAppendMsg('ai', "Connection error. Please check your internet and try again. 🙏");
+  }
+
+  aiPanelBusy = false;
+  if (sendBtn) sendBtn.disabled = false;
+}
+
 // UI IMPROVEMENT 3 — FAB BUTTON
 // ═══════════════════════════════════════════════════════
 let fabOpen = false;
