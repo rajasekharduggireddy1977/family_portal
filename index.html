@@ -4376,9 +4376,10 @@ function buildWidgetHTML(wid) {
         <div class="aib-toprow">
           <div class="aib-badge">
             <div class="aib-live-dot"></div>
-            AI Daily Briefing
+            Groq AI · Free
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="aib-refresh" id="aib-key-btn" onclick="aiShowKeySetup()" title="API Key Settings">🔑</div>
             <div class="aib-refresh" id="aib-refresh-btn" onclick="aiLoadBriefing(true)" title="Refresh">↻</div>
           </div>
         </div>
@@ -7167,13 +7168,94 @@ const BACKUP_KEYS = [
   'fp_health_v3','fp_health_appts_v3','fp_health_reports_v3',
   'fp_attendance_synced','fp_attendance_synced_ts',
   'fp_widgets','fp_widgets_ver',
-  'fp_theme','fp_active_member','emg_collapsed'
+  'fp_theme','fp_active_member','fp_pin','emg_collapsed',
+  'fp_groq_key'   // ← AI key — included in backup so it survives redeployment
 ];
 
 function openBackupModal() {
   const lastTs = localStorage.getItem('fp_backup_ts');
-  document.getElementById('backup-last-ts').textContent = lastTs ? 'Last backup: ' + lastTs : 'No backup yet';
+  document.getElementById('backup-last-ts').textContent = lastTs ? 'Last backup: ' + lastTs : 'No backup yet — backup now to save your Groq AI key!';
+
+  // Populate AI key section
+  const statusEl = document.getElementById('bm-groq-status');
+  const bodyEl   = document.getElementById('bm-groq-body');
+  const key = groqGetKey();
+
+  if (key) {
+    const masked = key.slice(0,8) + '••••••••' + key.slice(-4);
+    statusEl.style.cssText = 'background:rgba(62,207,142,.12);color:var(--green);border:1px solid rgba(62,207,142,.25);font-family:\'DM Mono\',monospace;font-size:10px;padding:3px 9px;border-radius:20px;';
+    statusEl.textContent = '✓ Active';
+    bodyEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 12px;margin-bottom:10px;">
+        <span style="font-size:14px;">🔑</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);flex:1;">${masked}</span>
+        <span onclick="bmCopyKey()" style="font-size:10px;font-weight:700;color:var(--blue2);cursor:pointer;font-family:'DM Mono',monospace;padding:3px 8px;border:1px solid rgba(79,127,255,.25);border-radius:6px;" id="bm-copy-key-btn">Copy</span>
+      </div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:10px;">
+        ✅ Included in backup. After redeployment, just restore your backup file — AI activates automatically, no re-entry needed.
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div onclick="bmUpdateKey()" style="flex:1;text-align:center;padding:8px;border-radius:9px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);color:var(--purple);font-size:11px;font-weight:700;cursor:pointer;">✏️ Update Key</div>
+        <div onclick="groqClearKey();openBackupModal();" style="padding:8px 14px;border-radius:9px;background:rgba(255,79,79,.08);border:1px solid rgba(255,79,79,.2);color:var(--red);font-size:11px;font-weight:700;cursor:pointer;">🗑 Remove</div>
+      </div>`;
+  } else {
+    statusEl.style.cssText = 'background:rgba(255,79,79,.1);color:var(--red);border:1px solid rgba(255,79,79,.2);font-family:\'DM Mono\',monospace;font-size:10px;padding:3px 9px;border-radius:20px;';
+    statusEl.textContent = '✗ Not set';
+    bodyEl.innerHTML = `
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">
+        No Groq key saved. Enter your key to activate AI features. Get one free at <span style="color:var(--blue2);font-family:'DM Mono',monospace;">console.groq.com</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input id="bm-key-input" type="password" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx"
+          style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(167,139,250,.3);border-radius:9px;padding:9px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;"
+          onkeydown="if(event.key==='Enter')bmSaveKey()">
+        <div onclick="bmSaveKey()" style="padding:9px 14px;border-radius:9px;background:linear-gradient(135deg,var(--blue),#6366f1);color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Save ✓</div>
+      </div>`;
+  }
+
   document.getElementById('backup-modal').style.display = 'flex';
+}
+
+function bmCopyKey() {
+  const key = groqGetKey();
+  if (!key) return;
+  navigator.clipboard.writeText(key).then(() => {
+    const btn = document.getElementById('bm-copy-key-btn');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 2000); }
+  });
+}
+
+function bmUpdateKey() {
+  const bodyEl = document.getElementById('bm-groq-body');
+  if (!bodyEl) return;
+  bodyEl.innerHTML = `
+    <div style="display:flex;gap:8px;margin-top:4px;">
+      <input id="bm-key-input" type="password" placeholder="Enter new gsk_ key"
+        style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(167,139,250,.3);border-radius:9px;padding:9px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;"
+        onkeydown="if(event.key==='Enter')bmSaveKey()">
+      <div onclick="bmSaveKey()" style="padding:9px 14px;border-radius:9px;background:linear-gradient(135deg,var(--blue),#6366f1);color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Save ✓</div>
+    </div>`;
+  setTimeout(() => document.getElementById('bm-key-input')?.focus(), 100);
+}
+
+function bmSaveKey() {
+  const inp = document.getElementById('bm-key-input');
+  if (!inp) return;
+  const key = inp.value.trim();
+  if (!key.startsWith('gsk_')) {
+    inp.style.borderColor = 'var(--red)';
+    inp.placeholder = 'Must start with gsk_...';
+    return;
+  }
+  groqSaveKey(key);
+  aibLoaded = false;
+  showToast('✅ Groq key saved & AI activated!', 'success');
+  openBackupModal(); // refresh the modal view
+  // Reload briefing & meals
+  setTimeout(() => {
+    if (document.getElementById('ai-briefing-card')) aiLoadBriefing(true);
+    if (document.getElementById('aimw-meals-body')) aiMealGenerate();
+  }, 400);
 }
 function closeBackupModal() {
   document.getElementById('backup-modal').style.display = 'none';
@@ -7615,8 +7697,97 @@ window.goPage = function(page) {
 
 // ═══════════════════════════════════════════════════════
 // ✨ AI FEATURES — v8
-// Uses Anthropic Claude API via fetch
+// Uses Groq API (FREE — llama-3.1-8b-instant)
 // ═══════════════════════════════════════════════════════
+
+// ── Groq Key Management ───────────────────────────────
+const GROQ_KEY_STORAGE = 'fp_groq_key';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+
+function groqGetKey() {
+  return localStorage.getItem(GROQ_KEY_STORAGE) || '';
+}
+function groqSaveKey(k) {
+  localStorage.setItem(GROQ_KEY_STORAGE, k.trim());
+}
+function groqClearKey() {
+  localStorage.removeItem(GROQ_KEY_STORAGE);
+  aibLoaded = false;
+  aimwPlan = null;
+  aicwHistory = [];
+  showToast('🔑 Groq key removed', 'info');
+  setTimeout(() => {
+    if (document.getElementById('ai-briefing-card')) aiShowKeyPrompt();
+  }, 300);
+}
+
+// Show key setup prompt inside briefing card
+function aiShowKeyPrompt() {
+  const textEl = document.getElementById('aib-text');
+  if (!textEl) return;
+  textEl.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:13px;color:var(--text2);line-height:1.5;">
+        🔑 Enter your <strong style="color:var(--purple)">free Groq API key</strong> to activate AI features.<br>
+        Get one free at <span style="color:var(--blue2);font-family:'DM Mono',monospace;">console.groq.com</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input id="groq-key-input" type="password"
+          placeholder="gsk_xxxxxxxxxxxxxxxxxxxx"
+          style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:10px 13px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;"
+          onkeydown="if(event.key==='Enter')groqSubmitKey()">
+        <div onclick="groqSubmitKey()"
+          style="padding:10px 16px;border-radius:10px;background:linear-gradient(135deg,var(--blue),#6366f1);color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;">
+          Activate ✓
+        </div>
+      </div>
+    </div>`;
+  const tsEl = document.getElementById('aib-ts');
+  if (tsEl) tsEl.textContent = 'Key required';
+}
+
+function groqSubmitKey() {
+  const inp = document.getElementById('groq-key-input');
+  if (!inp) return;
+  const key = inp.value.trim();
+  if (!key.startsWith('gsk_')) {
+    inp.style.borderColor = 'var(--red)';
+    inp.placeholder = 'Must start with gsk_...';
+    return;
+  }
+  groqSaveKey(key);
+  aibLoaded = false;
+  showToast('✅ Groq AI activated!', 'success');
+  aiLoadBriefing(true);
+  if (document.getElementById('aimw-meals-body')) setTimeout(aiMealGenerate, 800);
+}
+
+function aiShowKeySetup() {
+  const hasKey = !!groqGetKey();
+  const textEl = document.getElementById('aib-text');
+  if (!textEl) return;
+  if (hasKey) {
+    const masked = groqGetKey().slice(0,8) + '••••••••••••••••' + groqGetKey().slice(-4);
+    textEl.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;color:var(--green);font-weight:600;">✅ Groq AI is active</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);background:rgba(255,255,255,.05);padding:8px 12px;border-radius:8px;">${masked}</div>
+        <div style="display:flex;gap:8px;">
+          <div onclick="aibLoaded=false;aiLoadBriefing(false)"
+            style="flex:1;padding:9px;border-radius:9px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.25);color:var(--green);font-size:12px;font-weight:700;cursor:pointer;text-align:center;">
+            ✓ Keep & Continue
+          </div>
+          <div onclick="groqClearKey()"
+            style="padding:9px 14px;border-radius:9px;background:rgba(255,79,79,.1);border:1px solid rgba(255,79,79,.25);color:var(--red);font-size:12px;font-weight:700;cursor:pointer;">
+            🗑 Remove
+          </div>
+        </div>
+      </div>`;
+  } else {
+    aiShowKeyPrompt();
+  }
+}
 
 // ── Shared Family Context ──────────────────────────────
 const AI_FAMILY_CONTEXT = {
@@ -7647,20 +7818,29 @@ function aiGetTime() {
 }
 function aiGetHour() { return new Date().getHours(); }
 
-// Anthropic API call helper
+// ── Groq API call helper (OpenAI-compatible) ──────────
 async function aiCall(systemPrompt, userPrompt, maxTokens=600) {
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+  const key = groqGetKey();
+  if (!key) throw new Error('no_key');
+  const resp = await fetch(GROQ_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${key}`
+    },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: GROQ_MODEL,
       max_tokens: maxTokens,
-      system: systemPrompt,
-      messages: [{ role:'user', content: userPrompt }]
+      temperature: 0.7,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userPrompt }
+      ]
     })
   });
   const data = await resp.json();
-  return data.content?.map(b=>b.text||'').join('') || '';
+  if (!resp.ok) throw new Error(data.error?.message || `HTTP ${resp.status}`);
+  return data.choices?.[0]?.message?.content || '';
 }
 
 // ── FESTIVAL CHECKER ──────────────────────────────────
@@ -7697,6 +7877,9 @@ function aiLoadBriefing(force=false) {
   if (aibLoaded && !force) return;
   const card = document.getElementById('ai-briefing-card');
   if (!card) return; // widget not in DOM yet
+
+  // Check key first
+  if (!groqGetKey()) { aiShowKeyPrompt(); return; }
 
   const textEl = document.getElementById('aib-text');
   const dateEl = document.getElementById('aib-date');
@@ -7748,7 +7931,13 @@ Use 1-2 natural emojis. No bullet points. Max 55 words. Natural flowing sentence
       // Populate detail grid
       aibPopulateDetails();
     })
-    .catch(() => {
+    .catch((err) => {
+      if (err.message === 'no_key' || String(err.message).includes('401') || String(err.message).includes('invalid_api_key')) {
+        groqClearKey();
+        aiShowKeyPrompt();
+        return;
+      }
+      // Network / other error — show warm fallback
       const fallbacks = [
         `Good ${tod}, Duggireddy family! 🙏 Today is ${new Date().toLocaleDateString('en-IN',{weekday:'long'})} — a wonderful day to stay connected and make meaningful memories. ${isWeekend ? 'Cherish the weekend together!' : 'Wishing everyone a productive and joyful day!'} ✨`,
         `Namaste, Duggireddy family! 🌟 Today brings new opportunities for Rajasekhar at work, Josritha at college, and Jeevan at school. Vasundhara's warmth keeps the home running beautifully. Have a blessed day together!`
@@ -7903,18 +8092,32 @@ async function aiChatSend() {
   aiChatShowTyping();
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const key = groqGetKey();
+    if (!key) {
+      aiChatRemoveTyping();
+      aiChatAppendMsg('ai', '🔑 Please enter your Groq API key in the Daily Briefing widget above to activate AI chat.');
+      aicwBusy = false;
+      if (sendBtn) sendBtn.disabled = false;
+      return;
+    }
+    const resp = await fetch(GROQ_ENDPOINT, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: AICW_SYSTEM,
-        messages: aicwHistory
+        model: GROQ_MODEL,
+        max_tokens: 600,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: AICW_SYSTEM },
+          ...aicwHistory
+        ]
       })
     });
     const data = await resp.json();
-    const reply = data.content?.map(b=>b.text||'').join('') || "I'm here to help! Could you please rephrase that? 🙏";
+    const reply = data.choices?.[0]?.message?.content || "I'm here to help! Could you please rephrase that? 🙏";
     aiChatRemoveTyping();
     aiChatAppendMsg('ai', reply.trim());
     aicwHistory.push({role:'assistant', content:reply.trim()});
@@ -7979,6 +8182,8 @@ function aimwRenderDay() {
 
 async function aiMealGenerate() {
   if (aimwLoading) return;
+  // If no key, just show fallback silently
+  if (!groqGetKey()) { aimwPlan = null; aimwRenderDay(); return; }
   aimwLoading = true;
   const body = document.getElementById('aimw-meals-body');
   const btn = document.getElementById('aimw-regen');
@@ -8028,34 +8233,46 @@ function aiWidgetsInit() {
 
 <!-- BACKUP MODAL -->
 <div id="backup-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)closeBackupModal()">
-  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:24px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.4);max-height:90vh;overflow-y:auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
       <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);">💾 Backup & Restore</div>
       <div onclick="closeBackupModal()" style="font-size:20px;cursor:pointer;color:var(--text3);padding:4px 8px;">✕</div>
     </div>
     <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:20px;" id="backup-last-ts">No backup yet</div>
 
+    <!-- AI SETTINGS -->
+    <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.22);border-radius:14px;padding:16px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);">✨ Groq AI Key</div>
+        <div id="bm-groq-status" style="font-family:'DM Mono',monospace;font-size:10px;padding:3px 9px;border-radius:20px;"></div>
+      </div>
+      <div id="bm-groq-body">
+        <!-- filled by openBackupModal() -->
+      </div>
+    </div>
+
     <!-- BACKUP -->
     <div style="background:rgba(62,207,142,.06);border:1px solid rgba(62,207,142,.2);border-radius:14px;padding:16px;margin-bottom:12px;">
       <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:4px;">⬇️ Download Backup</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5;">Saves all your calendar events, health records, attendance, and settings to a JSON file on your phone.</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5;">Saves calendar, health, attendance, AI key &amp; all settings to a JSON file. <strong style="color:var(--green);">Includes your Groq key</strong> — restore after any redeployment.</div>
       <div onclick="doBackup()" style="background:var(--green);color:#fff;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;padding:11px 20px;border-radius:10px;cursor:pointer;text-align:center;">💾 Download family-portal-backup.json</div>
     </div>
 
     <!-- RESTORE -->
     <div style="background:rgba(79,127,255,.06);border:1px solid rgba(79,127,255,.2);border-radius:14px;padding:16px;margin-bottom:16px;">
       <div style="font-size:13px;font-weight:700;color:var(--blue2);margin-bottom:4px;">⬆️ Restore from Backup</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5;">Pick your backup file to restore all data. Portal will reload automatically after restore.</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5;">Restores all data including your Groq AI key. Portal reloads automatically.</div>
       <label style="background:var(--blue2);color:#fff;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;padding:11px 20px;border-radius:10px;cursor:pointer;text-align:center;display:block;">
         📂 Choose Backup File
         <input type="file" accept=".json" style="display:none;" onchange="doRestore(this)">
       </label>
     </div>
 
-    <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;line-height:1.6;">
+    <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;line-height:1.8;">
       ⚡ Backup before every new deployment<br>
+      🔑 Groq AI key is included in backup<br>
       📁 File saves to Downloads / Files app<br>
-      🔄 Restore after deployment to get data back
+      🔄 Restore after deployment to recover everything
     </div>
   </div>
 </div>
