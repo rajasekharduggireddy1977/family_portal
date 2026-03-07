@@ -4274,7 +4274,7 @@ body.dash-active #aura-canvas{ display:block; }
 .tc-family{border-color:rgba(79,127,255,.18);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),0 16px 48px rgba(79,127,255,.07),0 4px 12px rgba(0,0,0,.18);}
 
 /* ── Home Panel ── */
-.tc-greeting{padding:22px 20px 18px;}
+.tc-greeting{padding:14px 20px 12px;}
 .tc-greet-eyebrow{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;display:flex;align-items:center;gap:8px;}
 .tc-greet-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(240,180,41,.3),transparent);}
 .tc-greet-name{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1.2px;line-height:1.1;background:linear-gradient(135deg,#eef2ff 0%,rgba(200,210,255,.7) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
@@ -4649,18 +4649,6 @@ body.dash-active #aura-canvas{ display:block; }
   <div class="pin-hint">Default PIN: <strong style="color:var(--gold);font-family:'DM Mono',monospace">1234</strong><br>Change in Settings after unlock</div>
 </div>
 
-<!-- ═══════════════ PWA INSTALL BANNER ═══════════════ -->
-<div id="pwa-banner" class="hidden">
-  <div class="pwa-banner-icon">🏛️</div>
-  <div class="pwa-banner-body">
-    <div class="pwa-banner-title">Install Family Portal</div>
-  </div>
-  <div class="pwa-banner-actions">
-    <button class="pwa-install-btn" onclick="pwaInstall()">Install</button>
-    <button class="pwa-dismiss-btn" onclick="pwaDismiss()">Not now</button>
-  </div>
-</div>
-
 <!-- ═══════════════ SIDEBAR NAV (tablet/desktop) ═══════════════ -->
 <div id="sidebar-nav">
   <div class="snav-section">
@@ -4818,48 +4806,6 @@ body.dash-active #aura-canvas{ display:block; }
                 <div class="tc-greet-eyebrow" id="aura-eyebrow">Sunday · March 2026</div>
                 <div class="tc-greet-name" id="aura-greeting">Good Morning,<br>Rajasekhar.</div>
                 <div class="tc-greet-date" id="aura-date"></div>
-                <div class="tc-rings" id="aura-rings">
-                  <div class="tc-ring-unit" onclick="auraGoSlide(1)">
-                    <div class="tc-ring-wrap">
-                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
-                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
-                        <circle class="tc-ring-fill" id="ring-health" cx="23" cy="23" r="18" stroke="var(--green)" stroke-dasharray="113" stroke-dashoffset="20"/>
-                      </svg>
-                      <div class="tc-ring-center"><div class="tc-ring-val" id="ring-health-val" style="color:var(--green);">—</div></div>
-                    </div>
-                    <div class="tc-ring-lbl">Health</div>
-                  </div>
-                  <div class="tc-ring-unit" onclick="auraGoSlide(2)">
-                    <div class="tc-ring-wrap">
-                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
-                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
-                        <circle class="tc-ring-fill" id="ring-edu" cx="23" cy="23" r="18" stroke="var(--red)" stroke-dasharray="113" stroke-dashoffset="34"/>
-                      </svg>
-                      <div class="tc-ring-center"><div class="tc-ring-val" id="ring-edu-val" style="color:var(--red);font-size:14px;">⚠</div></div>
-                    </div>
-                    <div class="tc-ring-lbl">Edu</div>
-                  </div>
-                  <div class="tc-ring-unit" onclick="auraGoSlide(3)">
-                    <div class="tc-ring-wrap">
-                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
-                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
-                        <circle class="tc-ring-fill" id="ring-fin" cx="23" cy="23" r="18" stroke="var(--gold)" stroke-dasharray="113" stroke-dashoffset="56"/>
-                      </svg>
-                      <div class="tc-ring-center"><div class="tc-ring-val" id="ring-fin-val" style="color:var(--gold);font-size:9px;">—</div></div>
-                    </div>
-                    <div class="tc-ring-lbl">Finance</div>
-                  </div>
-                  <div class="tc-ring-unit" onclick="auraGoSlide(4)">
-                    <div class="tc-ring-wrap">
-                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
-                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
-                        <circle class="tc-ring-fill" cx="23" cy="23" r="18" stroke="var(--blue2)" stroke-dasharray="113" stroke-dashoffset="8"/>
-                      </svg>
-                      <div class="tc-ring-center"><div class="tc-ring-val" style="color:var(--blue2);">4</div></div>
-                    </div>
-                    <div class="tc-ring-lbl">Family</div>
-                  </div>
-                </div>
               </div>
             </div>
             <!-- Today timeline -->
@@ -12365,45 +12311,11 @@ init();
 // SIDEBAR NAV SYNC
 // ═══════════════════════════════════════
 let pwaPromptEvent = null;
-
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  pwaPromptEvent = e;
-});
-
-function checkPwaPrompt() {
-  const dismissed = localStorage.getItem('pwa_dismissed');
-  if (!dismissed && pwaPromptEvent) {
-    document.getElementById('pwa-banner').classList.remove('hidden');
-  }
-  // iOS Safari hint (no beforeinstallprompt support)
-  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone = window.navigator.standalone === true;
-  const iosDismissed = localStorage.getItem('pwa_ios_dismissed');
-  if (isIos && !isStandalone && !iosDismissed) {
-    document.getElementById('pwa-banner').classList.remove('hidden');
-    document.querySelector('.pwa-install-btn').textContent = 'Install';
-    document.querySelector('.pwa-install-btn').onclick = showIosInstallHelp;
-  }
-}
-
-function pwaInstall() {
-  if (pwaPromptEvent) {
-    pwaPromptEvent.prompt();
-    pwaPromptEvent.userChoice.then(() => pwaDismiss());
-  }
-}
-
-function pwaDismiss() {
-  localStorage.setItem('pwa_dismissed', '1');
-  localStorage.setItem('pwa_ios_dismissed', '1');
-  document.getElementById('pwa-banner').classList.add('hidden');
-}
-
-function showIosInstallHelp() {
-  showToast('Tap the Share icon → "Add to Home Screen"');
-  pwaDismiss();
-}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); pwaPromptEvent = e; });
+function checkPwaPrompt() {}
+function pwaInstall() {}
+function pwaDismiss() {}
+function showIosInstallHelp() {}
 
 // ═══════════════════════════════════════
 // SIDEBAR NAV SYNC
