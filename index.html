@@ -4142,7 +4142,9 @@ body.dash-active #aura-canvas{ display:block; }
   top:calc(var(--topbar-h) + var(--sat)) !important;
   left:0 !important; right:0 !important;
   bottom:var(--nav-h) !important;
-  overflow:hidden !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
   /* hide by default — .page{display:none} already handles this,
      but we need flex when active */
   display:none !important;
@@ -4158,7 +4160,7 @@ body.dash-active #aura-canvas{ display:block; }
 .aura-dash{
   position:relative;z-index:1;
   display:flex;flex-direction:column;
-  height:100%;overflow:hidden;
+  height:100%;overflow:visible;
   font-family:'Syne',sans-serif;
 }
 
@@ -4233,12 +4235,12 @@ body.dash-active #aura-canvas{ display:block; }
 .aura-cat-alert{position:absolute;top:-3px;right:-3px;width:13px;height:13px;border-radius:50%;background:var(--red);border:2px solid var(--bg);font-size:7px;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;}
 
 /* ── Swipeable Stage ── */
-.aura-stage{flex:1;position:relative;overflow:hidden;min-height:0;}
-.aura-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.77,0,.18,1);will-change:transform;}
+.aura-stage{flex:1;position:relative;overflow-x:hidden;overflow-y:visible;min-height:0;}
+.aura-track{display:flex;min-height:100%;transition:transform .5s cubic-bezier(.77,0,.18,1);will-change:transform;}
 .aura-track.aura-live{transition:none;}
 .aura-panel{
-  flex-shrink:0;width:100%;height:100%;
-  padding:6px 14px 8px;
+  flex-shrink:0;width:100%;min-height:100%;
+  padding:6px 14px calc(var(--nav-h) + 16px);
   overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
@@ -9280,12 +9282,15 @@ function auraGoSlide(idx) {
   var track = document.getElementById('aura-track');
   var stage = document.getElementById('aura-stage');
   if (!track || !stage) return;
-  var vw = stage.offsetWidth;
+  var vw = stage.offsetWidth || window.innerWidth;
   track.classList.remove('aura-live');
   track.style.transition = 'transform .5s cubic-bezier(.77,0,.18,1)';
   track.style.transform = 'translateX(' + (-idx * vw) + 'px)';
   var newP = document.getElementById(_auraSlides[idx]);
-  if (newP) newP.classList.add('aura-panel-active');
+  if (newP) { newP.classList.add('aura-panel-active'); newP.scrollTop = 0; }
+  // Also reset page scroll so new panel starts at top
+  var pg = document.getElementById('page-dashboard');
+  if (pg) pg.scrollTop = 0;
   var cats = document.querySelectorAll('.aura-cat');
   for (var i=0; i<cats.length; i++) cats[i].classList.toggle('aura-active', i===idx);
 }
@@ -9295,6 +9300,7 @@ function auraInitSwipe() {
   var track = document.getElementById('aura-track');
   if (!stage || !track) return;
   var tx0=0, ty0=0, dragging=false, ddx=0, mouseDown=false, mx0=0, intentLocked=false, intentH=false;
+  function vw() { return window.innerWidth; }
 
   stage.addEventListener('touchstart', function(e) {
     tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; dragging=false; ddx=0; intentLocked=false; intentH=false;
@@ -9306,18 +9312,19 @@ function auraInitSwipe() {
       intentLocked=true;
       intentH = Math.abs(dx) > Math.abs(dy);
     }
-    if (!intentH) return; // vertical — let browser scroll
-    if (!dragging && intentH && Math.abs(dx)>10) dragging=true;
+    if (!intentH) return; // vertical — native scroll handles it
+    e.preventDefault(); // horizontal — we handle it
+    if (!dragging && Math.abs(dx)>10) dragging=true;
     if (dragging) {
       ddx=dx;
       var resist=(_auraCur===0&&dx>0)||(_auraCur===_auraSlides.length-1&&dx<0)?.2:1;
-      track.style.transform='translateX('+((-_auraCur*stage.offsetWidth)+dx*resist)+'px)';
+      track.style.transform='translateX('+((-_auraCur*vw())+dx*resist)+'px)';
     }
-  }, {passive:true});
+  }, {passive:false});
   stage.addEventListener('touchend', function() {
     track.classList.remove('aura-live');
     if (!dragging) { auraGoSlide(_auraCur); return; }
-    var th = stage.offsetWidth * .28;
+    var th = vw() * .28;
     if (ddx < -th && _auraCur < _auraSlides.length-1) auraGoSlide(_auraCur+1);
     else if (ddx > th && _auraCur > 0) auraGoSlide(_auraCur-1);
     else auraGoSlide(_auraCur);
@@ -9328,7 +9335,7 @@ function auraInitSwipe() {
   window.addEventListener('mousemove', function(e) {
     if (!mouseDown) return;
     var d=e.clientX-mx0;
-    track.style.transform='translateX('+((-_auraCur*stage.offsetWidth)+d)+'px)';
+    track.style.transform='translateX('+((-_auraCur*vw())+d)+'px)';
   });
   window.addEventListener('mouseup', function(e) {
     if (!mouseDown) return; mouseDown=false;
