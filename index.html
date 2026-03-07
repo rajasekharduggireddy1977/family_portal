@@ -3919,15 +3919,15 @@ input:focus, button:focus-visible {
 ═══════════════════════════════════════════════ */
 #night-nudge {
   display: none;
-  position: fixed; bottom: 72px; left: 12px; right: 12px; z-index: 1200;
+  position: fixed; top: calc(var(--topbar-h) + var(--sat) + 8px); left: 12px; right: 12px; z-index: 2000;
   background: linear-gradient(135deg, #1a1040, #2d1b69);
   border-radius: 18px; padding: 14px 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.4);
-  animation: nudgeSlideUp .4s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(167,139,250,.2);
+  animation: nudgeSlideDown .4s cubic-bezier(.34,1.56,.64,1) both;
 }
-@keyframes nudgeSlideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+@keyframes nudgeSlideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
 }
 .nudge-row { display: flex; align-items: flex-start; gap: 12px; }
 .nudge-moon { font-size: 28px; flex-shrink: 0; }
@@ -4654,7 +4654,6 @@ body.dash-active #aura-canvas{ display:block; }
   <div class="pwa-banner-icon">🏛️</div>
   <div class="pwa-banner-body">
     <div class="pwa-banner-title">Install Family Portal</div>
-    <div class="pwa-banner-sub">Add to home screen for quick access</div>
   </div>
   <div class="pwa-banner-actions">
     <button class="pwa-install-btn" onclick="pwaInstall()">Install</button>
@@ -4783,12 +4782,6 @@ body.dash-active #aura-canvas{ display:block; }
     <!-- Aura OS Dashboard Shell -->
     <div class="aura-dash" id="aura-dash">
 
-      <!-- ALERT COMMAND ZONE -->
-      <div class="aura-cz" id="aura-cz">
-        <div class="aura-cz-eye"><div class="aura-pulse"></div>Immediate Attention</div>
-        <div id="aura-alerts-container"></div>
-      </div>
-
       <!-- CATEGORY RAIL -->
       <div class="aura-rail" id="aura-rail">
         <div class="aura-cat aura-active" style="--aura-cat-c:rgba(200,210,255,.55);" onclick="auraGoSlide(0)">
@@ -4796,11 +4789,11 @@ body.dash-active #aura-canvas{ display:block; }
           <div class="aura-cat-lbl">Home</div>
         </div>
         <div class="aura-cat" style="--aura-cat-c:rgba(0,230,118,.6);" onclick="auraGoSlide(1)">
-          <div class="aura-cat-orb">❤️</div>
+          <div class="aura-cat-orb" style="position:relative;">❤️<div class="aura-cat-alert" id="aura-health-badge" style="display:none;"></div></div>
           <div class="aura-cat-lbl">Health</div>
         </div>
         <div class="aura-cat" style="--aura-cat-c:rgba(167,139,250,.7);" onclick="auraGoSlide(2)" id="aura-cat-edu">
-          <div class="aura-cat-orb" style="position:relative;">📚<div class="aura-cat-alert" id="aura-edu-badge" style="display:none;">!</div></div>
+          <div class="aura-cat-orb" style="position:relative;">📚<div class="aura-cat-alert" id="aura-edu-badge" style="display:none;"></div></div>
           <div class="aura-cat-lbl">Edu</div>
         </div>
         <div class="aura-cat" style="--aura-cat-c:rgba(245,158,11,.7);" onclick="auraGoSlide(3)" id="aura-cat-fin">
@@ -9381,60 +9374,62 @@ function auraRenderGreeting() {
 
 /* ── Alerts ── */
 function auraRenderAlerts() {
-  var html = '';
-  // Check attendance
+  // Attendance — Edu badge
   var attRaw = localStorage.getItem('fp_attendance_synced');
-  var hasAttAlert = false;
-  var critSubjects = [];
+  var critCount = 0;
   if (attRaw) {
     try {
       var att = JSON.parse(attRaw);
       var seen = {};
       for (var i=0; i<att.length; i++) {
-        var a = att[i];
-        var key = a.subject + '|' + a.type;
+        var a = att[i]; var key = a.subject+'|'+a.type;
         if (seen[key]) continue; seen[key]=1;
         var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
-        if (pct < 75) critSubjects.push(a.subject.split(' ').slice(0,3).join(' ') + ' ' + pct + '%');
+        if (pct < 75) critCount++;
       }
-      if (critSubjects.length > 0) hasAttAlert = true;
     } catch(e){}
   }
-  if (hasAttAlert) {
-    var badge = document.getElementById('aura-edu-badge');
-    if (badge) badge.style.display='flex';
-    html += '<div class="aura-acard ac-red" onclick="auraGoSlide(2)">'
-      + '<div class="aura-acard-orb">📚</div>'
-      + '<div class="aura-acard-body">'
-      + '<div class="aura-acard-title">Josritha — Attendance Critical</div>'
-      + '<div class="aura-acard-sub">' + critSubjects.slice(0,2).join(' · ') + '</div>'
-      + '</div><div class="aura-acard-cta">View</div></div>';
+  var eduBadge = document.getElementById('aura-edu-badge');
+  if (eduBadge) {
+    if (critCount > 0) { eduBadge.style.display='flex'; eduBadge.textContent=critCount; }
+    else eduBadge.style.display='none';
   }
-  // Check overdue calendar events
+
+  // Health badge — elevated markers
+  var healthRaw = localStorage.getItem('fp_health_v3');
+  var healthAlerts = 0;
+  if (healthRaw) {
+    try {
+      var hd = JSON.parse(healthRaw);
+      var mids = ['rajasekhar','vasundhara','josritha','jeevan'];
+      for (var m=0; m<mids.length; m++) {
+        var mk = (hd[mids[m]]||{}).markers||{};
+        if (mk.tsh && (mk.tsh>4.5||mk.tsh<0.4)) healthAlerts++;
+        if (mk.hemoglobin && mk.hemoglobin<12) healthAlerts++;
+      }
+    } catch(e){}
+  }
+  var hBadge = document.getElementById('aura-health-badge');
+  if (hBadge) {
+    if (healthAlerts>0) { hBadge.style.display='flex'; hBadge.textContent=healthAlerts; }
+    else hBadge.style.display='none';
+  }
+
+  // Finance badge — overdue events
   var evtRaw = localStorage.getItem('fp_cal_events');
+  var overdueCount = 0;
   if (evtRaw) {
     try {
       var evts = JSON.parse(evtRaw);
       var todayStr = new Date().toISOString().slice(0,10);
-      var overdue = evts.filter(function(e){ return e.date < todayStr && e.cat === 'finance'; });
-      if (overdue.length > 0) {
-        var badge2 = document.getElementById('aura-fin-badge');
-        if (badge2) { badge2.style.display='flex'; badge2.textContent=overdue.length; }
-        html += '<div class="aura-acard ac-amber" onclick="auraGoSlide(3)">'
-          + '<div class="aura-acard-orb">⚡</div>'
-          + '<div class="aura-acard-body">'
-          + '<div class="aura-acard-title">' + overdue[0].title.replace(/^[^\w]*/,'') + '</div>'
-          + '<div class="aura-acard-sub">Overdue · ' + overdue[0].date + '</div>'
-          + '</div><div class="aura-acard-cta">Act</div></div>';
-      }
+      overdueCount = evts.filter(function(e){ return e.date < todayStr && e.cat==='finance'; }).length;
     } catch(e){}
   }
-  // No alerts fallback
-  if (!html) {
-    html = '<div style="font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);padding:4px 4px 6px;">✅ All clear — no urgent items today</div>';
+  var finBadge = document.getElementById('aura-fin-badge');
+  if (finBadge) {
+    if (overdueCount>0) { finBadge.style.display='flex'; finBadge.textContent=overdueCount; }
+    else finBadge.style.display='none';
   }
-  var container = document.getElementById('aura-alerts-container');
-  if (container) container.innerHTML = html;
 }
 
 /* ── Home Panel ── */
@@ -12387,7 +12382,7 @@ function checkPwaPrompt() {
   const iosDismissed = localStorage.getItem('pwa_ios_dismissed');
   if (isIos && !isStandalone && !iosDismissed) {
     document.getElementById('pwa-banner').classList.remove('hidden');
-    document.querySelector('.pwa-install-btn').textContent = 'How?';
+    document.querySelector('.pwa-install-btn').textContent = 'Install';
     document.querySelector('.pwa-install-btn').onclick = showIosInstallHelp;
   }
 }
