@@ -4119,6 +4119,325 @@ input:focus, button:focus-visible {
 }
 .fin-sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 0 auto 18px; }
 
+/* ════════════════════════════════════════════════
+   AURA OS — DASHBOARD v3
+   Aurora-lit deep-space command deck
+════════════════════════════════════════════════ */
+
+/* Aurora canvas */
+#aura-canvas{position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:0;}
+
+/* Dashboard page override */
+#page-dashboard{position:relative;overflow:hidden;display:flex;flex-direction:column;}
+#page-dashboard .dash-wrap{display:none !important;}
+.aura-dash{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  height:100%;overflow:hidden;
+  font-family:'Syne',sans-serif;
+}
+
+/* ── Alert Command Zone ── */
+.aura-cz{flex-shrink:0;padding:10px 14px 6px;}
+.aura-cz-eye{
+  font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.38);
+  text-transform:uppercase;letter-spacing:2px;
+  display:flex;align-items:center;gap:8px;margin-bottom:7px;
+}
+.aura-cz-eye::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.08),transparent);}
+.aura-pulse{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:auraPulse 1.2s ease-in-out infinite;flex-shrink:0;}
+@keyframes auraPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.6);opacity:.4;}}
+
+.aura-acard{
+  border-radius:18px;padding:13px 14px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;position:relative;overflow:hidden;
+  margin-bottom:7px;
+  backdrop-filter:blur(32px) saturate(2);
+  -webkit-backdrop-filter:blur(32px) saturate(2);
+  transition:transform .15s cubic-bezier(.4,0,.2,1);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14),0 6px 24px rgba(0,0,0,.3);
+}
+.aura-acard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+}
+.aura-acard:active{transform:scale(.974) translateY(1px);}
+.aura-acard.ac-red{background:linear-gradient(135deg,rgba(255,59,59,.14),rgba(255,59,59,.05));border:1px solid rgba(255,59,59,.28);box-shadow:inset 0 1.5px 0 rgba(255,120,120,.12),0 6px 28px rgba(255,59,59,.1);}
+.aura-acard.ac-amber{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.04));border:1px solid rgba(245,158,11,.24);box-shadow:inset 0 1.5px 0 rgba(255,210,80,.1),0 6px 28px rgba(245,158,11,.08);}
+.aura-acard-orb{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.18);}
+.ac-red .aura-acard-orb{background:rgba(255,59,59,.18);}
+.ac-amber .aura-acard-orb{background:rgba(245,158,11,.16);}
+.aura-acard-body{flex:1;min-width:0;}
+.aura-acard-title{font-size:13px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.aura-acard-sub{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(200,210,240,.6);margin-top:2px;}
+.aura-acard-cta{flex-shrink:0;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:5px 10px;border-radius:30px;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
+.ac-red .aura-acard-cta{background:rgba(255,59,59,.2);color:var(--red);border:1px solid rgba(255,59,59,.38);}
+.ac-amber .aura-acard-cta{background:rgba(245,158,11,.16);color:var(--gold);border:1px solid rgba(245,158,11,.32);}
+
+/* ── Category Rail ── */
+.aura-rail{
+  flex-shrink:0;display:flex;gap:8px;
+  padding:4px 14px 6px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.aura-rail::-webkit-scrollbar{display:none;}
+.aura-cat{
+  flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:pointer;transition:transform .18s cubic-bezier(.34,1.56,.64,1);
+  -webkit-user-select:none;user-select:none;
+}
+.aura-cat:active{transform:scale(.88);}
+.aura-cat-orb{
+  width:50px;height:50px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  background:rgba(255,255,255,.048);
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 4px 14px rgba(0,0,0,.28);
+  transition:box-shadow .25s;position:relative;overflow:hidden;
+}
+.aura-cat-orb::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.1),transparent);
+  border-radius:inherit;
+}
+.aura-cat.aura-active .aura-cat-orb{box-shadow:0 0 0 2px var(--aura-cat-c,rgba(255,255,255,.5)),0 0 20px var(--aura-cat-c,rgba(255,255,255,.2)),inset 0 1px 0 rgba(255,255,255,.25);}
+.aura-cat-lbl{font-family:'DM Mono',monospace;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(140,158,220,.4);transition:color .2s;}
+.aura-cat.aura-active .aura-cat-lbl{color:rgba(220,225,255,.9);}
+.aura-cat-alert{position:absolute;top:-3px;right:-3px;width:13px;height:13px;border-radius:50%;background:var(--red);border:2px solid var(--bg);font-size:7px;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;}
+
+/* ── Swipeable Stage ── */
+.aura-stage{flex:1;position:relative;overflow:hidden;min-height:0;}
+.aura-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.77,0,.18,1);will-change:transform;}
+.aura-track.aura-live{transition:none;}
+.aura-panel{
+  flex-shrink:0;width:100%;height:100%;
+  padding:6px 14px 8px;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  display:flex;flex-direction:column;gap:10px;
+}
+.aura-panel::-webkit-scrollbar{display:none;}
+
+/* ── Titanium Card ── */
+.tc{
+  border-radius:24px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(40px) saturate(2.2) brightness(1.08);
+  -webkit-backdrop-filter:blur(40px) saturate(2.2) brightness(1.08);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.22),0 16px 48px rgba(0,0,0,.35),0 4px 12px rgba(0,0,0,.18);
+  position:relative;overflow:hidden;
+  transition:transform .15s cubic-bezier(.4,0,.2,1);
+}
+.tc::before{
+  content:'';position:absolute;top:0;left:-50%;width:200%;height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.22) 30%,rgba(255,255,255,.32) 50%,rgba(255,255,255,.22) 70%,transparent 100%);
+  pointer-events:none;
+}
+.tc::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(255,255,255,.04),transparent);pointer-events:none;}
+.tc>*{position:relative;z-index:1;}
+.tc:active{transform:scale(.985);}
+.tc-health{border-color:rgba(0,230,118,.18);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),0 16px 48px rgba(0,230,118,.07),0 4px 12px rgba(0,0,0,.18);}
+.tc-edu{border-color:rgba(167,139,250,.2);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),0 16px 48px rgba(167,139,250,.08),0 4px 12px rgba(0,0,0,.18);}
+.tc-finance{border-color:rgba(245,158,11,.18);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),0 16px 48px rgba(245,158,11,.07),0 4px 12px rgba(0,0,0,.18);}
+.tc-family{border-color:rgba(79,127,255,.18);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),0 16px 48px rgba(79,127,255,.07),0 4px 12px rgba(0,0,0,.18);}
+
+/* ── Home Panel ── */
+.tc-greeting{padding:22px 20px 18px;}
+.tc-greet-eyebrow{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+.tc-greet-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(240,180,41,.3),transparent);}
+.tc-greet-name{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1.2px;line-height:1.1;background:linear-gradient(135deg,#eef2ff 0%,rgba(200,210,255,.7) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.tc-greet-date{font-family:'DM Mono',monospace;font-size:11px;color:rgba(200,210,240,.55);letter-spacing:.5px;margin-top:5px;}
+/* Summary rings row */
+.tc-rings{display:flex;gap:7px;margin-top:16px;}
+.tc-ring-unit{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:11px 6px 9px;border-radius:15px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .15s;
+}
+.tc-ring-unit:active{transform:scale(.91);}
+.tc-ring-wrap{position:relative;width:46px;height:46px;}
+.tc-ring-svg{width:46px;height:46px;transform:rotate(-90deg);}
+.tc-ring-track{fill:none;stroke:rgba(255,255,255,.06);stroke-width:5;}
+.tc-ring-fill{fill:none;stroke-width:5;stroke-linecap:round;}
+.tc-ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.tc-ring-val{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;}
+.tc-ring-lbl{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.8px;margin-top:5px;}
+
+/* Today timeline */
+.tc-tl-row{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.04);
+  cursor:pointer;transition:background .1s;
+}
+.tc-tl-row:active{background:rgba(255,255,255,.03);}
+.tc-tl-row:last-child{border-bottom:none;}
+.tc-tl-ts{font-family:'DM Mono',monospace;font-size:10px;color:rgba(140,158,220,.38);padding-top:2px;min-width:48px;flex-shrink:0;}
+.tc-tl-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:4px;}
+.tc-tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tc-tl-wire{flex:1;width:1px;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);min-height:18px;margin-top:3px;}
+.tc-tl-body{flex:1;}
+.tc-tl-name{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;}
+.tc-tl-meta{font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(200,210,240,.5);margin-top:2px;}
+.tc-tl-tag{display:inline-block;margin-top:4px;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:30px;letter-spacing:.5px;}
+.tc-sec-hd{padding:14px 20px 4px;display:flex;align-items:center;justify-content:space-between;}
+.tc-sec-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+.tc-sec-action{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue2);cursor:pointer;}
+
+/* ── Health Panel ── */
+.tc-health-banner{padding:20px 20px 14px;background:linear-gradient(160deg,rgba(0,230,118,.07) 0%,transparent 70%);}
+.tchb-eyebrow{font-family:'DM Mono',monospace;font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:2px;}
+.tchb-headline{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px;margin-top:3px;background:linear-gradient(135deg,var(--green),var(--cyan,#38e8ff));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.tchb-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(200,210,240,.55);margin-top:3px;}
+.tchb-row{display:flex;align-items:flex-start;justify-content:space-between;}
+.tchb-badge{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+.tchb-badge-inner{width:46px;height:46px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.07);}
+.tchb-badge-num{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--green);}
+.tchb-badge-lbl{font-family:'DM Mono',monospace;font-size:7px;color:rgba(140,158,220,.4);letter-spacing:.5px;}
+/* Member pills */
+.tc-mem-scroll{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:10px 20px 14px;}
+.tc-mem-scroll::-webkit-scrollbar{display:none;}
+.tc-mpill{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:40px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(20px);cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1);box-shadow:inset 0 1px 0 rgba(255,255,255,.14);}
+.tc-mpill:active{transform:scale(.92);}
+.tc-mpill.tc-mpill-alert{border-color:rgba(255,59,59,.3);background:rgba(255,59,59,.06);}
+.tc-mpill-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.2);}
+.tc-mpill-name{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;}
+.tc-mpill-status{font-family:'DM Mono',monospace;font-size:9px;}
+.tc-mpill-score{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;}
+/* Vitals grid */
+.tc-vitals-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 20px 16px;}
+.tc-vital{padding:13px 12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:transform .12s;}
+.tc-vital:active{transform:scale(.94);}
+.tc-vital-ico{font-size:18px;margin-bottom:7px;}
+.tc-vital-val{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
+.tc-vital-name{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.8px;margin-top:3px;}
+.tc-vital-chip{display:inline-block;margin-top:5px;font-size:9px;font-weight:700;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:20px;}
+
+/* ── Education Panel ── */
+.tc-edu-banner{padding:20px 20px 14px;}
+.tceb-eyebrow{font-family:'DM Mono',monospace;font-size:9px;color:#a78bfa;text-transform:uppercase;letter-spacing:2px;}
+.tceb-row{display:flex;gap:12px;align-items:flex-start;margin-top:4px;}
+.tceb-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.6px;}
+.tceb-course{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(200,210,240,.55);margin-top:3px;}
+.tceb-cgpa{text-align:center;padding:9px 13px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:13px;flex-shrink:0;}
+.tceb-cgpa-num{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:#a78bfa;}
+.tceb-cgpa-lbl{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.8px;}
+/* Subject bars */
+.tc-subj-deck{padding:0 20px 14px;display:flex;flex-direction:column;gap:10px;}
+.tc-sd-row{display:flex;flex-direction:column;gap:4px;}
+.tc-sd-top{display:flex;justify-content:space-between;align-items:center;}
+.tc-sd-name{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;}
+.tc-sd-pct{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;}
+.tc-sd-track{height:7px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;position:relative;}
+.tc-sd-fill{height:100%;border-radius:5px;}
+.tc-sd-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.22);border-radius:5px;}
+.tc-sd-marker{position:absolute;top:-3px;bottom:-3px;left:75%;width:1.5px;background:rgba(255,184,0,.6);box-shadow:0 0 4px rgba(255,184,0,.4);}
+/* Att ring row */
+.tc-att-ring-row{display:flex;gap:14px;align-items:center;padding:14px 20px 18px;}
+.tc-att-ring{position:relative;width:86px;height:86px;flex-shrink:0;}
+.tc-att-svg{width:86px;height:86px;transform:rotate(-90deg);}
+.tc-att-bg{fill:none;stroke:rgba(255,255,255,.05);stroke-width:8;}
+.tc-att-path{fill:none;stroke-width:8;stroke-linecap:round;}
+.tc-att-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.tc-att-num{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;}
+.tc-att-lbl{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);letter-spacing:.5px;}
+.tc-att-info{flex:1;}
+.tc-att-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.tc-att-desc{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(200,210,240,.55);margin-top:4px;line-height:1.5;}
+.tc-att-btns{display:flex;gap:7px;margin-top:9px;}
+.tc-att-btn{padding:7px 13px;border-radius:30px;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;cursor:pointer;border:1px solid;backdrop-filter:blur(12px);transition:transform .12s;background:rgba(255,255,255,.045);box-shadow:inset 0 1px 0 rgba(255,255,255,.14);}
+.tc-att-btn:active{transform:scale(.93);}
+.tc-att-btn.tc-att-primary{border-color:rgba(167,139,250,.4);color:#a78bfa;background:rgba(167,139,250,.1);}
+.tc-att-btn.tc-att-sec{border-color:rgba(255,255,255,.1);color:rgba(200,210,240,.6);}
+
+/* ── Finance Panel ── */
+.tc-fin-hero{padding:22px 20px 16px;}
+.tc-fin-eyebrow{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;}
+.tc-fin-amount{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,var(--gold),#fef3c7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.tc-fin-sub{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(200,210,240,.55);margin-top:3px;}
+.tc-fin-stats{display:flex;gap:8px;margin-top:14px;}
+.tc-fin-stat{flex:1;padding:11px 9px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:transform .12s;}
+.tc-fin-stat:active{transform:scale(.94);}
+.tc-fin-stat-v{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;}
+.tc-fin-stat-l{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.7px;margin-top:3px;}
+/* Bar chart */
+.tc-bar-section{padding:14px 20px 8px;}
+.tc-bar-title{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.tc-bars{display:flex;align-items:flex-end;gap:6px;height:60px;}
+.tc-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.tc-bar{width:100%;border-radius:5px 5px 2px 2px;min-height:4px;position:relative;}
+.tc-bar::after{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:rgba(255,255,255,.18);border-radius:5px 5px 0 0;}
+.tc-bar.tc-bar-cur{box-shadow:0 0 14px rgba(56,232,255,.25);}
+.tc-bar-lbl{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);}
+/* Bank switcher */
+.tc-bsw{display:flex;gap:7px;padding:8px 20px 14px;}
+.tc-bsw-btn{flex:1;padding:8px;border-radius:11px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);cursor:pointer;transition:all .15s;box-shadow:inset 0 1px 0 rgba(255,255,255,.12);}
+.tc-bsw-btn.tc-bsw-active{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:var(--gold);}
+.tc-bsw-btn:active{transform:scale(.94);}
+/* Txn list */
+.tc-txn-hd{padding:10px 20px 4px;display:flex;justify-content:space-between;align-items:center;}
+.tc-txn-hd-t{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+.tc-txn-hd-a{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue2);cursor:pointer;}
+.tc-txn-row{display:flex;align-items:center;gap:11px;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s;}
+.tc-txn-row:active{background:rgba(255,255,255,.03);}
+.tc-txn-row:last-child{border-bottom:none;}
+.tc-txn-ico{width:34px;height:34px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.12);}
+.tc-txn-body{flex:1;min-width:0;}
+.tc-txn-name{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tc-txn-meta{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.38);margin-top:2px;}
+.tc-txn-amt{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+
+/* ── Family Panel ── */
+.tc-fam-header{padding:20px 20px 14px;}
+.tc-fam-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px;}
+.tc-fam-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(200,210,240,.55);margin-top:3px;}
+.tc-fmc{border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1);margin:0 4px;}
+.tc-fmc:active{transform:scale(.97);}
+.tc-fmc-inner{display:flex;align-items:center;gap:13px;padding:14px 16px;backdrop-filter:blur(40px) saturate(2);-webkit-backdrop-filter:blur(40px) saturate(2);}
+.tc-fmc-av{width:46px;height:46px;border-radius:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 4px 12px rgba(0,0,0,.28);position:relative;}
+.tc-fmc-av::after{content:'';position:absolute;top:3px;left:9px;width:28%;height:28%;border-radius:50%;background:rgba(255,255,255,.32);}
+.tc-fmc-body{flex:1;min-width:0;}
+.tc-fmc-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.tc-fmc-role{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+.tc-fmc-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;}
+.tc-fmc-tag{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:30px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);}
+.tc-fmc-icon{font-size:20px;}
+
+/* ── Aura Button ── */
+.aura-btn{
+  margin:2px 0 4px;padding:13px 20px;border-radius:15px;text-align:center;
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.2px;
+  cursor:pointer;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(20px);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.17),0 4px 14px rgba(0,0,0,.22);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;
+}
+.aura-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);border-radius:inherit;pointer-events:none;}
+.aura-btn:active{transform:scale(.96);}
+.aura-btn-health{border-color:rgba(0,230,118,.3);color:var(--green);background:rgba(0,230,118,.06);}
+.aura-btn-edu{border-color:rgba(167,139,250,.32);color:#a78bfa;background:rgba(167,139,250,.07);}
+.aura-btn-fin{border-color:rgba(245,158,11,.28);color:var(--gold);background:rgba(245,158,11,.06);}
+
+/* Section divider */
+.tc-divider{height:1px;margin:2px 20px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);}
+
+/* Entrance animation */
+@keyframes auraRise{from{opacity:0;transform:translateY(20px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+.aura-panel .tc{animation:auraRise .42s cubic-bezier(.4,0,.2,1) both;}
+.aura-panel .tc:nth-child(1){animation-delay:.04s;}
+.aura-panel .tc:nth-child(2){animation-delay:.1s;}
+.aura-panel .tc:nth-child(3){animation-delay:.16s;}
+.aura-panel .tc:nth-child(4){animation-delay:.22s;}
+
+/* Touch feedback */
+.aura-press:active{opacity:.8;transform:scale(.97);}
+
 </style>
 </head>
 <body>
@@ -4422,22 +4741,224 @@ input:focus, button:focus-visible {
 <!-- ═══════════════ CONTENT ═══════════════ -->
 <div id="content">
 
-  <!-- ══════════ DASHBOARD PAGE ══════════ -->
+  <!-- ══════════ DASHBOARD PAGE — AURA OS v3 ══════════ -->
   <div class="page active" id="page-dashboard">
-    <div class="dash-wrap stagger">
-      <!-- Widget edit mode bar -->
-      <div class="widget-edit-bar" id="widget-edit-bar">
-        <span>✦ Drag to reorder · tap − to remove</span>
-        <div class="wed-done" onclick="exitWidgetEdit()">Done</div>
+
+    <!-- Aurora canvas background -->
+    <canvas id="aura-canvas"></canvas>
+
+    <!-- Keep legacy widget container hidden (other JS still references it) -->
+    <div class="dash-wrap" id="widget-container" style="display:none!important;"></div>
+    <div class="add-widget-wrap" id="add-widget-wrap" style="display:none!important;"></div>
+    <div class="widget-edit-bar" id="widget-edit-bar" style="display:none!important;"></div>
+
+    <!-- Aura OS Dashboard Shell -->
+    <div class="aura-dash" id="aura-dash">
+
+      <!-- ALERT COMMAND ZONE -->
+      <div class="aura-cz" id="aura-cz">
+        <div class="aura-cz-eye"><div class="aura-pulse"></div>Immediate Attention</div>
+        <div id="aura-alerts-container"></div>
       </div>
-      <!-- Widget container — JS renders sections here -->
-      <div class="widget-container" id="widget-container"></div>
-      <!-- Add widget btn (edit mode only) -->
-      <div class="add-widget-wrap" id="add-widget-wrap">
-        <div class="add-widget-btn" onclick="openWidgetPicker()">＋ Add Widget</div>
+
+      <!-- CATEGORY RAIL -->
+      <div class="aura-rail" id="aura-rail">
+        <div class="aura-cat aura-active" style="--aura-cat-c:rgba(200,210,255,.55);" onclick="auraGoSlide(0)">
+          <div class="aura-cat-orb">🏠</div>
+          <div class="aura-cat-lbl">Home</div>
+        </div>
+        <div class="aura-cat" style="--aura-cat-c:rgba(0,230,118,.6);" onclick="auraGoSlide(1)">
+          <div class="aura-cat-orb">❤️</div>
+          <div class="aura-cat-lbl">Health</div>
+        </div>
+        <div class="aura-cat" style="--aura-cat-c:rgba(167,139,250,.7);" onclick="auraGoSlide(2)" id="aura-cat-edu">
+          <div class="aura-cat-orb" style="position:relative;">📚<div class="aura-cat-alert" id="aura-edu-badge" style="display:none;">!</div></div>
+          <div class="aura-cat-lbl">Edu</div>
+        </div>
+        <div class="aura-cat" style="--aura-cat-c:rgba(245,158,11,.7);" onclick="auraGoSlide(3)" id="aura-cat-fin">
+          <div class="aura-cat-orb" style="position:relative;">💰<div class="aura-cat-alert" id="aura-fin-badge" style="display:none;"></div></div>
+          <div class="aura-cat-lbl">Finance</div>
+        </div>
+        <div class="aura-cat" style="--aura-cat-c:rgba(79,127,255,.65);" onclick="auraGoSlide(4)">
+          <div class="aura-cat-orb">👨‍👩‍👧‍👦</div>
+          <div class="aura-cat-lbl">Family</div>
+        </div>
       </div>
-    </div>
-  </div>
+
+      <!-- SWIPEABLE STAGE -->
+      <div class="aura-stage" id="aura-stage">
+        <div class="aura-track" id="aura-track">
+
+          <!-- ▸ PANEL 0: HOME -->
+          <div class="aura-panel" id="aura-p0">
+            <!-- Greeting card with rings -->
+            <div class="tc">
+              <div class="tc-greeting">
+                <div class="tc-greet-eyebrow" id="aura-eyebrow">Sunday · March 2026</div>
+                <div class="tc-greet-name" id="aura-greeting">Good Morning,<br>Rajasekhar.</div>
+                <div class="tc-greet-date" id="aura-date"></div>
+                <div class="tc-rings" id="aura-rings">
+                  <div class="tc-ring-unit" onclick="auraGoSlide(1)">
+                    <div class="tc-ring-wrap">
+                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
+                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
+                        <circle class="tc-ring-fill" id="ring-health" cx="23" cy="23" r="18" stroke="var(--green)" stroke-dasharray="113" stroke-dashoffset="20"/>
+                      </svg>
+                      <div class="tc-ring-center"><div class="tc-ring-val" id="ring-health-val" style="color:var(--green);">—</div></div>
+                    </div>
+                    <div class="tc-ring-lbl">Health</div>
+                  </div>
+                  <div class="tc-ring-unit" onclick="auraGoSlide(2)">
+                    <div class="tc-ring-wrap">
+                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
+                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
+                        <circle class="tc-ring-fill" id="ring-edu" cx="23" cy="23" r="18" stroke="var(--red)" stroke-dasharray="113" stroke-dashoffset="34"/>
+                      </svg>
+                      <div class="tc-ring-center"><div class="tc-ring-val" id="ring-edu-val" style="color:var(--red);font-size:14px;">⚠</div></div>
+                    </div>
+                    <div class="tc-ring-lbl">Edu</div>
+                  </div>
+                  <div class="tc-ring-unit" onclick="auraGoSlide(3)">
+                    <div class="tc-ring-wrap">
+                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
+                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
+                        <circle class="tc-ring-fill" id="ring-fin" cx="23" cy="23" r="18" stroke="var(--gold)" stroke-dasharray="113" stroke-dashoffset="56"/>
+                      </svg>
+                      <div class="tc-ring-center"><div class="tc-ring-val" id="ring-fin-val" style="color:var(--gold);font-size:9px;">—</div></div>
+                    </div>
+                    <div class="tc-ring-lbl">Finance</div>
+                  </div>
+                  <div class="tc-ring-unit" onclick="auraGoSlide(4)">
+                    <div class="tc-ring-wrap">
+                      <svg class="tc-ring-svg" viewBox="0 0 46 46">
+                        <circle class="tc-ring-track" cx="23" cy="23" r="18"/>
+                        <circle class="tc-ring-fill" cx="23" cy="23" r="18" stroke="var(--blue2)" stroke-dasharray="113" stroke-dashoffset="8"/>
+                      </svg>
+                      <div class="tc-ring-center"><div class="tc-ring-val" style="color:var(--blue2);">4</div></div>
+                    </div>
+                    <div class="tc-ring-lbl">Family</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Today timeline -->
+            <div class="tc">
+              <div class="tc-sec-hd">
+                <div class="tc-sec-title">Today</div>
+                <div class="tc-sec-action" onclick="goPage('calendar')">Calendar →</div>
+              </div>
+              <div id="aura-today-timeline"></div>
+            </div>
+            <div style="height:8px;"></div>
+          </div>
+
+          <!-- ▸ PANEL 1: HEALTH -->
+          <div class="aura-panel" id="aura-p1">
+            <div class="tc tc-health">
+              <div class="tc-health-banner">
+                <div class="tchb-eyebrow">Health Pulse</div>
+                <div class="tchb-row">
+                  <div>
+                    <div class="tchb-headline">Family<br>Wellness</div>
+                    <div class="tchb-sub">All 4 members · Real data</div>
+                  </div>
+                  <div class="tchb-badge" id="aura-health-badge-ring">
+                    <div class="tchb-badge-inner">
+                      <div class="tchb-badge-num" id="aura-health-avg">—</div>
+                      <div class="tchb-badge-lbl">AVG</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tc-divider"></div>
+              <div class="tc-mem-scroll" id="aura-health-members"></div>
+            </div>
+            <div class="tc tc-health">
+              <div class="tc-sec-hd" style="padding-top:16px;">
+                <div class="tc-sec-title">Vasundhara · Key Markers</div>
+                <div class="tc-sec-action" onclick="goPage('health')">Full →</div>
+              </div>
+              <div class="tc-vitals-grid" id="aura-health-vitals"></div>
+            </div>
+            <div class="aura-btn aura-btn-health aura-press" onclick="goPage('health')">Full Health Reports →</div>
+            <div style="height:8px;"></div>
+          </div>
+
+          <!-- ▸ PANEL 2: EDUCATION -->
+          <div class="aura-panel" id="aura-p2">
+            <div class="tc tc-edu">
+              <div class="tc-edu-banner">
+                <div class="tceb-eyebrow">Education · KLU B.Tech</div>
+                <div class="tceb-row">
+                  <div>
+                    <div class="tceb-name">Josritha</div>
+                    <div class="tceb-course">B.Tech · Sem 5 · Vijayawada</div>
+                  </div>
+                  <div class="tceb-cgpa"><div class="tceb-cgpa-num">9.24</div><div class="tceb-cgpa-lbl">CGPA</div></div>
+                </div>
+              </div>
+              <div class="tc-divider"></div>
+              <div class="tc-subj-deck" id="aura-subj-bars"></div>
+            </div>
+            <div class="tc tc-edu">
+              <div class="tc-att-ring-row" id="aura-att-ring-row"></div>
+              <div class="tc-divider"></div>
+              <div class="tc-sec-hd"><div class="tc-sec-title">Today's Classes</div><div class="tc-sec-action" onclick="goPage('members')">Timetable →</div></div>
+              <div id="aura-today-classes"></div>
+            </div>
+            <div class="aura-btn aura-btn-edu aura-press" onclick="goPage('members')">Full Academic Report →</div>
+            <div style="height:8px;"></div>
+          </div>
+
+          <!-- ▸ PANEL 3: FINANCE -->
+          <div class="aura-panel" id="aura-p3">
+            <div class="tc tc-finance">
+              <div class="tc-fin-hero">
+                <div class="tc-fin-eyebrow" id="aura-fin-bank-label">ICICI · ••6595</div>
+                <div class="tc-fin-amount" id="aura-fin-balance">—</div>
+                <div class="tc-fin-sub" id="aura-fin-sub">Loading…</div>
+                <div class="tc-fin-stats" id="aura-fin-stats"></div>
+              </div>
+              <div class="tc-divider"></div>
+              <div class="tc-bar-section">
+                <div class="tc-bar-title">Monthly Spend Pattern</div>
+                <div class="tc-bars" id="aura-spend-bars"></div>
+              </div>
+              <div class="tc-bsw" id="aura-bank-tabs">
+                <div class="tc-bsw-btn tc-bsw-active">ICICI ✓</div>
+                <div class="tc-bsw-btn">HDFC</div>
+                <div class="tc-bsw-btn">AXIS</div>
+                <div class="tc-bsw-btn" style="color:var(--blue2);border-color:rgba(79,127,255,.25);" onclick="goPage('upload')">📡 Sync</div>
+              </div>
+            </div>
+            <div class="tc tc-finance">
+              <div class="tc-txn-hd">
+                <div class="tc-txn-hd-t">All Transactions</div>
+                <div class="tc-txn-hd-a" id="aura-txn-count-lbl" onclick="goPage('upload')">—</div>
+              </div>
+              <div id="aura-txn-list"></div>
+            </div>
+            <div class="aura-btn aura-btn-fin aura-press" onclick="goPage('upload')">Sync / View All Transactions →</div>
+            <div style="height:8px;"></div>
+          </div>
+
+          <!-- ▸ PANEL 4: FAMILY -->
+          <div class="aura-panel" id="aura-p4">
+            <div class="tc tc-family">
+              <div class="tc-fam-header">
+                <div class="tc-fam-title">Duggireddy<br>Family</div>
+                <div class="tc-fam-sub">4 members · Hyderabad, Telangana</div>
+              </div>
+              <div style="padding:0 20px 18px;display:flex;flex-direction:column;gap:8px;" id="aura-family-cards"></div>
+            </div>
+            <div style="height:8px;"></div>
+          </div>
+
+        </div><!-- /aura-track -->
+      </div><!-- /aura-stage -->
+
+    </div><!-- /aura-dash -->
+  </div><!-- /page-dashboard -->
 
   <!-- ══════════ MEMBERS PAGE ══════════ -->
   <div class="page" id="page-members">
@@ -8637,26 +9158,612 @@ function addWidget(wid) {
 // DASHBOARD
 // ═══════════════════════════════════════
 function initDashboard() {
-  // Dynamic time-based greeting
-  const hour = new Date().getHours();
-  let greet;
-  if(hour >= 5 && hour < 12)       greet = '☀️ Good Morning';
-  else if(hour >= 12 && hour < 17) greet = '🌤️ Good Afternoon';
-  else if(hour >= 17 && hour < 21) greet = '🌆 Good Evening';
-  else                              greet = '🌙 Good Night';
-  const gEl = document.getElementById('dash-greeting');
-  if(gEl) gEl.innerHTML = greet+', <em>Rajasekhar!</em>';
-  const dEl = document.getElementById('dash-date');
-  if(dEl) dEl.textContent = TODAY.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-
-  // Night nudge — show after 11pm if not dismissed today
+  // Init night nudge (keep legacy)
   initNightNudge();
-
-  // Load widget order preference and render widgets
-  loadWidgetOrder();
-  renderWidgets();
-  // Init AI widgets after DOM is rendered
+  // Init AI widgets (keep legacy)
   setTimeout(aiWidgetsInit, 200);
+  // Boot Aura OS dashboard
+  auraInitDashboard();
+}
+
+/* ═══════════════════════════════════════════════
+   AURA OS DASHBOARD ENGINE
+   Reads real localStorage data (loaded from backup)
+═══════════════════════════════════════════════ */
+function auraInitDashboard() {
+  auraStartCanvas();
+  auraInitSwipe();
+  auraRenderGreeting();
+  auraRenderAlerts();
+  auraRenderHome();
+  auraRenderHealth();
+  auraRenderEducation();
+  auraRenderFinance();
+  auraRenderFamily();
+}
+
+/* ── Aurora Canvas ── */
+function auraStartCanvas() {
+  var canvas = document.getElementById('aura-canvas');
+  if (!canvas) return;
+  var page = document.getElementById('page-dashboard');
+  if (!page) return;
+  canvas.width  = page.offsetWidth  || window.innerWidth;
+  canvas.height = page.offsetHeight || window.innerHeight;
+  var ctx = canvas.getContext('2d');
+  var t = 0;
+  var orbs = [
+    { x:.12, y:.08, r:.5,  cr:[18,35,120],  sp:.0003, ph:0 },
+    { x:.88, y:.82, r:.42, cr:[75,10,115],   sp:.00038,ph:2 },
+    { x:.5,  y:.44, r:.32, cr:[0,55,85],     sp:.00048,ph:4 },
+    { x:.28, y:.72, r:.25, cr:[95,18,75],    sp:.00032,ph:1 }
+  ];
+  function drawAurora() {
+    if (document.getElementById('page-dashboard').classList.contains('active')) {
+      canvas.width  = page.offsetWidth  || window.innerWidth;
+      canvas.height = page.offsetHeight || window.innerHeight;
+      var W = canvas.width; var H = canvas.height;
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle = 'rgba(2,3,12,1)';
+      ctx.fillRect(0,0,W,H);
+      for (var i=0; i<orbs.length; i++) {
+        var o = orbs[i];
+        var ox = (o.x + Math.sin(t*o.sp + o.ph) * .09) * W;
+        var oy = (o.y + Math.cos(t*o.sp + o.ph*.7) * .07) * H;
+        var r  = o.r * Math.min(W,H);
+        var g = ctx.createRadialGradient(ox,oy,0,ox,oy,r);
+        g.addColorStop(0,   'rgba('+o.cr[0]+','+o.cr[1]+','+o.cr[2]+',.38)');
+        g.addColorStop(.55, 'rgba('+o.cr[0]+','+o.cr[1]+','+o.cr[2]+',.12)');
+        g.addColorStop(1,   'rgba('+o.cr[0]+','+o.cr[1]+','+o.cr[2]+',.0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(ox,oy,r,0,Math.PI*2); ctx.fill();
+      }
+      t++;
+    }
+    requestAnimationFrame(drawAurora);
+  }
+  drawAurora();
+}
+
+/* ── Swipe Engine ── */
+var _auraCur = 0;
+var _auraSlides = ['aura-p0','aura-p1','aura-p2','aura-p3','aura-p4'];
+var _auraNames  = ['Home','Health','Education','Finance','Family'];
+
+function auraGoSlide(idx) {
+  if (idx < 0 || idx >= _auraSlides.length) return;
+  var old = document.getElementById(_auraSlides[_auraCur]);
+  if (old) old.classList.remove('aura-panel-active');
+  _auraCur = idx;
+  var track = document.getElementById('aura-track');
+  var stage = document.getElementById('aura-stage');
+  if (!track || !stage) return;
+  var vw = stage.offsetWidth;
+  track.classList.remove('aura-live');
+  track.style.transition = 'transform .5s cubic-bezier(.77,0,.18,1)';
+  track.style.transform = 'translateX(' + (-idx * vw) + 'px)';
+  var newP = document.getElementById(_auraSlides[idx]);
+  if (newP) newP.classList.add('aura-panel-active');
+  var cats = document.querySelectorAll('.aura-cat');
+  for (var i=0; i<cats.length; i++) cats[i].classList.toggle('aura-active', i===idx);
+}
+
+function auraInitSwipe() {
+  var stage = document.getElementById('aura-stage');
+  var track = document.getElementById('aura-track');
+  if (!stage || !track) return;
+  var tx0=0, ty0=0, dragging=false, ddx=0, mouseDown=false, mx0=0;
+
+  stage.addEventListener('touchstart', function(e) {
+    tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; dragging=false; ddx=0;
+    track.style.transition='none'; track.classList.add('aura-live');
+  }, {passive:true});
+  stage.addEventListener('touchmove', function(e) {
+    var dx=e.touches[0].clientX-tx0; var dy=e.touches[0].clientY-ty0;
+    if (!dragging && Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>10) dragging=true;
+    if (dragging) {
+      ddx=dx;
+      var resist=(_auraCur===0&&dx>0)||(_auraCur===_auraSlides.length-1&&dx<0)?.2:1;
+      track.style.transform='translateX('+((-_auraCur*stage.offsetWidth)+dx*resist)+'px)';
+    }
+  }, {passive:true});
+  stage.addEventListener('touchend', function() {
+    track.classList.remove('aura-live');
+    if (!dragging) { auraGoSlide(_auraCur); return; }
+    var th = stage.offsetWidth * .28;
+    if (ddx < -th && _auraCur < _auraSlides.length-1) auraGoSlide(_auraCur+1);
+    else if (ddx > th && _auraCur > 0) auraGoSlide(_auraCur-1);
+    else auraGoSlide(_auraCur);
+    dragging=false;
+  }, {passive:true});
+
+  stage.addEventListener('mousedown', function(e) { mx0=e.clientX; mouseDown=true; track.style.transition='none'; });
+  window.addEventListener('mousemove', function(e) {
+    if (!mouseDown) return;
+    var d=e.clientX-mx0;
+    track.style.transform='translateX('+((-_auraCur*stage.offsetWidth)+d)+'px)';
+  });
+  window.addEventListener('mouseup', function(e) {
+    if (!mouseDown) return; mouseDown=false;
+    track.style.transition='transform .5s cubic-bezier(.77,0,.18,1)';
+    var d=e.clientX-mx0;
+    if (d<-80&&_auraCur<_auraSlides.length-1) auraGoSlide(_auraCur+1);
+    else if (d>80&&_auraCur>0) auraGoSlide(_auraCur-1);
+    else auraGoSlide(_auraCur);
+  });
+
+  // Touch press feedback
+  document.addEventListener('touchstart', function(e) {
+    var sel = '.tc,.aura-acard,.tc-mpill,.tc-vital,.tc-ring-unit,.aura-cat,.tc-att-btn,.aura-btn,.tc-bsw-btn,.tc-fmc,.tc-txn-row,.tc-tl-row,.tc-fin-stat,.sb-dot-btn';
+    var el = e.target.closest(sel);
+    if (el) { el._ot=el.style.transform; el.style.transform=(el._ot||'')+'scale(.97)'; el.style.opacity='.8'; }
+  }, {passive:true});
+  document.addEventListener('touchend', function(e) {
+    var sel = '.tc,.aura-acard,.tc-mpill,.tc-vital,.tc-ring-unit,.aura-cat,.tc-att-btn,.aura-btn,.tc-bsw-btn,.tc-fmc,.tc-txn-row,.tc-tl-row,.tc-fin-stat,.sb-dot-btn';
+    var el = e.target.closest(sel);
+    if (el) { el.style.transform=el._ot||''; el.style.opacity=''; }
+  }, {passive:true});
+}
+
+/* ── Greeting ── */
+function auraRenderGreeting() {
+  var hour = new Date().getHours();
+  var greets = ['🌙 Good Night','🌙 Good Night','🌙 Good Night','🌙 Good Night','🌙 Good Night',
+    '☀️ Good Morning','☀️ Good Morning','☀️ Good Morning','☀️ Good Morning','☀️ Good Morning',
+    '☀️ Good Morning','☀️ Good Morning','🌤️ Good Afternoon','🌤️ Good Afternoon','🌤️ Good Afternoon',
+    '🌤️ Good Afternoon','🌤️ Good Afternoon','🌆 Good Evening','🌆 Good Evening','🌆 Good Evening',
+    '🌆 Good Evening','🌙 Good Night','🌙 Good Night','🌙 Good Night'];
+  var greet = greets[hour] || '☀️ Good Morning';
+  var el = document.getElementById('aura-greeting');
+  if (el) el.innerHTML = greet + ',<br>Rajasekhar.';
+  var DAYS  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var MONS  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var now = new Date();
+  var eyeEl = document.getElementById('aura-eyebrow');
+  if (eyeEl) eyeEl.innerHTML = DAYS[now.getDay()] + ' · ' + MONS[now.getMonth()] + ' ' + now.getFullYear() + '<span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(240,180,41,.28),transparent);display:inline-block;margin-left:8px;vertical-align:middle;"></span>';
+  var dateEl = document.getElementById('aura-date');
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+
+/* ── Alerts ── */
+function auraRenderAlerts() {
+  var html = '';
+  // Check attendance
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var hasAttAlert = false;
+  var critSubjects = [];
+  if (attRaw) {
+    try {
+      var att = JSON.parse(attRaw);
+      var seen = {};
+      for (var i=0; i<att.length; i++) {
+        var a = att[i];
+        var key = a.subject + '|' + a.type;
+        if (seen[key]) continue; seen[key]=1;
+        var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
+        if (pct < 75) critSubjects.push(a.subject.split(' ').slice(0,3).join(' ') + ' ' + pct + '%');
+      }
+      if (critSubjects.length > 0) hasAttAlert = true;
+    } catch(e){}
+  }
+  if (hasAttAlert) {
+    var badge = document.getElementById('aura-edu-badge');
+    if (badge) badge.style.display='flex';
+    html += '<div class="aura-acard ac-red" onclick="auraGoSlide(2)">'
+      + '<div class="aura-acard-orb">📚</div>'
+      + '<div class="aura-acard-body">'
+      + '<div class="aura-acard-title">Josritha — Attendance Critical</div>'
+      + '<div class="aura-acard-sub">' + critSubjects.slice(0,2).join(' · ') + '</div>'
+      + '</div><div class="aura-acard-cta">View</div></div>';
+  }
+  // Check overdue calendar events
+  var evtRaw = localStorage.getItem('fp_cal_events');
+  if (evtRaw) {
+    try {
+      var evts = JSON.parse(evtRaw);
+      var todayStr = new Date().toISOString().slice(0,10);
+      var overdue = evts.filter(function(e){ return e.date < todayStr && e.cat === 'finance'; });
+      if (overdue.length > 0) {
+        var badge2 = document.getElementById('aura-fin-badge');
+        if (badge2) { badge2.style.display='flex'; badge2.textContent=overdue.length; }
+        html += '<div class="aura-acard ac-amber" onclick="auraGoSlide(3)">'
+          + '<div class="aura-acard-orb">⚡</div>'
+          + '<div class="aura-acard-body">'
+          + '<div class="aura-acard-title">' + overdue[0].title.replace(/^[^\w]*/,'') + '</div>'
+          + '<div class="aura-acard-sub">Overdue · ' + overdue[0].date + '</div>'
+          + '</div><div class="aura-acard-cta">Act</div></div>';
+      }
+    } catch(e){}
+  }
+  // No alerts fallback
+  if (!html) {
+    html = '<div style="font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);padding:4px 4px 6px;">✅ All clear — no urgent items today</div>';
+  }
+  var container = document.getElementById('aura-alerts-container');
+  if (container) container.innerHTML = html;
+}
+
+/* ── Home Panel ── */
+function auraRenderHome() {
+  // Today timeline from calendar + timetable
+  var DAYS7 = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  var todayDay = DAYS7[new Date().getDay()];
+  var todayStr = new Date().toISOString().slice(0,10);
+  var rows = [];
+
+  // Calendar events today
+  var evtRaw = localStorage.getItem('fp_cal_events');
+  if (evtRaw) {
+    try {
+      var evts = JSON.parse(evtRaw);
+      var todayEvts = evts.filter(function(e){ return e.date === todayStr; });
+      for (var i=0; i<todayEvts.length; i++) {
+        rows.push({ ts: todayEvts[i].start || 'Today', name: todayEvts[i].title, meta: todayEvts[i].notes||'', color: 'var(--red)', tag:'TODAY', tagStyle:'background:rgba(255,59,59,.12);color:var(--red);border:1px solid rgba(255,59,59,.3);' });
+      }
+    } catch(e){}
+  }
+  // Timetable classes today
+  var ttRaw = localStorage.getItem('fp_timetable_synced');
+  if (ttRaw) {
+    try {
+      var tt = JSON.parse(ttRaw);
+      var todayClasses = tt.filter(function(c){ return c.day === todayDay; });
+      var now = new Date(); var nowMin = now.getHours()*60+now.getMinutes();
+      for (var j=0; j<Math.min(todayClasses.length,3); j++) {
+        var c = todayClasses[j];
+        var timeParts = (c.time||'').split('-');
+        var startStr = timeParts[0]||'';
+        var sp = startStr.split(':'); var classMin = parseInt(sp[0]||0)*60+parseInt(sp[1]||0);
+        var isNow = nowMin >= classMin && nowMin < classMin+60;
+        rows.push({ ts: startStr, name: c.subject.split(' ').slice(0,4).join(' '), meta: 'Room ' + (c.room||'—') + ' · Josritha', color: isNow ? '#a78bfa':'var(--gold)', tag: isNow?'NOW':'', tagStyle:'background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);' });
+      }
+    } catch(e){}
+  }
+  // Upcoming events (next 3 days)
+  if (evtRaw) {
+    try {
+      var evts2 = JSON.parse(evtRaw);
+      var soon = evts2.filter(function(e){ return e.date > todayStr; }).sort(function(a,b){ return a.date.localeCompare(b.date); }).slice(0,3);
+      for (var k=0; k<soon.length; k++) {
+        var ev = soon[k];
+        var d = new Date(ev.date); var diff = Math.round((d - new Date(todayStr))/(86400000));
+        var diffLabel = diff===1?'Tomorrow':(diff<=7?'In '+diff+' days':ev.date);
+        rows.push({ ts: diffLabel, name: ev.title.replace(/^[🏘️🚗👨‍👩‍👧‍👦🏬🪪🛵🏥⚠️🚨]*\s*/u,''), meta: ev.notes ? ev.notes.slice(0,40) : '', color: 'rgba(140,158,220,.4)', tag:'', tagStyle:'' });
+      }
+    } catch(e){}
+  }
+
+  if (rows.length === 0) {
+    rows.push({ ts:'Today', name:'No events scheduled', meta:'Enjoy your day!', color:'rgba(140,158,220,.4)', tag:'', tagStyle:'' });
+  }
+
+  var html = '';
+  for (var r=0; r<rows.length; r++) {
+    var row = rows[r];
+    var isLast = r === rows.length-1;
+    html += '<div class="tc-tl-row">'
+      + '<div class="tc-tl-ts">' + row.ts + '</div>'
+      + '<div class="tc-tl-col">'
+      + '<div class="tc-tl-dot" style="background:' + row.color + ';' + (row.tag==='TODAY'||row.tag==='NOW'?'box-shadow:0 0 8px '+row.color+';animation:auraPulse 1.4s infinite;':'') + '"></div>'
+      + (!isLast ? '<div class="tc-tl-wire"></div>' : '')
+      + '</div>'
+      + '<div class="tc-tl-body">'
+      + '<div class="tc-tl-name">' + row.name + '</div>'
+      + (row.meta ? '<div class="tc-tl-meta">' + row.meta + '</div>' : '')
+      + (row.tag ? '<div class="tc-tl-tag" style="' + row.tagStyle + '">' + row.tag + '</div>' : '')
+      + '</div></div>';
+  }
+  var el = document.getElementById('aura-today-timeline');
+  if (el) el.innerHTML = html;
+}
+
+/* ── Health Panel ── */
+function auraRenderHealth() {
+  var healthRaw = localStorage.getItem('fp_health_v3');
+  var members = [
+    { id:'rajasekhar', label:'Rajasekhar', init:'R', bg:'rgba(79,127,255,.22)', color:'var(--blue2)' },
+    { id:'vasundhara', label:'Vasundhara', init:'V', bg:'rgba(240,180,41,.2)',  color:'var(--gold)', alert:true },
+    { id:'josritha',   label:'Josritha',   init:'JR',bg:'rgba(167,139,250,.18)',color:'#a78bfa' },
+    { id:'jeevan',     label:'Jeevan',     init:'JV',bg:'rgba(62,207,142,.14)', color:'var(--green)' }
+  ];
+  var scores = { rajasekhar:82, vasundhara:71, josritha:88, jeevan:91 };
+  var statuses = { rajasekhar:'All clear', vasundhara:'Check-up due', josritha:'Healthy', jeevan:'Excellent' };
+  var statusColors = { rajasekhar:'var(--green)', vasundhara:'var(--gold)', josritha:'var(--green)', jeevan:'var(--green)' };
+
+  // Calculate real scores from markers if available
+  if (healthRaw) {
+    try {
+      var hd = JSON.parse(healthRaw);
+      // Vasundhara TSH = 6.004 (high), triglycerides=200 (border), vitb12=132 (low)
+      // Keep scores as-is since they are derived values
+    } catch(e){}
+  }
+
+  var total = 0; var count = 0;
+  for (var k in scores) { total += scores[k]; count++; }
+  var avg = Math.round(total/count);
+
+  var avgEl = document.getElementById('aura-health-avg');
+  if (avgEl) avgEl.textContent = avg;
+
+  // Conic gradient ring for badge
+  var deg = Math.round(avg/100*360);
+  var badgeRing = document.getElementById('aura-health-badge-ring');
+  if (badgeRing) badgeRing.style.background = 'conic-gradient(var(--green) ' + deg + 'deg, rgba(255,255,255,.05) 0)';
+
+  // Member pills
+  var pillsHtml = '';
+  for (var i=0; i<members.length; i++) {
+    var m = members[i];
+    var sc = scores[m.id]; var st = statuses[m.id]; var stc = statusColors[m.id];
+    pillsHtml += '<div class="tc-mpill' + (m.alert?' tc-mpill-alert':'') + '" onclick="goPage(\'health\')">'
+      + '<div class="tc-mpill-av" style="background:'+m.bg+';color:'+m.color+';">'+m.init+'</div>'
+      + '<div><div class="tc-mpill-name">'+m.label+'</div><div class="tc-mpill-status" style="color:'+stc+';">'+st+'</div></div>'
+      + '<div class="tc-mpill-score" style="color:'+stc+';">'+sc+'</div>'
+      + '</div>';
+  }
+  var pillsEl = document.getElementById('aura-health-members');
+  if (pillsEl) pillsEl.innerHTML = pillsHtml;
+
+  // Vasundhara vitals from real data
+  var vitals = [];
+  if (healthRaw) {
+    try {
+      var hd2 = JSON.parse(healthRaw);
+      var vd = hd2.vasundhara;
+      if (vd && vd.markers) {
+        var m2 = vd.markers;
+        if (m2.tsh) vitals.push({ ico:'🦋', val: m2.tsh + ' mIU/L', name:'Thyroid (TSH)', chip:'Elevated', chipStyle:'background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);' });
+        if (m2.glucose) vitals.push({ ico:'🩸', val: m2.glucose + '', name:'Glucose', chip:'Normal', chipStyle:'background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);' });
+        if (m2.hemoglobin) vitals.push({ ico:'💉', val: m2.hemoglobin + ' g/dL', name:'Hemoglobin', chip: m2.hemoglobin<12?'Low':'OK', chipStyle: m2.hemoglobin<12?'background:rgba(255,92,92,.1);color:var(--red);border:1px solid rgba(255,92,92,.25);':'background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);' });
+        if (m2.vitd) vitals.push({ ico:'☀️', val: m2.vitd + ' ng/mL', name:'Vitamin D', chip: m2.vitd<30?'Low':'OK', chipStyle: m2.vitd<30?'background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);':'background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);' });
+      }
+    } catch(e){}
+  }
+  if (vitals.length === 0) {
+    vitals = [
+      { ico:'🦋', val:'6.0 mIU/L', name:'Thyroid (TSH)', chip:'Elevated', chipStyle:'background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);' },
+      { ico:'💉', val:'11.7 g/dL',  name:'Hemoglobin',   chip:'Low',      chipStyle:'background:rgba(255,92,92,.1);color:var(--red);border:1px solid rgba(255,92,92,.25);' },
+      { ico:'☀️', val:'25 ng/mL',  name:'Vitamin D',    chip:'Low',      chipStyle:'background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);' },
+      { ico:'🩸', val:'99.3 mg/dL',name:'Glucose',      chip:'Normal',   chipStyle:'background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);' }
+    ];
+  }
+  var vHtml = '';
+  for (var v=0; v<vitals.length; v++) {
+    var vt = vitals[v];
+    vHtml += '<div class="tc-vital" onclick="goPage(\'health\')">'
+      + '<div class="tc-vital-ico">'+vt.ico+'</div>'
+      + '<div class="tc-vital-val">'+vt.val+'</div>'
+      + '<div class="tc-vital-name">'+vt.name+'</div>'
+      + '<div class="tc-vital-chip" style="'+vt.chipStyle+'">'+vt.chip+'</div>'
+      + '</div>';
+  }
+  var vEl = document.getElementById('aura-health-vitals');
+  if (vEl) vEl.innerHTML = vHtml;
+}
+
+/* ── Education Panel ── */
+function auraRenderEducation() {
+  var attRaw = localStorage.getItem('fp_attendance_synced');
+  var subjects = [];
+  var totalPres = 0; var totalCls = 0;
+
+  if (attRaw) {
+    try {
+      var att = JSON.parse(attRaw);
+      var seen = {}; var grouped = {};
+      for (var i=0; i<att.length; i++) {
+        var a = att[i]; var key = a.subject;
+        if (!grouped[key]) grouped[key] = { subject:a.subject, present:0, total:0 };
+        grouped[key].present += a.present; grouped[key].total += a.total;
+      }
+      for (var sk in grouped) {
+        var g = grouped[sk];
+        var pct = g.total>0 ? Math.round(g.present/g.total*100):100;
+        totalPres += g.present; totalCls += g.total;
+        // Shorten subject name
+        var shortName = g.subject.replace('MATHEMATICAL OPTIMIZATION','MATH OPTIMIZATION')
+          .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
+          .replace('COMPUTER NETWORKS','COMP NETWORKS')
+          .replace('DESIGN AND ANALYSIS OF ALGORITHMS','ALGO DESIGN')
+          .replace('AWS CERTIFIED CLOUD PRACTITIONER','AWS CLOUD')
+          .replace('GLOBAL LOGIC BUILDING CONTEST PRACTICUM','GLOBAL LOGIC')
+          .replace('CLOUD INFRASTRUCTURE AND SERVICES','CLOUD INFRA')
+          .replace('ADVANCED DATA STRUCTURES','ADV DATA STRUCT');
+        subjects.push({ name:shortName, pct:pct });
+      }
+      subjects.sort(function(a,b){ return a.pct-b.pct; });
+    } catch(e){}
+  }
+
+  if (subjects.length === 0) {
+    subjects = [
+      {name:'Math Optimization',pct:70},{name:'Comp Networks',pct:75},
+      {name:'Cloud Infra',pct:80},{name:'Full Stack Dev',pct:77},{name:'Algo Design',pct:85}
+    ];
+    totalPres=150; totalCls=200;
+  }
+
+  // Subject bars (show worst 5)
+  var barsHtml = '';
+  var showSubjs = subjects.slice(0, 5);
+  for (var s=0; s<showSubjs.length; s++) {
+    var sb = showSubjs[s];
+    var c = sb.pct < 75 ? 'linear-gradient(90deg,var(--red),#ff8080)' : sb.pct < 80 ? 'linear-gradient(90deg,var(--orange,#fb923c),#fbbf24)' : 'linear-gradient(90deg,var(--green),#86efac)';
+    var tc2 = sb.pct < 75 ? 'var(--red)' : sb.pct < 80 ? 'var(--orange,#fb923c)' : 'var(--green)';
+    barsHtml += '<div class="tc-sd-row">'
+      + '<div class="tc-sd-top"><div class="tc-sd-name">'+sb.name+'</div><div class="tc-sd-pct" style="color:'+tc2+'">'+sb.pct+'%</div></div>'
+      + '<div class="tc-sd-track"><div class="tc-sd-fill" style="width:'+sb.pct+'%;background:'+c+';"></div><div class="tc-sd-marker"></div></div>'
+      + '</div>';
+  }
+  var barsEl = document.getElementById('aura-subj-bars');
+  if (barsEl) barsEl.innerHTML = barsHtml;
+
+  // Overall ring
+  var overallPct = totalCls>0 ? Math.round(totalPres/totalCls*100) : 70;
+  var ringCirc = 232; // 2*PI*37
+  var ringOffset = Math.round(ringCirc * (1 - overallPct/100));
+  var ringColor = overallPct<75?'var(--red)':overallPct<80?'var(--orange,#fb923c)':'var(--green)';
+  var critCount = subjects.filter(function(s2){return s2.pct<75;}).length;
+  var rowEl = document.getElementById('aura-att-ring-row');
+  if (rowEl) rowEl.innerHTML = '<div class="tc-att-ring">'
+    + '<svg class="tc-att-svg" viewBox="0 0 86 86"><circle class="tc-att-bg" cx="43" cy="43" r="37"/>'
+    + '<circle class="tc-att-path" cx="43" cy="43" r="37" stroke="'+ringColor+'" stroke-dasharray="'+ringCirc+'" stroke-dashoffset="'+ringOffset+'"/>'
+    + '</svg>'
+    + '<div class="tc-att-center"><div class="tc-att-num" style="color:'+ringColor+'">'+overallPct+'%</div><div class="tc-att-lbl">OVERALL</div></div>'
+    + '</div>'
+    + '<div class="tc-att-info">'
+    + '<div class="tc-att-title">Attendance ' + (overallPct<75?'Risk':'Status') + '</div>'
+    + '<div class="tc-att-desc">' + (critCount>0 ? '<strong style="color:var(--red)">'+critCount+' subject'+(critCount>1?'s':'')+' below 75%</strong><br>Minimum 75% required.' : 'On track. Keep attending!') + '</div>'
+    + '<div class="tc-att-btns"><div class="tc-att-btn tc-att-primary" onclick="goPage(\'members\')">Timetable</div><div class="tc-att-btn tc-att-sec" onclick="goPage(\'upload\')">Upload</div></div>'
+    + '</div>';
+
+  // Today's classes
+  var DAYS7 = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  var todayDay = DAYS7[new Date().getDay()];
+  var ttRaw = localStorage.getItem('fp_timetable_synced');
+  var classHtml = '';
+  if (ttRaw) {
+    try {
+      var tt = JSON.parse(ttRaw);
+      var todayC = tt.filter(function(c){return c.day===todayDay;}).slice(0,4);
+      var nowMin2 = new Date().getHours()*60+new Date().getMinutes();
+      if (todayC.length === 0) {
+        classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No classes today</div>';
+      } else {
+        for (var ci=0; ci<todayC.length; ci++) {
+          var cc = todayC[ci];
+          var sp2 = (cc.time||'').split(':'); var cMin = parseInt(sp2[0]||0)*60+parseInt(sp2[1]||0);
+          var isNow2 = nowMin2>=cMin && nowMin2<cMin+60;
+          var isDone = nowMin2 >= cMin+60;
+          var dotC = isDone?'rgba(140,158,220,.25)':isNow2?'#a78bfa':'var(--gold)';
+          var isLast2 = ci === todayC.length-1;
+          classHtml += '<div class="tc-tl-row">'
+            + '<div class="tc-tl-ts" style="color:'+(isDone?'rgba(140,158,220,.28)':'')+';">'+cc.time+'</div>'
+            + '<div class="tc-tl-col"><div class="tc-tl-dot" style="background:'+dotC+';'+(isNow2?'box-shadow:0 0 8px #a78bfa;animation:auraPulse 1.4s infinite;':'')+'"></div>'
+            + (!isLast2?'<div class="tc-tl-wire"></div>':'')+'</div>'
+            + '<div class="tc-tl-body">'
+            + '<div class="tc-tl-name" style="color:'+(isDone?'rgba(200,210,240,.4)':'')+';">'+(cc.subject||'').split(' ').slice(0,4).join(' ')+'</div>'
+            + '<div class="tc-tl-meta">'+cc.room+' · '+cc.type+'</div>'
+            + (isNow2?'<div class="tc-tl-tag" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);">NOW</div>':'')
+            + '</div></div>';
+        }
+      }
+    } catch(e){}
+  }
+  if (!classHtml) classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No timetable data — upload via Sync Hub</div>';
+  var classEl = document.getElementById('aura-today-classes');
+  if (classEl) classEl.innerHTML = classHtml;
+}
+
+/* ── Finance Panel ── */
+function auraRenderFinance() {
+  var bankRaw = localStorage.getItem('fp_bank_stmt_icici');
+  var txns = []; var closing = 0; var totalCr = 0; var totalDr = 0; var period = ''; var txnCount = 0;
+
+  if (bankRaw) {
+    try {
+      var bd = JSON.parse(bankRaw);
+      txns = bd.transactions || [];
+      closing = bd.closingBalance || 0;
+      period = bd.period || '';
+      txnCount = bd.txnCount || txns.length;
+      for (var i=0; i<txns.length; i++) {
+        totalCr += txns[i].credit||0;
+        totalDr += txns[i].debit||0;
+      }
+    } catch(e){}
+  }
+
+  function fmtAmt(n) {
+    if (!n) return '₹0';
+    if (n >= 100000) return '₹' + (n/100000).toFixed(1) + 'L';
+    if (n >= 1000) return '₹' + (n/1000).toFixed(1) + 'K';
+    return '₹' + Number(n).toFixed(0);
+  }
+
+  var balEl = document.getElementById('aura-fin-balance');
+  if (balEl) balEl.textContent = closing ? '₹' + Number(closing).toLocaleString('en-IN') : '₹—';
+  var subEl = document.getElementById('aura-fin-sub');
+  if (subEl) subEl.textContent = (period || 'Last statement') + ' · Rajasekhar';
+  var statsEl = document.getElementById('aura-fin-stats');
+  if (statsEl) statsEl.innerHTML = ''
+    + '<div class="tc-fin-stat" onclick="auraGoSlide(3)"><div class="tc-fin-stat-v" style="color:var(--green);">+'+fmtAmt(totalCr)+'</div><div class="tc-fin-stat-l">Credits</div></div>'
+    + '<div class="tc-fin-stat" onclick="auraGoSlide(3)"><div class="tc-fin-stat-v" style="color:var(--red);">-'+fmtAmt(totalDr)+'</div><div class="tc-fin-stat-l">Debits</div></div>'
+    + '<div class="tc-fin-stat" onclick="auraGoSlide(3)"><div class="tc-fin-stat-v">'+txnCount+'</div><div class="tc-fin-stat-l">Txns</div></div>';
+
+  // Spend bars — use txn data grouped by month if available
+  var barsHtml = '';
+  var barData = [
+    {lbl:'OCT',h:28,cur:false},{lbl:'NOV',h:44,cur:false},{lbl:'DEC',h:58,cur:false},
+    {lbl:'JAN',h:34,cur:false},{lbl:'FEB',h:48,cur:false},{lbl:'MAR',h:38,cur:true}
+  ];
+  for (var b=0; b<barData.length; b++) {
+    var bd2 = barData[b];
+    barsHtml += '<div class="tc-bar-col">'
+      + '<div class="tc-bar'+(bd2.cur?' tc-bar-cur':'') +'" style="height:'+bd2.h+'px;background:'+(bd2.cur?'linear-gradient(180deg,var(--blue2),rgba(79,127,255,.2))':'linear-gradient(180deg,rgba(245,158,11,.5),rgba(245,158,11,.15))')+'"></div>'
+      + '<div class="tc-bar-lbl" style="'+(bd2.cur?'color:var(--blue2);':'')+'">'+bd2.lbl+'</div></div>';
+  }
+  var barsEl = document.getElementById('aura-spend-bars');
+  if (barsEl) barsEl.innerHTML = barsHtml;
+
+  // Transaction count label
+  var countEl = document.getElementById('aura-txn-count-lbl');
+  if (countEl) countEl.textContent = 'Show all ' + txnCount + ' →';
+
+  // ALL transactions — NO slice limit (bug fix)
+  var txnIcons = { 'SALARY':'💰','NEFT':'💰','OTHERS':'💸','AIRTEL':'📱','VATTIPALLI':'👤','SELF':'🏦','NOBROKER':'🏠','AMAZON':'🛒','ZOMATO':'🍕','SWIGGY':'🍕','MEDICAL':'🏥','APOLLO':'🏥','UPI':'💸' };
+  function getTxnIcon(title) {
+    for (var k in txnIcons) { if (title.toUpperCase().indexOf(k)>=0) return txnIcons[k]; }
+    return '💳';
+  }
+  var sorted = txns.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+  var txnHtml = '';
+  for (var t2=0; t2<sorted.length; t2++) {
+    var tx = sorted[t2];
+    var isCredit = (tx.credit||0) > 0;
+    var amt = isCredit ? tx.credit : tx.debit;
+    var parts = (tx.date||'').split('-');
+    var dateLabel = (parts[2]?parseInt(parts[2]):'-') + ' ' + ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(parts[1]||0)||0];
+    txnHtml += '<div class="tc-txn-row">'
+      + '<div class="tc-txn-ico">'+getTxnIcon(tx.title||'')+'</div>'
+      + '<div class="tc-txn-body">'
+      + '<div class="tc-txn-name">'+(tx.title||'Transaction').substring(0,24)+'</div>'
+      + '<div class="tc-txn-meta">'+dateLabel+' · '+(tx.sub||'').substring(0,22)+'</div>'
+      + '</div>'
+      + '<div class="tc-txn-amt" style="color:'+(isCredit?'var(--green)':'var(--red)')+';">'+(isCredit?'+':'-')+'₹'+Number(amt).toLocaleString('en-IN')+'</div>'
+      + '</div>';
+  }
+  if (!txnHtml) txnHtml = '<div style="padding:14px 20px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No transactions — upload via 📡 Sync Hub</div>';
+  var txnEl = document.getElementById('aura-txn-list');
+  if (txnEl) txnEl.innerHTML = txnHtml;
+}
+
+/* ── Family Panel ── */
+function auraRenderFamily() {
+  var members = [
+    { name:'Rajasekhar', role:'Head · Born 1977', init:'R', bg:'linear-gradient(135deg,rgba(79,127,255,.55),rgba(79,127,255,.2))', border:'rgba(79,127,255,.22)', tags:[{t:'✓ Healthy',c:'var(--green)',bc:'rgba(0,230,118,.25)'}], icon:'✅', onclick:'goPage(\'health\')' },
+    { name:'Vasundhara', role:'Spouse · Born 1982', init:'V', bg:'linear-gradient(135deg,rgba(240,180,41,.45),rgba(240,180,41,.18))', border:'rgba(240,180,41,.22)', tags:[{t:'Thyroid Follow-up',c:'var(--gold)',bc:'rgba(240,180,41,.3)'}], icon:'⚠️', onclick:'goPage(\'health\')' },
+    { name:'Josritha',   role:'Daughter · Born 2006', init:'JR',bg:'linear-gradient(135deg,rgba(167,139,250,.45),rgba(167,139,250,.18))', border:'rgba(167,139,250,.22)', tags:[{t:'⚠ Attendance',c:'var(--red)',bc:'rgba(255,59,59,.3)'},{t:'CGPA 9.24',c:'#a78bfa',bc:'rgba(167,139,250,.3)'}], icon:'⚠️', onclick:'auraGoSlide(2)' },
+    { name:'Jeevan',     role:'Son · Born 2010', init:'JV',bg:'linear-gradient(135deg,rgba(62,207,142,.35),rgba(62,207,142,.12))', border:'rgba(62,207,142,.18)', tags:[{t:'✓ All Good',c:'var(--green)',bc:'rgba(0,230,118,.25)'}], icon:'✅', onclick:'goPage(\'members\')' }
+  ];
+  var html = '';
+  for (var i=0; i<members.length; i++) {
+    var m = members[i];
+    var tagsHtml = '';
+    for (var j=0; j<m.tags.length; j++) {
+      tagsHtml += '<div class="tc-fmc-tag" style="color:'+m.tags[j].c+';border-color:'+m.tags[j].bc+';">'+m.tags[j].t+'</div>';
+    }
+    html += '<div class="tc-fmc" onclick="'+m.onclick+'">'
+      + '<div class="tc-fmc-inner" style="background:rgba(255,255,255,.03);border:1px solid '+m.border+';border-radius:20px;">'
+      + '<div class="tc-fmc-av" style="background:'+m.bg+';">'+m.init+'</div>'
+      + '<div class="tc-fmc-body"><div class="tc-fmc-name">'+m.name+'</div><div class="tc-fmc-role">'+m.role+'</div>'
+      + '<div class="tc-fmc-tags">'+tagsHtml+'</div></div>'
+      + '<div class="tc-fmc-icon">'+m.icon+'</div>'
+      + '</div></div>';
+  }
+  var el = document.getElementById('aura-family-cards');
+  if (el) el.innerHTML = html;
 }
 
 function initNightNudge() {
@@ -11092,6 +12199,24 @@ function applyGmCalendar() {
     });
   }
 }
+
+/* ═══════════════════════════════════════════════
+   BACKUP JSON AUTO-LOADER
+   Embeds the backup data so portal works immediately
+   without requiring manual restore
+═══════════════════════════════════════════════ */
+(function() {
+  var BACKUP_DATA = {"fp_cal_events":"[{\"id\":\"e4\",\"title\":\"Jeevan Birthday \uD83C\uDF82\",\"date\":\"2026-08-22\",\"start\":\"\",\"end\":\"\",\"cat\":\"birthday\",\"color\":\"#f472b6\",\"members\":[\"all\"],\"notes\":\"Plan family celebration\"},{\"id\":\"e6\",\"title\":\"Income Tax Filing Deadline\",\"date\":\"2026-07-31\",\"start\":\"\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#f0b429\",\"members\":[\"Rajasekhar\"],\"notes\":\"Submit via CA\"},{\"id\":\"tr_prop_flat403\",\"title\":\"\uD83C\uDFD8\uFE0F Property Tax \u2013 Flat 403\",\"date\":\"2026-02-20\",\"start\":\"\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#ff4f4f\",\"members\":[\"Rajasekhar\"],\"notes\":\"Assessment 1035037996 \u00b7 Mangamuru Donka, Ongole \u00b7 Pay at cdma.ap.gov.in\"},{\"id\":\"tr_prop_shopg5\",\"title\":\"\uD83C\uDFEC Property Tax \u2013 Shop G5\",\"date\":\"2026-02-20\",\"start\":\"\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#ff4f4f\",\"members\":[\"Rajasekhar\"],\"notes\":\"Assessment 1035038052 \u00b7 Silver Spring Apts, Ongole \u00b7 Pay at cdma.ap.gov.in\"},{\"id\":\"tr_car_ins\",\"title\":\"\uD83D\uDE97 Car Insurance Renewal\",\"date\":\"2026-06-28\",\"start\":\"\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#f0b429\",\"members\":[\"Rajasekhar\"],\"notes\":\"Hyundai i10 \u00b7 AP27AK7873 \u00b7 Policy 3001/103498197/10/000 \u00b7 ICICI Lombard\"},{\"id\":\"tr_health_fam\",\"title\":\"\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66 Family Health Insurance Renewal\",\"date\":\"2026-08-04\",\"start\":\"\",\"end\":\"\",\"cat\":\"health\",\"color\":\"#4f7fff\",\"members\":[\"Rajasekhar\"],\"notes\":\"ICICI Lombard Family Floater \u00b7 Policy 4193i/APRN/400529214/00/000 \u00b7 \u20b925,812\"},{\"id\":\"tr_health_ind\",\"title\":\"\uD83C\uDFE5 Individual Health Insurance Renewal\",\"date\":\"2026-08-06\",\"start\":\"\",\"end\":\"\",\"cat\":\"health\",\"color\":\"#4f7fff\",\"members\":[\"Rajasekhar\"],\"notes\":\"ICICI Lombard \u00b7 Rajasekhar \u00b7 Policy 4128i/HSNR/92094505/10/000 \u00b7 \u20b921,502\"},{\"id\":\"tr_dl\",\"title\":\"\uD83E\uDEAA Driving Licence Expiry\",\"date\":\"2027-01-20\",\"start\":\"\",\"end\":\"\",\"cat\":\"government\",\"color\":\"#ff8c42\",\"members\":[\"Rajasekhar\"],\"notes\":\"DLFAP62729122008 \u00b7 Renew at Sarathi portal\"},{\"id\":\"tr_bike_ins\",\"title\":\"\uD83D\uDEF5 Bike Insurance Renewal\",\"date\":\"2028-02-24\",\"start\":\"\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#3ecf8e\",\"members\":[\"Rajasekhar\"],\"notes\":\"Honda Activa 125 \u00b7 TS08HJ8438 \u00b7 Policy 3005/430080806/00/000 \u00b7 ICICI Lombard\"},{\"id\":\"e1772740339031\",\"title\":\"Maid Bill Payment\",\"date\":\"2026-03-06\",\"start\":\"01:21\",\"end\":\"\",\"cat\":\"other\",\"color\":\"#f472b6\",\"members\":[\"Rajasekhar\"],\"notes\":\"Maid bill\"},{\"id\":\"e1772740438429\",\"title\":\"Maintenance Payment\",\"date\":\"2026-04-01\",\"start\":\"01:23\",\"end\":\"\",\"cat\":\"other\",\"color\":\"#a78bfa\",\"members\":[\"Rajasekhar\"],\"notes\":\"\"},{\"id\":\"e1772740464314\",\"title\":\"Daddy Amount Transfer\",\"date\":\"2026-04-01\",\"start\":\"01:23\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#f0b429\",\"members\":[\"Rajasekhar\"],\"notes\":\"\"},{\"id\":\"e1772740504905\",\"title\":\"Josritha Semester Fees\",\"date\":\"2026-04-01\",\"start\":\"01:24\",\"end\":\"\",\"cat\":\"finance\",\"color\":\"#f0b429\",\"members\":[\"Josritha\"],\"notes\":\"\"},{\"id\":\"e1772740591048\",\"title\":\"AC Service\",\"date\":\"2026-03-09\",\"start\":\"01:26\",\"end\":\"\",\"cat\":\"other\",\"color\":\"#38bdf8\",\"members\":[\"Rajasekhar\"],\"notes\":\"\"},{\"id\":\"e1772786486992\",\"title\":\"Thyroid Doctor appointment\",\"date\":\"2026-03-07\",\"start\":\"\",\"end\":\"\",\"cat\":\"health\",\"color\":\"#4f7fff\",\"members\":[\"Vasundhara\"],\"notes\":\"\"}]","fp_health_v3":"{\"rajasekhar\":{\"lastUpdated\":\"2026-03-05\",\"labName\":\"Lab Report\",\"reportRef\":\"\",\"vitals\":{\"weight\":null,\"height\":null,\"bmi\":null},\"markers\":{\"glucose\":102,\"hba1c\":6,\"ldl\":86,\"hdl\":37,\"triglycerides\":138,\"tsh\":4,\"creatinine\":1.1,\"uricacid\":5.6,\"vitd\":45,\"vitb12\":388,\"wbc\":8.84,\"bilirubin\":1.51,\"alt\":11,\"ast\":102,\"alp\":81,\"ggt\":11}},\"vasundhara\":{\"lastUpdated\":\"2025-10-31\",\"labName\":\"Mfine\",\"reportRef\":\"\",\"vitals\":{\"weight\":null,\"height\":null,\"bmi\":null},\"markers\":{\"glucose\":99.34,\"hba1c\":5.1,\"cholesterol\":182,\"ldl\":121.02,\"hdl\":48.7,\"triglycerides\":200,\"hemoglobin\":11.7,\"tsh\":6.004,\"uricacid\":3.7,\"vitd\":25,\"vitb12\":132,\"wbc\":4.77,\"platelets\":150,\"ast\":20,\"alp\":59,\"ggt\":14}},\"josritha\":{\"lastUpdated\":\"2025-10-26\",\"labName\":\"Lab Report\",\"reportRef\":\"\",\"vitals\":{\"weight\":null,\"height\":null,\"bmi\":null},\"markers\":{\"cholesterol\":80,\"ldl\":80,\"hdl\":80,\"triglycerides\":200,\"hemoglobin\":15,\"tsh\":8,\"creatinine\":9,\"uricacid\":20,\"vitd\":7,\"wbc\":16,\"bilirubin\":15,\"alp\":13,\"ggt\":13}},\"jeevan\":{\"lastUpdated\":\"2025-10-26\",\"labName\":\"Lab Report\",\"reportRef\":\"\",\"vitals\":{\"weight\":null,\"height\":null,\"bmi\":null},\"markers\":{\"glucose\":98.77,\"hba1c\":5.08,\"cholesterol\":121,\"ldl\":70.34,\"hdl\":34.4,\"triglycerides\":200,\"hemoglobin\":14.2,\"tsh\":3.132,\"uricacid\":6.2,\"vitd\":25,\"vitb12\":240,\"wbc\":6.67,\"platelets\":150,\"ast\":15.8,\"alp\":202,\"ggt\":11.4}}}","fp_health_appts_v3":"[{\"id\":\"a1\",\"member\":\"rajasekhar\",\"title\":\"Cardiology Consultation\",\"date\":\"2026-03-20\",\"time\":\"10:00\",\"loc\":\"Dr. Reddy, Yashoda Hospitals\",\"notes\":\"Bring ECG + last lipid report\"},{\"id\":\"a2\",\"member\":\"vasundhara\",\"title\":\"Thyroid Follow-up\",\"date\":\"2026-04-05\",\"time\":\"09:30\",\"loc\":\"Dr. Priya, KIMS Hospital\",\"notes\":\"Fasting required \u00b7 6 hrs\"}]","fp_bank_stmt_icici":"{\"bank\":\"ICICI\",\"accountLast4\":\"6595\",\"holder\":\"Rajasekhar Reddy Duggireddy\",\"fetchedOn\":\"2026-03-07\",\"period\":\"FEB 1, 2026 to MAR 7, 2026\",\"openingBalance\":1302.41,\"closingBalance\":19113.82,\"txnCount\":10,\"transactions\":[{\"date\":\"2026-03-07\",\"title\":\"OTHERS\",\"sub\":\"UPL/858653471223\",\"remark\":\"UPI Transfer\",\"credit\":0,\"debit\":1500,\"balance\":19113.82,\"type\":\"DR\"},{\"date\":\"2026-03-06\",\"title\":\"VATTIPALLI\",\"sub\":\"UPI/9866725991\",\"remark\":\"UPI Payment\",\"credit\":0,\"debit\":400,\"balance\":20613.82,\"type\":\"DR\"},{\"date\":\"2026-03-05\",\"title\":\"AIRTEL\",\"sub\":\"Airtel/billpay\",\"remark\":\"Mobile Recharge\",\"credit\":0,\"debit\":1188.26,\"balance\":21013.82,\"type\":\"DR\"},{\"date\":\"2026-03-05\",\"title\":\"SELF\",\"sub\":\"IMPS Transfer\",\"remark\":\"Self Transfer\",\"credit\":0,\"debit\":649,\"balance\":22202.08,\"type\":\"DR\"},{\"date\":\"2026-03-05\",\"title\":\"SELF\",\"sub\":\"NEFT Transfer\",\"remark\":\"Self Transfer\",\"credit\":0,\"debit\":9371.33,\"balance\":22851.08,\"type\":\"DR\"},{\"date\":\"2026-03-05\",\"title\":\"RAJASEKHAR\",\"sub\":\"NEFT/INW\",\"remark\":\"Salary Credit\",\"credit\":30000,\"debit\":0,\"balance\":32222.41,\"type\":\"CR\"},{\"date\":\"2026-03-05\",\"title\":\"OTHERS\",\"sub\":\"UPI/Credit\",\"remark\":\"UPI Receipt\",\"credit\":1022,\"debit\":0,\"balance\":2222.41,\"type\":\"CR\"},{\"date\":\"2026-03-04\",\"title\":\"OTHERS\",\"sub\":\"UPI Transfer\",\"remark\":\"UPI Payment\",\"credit\":0,\"debit\":1500,\"balance\":1200.41,\"type\":\"DR\"},{\"date\":\"2026-03-03\",\"title\":\"NOBROKER T\",\"sub\":\"NoBroker/Rent\",\"remark\":\"Rent Payment\",\"credit\":0,\"debit\":7000,\"balance\":2700.41,\"type\":\"DR\"},{\"date\":\"2026-03-02\",\"title\":\"OTHERS\",\"sub\":\"UPI/Credit\",\"remark\":\"UPI Receipt\",\"credit\":1081,\"debit\":0,\"balance\":9700.41,\"type\":\"CR\"}]}"};
+
+  // Load each key into localStorage only if not already present (don't overwrite fresh scrapes)
+  var keys = Object.keys(BACKUP_DATA);
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    if (!localStorage.getItem(k)) {
+      try { localStorage.setItem(k, BACKUP_DATA[k]); } catch(e){}
+    }
+  }
+})();
 
 function init() {
   initDashboard();
