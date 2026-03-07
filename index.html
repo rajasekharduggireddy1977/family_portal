@@ -4382,51 +4382,8 @@ body.dash-active #aura-canvas{ display:block; }
 .tc-att-btn.tc-att-primary{border-color:rgba(167,139,250,.4);color:#a78bfa;background:rgba(167,139,250,.1);}
 .tc-att-btn.tc-att-sec{border-color:rgba(255,255,255,.1);color:rgba(200,210,240,.6);}
 
-/* ══ BLOCK 1: SGPA TREND CHART ══ */
-.aura-sgpa-chart-wrap{position:relative;width:100%;height:110px;}
-.aura-sgpa-svg{width:100%;height:110px;overflow:visible;}
-
-/* ══ BLOCK 2: TIMETABLE SWIPE ══ */
-.aura-tt-tabs{display:flex;gap:0;padding:0 16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
-.aura-tt-tabs::-webkit-scrollbar{display:none;}
-.aura-tt-tab{flex-shrink:0;padding:7px 13px;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(200,210,240,.35);cursor:pointer;position:relative;transition:color .2s;border-radius:8px 8px 0 0;}
-.aura-tt-tab.aura-tt-tab-active{color:#a78bfa;}.aura-tt-tab.aura-tt-tab-today{position:relative;}.aura-tt-tab.aura-tt-tab-today::before{content:'';position:absolute;top:6px;right:6px;width:4px;height:4px;border-radius:50%;background:#f0b429;}
-.aura-tt-tab.aura-tt-tab-active::after{content:'';position:absolute;bottom:0;left:13px;right:13px;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,#7c5cfc,#a78bfa);}
-.aura-tt-days{overflow:hidden;position:relative;}
-.aura-tt-day{display:none;padding:6px 16px 14px;flex-direction:column;gap:0;}
-.aura-tt-day.aura-tt-day-active{display:flex;}
-.aura-tt-slot{display:flex;align-items:stretch;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.035);}
-.aura-tt-slot:last-child{border-bottom:none;}
-.aura-tt-time{width:38px;flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,210,240,.32);padding-top:2px;text-align:right;}
-.aura-tt-line-col{display:flex;flex-direction:column;align-items:center;gap:0;padding-top:5px;}
-.aura-tt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.aura-tt-wire{width:1.5px;flex:1;min-height:20px;background:linear-gradient(180deg,rgba(167,139,250,.25),rgba(167,139,250,.06));margin-top:3px;}
-.aura-tt-info{flex:1;min-width:0;}
-.aura-tt-subj{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.aura-tt-meta{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.38);margin-top:2px;}
-.aura-tt-pct{flex-shrink:0;padding:3px 7px;border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;font-weight:800;align-self:center;}
-.aura-tt-now-tag{display:inline-block;margin-top:3px;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;background:rgba(167,139,250,.14);color:#a78bfa;border:1px solid rgba(167,139,250,.3);}
-.aura-tt-empty{padding:20px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,210,240,.25);}
-
-/* ══ BLOCK 3: SUBJECT ATTENDANCE CARDS ══ */
-.aura-att-sum-pill{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;font-family:'DM Mono',monospace;font-size:9px;font-weight:800;border:1px solid;}
-.aura-subj-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;transition:transform .12s;}
-.aura-subj-card:active{transform:scale(.97);}
-.aura-subj-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
-.aura-subj-card-name{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--text);line-height:1.3;flex:1;min-width:0;}
-.aura-subj-card-type{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
-.aura-subj-pct-badge{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;flex-shrink:0;text-align:right;line-height:1;}
-.aura-subj-pct-lbl{font-family:'DM Mono',monospace;font-size:7px;color:rgba(140,158,220,.35);text-align:right;margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
-.aura-subj-track{height:5px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;margin-top:10px;position:relative;}
-.aura-subj-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.4,0,.2,1);}
-.aura-subj-marker{position:absolute;top:-3px;bottom:-3px;left:75%;width:1.5px;background:rgba(255,184,0,.55);box-shadow:0 0 4px rgba(255,184,0,.4);}
-.aura-subj-footer{display:flex;justify-content:space-between;align-items:center;margin-top:7px;}
-.aura-subj-count{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.38);}
-.aura-subj-status{font-family:'DM Mono',monospace;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:2px 8px;border-radius:20px;}
-.aura-subj-card-glow{position:absolute;top:0;right:0;width:60px;height:60px;border-radius:50%;opacity:.06;pointer-events:none;}
-
-/* ─────────────────────────────────── */
 /* ── Finance Panel ── */
+.tc-fin-hero{padding:22px 20px 16px;}
 .tc-fin-eyebrow{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;}
 .tc-fin-amount{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,var(--gold),#fef3c7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .tc-fin-sub{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(200,210,240,.55);margin-top:3px;}
@@ -4896,9 +4853,7 @@ body.dash-active #aura-canvas{ display:block; }
 
           <!-- ▸ PANEL 2: EDUCATION -->
           <div class="aura-panel" id="aura-p2">
-
-            <!-- ══ BLOCK 1: SGPA TREND ══ -->
-            <div class="tc tc-edu" id="aura-sgpa-card">
+            <div class="tc tc-edu">
               <div class="tc-edu-banner">
                 <div class="tceb-eyebrow">Education · KLU B.Tech</div>
                 <div class="tceb-row">
@@ -4910,49 +4865,21 @@ body.dash-active #aura-canvas{ display:block; }
                 </div>
               </div>
               <div class="tc-divider"></div>
-              <div class="tc-sec-hd" style="padding-top:14px;">
-                <div class="tc-sec-title">SGPA Trend</div>
-                <div class="tc-sec-action" style="color:#a78bfa;">Sems 1 – 3</div>
-              </div>
-              <div id="aura-sgpa-chart" style="padding:4px 20px 18px;"></div>
+              <div class="tc-subj-deck" id="aura-subj-bars"></div>
             </div>
-
-            <!-- ══ BLOCK 2: WEEKLY TIMETABLE SWIPE ══ -->
-            <div class="tc tc-edu" id="aura-tt-block">
-              <div class="tc-sec-hd" style="padding-top:16px;">
-                <div class="tc-sec-title">Weekly Schedule</div>
-                <div class="tc-sec-action" onclick="goPage('members')">Full →</div>
-              </div>
-              <!-- Day tab strip -->
-              <div class="aura-tt-tabs" id="aura-tt-tabs">
-                <div class="aura-tt-tab aura-tt-tab-active" onclick="auraShowDay(0)">MON</div>
-                <div class="aura-tt-tab" onclick="auraShowDay(1)">TUE</div>
-                <div class="aura-tt-tab" onclick="auraShowDay(2)">WED</div>
-                <div class="aura-tt-tab" onclick="auraShowDay(3)">THU</div>
-                <div class="aura-tt-tab" onclick="auraShowDay(4)">FRI</div>
-                <div class="aura-tt-tab" onclick="auraShowDay(5)">SAT</div>
-              </div>
-              <!-- Day panels -->
-              <div class="aura-tt-days" id="aura-tt-days">
-                <div class="aura-tt-day" id="aura-tt-d0"></div>
-                <div class="aura-tt-day" id="aura-tt-d1"></div>
-                <div class="aura-tt-day" id="aura-tt-d2"></div>
-                <div class="aura-tt-day" id="aura-tt-d3"></div>
-                <div class="aura-tt-day" id="aura-tt-d4"></div>
-                <div class="aura-tt-day" id="aura-tt-d5"></div>
-              </div>
-            </div>
-
-            <!-- ══ BLOCK 3: ALL SUBJECTS ATTENDANCE ══ -->
             <div class="tc tc-edu">
-              <div class="tc-sec-hd" style="padding-top:16px;">
-                <div class="tc-sec-title">Attendance</div>
-                <div id="aura-att-summary-pills" style="display:flex;gap:5px;"></div>
-              </div>
-              <div class="tc-divider" style="margin-top:6px;"></div>
-              <div id="aura-subj-cards" style="padding:10px 16px 16px;display:flex;flex-direction:column;gap:9px;"></div>
+              <div class="tc-att-ring-row" id="aura-att-ring-row"></div>
+              <div class="tc-divider"></div>
+              <div class="tc-sec-hd"><div class="tc-sec-title">Today's Classes</div><div class="tc-sec-action" onclick="goPage('members')">Timetable →</div></div>
+              <div id="aura-today-classes"></div>
             </div>
-
+            <div class="tc tc-edu" id="aura-sgpa-card">
+              <div class="tc-sec-hd" style="padding-top:16px;">
+                <div class="tc-sec-title">SGPA Trend · Sems 1–3</div>
+                <div class="tc-sec-action" style="color:#a78bfa;">CGPA 9.24</div>
+              </div>
+              <div id="aura-sgpa-bars" style="display:flex;align-items:flex-end;gap:10px;padding:10px 20px 16px;"></div>
+            </div>
             <div class="aura-btn aura-btn-edu aura-press" onclick="goPage('members')">Full Academic Report →</div>
             <div style="height:8px;"></div>
           </div>
@@ -8036,22 +7963,18 @@ function buildJosrithaAcadWidget() {
   var risky = {};
   attData.forEach(function(a) {
     var pct = Math.round(a.present / a.total * 100);
-    var codeTypeKey = (a.code||'') + '|' + (a.type||'');
-    var nameTypeKey = (a.subject||'') + '|' + (a.type||'');
-    var riskVal = { pct: pct, critical: pct < 70, atrisk: pct < 75 };
-    risky[codeTypeKey] = riskVal;
-    risky[nameTypeKey] = riskVal;
-    if (a.code) risky[a.code] = riskVal;
+    var key = a.code + '|' + a.type;
+    risky[key] = { pct: pct, critical: pct < 70, atrisk: pct < 75 };
   });
 
   var ttByDay = {};
   DAY_FULL.forEach(function(d){ ttByDay[d] = []; });
   if (ttData) {
     ttData.forEach(function(sl) {
-      var key = sl.att_key || ((sl.code||'') + '|' + (sl.type||''));
+      var key = sl.att_key || (sl.code + '|' + sl.type);
       if (sl.day && ttByDay[sl.day]) {
         var exists = ttByDay[sl.day].some(function(x){ return x.key === key; });
-        if (!exists) ttByDay[sl.day].push({ key: key, sl: sl });
+        if (!exists) ttByDay[sl.day].push({ key: key });
       }
     });
   }
@@ -8082,7 +8005,7 @@ function buildJosrithaAcadWidget() {
       hmHtml += '<div class="jac-hm-dot none" title="No classes"></div>';
     } else {
       daySlots.forEach(function(sl) {
-        var r = risky[sl.key]; if (!r && sl.sl) r = risky[(sl.sl.subject||"")+"|200b"+(sl.sl.type||"")] || risky[sl.sl.code];
+        var r = risky[sl.key];
         if (!r) { hmHtml += '<div class="jac-hm-dot safe" title="OK"></div>'; return; }
         var dc = r.critical ? 'crit' : r.atrisk ? 'warn' : 'safe';
         var pctStr = r.pct + '%';
@@ -8156,7 +8079,7 @@ function buildJacSlots(d) {
 
   var html = '<div class="jac-swipe-zone" id="jac-swipe-zone"><div class="jac-swipe-hint left" id="jac-hint-left">‹</div><div class="jac-swipe-hint right" id="jac-hint-right">›</div><div class="jac-slots jac-anim" id="jac-slots-inner">';
   slots.forEach(function(sl) {
-    var att = attMap[sl.att_key] || attMap[(sl.code||'')+'|'+(sl.type||'')] || attMap[(sl.subject||'')+'|'+(sl.type||'')] || (sl.code ? attMap[sl.code] : undefined);
+    var att = attMap[sl.att_key || (sl.code + '|' + sl.type)];
     var pct = att ? Math.round(att.present / att.total * 100) : null;
     var col = pct === null ? 'var(--text3)' : pct >= 75 ? '#3ecf8e' : pct >= 70 ? '#fbbf24' : '#ff4f4f';
     var bg  = pct === null ? 'transparent'  : pct >= 75 ? 'rgba(62,207,142,.12)' : pct >= 70 ? 'rgba(245,158,11,.12)' : 'rgba(255,79,79,.12)';
@@ -9653,62 +9576,23 @@ function auraRenderHealth() {
 }
 
 /* ── Education Panel ── */
-var _auraTTDay = 0;
-var _auraTTTodayIdx = -1;
-
-function auraShowDay(idx) {
-  _auraTTDay = idx;
-  var tabs = document.querySelectorAll('.aura-tt-tab');
-  var days = document.querySelectorAll('.aura-tt-day');
-  for (var i=0; i<tabs.length; i++) {
-    var cls = 'aura-tt-tab';
-    if (i===idx) cls += ' aura-tt-tab-active';
-    if (i===_auraTTTodayIdx && i!==idx) cls += ' aura-tt-tab-today';
-    tabs[i].className = cls;
-  }
-  for (var j=0; j<days.length; j++) {
-    days[j].className = 'aura-tt-day' + (j===idx?' aura-tt-day-active':'');
-  }
-}
-
-function _auraTTSwipeInit() {
-  var daysEl = document.getElementById('aura-tt-days');
-  if (!daysEl || daysEl._swInit) return;
-  daysEl._swInit = true;
-  var sx=0, sy=0, dragging=false, locked=false, cx=0;
-  daysEl.addEventListener('touchstart',function(e){
-    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
-    cx=0; dragging=true; locked=false;
-  },{passive:true});
-  daysEl.addEventListener('touchmove',function(e){
-    if(!dragging) return;
-    var dx=e.touches[0].clientX-sx, dy=e.touches[0].clientY-sy;
-    if(!locked){ if(Math.abs(dy)>Math.abs(dx)+5){dragging=false;return;} locked=true; }
-    cx=dx;
-  },{passive:true});
-  daysEl.addEventListener('touchend',function(){
-    if(!dragging||!locked){dragging=false;return;}
-    dragging=false;
-    var TABS=6;
-    if(cx<-40 && _auraTTDay<TABS-1) auraShowDay(_auraTTDay+1);
-    else if(cx>40 && _auraTTDay>0) auraShowDay(_auraTTDay-1);
-  },{passive:true});
-}
-
 function auraRenderEducation() {
   var attRaw = localStorage.getItem('fp_attendance_synced');
-  var attMap = {};
   var subjects = [];
   var totalPres = 0; var totalCls = 0;
 
   if (attRaw) {
     try {
       var att = JSON.parse(attRaw);
+      // Each row in the JSON = one subject+type slot. Show every unique code as its own bar.
       for (var i=0; i<att.length; i++) {
         var a = att[i];
         totalPres += a.present; totalCls += a.total;
-        var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
-        var shortName = (a.subject||'')
+        var pct = a.total>0 ? Math.round(a.present/a.total*100):100;
+        var label = (a.subject||'');
+        // Append type if it is Lab/Tutorial/Seminar to distinguish from Lecture
+        if (a.type && a.type !== 'Lecture') label += ' (' + a.type + ')';
+        label = label
           .replace('MATHEMATICAL OPTIMIZATION','MATH OPT')
           .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
           .replace('COMPUTER NETWORKS','COMP NETWORKS')
@@ -9720,172 +9604,116 @@ function auraRenderEducation() {
           .replace('DESIGN THINKING AND INNOVATION','DT & INNOVATION')
           .replace('ENGLISH FOR PROFESSIONAL COMMUNICATION','ENG COMM')
           .replace('PROBABILITY AND STATISTICS','PROB & STATS');
-        var fullName = (a.subject||'');
-        var typeStr = (a.type||'Lecture');
-        var codeKey = (a.code||'') + '|' + typeStr;
-        var nameKey = fullName + '|' + typeStr;
-        attMap[codeKey] = pct;
-        attMap[nameKey] = pct;
-        if (a.code) attMap[a.code] = pct; // fallback single-code lookup
-        subjects.push({ name:shortName, full:fullName, type:typeStr, pct:pct, present:(a.present||0), total:(a.total||0), code:(a.code||'') });
+        subjects.push({ name:label, pct:pct });
       }
-      subjects.sort(function(x,y){ return x.pct - y.pct; });
+      subjects.sort(function(a,b){ return a.pct-b.pct; });
     } catch(e){}
   }
 
-  /* ── BLOCK 1: SGPA SVG LINE CHART ── */
-  var sgpaSems = [
-    { lbl:'S1', val:9.26 }, { lbl:'S2', val:9.29 }, { lbl:'S3', val:9.17 }
-  ];
-  var chartEl = document.getElementById('aura-sgpa-chart');
-  if (chartEl) {
-    var W = 280; var H = 90; var padL = 28; var padR = 16; var padT = 18; var padB = 22;
-    var minV = 9.0; var maxV = 10.0;
-    var pts = [];
-    var colW = (W - padL - padR) / (sgpaSems.length - 1);
-    for (var si=0; si<sgpaSems.length; si++) {
-      var px = padL + si * colW;
-      var py = padT + (1 - (sgpaSems[si].val - minV) / (maxV - minV)) * (H - padT - padB);
-      pts.push({ x:px, y:py, v:sgpaSems[si].val, lbl:sgpaSems[si].lbl });
-    }
-    var pathD = '';
-    for (var pi=0; pi<pts.length; pi++) {
-      pathD += (pi===0 ? 'M ' : 'L ') + pts[pi].x.toFixed(1) + ' ' + pts[pi].y.toFixed(1) + ' ';
-    }
-    var areaD = pathD + 'L ' + pts[pts.length-1].x.toFixed(1) + ' ' + (H-padB) + ' L ' + pts[0].x.toFixed(1) + ' ' + (H-padB) + ' Z';
-    var dotsSvg = '';
-    for (var di=0; di<pts.length; di++) {
-      var dColor = pts[di].v >= 9.25 ? '#3ecf8e' : pts[di].v >= 9.1 ? '#f0b429' : '#ff4f4f';
-      dotsSvg += '<circle cx="'+pts[di].x.toFixed(1)+'" cy="'+pts[di].y.toFixed(1)+'" r="5" fill="'+dColor+'" stroke="#07080f" stroke-width="2.5"/>';
-      dotsSvg += '<text x="'+pts[di].x.toFixed(1)+'" y="'+(pts[di].y-10).toFixed(1)+'" text-anchor="middle" font-family="Syne,sans-serif" font-size="10" font-weight="800" fill="'+dColor+'">'+pts[di].v+'</text>';
-      dotsSvg += '<text x="'+pts[di].x.toFixed(1)+'" y="'+(H-padB+13)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(140,158,220,.45)">'+pts[di].lbl+'</text>';
-    }
-    var gridY = padT + (1 - (9.2 - minV)/(maxV - minV)) * (H - padT - padB);
-    chartEl.innerHTML = '<div class="aura-sgpa-chart-wrap"><svg class="aura-sgpa-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'
-      + '<defs><linearGradient id="sgpaArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a78bfa" stop-opacity=".22"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></linearGradient></defs>'
-      + '<line x1="'+padL+'" y1="'+gridY.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+gridY.toFixed(1)+'" stroke="rgba(255,184,0,.18)" stroke-width="1" stroke-dasharray="3,3"/>'
-      + '<text x="'+padL+'" y="'+(gridY-3).toFixed(1)+'" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,184,0,.4)">9.2</text>'
-      + '<path d="'+areaD+'" fill="url(#sgpaArea)"/>'
-      + '<path d="'+pathD+'" fill="none" stroke="url(#sgpaLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
-      + '<defs><linearGradient id="sgpaLine" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#4f7fff"/><stop offset="50%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#f0b429"/></linearGradient></defs>'
-      + dotsSvg
-      + '</svg></div>';
+  // Subject bars — all subjects sorted worst first
+  var barsHtml = '';
+  if (subjects.length === 0) {
+    barsHtml = '<div style="padding:14px 20px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);text-align:center;">No attendance data — upload via Sync Hub</div>';
   }
+  var showSubjs = subjects;
+  for (var s=0; s<showSubjs.length; s++) {
+    var sb = showSubjs[s];
+    var c = sb.pct < 75 ? 'linear-gradient(90deg,var(--red),#ff8080)' : sb.pct < 80 ? 'linear-gradient(90deg,var(--orange,#fb923c),#fbbf24)' : 'linear-gradient(90deg,var(--green),#86efac)';
+    var tc2 = sb.pct < 75 ? 'var(--red)' : sb.pct < 80 ? 'var(--orange,#fb923c)' : 'var(--green)';
+    barsHtml += '<div class="tc-sd-row">'
+      + '<div class="tc-sd-top"><div class="tc-sd-name">'+sb.name+'</div><div class="tc-sd-pct" style="color:'+tc2+'">'+sb.pct+'%</div></div>'
+      + '<div class="tc-sd-track"><div class="tc-sd-fill" style="width:'+sb.pct+'%;background:'+c+';"></div><div class="tc-sd-marker"></div></div>'
+      + '</div>';
+  }
+  var barsEl = document.getElementById('aura-subj-bars');
+  if (barsEl) barsEl.innerHTML = barsHtml;
 
-  /* ── BLOCK 2: TIMETABLE SWIPE ── */
-  var DAYS_KEYS = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  var ttRaw = localStorage.getItem('fp_timetable_synced');
-  var tt = [];
-  try { if (ttRaw) tt = JSON.parse(ttRaw); } catch(e){}
-  var nowMin = new Date().getHours()*60 + new Date().getMinutes();
+  // Overall ring
+  var overallPct = totalCls>0 ? Math.round(totalPres/totalCls*100) : 70;
+  var ringCirc = 232; // 2*PI*37
+  var ringOffset = Math.round(ringCirc * (1 - overallPct/100));
+  var ringColor = overallPct<75?'var(--red)':overallPct<80?'var(--orange,#fb923c)':'var(--green)';
+  var critCount = subjects.filter(function(s2){return s2.pct<75;}).length;
+  var rowEl = document.getElementById('aura-att-ring-row');
+  if (rowEl) rowEl.innerHTML = '<div class="tc-att-ring">'
+    + '<svg class="tc-att-svg" viewBox="0 0 86 86"><circle class="tc-att-bg" cx="43" cy="43" r="37"/>'
+    + '<circle class="tc-att-path" cx="43" cy="43" r="37" stroke="'+ringColor+'" stroke-dasharray="'+ringCirc+'" stroke-dashoffset="'+ringOffset+'"/>'
+    + '</svg>'
+    + '<div class="tc-att-center"><div class="tc-att-num" style="color:'+ringColor+'">'+overallPct+'%</div><div class="tc-att-lbl">OVERALL</div></div>'
+    + '</div>'
+    + '<div class="tc-att-info">'
+    + '<div class="tc-att-title">Attendance ' + (overallPct<75?'Risk':'Status') + '</div>'
+    + '<div class="tc-att-desc">' + (critCount>0 ? '<strong style="color:var(--red)">'+critCount+' subject'+(critCount>1?'s':'')+' below 75%</strong><br>Minimum 75% required.' : 'On track. Keep attending!') + '</div>'
+    + '<div class="tc-att-btns"><div class="tc-att-btn tc-att-primary" onclick="goPage(\'members\')">Timetable</div><div class="tc-att-btn tc-att-sec" onclick="goPage(\'upload\')">Upload</div></div>'
+    + '</div>';
+
+  // Today's classes — reads same key as academics page
   var DAYS7 = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  var todayKey = DAYS7[new Date().getDay()];
-
-  for (var di2=0; di2<DAYS_KEYS.length; di2++) {
-    var dayName = DAYS_KEYS[di2];
-    var dayEl = document.getElementById('aura-tt-d'+di2);
-    if (!dayEl) continue;
-    var dayCls = tt.filter(function(c){ return c.day === dayName; });
-    dayCls.sort(function(a,b){ return (a.time||'').localeCompare(b.time||''); });
-    if (dayCls.length === 0) {
-      dayEl.innerHTML = '<div class="aura-tt-empty">No classes scheduled</div>';
-      continue;
-    }
-    var dHtml = '';
-    for (var ci=0; ci<dayCls.length; ci++) {
-      var cc = dayCls[ci];
-      var sp2 = (cc.time||'00:00').split(':');
-      var cMin = parseInt(sp2[0]||0)*60 + parseInt(sp2[1]||0);
-      var isNow = (todayKey===dayName) && nowMin>=cMin && nowMin<cMin+60;
-      var isDone = (todayKey===dayName) && nowMin>=cMin+60;
-      var sPct = attMap[cc.att_key] !== undefined ? attMap[cc.att_key]
-        : attMap[(cc.code||'')+'|'+(cc.type||'')] !== undefined ? attMap[(cc.code||'')+'|'+(cc.type||'')]
-        : attMap[(cc.subject||'')+'|'+(cc.type||'')] !== undefined ? attMap[(cc.subject||'')+'|'+(cc.type||'')]
-        : attMap[cc.code];
-      var dotColor = isDone ? 'rgba(140,158,220,.2)' : isNow ? '#a78bfa' : 'rgba(167,139,250,.5)';
-      var pctColor = sPct !== undefined ? (sPct<75?'var(--red)':sPct<80?'var(--orange,#fb923c)':'var(--green)') : 'rgba(140,158,220,.3)';
-      var pctBg = sPct !== undefined ? (sPct<75?'rgba(255,79,79,.12)':sPct<80?'rgba(255,140,66,.12)':'rgba(62,207,142,.12)') : 'rgba(255,255,255,.04)';
-      var isLast = ci === dayCls.length - 1;
-      var subjShort = (cc.subject||'').replace('MATHEMATICAL OPTIMIZATION','MATH OPT').replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV').replace('COMPUTER NETWORKS','COMP NETWORKS').replace('DESIGN AND ANALYSIS OF ALGORITHMS','ALGO DESIGN').replace('AWS CERTIFIED CLOUD PRACTITIONER','AWS CLOUD').replace('GLOBAL LOGIC BUILDING CONTEST PRACTICUM','GLOBAL LOGIC').replace('CLOUD INFRASTRUCTURE AND SERVICES','CLOUD INFRA').replace('ADVANCED DATA STRUCTURES','ADV DATA STRUCT').replace('DESIGN THINKING AND INNOVATION','DT & INNOVATION').replace('ENGLISH FOR PROFESSIONAL COMMUNICATION','ENG COMM').replace('PROBABILITY AND STATISTICS','PROB & STATS');
-      dHtml += '<div class="aura-tt-slot">'
-        + '<div class="aura-tt-time" style="'+(isDone?'opacity:.3':'')+'">'+cc.time+'</div>'
-        + '<div class="aura-tt-line-col">'
-        +   '<div class="aura-tt-dot" style="background:'+dotColor+';'+(isNow?'box-shadow:0 0 7px #a78bfa;':'')+'"></div>'
-        +   (!isLast ? '<div class="aura-tt-wire"></div>' : '')
-        + '</div>'
-        + '<div class="aura-tt-info" style="'+(isDone?'opacity:.4':'')+';">'
-        +   '<div class="aura-tt-subj">'+subjShort+'</div>'
-        +   '<div class="aura-tt-meta">'+(cc.code||'')+(cc.room?' · '+cc.room:'')+(cc.type?' · '+cc.type:'')+'</div>'
-        +   (isNow ? '<span class="aura-tt-now-tag">NOW</span>' : '')
-        + '</div>'
-        + (sPct !== undefined ? '<div class="aura-tt-pct" style="color:'+pctColor+';background:'+pctBg+';">'+sPct+'%</div>' : '')
-        + '</div>';
-    }
-    dayEl.innerHTML = dHtml;
-  }
-  if (!ttRaw) {
-    for (var dj=0; dj<6; dj++) {
-      var dEl = document.getElementById('aura-tt-d'+dj);
-      if (dEl) dEl.innerHTML = '<div class="aura-tt-empty">Upload timetable via Sync Hub</div>';
-    }
-  }
-  var todayTabIdx = DAYS_KEYS.indexOf(todayKey);
-  _auraTTTodayIdx = todayTabIdx;
-  auraShowDay(todayTabIdx >= 0 ? todayTabIdx : 0);
-  requestAnimationFrame(function(){ _auraTTSwipeInit(); });
-
-  /* ── BLOCK 3: SUBJECT ATTENDANCE CARDS ── */
-  var safeCount = 0; var riskCount = 0; var critCount = 0;
-  for (var sc=0; sc<subjects.length; sc++) {
-    if (subjects[sc].pct >= 80) safeCount++;
-    else if (subjects[sc].pct >= 75) riskCount++;
-    else critCount++;
-  }
-  var pillsEl = document.getElementById('aura-att-summary-pills');
-  if (pillsEl) {
-    pillsEl.innerHTML = ''
-      + (safeCount ? '<div class="aura-att-sum-pill" style="color:var(--green);border-color:rgba(62,207,142,.3);background:rgba(62,207,142,.08);">✓ '+safeCount+' safe</div>' : '')
-      + (riskCount ? '<div class="aura-att-sum-pill" style="color:var(--orange,#fb923c);border-color:rgba(255,140,66,.3);background:rgba(255,140,66,.08);">⚠ '+riskCount+' risk</div>' : '')
-      + (critCount ? '<div class="aura-att-sum-pill" style="color:var(--red);border-color:rgba(255,79,79,.3);background:rgba(255,79,79,.08);">✕ '+critCount+' crit</div>' : '');
-  }
-  var cardsEl = document.getElementById('aura-subj-cards');
-  if (cardsEl) {
-    if (subjects.length === 0) {
-      cardsEl.innerHTML = '<div style="padding:14px 4px;font-family:\'DM Mono\',sans-serif;font-size:11px;color:rgba(200,210,240,.3);text-align:center;">No attendance data — upload via Sync Hub</div>';
-    } else {
-      var cHtml = '';
-      for (var sk=0; sk<subjects.length; sk++) {
-        var sb = subjects[sk];
-        var isCrit = sb.pct < 75;
-        var isRisk = sb.pct >= 75 && sb.pct < 80;
-        var isSafe = sb.pct >= 80;
-        var pctCol = isCrit ? 'var(--red)' : isRisk ? 'var(--orange,#fb923c)' : 'var(--green)';
-        var fillGrad = isCrit ? 'linear-gradient(90deg,#ff4f4f,#ff8080)' : isRisk ? 'linear-gradient(90deg,#ff8c42,#fbbf24)' : 'linear-gradient(90deg,#3ecf8e,#34d399)';
-        var glowCol = isCrit ? '#ff4f4f' : isRisk ? '#ff8c42' : '#3ecf8e';
-        var statusTxt = isCrit ? 'Critical' : isRisk ? 'At Risk' : 'Safe';
-        var statusBg = isCrit ? 'rgba(255,79,79,.12)' : isRisk ? 'rgba(255,140,66,.1)' : 'rgba(62,207,142,.1)';
-        var borderCol = isCrit ? 'rgba(255,79,79,.18)' : isRisk ? 'rgba(255,140,66,.14)' : 'rgba(255,255,255,.055)';
-        cHtml += '<div class="aura-subj-card" style="border-color:'+borderCol+';">'
-          + '<div class="aura-subj-card-glow" style="background:'+glowCol+';transform:translate(10px,-10px);"></div>'
-          + '<div class="aura-subj-card-top">'
-          +   '<div><div class="aura-subj-card-name">'+sb.name+'</div>'
-          +   '<div class="aura-subj-card-type">'+(sb.code||'')+(sb.type && sb.type!=='Lecture' ? ' · '+sb.type : '')+'</div></div>'
-          +   '<div><div class="aura-subj-pct-badge" style="color:'+pctCol+'">'+sb.pct+'%</div>'
-          +   '<div class="aura-subj-pct-lbl">attend</div></div>'
-          + '</div>'
-          + '<div class="aura-subj-track">'
-          +   '<div class="aura-subj-fill" style="width:'+sb.pct+'%;background:'+fillGrad+';"></div>'
-          +   '<div class="aura-subj-marker"></div>'
-          + '</div>'
-          + '<div class="aura-subj-footer">'
-          +   '<div class="aura-subj-count">'+sb.present+' / '+sb.total+' classes</div>'
-          +   '<div class="aura-subj-status" style="color:'+pctCol+';background:'+statusBg+';">'+statusTxt+'</div>'
-          + '</div>'
-          + '</div>';
+  var todayDay = DAYS7[new Date().getDay()];
+  var ttRaw = localStorage.getItem('fp_timetable_synced');
+  var classHtml = '';
+  try {
+    var tt = ttRaw ? JSON.parse(ttRaw) : [];
+    if (tt.length > 0) {
+      var todayC = tt.filter(function(c){return c.day===todayDay;});
+      var displayDay = todayDay;
+      // If no classes today (weekend or no-class day) find next weekday with classes
+      if (todayC.length === 0) {
+        var wdays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
+        for (var wd=0; wd<wdays.length; wd++) {
+          var nd = wdays[wd];
+          var nc = tt.filter(function(c){return c.day===nd;});
+          if (nc.length > 0) { todayC = nc; displayDay = nd; break; }
+        }
       }
-      cardsEl.innerHTML = cHtml;
+      var nowMin2 = new Date().getHours()*60+new Date().getMinutes();
+      if (todayC.length === 0) {
+        classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No classes in timetable</div>';
+      } else {
+        if (displayDay !== todayDay) {
+          classHtml = '<div style="padding:6px 20px 2px;font-family:\'DM Mono\',monospace;font-size:9px;color:rgba(240,180,41,.5);letter-spacing:1px;">NEXT: ' + displayDay + '</div>';
+        }
+        for (var ci=0; ci<todayC.length; ci++) {
+          var cc = todayC[ci];
+          var sp2 = (cc.time||'').split(':'); var cMin = parseInt(sp2[0]||0)*60+parseInt(sp2[1]||0);
+          var isNow2 = displayDay===todayDay && nowMin2>=cMin && nowMin2<cMin+60;
+          var isDone = displayDay===todayDay && nowMin2 >= cMin+60;
+          var dotC = isDone?'rgba(140,158,220,.25)':isNow2?'#a78bfa':'var(--gold)';
+          var isLast2 = ci === todayC.length-1;
+          classHtml += '<div class="tc-tl-row">'
+            + '<div class="tc-tl-ts" style="color:'+(isDone?'rgba(140,158,220,.28)':'')+';">'+cc.time+'</div>'
+            + '<div class="tc-tl-col"><div class="tc-tl-dot" style="background:'+dotC+';'+(isNow2?'box-shadow:0 0 8px #a78bfa;animation:auraPulse 1.4s infinite;':'')+'"></div>'
+            + (!isLast2?'<div class="tc-tl-wire"></div>':'')+'</div>'
+            + '<div class="tc-tl-body">'
+            + '<div class="tc-tl-name" style="color:'+(isDone?'rgba(200,210,240,.4)':'')+';">'+(cc.subject||'').split(' ').slice(0,4).join(' ')+'</div>'
+            + '<div class="tc-tl-meta">'+(cc.room||'')+'  '+( cc.type||'')+'</div>'
+            + (isNow2?'<div class="tc-tl-tag" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);">NOW</div>':'')
+            + '</div></div>';
+        }
+      }
     }
+  } catch(e){}
+  if (!classHtml) classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No timetable — upload via Sync Hub</div>';
+  var classEl = document.getElementById('aura-today-classes');
+  if (classEl) classEl.innerHTML = classHtml;
+
+  // SGPA Semester Trend
+  var sgpaSems = [
+    { lbl:'Sem 1', val:9.26 }, { lbl:'Sem 2', val:9.29 }, { lbl:'Sem 3', val:9.17 }
+  ];
+  var sgpaMax = 10; var sgpaHtml = '';
+  for (var si=0; si<sgpaSems.length; si++) {
+    var sg = sgpaSems[si];
+    var sh = Math.round(sg.val/sgpaMax*60);
+    var sc2 = sg.val >= 9.2 ? 'var(--green)' : sg.val >= 9.0 ? 'var(--gold)' : 'var(--red)';
+    sgpaHtml += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+      + '<div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:800;color:'+sc2+';">'+sg.val+'</div>'
+      + '<div style="width:100%;height:'+sh+'px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,'+sc2+',rgba(167,139,250,.12));min-height:8px;"></div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:rgba(200,210,240,.5);">'+sg.lbl+'</div>'
+      + '</div>';
   }
+  var sgpaEl = document.getElementById('aura-sgpa-bars');
+  if (sgpaEl) sgpaEl.innerHTML = sgpaHtml;
 }
 
 /* ── Finance Panel ── */
@@ -13580,13 +13408,9 @@ document.addEventListener('keydown', e => {
   const label = document.getElementById('ptr-label');
   const THRESHOLD = 80;
 
-  var ptrStartX = 0;
   document.addEventListener('touchstart', e => {
-    var activePanel = document.querySelector('.aura-panel.active');
-    var panelScrollTop = activePanel ? activePanel.scrollTop : window.scrollY;
-    if (panelScrollTop === 0) {
+    if (window.scrollY === 0) {
       startY = e.touches[0].clientY;
-      ptrStartX = e.touches[0].clientX;
       pulling = true;
       triggered = false;
     }
@@ -13595,12 +13419,7 @@ document.addEventListener('keydown', e => {
   document.addEventListener('touchmove', e => {
     if (!pulling) return;
     const dy = e.touches[0].clientY - startY;
-    const dx = e.touches[0].clientX - ptrStartX;
-    // Cancel PTR if swipe is more horizontal than vertical (panel navigation)
-    if (Math.abs(dx) > Math.abs(dy) * 0.7) { pulling = false; return; }
-    var activePanel = document.querySelector('.aura-panel.active');
-    var panelScrollTop = activePanel ? activePanel.scrollTop : window.scrollY;
-    if (dy > 20 && panelScrollTop === 0) {
+    if (dy > 20 && window.scrollY === 0) {
       const progress = Math.min(dy / THRESHOLD, 1);
       indicator.classList.add('ptr-show');
       if (progress >= 1) {
