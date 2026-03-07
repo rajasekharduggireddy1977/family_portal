@@ -2099,10 +2099,235 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 }
 
 /* ══════════════════════════════════════════════
+   BANK TRANSACTIONS WIDGET
+══════════════════════════════════════════════ */
+.btw-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.btw-header {
+  padding: 14px 16px 12px;
+  background: linear-gradient(135deg, rgba(240,180,41,.06), rgba(79,127,255,.04));
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.btw-header-left { display: flex; flex-direction: column; gap: 2px; }
+.btw-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 800;
+  color: var(--text); letter-spacing: -.2px;
+}
+.btw-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--text3);
+  letter-spacing: .5px; text-transform: uppercase;
+}
+.btw-upload-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--blue2);
+  background: var(--blue-dim);
+  border: 1px solid rgba(79,127,255,.2);
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.btw-upload-btn:active { transform: scale(.95); }
+
+/* Bank tabs */
+.btw-tabs {
+  display: flex;
+  padding: 10px 12px 0;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.btw-tab {
+  padding: 6px 14px 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--text3);
+  letter-spacing: .4px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.btw-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.btw-tab-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border2);
+}
+.btw-tab.active .btw-tab-dot { background: var(--green); box-shadow: 0 0 5px rgba(62,207,142,.5); }
+.btw-tab.no-data .btw-tab-dot { background: var(--border2); }
+
+/* Summary strip */
+.btw-summary {
+  display: flex;
+  padding: 12px 14px;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.btw-sum-tile {
+  flex: 1;
+  text-align: center;
+  padding: 0 6px;
+  border-right: 1px solid var(--border);
+}
+.btw-sum-tile:last-child { border-right: none; }
+.btw-sum-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 800;
+  letter-spacing: -.3px;
+}
+.btw-sum-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--text3);
+  letter-spacing: .4px; text-transform: uppercase;
+  margin-top: 2px;
+}
+.btw-sum-period {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--text3);
+  padding: 4px 14px 8px;
+  letter-spacing: .3px;
+  background: var(--surface2);
+}
+
+/* Transaction list */
+.btw-txn-list { padding: 0 0 4px; }
+.btw-txn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+  transition: background .12s;
+}
+.btw-txn-row:last-child { border-bottom: none; }
+.btw-txn-row:active { background: var(--surface2); }
+.btw-txn-date-col {
+  display: flex; flex-direction: column;
+  align-items: center;
+  width: 28px; flex-shrink: 0;
+}
+.btw-txn-day {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: var(--text); line-height: 1;
+}
+.btw-txn-mon {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .3px;
+  margin-top: 1px;
+}
+.btw-txn-ico {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.btw-txn-ico.dr { background: rgba(255,79,79,.1); }
+.btw-txn-ico.cr { background: rgba(62,207,142,.1); }
+.btw-txn-mid { flex: 1; min-width: 0; }
+.btw-txn-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.btw-txn-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--text3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 1px; letter-spacing: .2px;
+}
+.btw-txn-amt {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 800;
+  text-align: right; flex-shrink: 0;
+  letter-spacing: -.2px;
+}
+.btw-txn-amt.dr { color: var(--red); }
+.btw-txn-amt.cr { color: var(--green); }
+.btw-txn-bal {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--text3);
+  text-align: right; margin-top: 1px;
+}
+
+/* Balance bar at bottom */
+.btw-balance-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(240,180,41,.06), rgba(79,127,255,.04));
+  border-top: 1px solid var(--border);
+}
+.btw-balance-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text3);
+  letter-spacing: .4px; text-transform: uppercase;
+}
+.btw-balance-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 800;
+  color: var(--gold);
+  letter-spacing: -.3px;
+}
+.btw-see-all {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  color: var(--blue2);
+  cursor: pointer; padding: 4px 0;
+}
+/* No data state */
+.btw-no-data {
+  padding: 32px 20px;
+  text-align: center;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+}
+.btw-no-data-icon { font-size: 36px; opacity: .4; }
+.btw-no-data-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text2);
+}
+.btw-no-data-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text3);
+  line-height: 1.6;
+}
+.btw-no-data-btn {
+  margin-top: 4px;
+  padding: 8px 20px;
+  background: var(--blue-dim);
+  border: 1px solid rgba(79,127,255,.25);
+  border-radius: 10px;
+  color: var(--blue2);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all .15s;
+  letter-spacing: .3px;
+}
+.btw-no-data-btn:active { transform: scale(.96); }
+
+/* ══════════════════════════════════════════════
    UPLOAD HUB PAGE
 ══════════════════════════════════════════════ */
 .upload-hub-wrap {
-  padding: 16px 16px 40px;
+  padding: 0 16px 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -4865,14 +5090,14 @@ const MEMBERS = {
       property:[{name:'Flat 403, Mangamuru Donka, Ongole',assessment:'1035037996',door:'7/1200(a)/403',address:'7/1200(a)/403, Mangamuru Donka, Revenue Ward 35, Ongole',type:'Residential – 4th Floor',area:'765.25 Sq.Yds',taxHalf:'₹2,263',taxAnnual:'₹4,526',capitalValue:'₹36,20,277',src:'PROP_Vasundhara_Flat403_MangamuruDonka_Ongole.pdf'},{name:'Shop G5, Silver Spring Apts, Ongole',assessment:'1035038052',door:'7/1200(a)/g5',type:'Non-Residential – Ground Floor',area:'765.85 Sq.Yds',taxHalf:'₹6,680',taxAnnual:'₹13,360',capitalValue:'₹30,29,779',src:'PROP_Vasundhara_ShopG5_SilverSpring_Ongole.pdf'}]
     }
   },
-  josritha:{id:'josritha',color:'#db2777',gradient:'linear-gradient(135deg,#9d174d,#ec4899)',initials:'JD',name:'Josritha Duggireddy',shortName:'Josritha',role:'Daughter',dob:'2006-02-26',gender:'Female',father:'Rajasekhar Reddy Duggireddy',mother:'Vasundhara Duggireddy',
+  josritha:{id:'josritha',color:'#db2777',gradient:'linear-gradient(135deg,#9d174d,#ec4899)',initials:'JD',name:'Josritha Duggireddy',shortName:'Josritha',role:'Daughter',dob:'2006-02-26',gender:'Female',mobile:'9392932602',father:'Rajasekhar Reddy Duggireddy',mother:'Vasundhara Duggireddy',
     sections:{
       identity:{aadhaar:{number:'8316 6458 6848',vid:'9124 7918 6424 2719',enrolment:'0642/40208/00414',issued:'10/01/2017',src:'ID_Josritha_Aadhaar_8316-6458-6848.pdf'},voter:{epic:'UPD3143468',assembly:'1187 · 108-Ongole · Part 98',address:'8-217, Lawyerpet, Sujathanagar, Ongole – 523002',src:'ID_Josritha_VoterCard_UPD3143468.pdf'},birthCert:{name:'Duggi Reddy Josritha',dob:'26-February-2006',placeOfBirth:'Sudha Test Tube Baby Center, Hyderabad',father:'Duggi Reddy Rajasekhar Reddy',mother:'Duggireddy Vasundhara',regNo:'791',src:'ID_Josritha_BirthCertificate_Hyderabad.pdf'}},
         education: [{ level: 'B.Tech (Current)', institution: 'KL Deemed to be University — KLH Campus', roll: '2420030493', email: '2420030493@klh.edu.in', src: 'EDU_Josritha_BTech_KLUniversity_Details.html' }, { level: 'B.Tech Results (Till Date)', field: 'Semester-wise Academic Performance', institution: 'KL Deemed to be University — KLH Campus', note: 'Sem 1: SGPA 9.26 · Sem 2: SGPA 9.29 · Sem 3: SGPA 9.17 (CGPA: 9.24)', sem1: 'SGPA 9.26 (Credits: 20)', sem2: 'SGPA 9.29 (Credits: 20)', sem3: 'SGPA 9.17 (Credits: 20)', cgpa: '9.24 (Till Sem 3)', src:'EDU_Josritha_BTech_KLUniversity_Results.html'},{level:'Intermediate / 12th',field:'MPC',institution:'Sri Harshini Junior College, Ongole',board:'BIE, AP',regNo:'2417214778',exam:'March 2024',result:'PASS – A GRADE',total:'878',src:'EDU_Josritha_Intermediate_BIEAndhraPradesh_2024.pdf'},{level:'SSC / 10th',institution:'Global Edge School, Kukatpalli, Hyderabad',board:'CBSE',roll:'20164403',year:'2022',result:'PASS',issued:'22/07/2022',src:'EDU_Josritha_SSC_CBSE_2022.pdf'}],
       insurance:[{type:'Family Floater',note:true,policy:'4193i/APRN/400529214/00/000',sumInsured:'₹15,00,000 per member'}]
     }
   },
-  jeevan:{id:'jeevan',color:'#0d9488',gradient:'linear-gradient(135deg,#065f46,#0d9488)',initials:'JV',name:'Jeevan Vidyadhar Duggireddy',shortName:'Jeevan',role:'Son',dob:'2010-08-22',gender:'Male',father:'Rajasekhar Reddy Duggireddy',mother:'Vasundhara Duggireddy',
+  jeevan:{id:'jeevan',color:'#0d9488',gradient:'linear-gradient(135deg,#065f46,#0d9488)',initials:'JV',name:'Jeevan Vidyadhar Duggireddy',shortName:'Jeevan',role:'Son',dob:'2010-08-22',gender:'Male',mobile:'9063359446',father:'Rajasekhar Reddy Duggireddy',mother:'Vasundhara Duggireddy',
     sections:{
       identity:{aadhaar:{number:'6918 2946 7739',vid:'9158 3149 4395 7932',enrolment:'0867/80256/00218',issued:'11/01/2017',mobile:'9640656595 (Father)',src:'ID_Jeevan_Aadhaar_6918-2946-7739.pdf'},birthCert:{name:'Duggireddy Jeevan',dob:'22/08/2010',sex:'Male',place:'Ongole Municipality, Prakasam District, AP',father:'Rajasekhar Duggireddy',mother:'Vasundhara Duggireddy',src:'ID_Jeevan_BirthCertificate_Ongole.pdf'}},
       finance:[{bank:'HDFC Bank',type:'Savings',account:'50100671382555',cif:'261391217',src:'FIN_Family_BankAccounts_Reference.txt'}],
@@ -5615,8 +5840,9 @@ const WIDGET_DEFS = {
   bills:      { id:'bills',      icon:'💸', name:'Bills & Reminders',   desc:'Monthly bill tracker with paid/unpaid toggle' },
   att_risk:   { id:'att_risk',   icon:'📊', name:'Attendance Risk Meter', desc:'Live subject-wise attendance % bar for Josritha' },
   finance:    { id:'finance',    icon:'💳', name:'Finance Sync',          desc:'Google Sheets transaction feed with spend summary' },
+  bank_txns:  { id:'bank_txns',  icon:'🏦', name:'Bank Transactions',    desc:'Multi-bank statement viewer from scraped JSON data' },
 };
-const DEFAULT_WIDGETS=['hero','att_risk','ai_briefing2','priority','family','grocery','timeline','att_severity','vehicle','health_pulse','bills','finance','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','att_risk','ai_briefing2','priority','family','grocery','timeline','bank_txns','vehicle','health_pulse','bills','finance','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
@@ -6008,6 +6234,7 @@ function buildWidgetHTML(wid) {
     case 'bills':       return '<div class="w-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="w-hdr" style="margin:0">💸 &nbsp;Bills & Reminders</div><span class="card-action" onclick="billsResetMonth()" style="font-size:11px;">Reset Month</span></div><div id="bills-body">' + buildBillsWidget() + '</div></div>';
     case 'att_risk':    return '<div class="w-card" style="padding:14px 16px 12px;" id="att-risk-card">' + buildAttRiskMeter() + '</div>';
     case 'finance':     return buildFinanceWidget();
+    case 'bank_txns':   return buildBankTxnsWidget();
     case 'ai_meals': return `<div class="ai-meal-widget">
       <div class="aimw-header">
         <div class="w-hdr" style="margin:0">🍛 &nbsp;AI Meal Planner</div>
@@ -8241,6 +8468,7 @@ function initWidgetDynamic() {
     if (wid === 'att_severity' || wid === 'josritha_acad') { body.innerHTML = buildJosrithaAcadWidget(); requestAnimationFrame(function(){ jacInitSwipe(); }); }
     else if (wid === 'att_risk')   { var c = body.querySelector('#att-risk-card'); if (c) c.innerHTML = buildAttRiskMeter(); }
     else if (wid === 'finance')    { body.innerHTML = buildFinanceWidget(); }
+    else if (wid === 'bank_txns')  { body.innerHTML = buildBankTxnsWidget(); }
     else if (wid === 'vehicle')  body.innerHTML = buildVehicleWidget();
     else if (wid === 'photos')   body.innerHTML = buildMemoryWallWidget();
     // grocery + briefing only refresh on tab switch — don't wipe user input
@@ -12918,7 +13146,144 @@ function uhRefreshUI() {
   }
 }
 
-// Call uhRefreshUI when upload page is visited — hooked via goPage's page-show logic
+// ═══════════════════════════════════════════════════════
+// BANK TRANSACTIONS WIDGET
+// ═══════════════════════════════════════════════════════
+
+var _btwActiveBank = 'icici';
+
+function btwFmtAmt(n) {
+  if (!n || n === 0) return '\u20b90';
+  return '\u20b9' + Math.abs(n).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function btwGetIcon(title, type) {
+  var t = (title || '').toLowerCase();
+  if (t.indexOf('upi') !== -1 || t.indexOf('payme') !== -1 || t.indexOf('gpay') !== -1 || t.indexOf('phonepe') !== -1) return '\ud83d\udcf1';
+  if (t.indexOf('airtel') !== -1 || t.indexOf('jio') !== -1 || t.indexOf('bsnl') !== -1) return '\ud83d\udcde';
+  if (t.indexOf('swiggy') !== -1 || t.indexOf('zomato') !== -1) return '\ud83c\udf5b';
+  if (t.indexOf('amazon') !== -1 || t.indexOf('flipkart') !== -1 || t.indexOf('myntra') !== -1) return '\ud83d\udece\ufe0f';
+  if (t.indexOf('petrol') !== -1 || t.indexOf('fuel') !== -1 || t.indexOf('bpcl') !== -1 || t.indexOf('iocl') !== -1) return '\u26fd';
+  if (t.indexOf('self') !== -1 || t.indexOf('transfer') !== -1 || t.indexOf('neft') !== -1 || t.indexOf('imps') !== -1 || t.indexOf('rtgs') !== -1) return '\ud83d\udd04';
+  if (t.indexOf('salary') !== -1 || t.indexOf('payroll') !== -1 || t.indexOf('dataspeaks') !== -1) return '\ud83d\udcbc';
+  if (t.indexOf('atm') !== -1 || t.indexOf('cash') !== -1) return '\ud83d\udcb5';
+  if (t.indexOf('emi') !== -1 || t.indexOf('loan') !== -1) return '\ud83c\udfe6';
+  if (t.indexOf('insurance') !== -1 || t.indexOf('lic') !== -1) return '\ud83d\udee1\ufe0f';
+  if (t.indexOf('electricity') !== -1 || t.indexOf('bill') !== -1) return '\u26a1';
+  if (type === 'CR') return '\ud83d\udcb0';
+  return '\ud83d\udcb3';
+}
+
+function btwSetTab(bank) {
+  _btwActiveBank = bank;
+  var body = document.getElementById('btw-body');
+  if (body) body.innerHTML = buildBankTxnsBody();
+}
+
+function buildBankTxnsBody() {
+  var banks = [
+    { key: 'icici', label: 'ICICI', storageKey: 'fp_bank_stmt_icici' },
+    { key: 'hdfc',  label: 'HDFC',  storageKey: 'fp_bank_stmt_hdfc'  },
+    { key: 'axis',  label: 'AXIS',  storageKey: 'fp_bank_stmt_axis'  }
+  ];
+
+  var html = '';
+
+  // Tabs
+  html += '<div class="btw-tabs">';
+  banks.forEach(function(b) {
+    var hasData = !!localStorage.getItem(b.storageKey);
+    var activeClass = (_btwActiveBank === b.key) ? ' active' : '';
+    var noDataClass = !hasData ? ' no-data' : '';
+    html += '<div class="btw-tab' + activeClass + noDataClass + '" onclick="btwSetTab(\'' + b.key + '\')">'
+      + '<div class="btw-tab-dot"></div>' + b.label + '</div>';
+  });
+  html += '</div>';
+
+  var activeBankCfg = null;
+  for (var i = 0; i < banks.length; i++) { if (banks[i].key === _btwActiveBank) { activeBankCfg = banks[i]; break; } }
+  if (!activeBankCfg) return html;
+
+  var raw = localStorage.getItem(activeBankCfg.storageKey);
+  if (!raw) {
+    html += '<div class="btw-no-data">'
+      + '<div class="btw-no-data-icon">\ud83c\udfe6</div>'
+      + '<div class="btw-no-data-title">' + activeBankCfg.label + ' not synced yet</div>'
+      + '<div class="btw-no-data-sub">Run the bookmark scraper on the ' + activeBankCfg.label + ' statement<br>page, then upload the JSON via Data Sync Hub.</div>'
+      + '<div class="btw-no-data-btn" onclick="goPage(\'upload\')">&#x1F4E1; Open Data Sync Hub</div>'
+      + '</div>';
+    return html;
+  }
+
+  var data = null;
+  try { data = JSON.parse(raw); } catch(e) { return html + '<div class="btw-no-data"><div class="btw-no-data-title">Parse error — re-upload file</div></div>'; }
+
+  var txns = data.transactions || [];
+  var totalDebit  = txns.reduce(function(s,t){ return s + (t.debit  || 0); }, 0);
+  var totalCredit = txns.reduce(function(s,t){ return s + (t.credit || 0); }, 0);
+  var closingBal  = data.closingBalance || 0;
+
+  html += '<div class="btw-summary">'
+    + '<div class="btw-sum-tile"><div class="btw-sum-val" style="color:var(--green);">' + btwFmtAmt(totalCredit) + '</div><div class="btw-sum-lbl">Credit</div></div>'
+    + '<div class="btw-sum-tile"><div class="btw-sum-val" style="color:var(--red);">'   + btwFmtAmt(totalDebit)  + '</div><div class="btw-sum-lbl">Debit</div></div>'
+    + '<div class="btw-sum-tile"><div class="btw-sum-val" style="color:var(--gold);">'  + btwFmtAmt(closingBal)  + '</div><div class="btw-sum-lbl">Balance</div></div>'
+    + '</div>';
+
+  if (data.period) {
+    html += '<div class="btw-sum-period">' + data.period + ' \u00b7 ' + txns.length + ' transactions</div>';
+  }
+
+  var recent = txns.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); }).slice(0, 8);
+
+  html += '<div class="btw-txn-list">';
+  recent.forEach(function(t) {
+    var isDebit  = (t.debit  || 0) > 0;
+    var amt      = isDebit ? (t.debit || 0) : (t.credit || 0);
+    var typeClass = isDebit ? 'dr' : 'cr';
+    var sign     = isDebit ? '\u2212' : '+';
+    var parts    = (t.date || '').split('-');
+    var dayNum   = parts[2] ? parseInt(parts[2]) : '--';
+    var monIdx   = parts[1] ? parseInt(parts[1]) : 0;
+    var mons     = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var monStr   = mons[monIdx] || '';
+    var title    = (t.title || t.remark || 'Transaction').substring(0, 22);
+    var sub      = (t.sub || '').substring(0, 30);
+    var ico      = btwGetIcon(t.title || t.remark || '', t.type || '');
+
+    html += '<div class="btw-txn-row">'
+      + '<div class="btw-txn-date-col"><div class="btw-txn-day">' + dayNum + '</div><div class="btw-txn-mon">' + monStr + '</div></div>'
+      + '<div class="btw-txn-ico ' + typeClass + '">' + ico + '</div>'
+      + '<div class="btw-txn-mid"><div class="btw-txn-title">' + title + '</div>'
+      + (sub ? '<div class="btw-txn-sub">' + sub + '</div>' : '') + '</div>'
+      + '<div><div class="btw-txn-amt ' + typeClass + '">' + sign + btwFmtAmt(amt) + '</div>'
+      + (t.balance ? '<div class="btw-txn-bal">\u20b9' + Number(t.balance).toLocaleString('en-IN') + '</div>' : '')
+      + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<div class="btw-balance-bar">'
+    + '<div><div class="btw-balance-label">Closing Balance</div>'
+    + '<div class="btw-balance-val">' + btwFmtAmt(closingBal) + '</div></div>'
+    + '<div class="btw-see-all pressable" onclick="goPage(\'upload\')">Sync \u2192</div>'
+    + '</div>';
+
+  return html;
+}
+
+function buildBankTxnsWidget() {
+  return '<div class="btw-card">'
+    + '<div class="btw-header">'
+    + '<div class="btw-header-left">'
+    + '<div class="btw-title">\ud83c\udfe6 Bank Transactions</div>'
+    + '<div class="btw-sub">ICICI \u00b7 HDFC \u00b7 AXIS \u00b7 Scraped live</div>'
+    + '</div>'
+    + '<div class="btw-upload-btn pressable" onclick="goPage(\'upload\')">\ud83d\udce1 Sync</div>'
+    + '</div>'
+    + '<div id="btw-body">' + buildBankTxnsBody() + '</div>'
+    + '</div>';
+}
+
+// Call uhRefreshUI when upload page is visited — hooked via goPage\\'s page-show logic
 function initUploadHub() {
   uhRefreshUI();
 }
