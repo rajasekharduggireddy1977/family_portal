@@ -4243,6 +4243,7 @@ body.dash-active #aura-canvas{ display:block; }
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
   display:flex;flex-direction:column;gap:10px;
+  touch-action:pan-y;
 }
 .aura-panel::-webkit-scrollbar{display:none;}
 
@@ -4930,6 +4931,13 @@ body.dash-active #aura-canvas{ display:block; }
               <div class="tc-divider"></div>
               <div class="tc-sec-hd"><div class="tc-sec-title">Today's Classes</div><div class="tc-sec-action" onclick="goPage('members')">Timetable →</div></div>
               <div id="aura-today-classes"></div>
+            </div>
+            <div class="tc tc-edu" id="aura-sgpa-card">
+              <div class="tc-sec-hd" style="padding-top:16px;">
+                <div class="tc-sec-title">SGPA Trend · Sems 1–3</div>
+                <div class="tc-sec-action" style="color:#a78bfa;">CGPA 9.24</div>
+              </div>
+              <div id="aura-sgpa-bars" style="display:flex;align-items:flex-end;gap:10px;padding:10px 20px 16px;"></div>
             </div>
             <div class="aura-btn aura-btn-edu aura-press" onclick="goPage('members')">Full Academic Report →</div>
             <div style="height:8px;"></div>
@@ -9286,15 +9294,20 @@ function auraInitSwipe() {
   var stage = document.getElementById('aura-stage');
   var track = document.getElementById('aura-track');
   if (!stage || !track) return;
-  var tx0=0, ty0=0, dragging=false, ddx=0, mouseDown=false, mx0=0;
+  var tx0=0, ty0=0, dragging=false, ddx=0, mouseDown=false, mx0=0, intentLocked=false, intentH=false;
 
   stage.addEventListener('touchstart', function(e) {
-    tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; dragging=false; ddx=0;
+    tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; dragging=false; ddx=0; intentLocked=false; intentH=false;
     track.style.transition='none'; track.classList.add('aura-live');
   }, {passive:true});
   stage.addEventListener('touchmove', function(e) {
     var dx=e.touches[0].clientX-tx0; var dy=e.touches[0].clientY-ty0;
-    if (!dragging && Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>10) dragging=true;
+    if (!intentLocked && (Math.abs(dx)>8 || Math.abs(dy)>8)) {
+      intentLocked=true;
+      intentH = Math.abs(dx) > Math.abs(dy);
+    }
+    if (!intentH) return; // vertical — let browser scroll
+    if (!dragging && intentH && Math.abs(dx)>10) dragging=true;
     if (dragging) {
       ddx=dx;
       var resist=(_auraCur===0&&dx>0)||(_auraCur===_auraSlides.length-1&&dx<0)?.2:1;
@@ -9503,13 +9516,42 @@ function auraRenderHealth() {
   var scores = { rajasekhar:82, vasundhara:71, josritha:88, jeevan:91 };
   var statuses = { rajasekhar:'All clear', vasundhara:'Check-up due', josritha:'Healthy', jeevan:'Excellent' };
   var statusColors = { rajasekhar:'var(--green)', vasundhara:'var(--gold)', josritha:'var(--green)', jeevan:'var(--green)' };
+  var memberAlerts = { rajasekhar:[], vasundhara:[], josritha:[], jeevan:[] };
 
-  // Calculate real scores from markers if available
+  // Calculate real scores from actual marker data
   if (healthRaw) {
     try {
       var hd = JSON.parse(healthRaw);
-      // Vasundhara TSH = 6.004 (high), triglycerides=200 (border), vitb12=132 (low)
-      // Keep scores as-is since they are derived values
+      var memberIds = ['rajasekhar','vasundhara','josritha','jeevan'];
+      for (var mi=0; mi<memberIds.length; mi++) {
+        var mid = memberIds[mi];
+        var md = hd[mid]; if (!md || !md.markers) continue;
+        var mk = md.markers; var issues = []; var warnings = [];
+        if (mk.tsh && mk.tsh > 4.5) issues.push('TSH ' + mk.tsh);
+        if (mk.tsh && mk.tsh < 0.4) issues.push('TSH low ' + mk.tsh);
+        if (mk.hemoglobin && mk.hemoglobin < 12) issues.push('Hgb ' + mk.hemoglobin);
+        if (mk.glucose && mk.glucose > 126) issues.push('Glucose ' + mk.glucose);
+        if (mk.hba1c && mk.hba1c > 6.4) issues.push('HbA1c ' + mk.hba1c);
+        if (mk.ldl && mk.ldl > 130) warnings.push('LDL ' + mk.ldl);
+        if (mk.vitd && mk.vitd < 20) warnings.push('Vit-D ' + mk.vitd);
+        if (mk.vitb12 && mk.vitb12 < 200) warnings.push('B12 ' + mk.vitb12);
+        if (mk.triglycerides && mk.triglycerides > 150) warnings.push('Trigs ' + mk.triglycerides);
+        memberAlerts[mid] = issues.concat(warnings);
+        var sc = 100 - issues.length*12 - warnings.length*5;
+        if (sc < 50) sc = 50;
+        scores[mid] = sc;
+        if (issues.length > 0) {
+          statuses[mid] = issues[0] + (issues.length>1?' +' + (issues.length-1) + ' more':'');
+          statusColors[mid] = 'var(--red)';
+        } else if (warnings.length > 0) {
+          statuses[mid] = warnings[0] + (warnings.length>1?' +' + (warnings.length-1):'');
+          statusColors[mid] = 'var(--gold)';
+        } else {
+          statuses[mid] = 'All markers OK';
+          statusColors[mid] = 'var(--green)';
+          scores[mid] = 95;
+        }
+      }
     } catch(e){}
   }
 
@@ -9530,9 +9572,10 @@ function auraRenderHealth() {
   for (var i=0; i<members.length; i++) {
     var m = members[i];
     var sc = scores[m.id]; var st = statuses[m.id]; var stc = statusColors[m.id];
-    pillsHtml += '<div class="tc-mpill' + (m.alert?' tc-mpill-alert':'') + '" onclick="goPage(\'health\')">'
+    var hasAlert = memberAlerts[m.id] && memberAlerts[m.id].length > 0;
+    pillsHtml += '<div class="tc-mpill' + (hasAlert?' tc-mpill-alert':'') + '" onclick="goPage(\'health\')">'
       + '<div class="tc-mpill-av" style="background:'+m.bg+';color:'+m.color+';">'+m.init+'</div>'
-      + '<div><div class="tc-mpill-name">'+m.label+'</div><div class="tc-mpill-status" style="color:'+stc+';">'+st+'</div></div>'
+      + '<div style="flex:1;min-width:0;"><div class="tc-mpill-name">'+m.label+'</div><div class="tc-mpill-status" style="color:'+stc+';font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px;">'+st+'</div></div>'
       + '<div class="tc-mpill-score" style="color:'+stc+';">'+sc+'</div>'
       + '</div>';
   }
@@ -9688,6 +9731,24 @@ function auraRenderEducation() {
   if (!classHtml) classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No timetable data — upload via Sync Hub</div>';
   var classEl = document.getElementById('aura-today-classes');
   if (classEl) classEl.innerHTML = classHtml;
+
+  // SGPA Semester Trend
+  var sgpaSems = [
+    { lbl:'Sem 1', val:9.26 }, { lbl:'Sem 2', val:9.29 }, { lbl:'Sem 3', val:9.17 }
+  ];
+  var sgpaMax = 10; var sgpaHtml = '';
+  for (var si=0; si<sgpaSems.length; si++) {
+    var sg = sgpaSems[si];
+    var sh = Math.round(sg.val/sgpaMax*60);
+    var sc2 = sg.val >= 9.2 ? 'var(--green)' : sg.val >= 9.0 ? 'var(--gold)' : 'var(--red)';
+    sgpaHtml += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+      + '<div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:800;color:'+sc2+';">'+sg.val+'</div>'
+      + '<div style="width:100%;height:'+sh+'px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,'+sc2+',rgba(167,139,250,.12));min-height:8px;"></div>'
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:rgba(200,210,240,.5);">'+sg.lbl+'</div>'
+      + '</div>';
+  }
+  var sgpaEl = document.getElementById('aura-sgpa-bars');
+  if (sgpaEl) sgpaEl.innerHTML = sgpaHtml;
 }
 
 /* ── Finance Panel ── */
@@ -9726,20 +9787,51 @@ function auraRenderFinance() {
     + '<div class="tc-fin-stat" onclick="auraGoSlide(3)"><div class="tc-fin-stat-v" style="color:var(--red);">-'+fmtAmt(totalDr)+'</div><div class="tc-fin-stat-l">Debits</div></div>'
     + '<div class="tc-fin-stat" onclick="auraGoSlide(3)"><div class="tc-fin-stat-v">'+txnCount+'</div><div class="tc-fin-stat-l">Txns</div></div>';
 
-  // Spend bars — use txn data grouped by month if available
+  // Spend bars — real debit totals by month from txn data
   var barsHtml = '';
-  var barData = [
-    {lbl:'OCT',h:28,cur:false},{lbl:'NOV',h:44,cur:false},{lbl:'DEC',h:58,cur:false},
-    {lbl:'JAN',h:34,cur:false},{lbl:'FEB',h:48,cur:false},{lbl:'MAR',h:38,cur:true}
-  ];
-  for (var b=0; b<barData.length; b++) {
-    var bd2 = barData[b];
+  var MONLBLS = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var now3 = new Date(); var curMon = now3.getMonth()+1; var curYr = now3.getFullYear();
+  var monthSpend = {};
+  for (var ti=0; ti<txns.length; ti++) {
+    var tp = (txns[ti].date||'').split('-');
+    var mkey = tp[0]+'-'+tp[1];
+    if (!monthSpend[mkey]) monthSpend[mkey] = 0;
+    monthSpend[mkey] += txns[ti].debit||0;
+  }
+  var barMonths = [];
+  for (var bmi=5; bmi>=0; bmi--) {
+    var bd3 = new Date(curYr, curMon-1-bmi, 1);
+    var ym = bd3.getFullYear()+'-'+String(bd3.getMonth()+1).padStart(2,'0');
+    barMonths.push({ lbl: MONLBLS[bd3.getMonth()+1], ym: ym, cur: bmi===0 });
+  }
+  var maxSpend = 1;
+  for (var bi2=0; bi2<barMonths.length; bi2++) { var sp3 = monthSpend[barMonths[bi2].ym]||0; if (sp3>maxSpend) maxSpend=sp3; }
+  for (var b=0; b<barMonths.length; b++) {
+    var bm = barMonths[b];
+    var spend = monthSpend[bm.ym]||0;
+    var h = spend>0 ? Math.max(8, Math.round(spend/maxSpend*58)) : (bm.cur?22:8);
+    var hasData = spend > 0;
     barsHtml += '<div class="tc-bar-col">'
-      + '<div class="tc-bar'+(bd2.cur?' tc-bar-cur':'') +'" style="height:'+bd2.h+'px;background:'+(bd2.cur?'linear-gradient(180deg,var(--blue2),rgba(79,127,255,.2))':'linear-gradient(180deg,rgba(245,158,11,.5),rgba(245,158,11,.15))')+'"></div>'
-      + '<div class="tc-bar-lbl" style="'+(bd2.cur?'color:var(--blue2);':'')+'">'+bd2.lbl+'</div></div>';
+      + '<div style="font-family:\'DM Mono\',monospace;font-size:7px;color:rgba(200,210,240,.4);text-align:center;margin-bottom:2px;">'+(hasData?fmtAmt(spend):'')+'</div>'
+      + '<div class="tc-bar'+(bm.cur?' tc-bar-cur':'')+'" style="height:'+h+'px;background:'+(bm.cur?'linear-gradient(180deg,var(--blue2),rgba(79,127,255,.2))':(hasData?'linear-gradient(180deg,rgba(245,158,11,.6),rgba(245,158,11,.18))':'linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01))'))+';"></div>'
+      + '<div class="tc-bar-lbl" style="'+(bm.cur?'color:var(--blue2);':'')+'">'+bm.lbl+'</div></div>';
   }
   var barsEl = document.getElementById('aura-spend-bars');
   if (barsEl) barsEl.innerHTML = barsHtml;
+
+  // Transaction count label
+  var countEl = document.getElementById('aura-txn-count-lbl');
+  if (countEl) countEl.textContent = 'Show all ' + txnCount + ' →';
+
+
+
+
+
+
+
+
+
+
 
   // Transaction count label
   var countEl = document.getElementById('aura-txn-count-lbl');
