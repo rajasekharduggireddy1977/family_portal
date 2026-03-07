@@ -10447,7 +10447,7 @@ function syncAttendanceFile(input) {
       localStorage.setItem("fp_attendance_synced_ts", ts);
       showToast("✅ " + data.length + " subjects synced");
       setTimeout(function() { autoManageAttendanceEvents(data); }, 200);
-      setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); }, 50);
+      setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); auraRenderEducation(); auraRenderAlerts(); }, 50);
       input.value = "";
     } catch(err) { showToast("❌ Could not parse file"); }
   };
@@ -10468,7 +10468,7 @@ function syncTimetableFile(input) {
       localStorage.setItem("fp_timetable_synced_ts", ts);
       window._acadView = 'combined';
       showToast("✅ Timetable synced — " + data.length + " slots loaded");
-      setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); }, 50);
+      setTimeout(() => { showMemberDetail("josritha","academics"); initWidgetDynamic(); auraRenderEducation(); auraRenderHome(); }, 50);
       input.value = "";
     } catch(err) { showToast("❌ Could not parse timetable file"); }
   };
@@ -11023,6 +11023,7 @@ function getHealthData() {
 }
 function saveHealthData(data) {
   localStorage.setItem('fp_health_v3', JSON.stringify(data));
+  setTimeout(function() { auraRenderHealth(); auraRenderAlerts(); }, 50);
 }
 
 // ── Compute health score (0–100) for a member ──
@@ -14240,6 +14241,7 @@ function uhHandleFile(type, input) {
       showToast('\u2705 ' + msg);
       if (card) card.classList.remove('uploading');
       uhRefreshUI();
+      setTimeout(function() { auraRenderAlerts(); auraRenderHealth(); auraRenderEducation(); auraRenderFinance(); auraRenderHome(); }, 100);
       input.value = '';
     } catch(err) {
       showToast('\u274c Could not parse JSON');
