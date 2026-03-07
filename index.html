@@ -9322,20 +9322,18 @@ function auraRenderGreeting() {
 function auraRenderAlerts() {
   // Attendance — Edu badge (dedupe by code, same as Members page)
   var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attArr = attRaw ? JSON.parse(attRaw) : (typeof ATTENDANCE !== 'undefined' ? ATTENDANCE : []);
   var critCount = 0;
-  if (attRaw) {
-    try {
-      var att = JSON.parse(attRaw);
-      var seen = {};
-      for (var i=0; i<att.length; i++) {
-        var a = att[i];
-        var key = a.code || (a.subject+'|'+a.type);
-        if (seen[key]) continue; seen[key]=1;
-        var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
-        if (pct < 75) critCount++;
-      }
-    } catch(e){}
-  }
+  try {
+    var seen = {};
+    for (var i=0; i<attArr.length; i++) {
+      var a = attArr[i];
+      var key = a.code || (a.subject+'|'+a.type);
+      if (seen[key]) continue; seen[key]=1;
+      var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
+      if (pct < 75) critCount++;
+    }
+  } catch(e){}
   var eduBadge = document.getElementById('aura-edu-badge');
   if (eduBadge) {
     if (critCount > 0) { eduBadge.style.display='flex'; eduBadge.textContent=critCount; }
@@ -9571,51 +9569,40 @@ function auraRenderHealth() {
 /* ── Education Panel ── */
 function auraRenderEducation() {
   var attRaw = localStorage.getItem('fp_attendance_synced');
+  var att = attRaw ? JSON.parse(attRaw) : (typeof ATTENDANCE !== 'undefined' ? ATTENDANCE : []);
   var subjects = [];
   var totalPres = 0; var totalCls = 0;
 
-  if (attRaw) {
-    try {
-      var att = JSON.parse(attRaw);
-      // Dedupe by code — same logic as Members/academics page
-      var seen = {};
-      var deduped = [];
-      for (var i=0; i<att.length; i++) {
-        var a = att[i];
-        var key = a.code || (a.subject+'|'+a.type);
-        if (!seen[key]) { seen[key]=true; deduped.push(a); }
-      }
-      totalPres = att.reduce(function(s,x){ return s+x.present; },0);
-      totalCls  = att.reduce(function(s,x){ return s+x.total; },0);
-      for (var j=0; j<deduped.length; j++) {
-        var d = deduped[j];
-        var pct = d.total>0 ? Math.round(d.present/d.total*100):100;
-        var shortName = d.subject
-          .replace('MATHEMATICAL OPTIMIZATION','MATH OPTIMIZATION')
-          .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
-          .replace('COMPUTER NETWORKS','COMP NETWORKS')
-          .replace('DESIGN AND ANALYSIS OF ALGORITHMS','ALGO DESIGN')
-          .replace('AWS CERTIFIED CLOUD PRACTITIONER','AWS CLOUD')
-          .replace('GLOBAL LOGIC BUILDING CONTEST PRACTICUM','GLOBAL LOGIC')
-          .replace('CLOUD INFRASTRUCTURE AND SERVICES','CLOUD INFRA')
-          .replace('ADVANCED DATA STRUCTURES','ADV DATA STRUCT');
-        subjects.push({ name:shortName, pct:pct });
-      }
-      subjects.sort(function(a,b){ return a.pct-b.pct; });
-    } catch(e){}
-  }
+  try {
+    var seen = {};
+    var deduped = [];
+    for (var i=0; i<att.length; i++) {
+      var a = att[i];
+      var key = a.code || (a.subject+'|'+a.type);
+      if (!seen[key]) { seen[key]=true; deduped.push(a); }
+    }
+    totalPres = att.reduce(function(s,x){ return s+x.present; },0);
+    totalCls  = att.reduce(function(s,x){ return s+x.total; },0);
+    for (var j=0; j<deduped.length; j++) {
+      var d = deduped[j];
+      var pct = d.total>0 ? Math.round(d.present/d.total*100):100;
+      var shortName = (d.subject||'')
+        .replace('MATHEMATICAL OPTIMIZATION','MATH OPTIMIZATION')
+        .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
+        .replace('COMPUTER NETWORKS','COMP NETWORKS')
+        .replace('DESIGN AND ANALYSIS OF ALGORITHMS','ALGO DESIGN')
+        .replace('AWS CERTIFIED CLOUD PRACTITIONER','AWS CLOUD')
+        .replace('GLOBAL LOGIC BUILDING CONTEST PRACTICUM','GLOBAL LOGIC')
+        .replace('CLOUD INFRASTRUCTURE AND SERVICES','CLOUD INFRA')
+        .replace('ADVANCED DATA STRUCTURES','ADV DATA STRUCT');
+      subjects.push({ name:shortName, pct:pct });
+    }
+    subjects.sort(function(a,b){ return a.pct-b.pct; });
+  } catch(e){}
 
-  if (subjects.length === 0) {
-    subjects = [
-      {name:'Math Optimization',pct:70},{name:'Comp Networks',pct:75},
-      {name:'Cloud Infra',pct:80},{name:'Full Stack Dev',pct:77},{name:'Algo Design',pct:85}
-    ];
-    totalPres=150; totalCls=200;
-  }
-
-  // Subject bars (show worst 5)
+  // Subject bars — all subjects sorted worst first
   var barsHtml = '';
-  var showSubjs = subjects; // show all subjects
+  var showSubjs = subjects;
   for (var s=0; s<showSubjs.length; s++) {
     var sb = showSubjs[s];
     var c = sb.pct < 75 ? 'linear-gradient(90deg,var(--red),#ff8080)' : sb.pct < 80 ? 'linear-gradient(90deg,var(--orange,#fb923c),#fbbf24)' : 'linear-gradient(90deg,var(--green),#86efac)';
