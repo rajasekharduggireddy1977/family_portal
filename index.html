@@ -2099,6 +2099,205 @@ body::after{content:'';position:fixed;bottom:-200px;right:-200px;width:600px;hei
 }
 
 /* ══════════════════════════════════════════════
+   UPLOAD HUB PAGE
+══════════════════════════════════════════════ */
+.upload-hub-wrap {
+  padding: 16px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.upload-hub-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 4px;
+}
+.upload-hub-icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(79,127,255,.15), rgba(240,180,41,.1));
+  border: 1px solid rgba(79,127,255,.25);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.upload-hub-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.upload-hub-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 0 2px;
+}
+.upload-hub-section-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.upload-hub-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all .18s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+  overflow: hidden;
+}
+.upload-hub-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(79,127,255,.04), transparent);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.upload-hub-card:hover::before { opacity: 1; }
+.upload-hub-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,.25); }
+.upload-hub-card:active { transform: scale(0.98); }
+.upload-hub-card.synced { border-color: rgba(62,207,142,.2); }
+.upload-hub-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.upload-hub-card-ico {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: 1px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.upload-hub-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.2px;
+}
+.upload-hub-card-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.upload-hub-card-ts {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  margin-top: 3px;
+  min-height: 14px;
+}
+.upload-hub-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.upload-hub-status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border2);
+  transition: background .3s;
+}
+.upload-hub-status-dot.synced { background: var(--green); box-shadow: 0 0 6px rgba(62,207,142,.5); }
+.upload-hub-card-arrow {
+  font-size: 16px;
+  color: var(--text3);
+  font-weight: 700;
+  line-height: 1;
+  transition: color .2s, transform .2s;
+}
+.upload-hub-card:hover .upload-hub-card-arrow { color: var(--blue2); transform: translateY(-2px); }
+.upload-hub-card.uploading .upload-hub-card-arrow {
+  animation: uhPulse .6s ease-in-out infinite alternate;
+}
+@keyframes uhPulse { from { opacity: .3; } to { opacity: 1; } }
+.upload-hub-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 0;
+}
+.upload-hub-stat {
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  padding: 0 8px;
+}
+.upload-hub-stat:last-child { border-right: none; }
+.upload-hub-stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+.upload-hub-stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.upload-hub-instructions {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.upload-hub-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.upload-hub-step-num {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  background: var(--blue-dim);
+  border: 1px solid rgba(79,127,255,.2);
+  color: var(--blue2);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ══════════════════════════════════════════════
    IMPROVEMENT 4 — FLOATING ACTION BUTTON (FAB)
 ══════════════════════════════════════════════ */
 #fab-btn-wrap {
@@ -3791,6 +3990,9 @@ input:focus, button:focus-visible {
 <div id="ai-panel-backdrop" onclick="toggleAIPanel()"></div>
 
 <div id="fab-menu" class="hidden">
+  <div class="fab-item" onclick="fabAction('upload')">
+    <div class="fab-item-ico">📡</div> Data Sync Hub
+  </div>
   <div class="fab-item" onclick="fabAction('event')">
     <div class="fab-item-ico">📅</div> Add Event
   </div>
@@ -4471,6 +4673,141 @@ input:focus, button:focus-visible {
 </div>
 
 
+<!-- ═══════════════════════════════════════════
+     UPLOAD HUB PAGE
+═══════════════════════════════════════════ -->
+<div class="page" id="page-upload">
+  <div class="upload-hub-wrap">
+
+    <div class="upload-hub-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="upload-hub-icon-wrap">
+          <span style="font-size:26px;">📡</span>
+        </div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;">Data Sync Hub</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.5px;text-transform:uppercase;">Upload scraped JSON files</div>
+        </div>
+      </div>
+      <div id="upload-hub-last-sync" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-align:right;line-height:1.6;"></div>
+    </div>
+
+    <!-- ── CATEGORY: ACADEMICS ── -->
+    <div class="upload-hub-section">
+      <div class="upload-hub-section-label">
+        <span class="upload-hub-section-dot" style="background:var(--pink);"></span>
+        JOSRITHA · ACADEMICS
+      </div>
+
+      <!-- Attendance -->
+      <div class="upload-hub-card" id="uhcard-attendance" onclick="uhTrigger('attendance')">
+        <div class="upload-hub-card-left">
+          <div class="upload-hub-card-ico" style="background:rgba(244,114,182,.12);border-color:rgba(244,114,182,.25);">📊</div>
+          <div>
+            <div class="upload-hub-card-title">Attendance</div>
+            <div class="upload-hub-card-sub">Subject-wise present / total counts</div>
+            <div class="upload-hub-card-ts" id="uh-ts-attendance"></div>
+          </div>
+        </div>
+        <div class="upload-hub-card-right">
+          <div class="upload-hub-status-dot" id="uh-dot-attendance"></div>
+          <div class="upload-hub-card-arrow">↑</div>
+        </div>
+        <input type="file" accept=".json" id="uh-file-attendance" style="display:none;" onchange="uhHandleFile('attendance',this)">
+      </div>
+
+      <!-- Timetable -->
+      <div class="upload-hub-card" id="uhcard-timetable" onclick="uhTrigger('timetable')">
+        <div class="upload-hub-card-left">
+          <div class="upload-hub-card-ico" style="background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.25);">🗓️</div>
+          <div>
+            <div class="upload-hub-card-title">Timetable</div>
+            <div class="upload-hub-card-sub">Weekly schedule · period slots · rooms</div>
+            <div class="upload-hub-card-ts" id="uh-ts-timetable"></div>
+          </div>
+        </div>
+        <div class="upload-hub-card-right">
+          <div class="upload-hub-status-dot" id="uh-dot-timetable"></div>
+          <div class="upload-hub-card-arrow">↑</div>
+        </div>
+        <input type="file" accept=".json" id="uh-file-timetable" style="display:none;" onchange="uhHandleFile('timetable',this)">
+      </div>
+    </div>
+
+    <!-- ── CATEGORY: BANK STATEMENTS ── -->
+    <div class="upload-hub-section">
+      <div class="upload-hub-section-label">
+        <span class="upload-hub-section-dot" style="background:var(--gold);"></span>
+        BANK STATEMENTS
+      </div>
+
+      <!-- ICICI -->
+      <div class="upload-hub-card" id="uhcard-bank-icici" onclick="uhTrigger('bank-icici')">
+        <div class="upload-hub-card-left">
+          <div class="upload-hub-card-ico" style="background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.2);">🏦</div>
+          <div>
+            <div class="upload-hub-card-title">ICICI Bank</div>
+            <div class="upload-hub-card-sub">Rajasekhar · A/c …0595 · Detailed statement</div>
+            <div class="upload-hub-card-ts" id="uh-ts-bank-icici"></div>
+          </div>
+        </div>
+        <div class="upload-hub-card-right">
+          <div class="upload-hub-status-dot" id="uh-dot-bank-icici"></div>
+          <div class="upload-hub-card-arrow">↑</div>
+        </div>
+        <input type="file" accept=".json" id="uh-file-bank-icici" style="display:none;" onchange="uhHandleFile('bank-icici',this)">
+      </div>
+
+      <!-- HDFC -->
+      <div class="upload-hub-card" id="uhcard-bank-hdfc" onclick="uhTrigger('bank-hdfc')">
+        <div class="upload-hub-card-left">
+          <div class="upload-hub-card-ico" style="background:rgba(79,127,255,.1);border-color:rgba(79,127,255,.2);">🏦</div>
+          <div>
+            <div class="upload-hub-card-title">HDFC Bank</div>
+            <div class="upload-hub-card-sub">Rajasekhar · A/c …3742 · Detailed statement</div>
+            <div class="upload-hub-card-ts" id="uh-ts-bank-hdfc"></div>
+          </div>
+        </div>
+        <div class="upload-hub-card-right">
+          <div class="upload-hub-status-dot" id="uh-dot-bank-hdfc"></div>
+          <div class="upload-hub-card-arrow">↑</div>
+        </div>
+        <input type="file" accept=".json" id="uh-file-bank-hdfc" style="display:none;" onchange="uhHandleFile('bank-hdfc',this)">
+      </div>
+
+      <!-- AXIS -->
+      <div class="upload-hub-card" id="uhcard-bank-axis" onclick="uhTrigger('bank-axis')">
+        <div class="upload-hub-card-left">
+          <div class="upload-hub-card-ico" style="background:rgba(62,207,142,.1);border-color:rgba(62,207,142,.2);">🏦</div>
+          <div>
+            <div class="upload-hub-card-title">AXIS Bank</div>
+            <div class="upload-hub-card-sub">Rajasekhar · A/c …7901 · Statement</div>
+            <div class="upload-hub-card-ts" id="uh-ts-bank-axis"></div>
+          </div>
+        </div>
+        <div class="upload-hub-card-right">
+          <div class="upload-hub-status-dot" id="uh-dot-bank-axis"></div>
+          <div class="upload-hub-card-arrow">↑</div>
+        </div>
+        <input type="file" accept=".json" id="uh-file-bank-axis" style="display:none;" onchange="uhHandleFile('bank-axis',this)">
+      </div>
+    </div>
+
+    <!-- ── SYNC SUMMARY ── -->
+    <div class="upload-hub-summary" id="upload-hub-summary"></div>
+
+    <!-- ── INSTRUCTIONS ── -->
+    <div class="upload-hub-instructions">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;">HOW IT WORKS</div>
+      <div class="upload-hub-step"><span class="upload-hub-step-num">1</span><span>Open college/bank portal in browser</span></div>
+      <div class="upload-hub-step"><span class="upload-hub-step-num">2</span><span>Click the saved bookmark scraper</span></div>
+      <div class="upload-hub-step"><span class="upload-hub-step-num">3</span><span>Hit <b style="color:var(--green);">&#x2B07; DOWNLOAD JSON</b> in the overlay</span></div>
+      <div class="upload-hub-step"><span class="upload-hub-step-num">4</span><span>Come here and tap the matching card</span></div>
+    </div>
+
+  </div>
+</div>
+
 <div id="toast">✓ Copied to clipboard</div>
 
 <!-- Swipe hint -->
@@ -4715,6 +5052,7 @@ function goPage(page) {
   if(page==='health')   { setTimeout(()=>{ initHealthPage(); applyGmHealth(); },80); }
   if(page==='documents') { setTimeout(()=>{ applyGmDocuments(); collapseAllDocSections(); },80); }
   if(page==='dashboard') { setTimeout(()=>applyGmDashboard(),60); }
+  if(page==='upload')    { setTimeout(function(){ if(typeof uhRefreshUI==='function') uhRefreshUI(); },80); }
 }
 
 // ═══════════════════════════════════════════════════
@@ -10769,6 +11107,9 @@ const BACKUP_KEYS = [
   'fp_health_v3','fp_health_appts_v3','fp_health_reports_v3',
   'fp_attendance_synced','fp_attendance_synced_ts',
   'fp_timetable_synced','fp_timetable_synced_ts',
+  'fp_bank_stmt_icici','fp_bank_stmt_icici_ts',
+  'fp_bank_stmt_hdfc','fp_bank_stmt_hdfc_ts',
+  'fp_bank_stmt_axis','fp_bank_stmt_axis_ts',
   'fp_widgets','fp_widgets_ver',
   'fp_theme','fp_active_member','fp_pin','emg_collapsed',
   'fp_groq_key',  // ← AI key — included in backup so it survives redeployment
@@ -11489,7 +11830,9 @@ function toggleFab() {
 function fabAction(action) {
   haptic('light');
   toggleFab();
-  if (action === 'event') {
+  if (action === 'upload') {
+    goPage('upload');
+  } else if (action === 'event') {
     goPage('calendar');
     setTimeout(() => { if(typeof openCalSheet === 'function') openCalSheet(); }, 200);
   } else if (action === 'search') {
@@ -12403,6 +12746,182 @@ function aiWidgetsInit() {
 
 // ═══════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════
+// UPLOAD HUB
+// ═══════════════════════════════════════════════════════
+
+var UH_CONFIG = {
+  'attendance': {
+    key: 'fp_attendance_synced',
+    tsKey: 'fp_attendance_synced_ts',
+    validate: function(data) {
+      return Array.isArray(data) && data.length > 0 && data[0].hasOwnProperty('subject');
+    },
+    onSuccess: function(data, ts) {
+      localStorage.setItem('fp_attendance_synced', JSON.stringify(data));
+      localStorage.setItem('fp_attendance_synced_ts', ts);
+      setTimeout(function() { autoManageAttendanceEvents(data); }, 200);
+      setTimeout(function() { initWidgetDynamic(); }, 100);
+      return data.length + ' subjects synced';
+    }
+  },
+  'timetable': {
+    key: 'fp_timetable_synced',
+    tsKey: 'fp_timetable_synced_ts',
+    validate: function(data) {
+      var arr = Array.isArray(data) ? data : (data.timetable && Array.isArray(data.timetable) ? data.timetable : null);
+      return arr && arr.length > 0 && arr[0].hasOwnProperty('day');
+    },
+    onSuccess: function(data, ts) {
+      var arr = Array.isArray(data) ? data : data.timetable;
+      localStorage.setItem('fp_timetable_synced', JSON.stringify(arr));
+      localStorage.setItem('fp_timetable_synced_ts', ts);
+      window._acadView = 'combined';
+      setTimeout(function() { initWidgetDynamic(); }, 100);
+      return arr.length + ' slots loaded';
+    }
+  },
+  'bank-icici': {
+    key: 'fp_bank_stmt_icici',
+    tsKey: 'fp_bank_stmt_icici_ts',
+    validate: function(data) {
+      return data && data.bank === 'ICICI' && Array.isArray(data.transactions);
+    },
+    onSuccess: function(data, ts) {
+      localStorage.setItem('fp_bank_stmt_icici', JSON.stringify(data));
+      localStorage.setItem('fp_bank_stmt_icici_ts', ts);
+      return data.transactions.length + ' transactions · \u20b9' + (data.closingBalance || 0).toLocaleString('en-IN');
+    }
+  },
+  'bank-hdfc': {
+    key: 'fp_bank_stmt_hdfc',
+    tsKey: 'fp_bank_stmt_hdfc_ts',
+    validate: function(data) {
+      return data && data.bank === 'HDFC' && Array.isArray(data.transactions);
+    },
+    onSuccess: function(data, ts) {
+      localStorage.setItem('fp_bank_stmt_hdfc', JSON.stringify(data));
+      localStorage.setItem('fp_bank_stmt_hdfc_ts', ts);
+      return data.transactions.length + ' transactions · \u20b9' + (data.closingBalance || 0).toLocaleString('en-IN');
+    }
+  },
+  'bank-axis': {
+    key: 'fp_bank_stmt_axis',
+    tsKey: 'fp_bank_stmt_axis_ts',
+    validate: function(data) {
+      return data && data.bank === 'AXIS' && Array.isArray(data.transactions);
+    },
+    onSuccess: function(data, ts) {
+      localStorage.setItem('fp_bank_stmt_axis', JSON.stringify(data));
+      localStorage.setItem('fp_bank_stmt_axis_ts', ts);
+      return data.transactions.length + ' transactions · \u20b9' + (data.closingBalance || 0).toLocaleString('en-IN');
+    }
+  }
+};
+
+function uhTrigger(type) {
+  var inp = document.getElementById('uh-file-' + type);
+  if (inp) inp.click();
+}
+
+function uhHandleFile(type, input) {
+  var file = input.files[0];
+  if (!file) return;
+  var cfg = UH_CONFIG[type];
+  if (!cfg) return;
+
+  var card = document.getElementById('uhcard-' + type);
+  if (card) card.classList.add('uploading');
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!cfg.validate(data)) {
+        showToast('\u274c Invalid file for ' + type);
+        if (card) card.classList.remove('uploading');
+        return;
+      }
+      var ts = new Date().toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      var msg = cfg.onSuccess(data, ts);
+      showToast('\u2705 ' + msg);
+      if (card) card.classList.remove('uploading');
+      uhRefreshUI();
+      input.value = '';
+    } catch(err) {
+      showToast('\u274c Could not parse JSON');
+      if (card) card.classList.remove('uploading');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function uhRefreshUI() {
+  var totalSynced = 0;
+  var totalTxns = 0;
+  var types = ['attendance','timetable','bank-icici','bank-hdfc','bank-axis'];
+
+  for (var i = 0; i < types.length; i++) {
+    var t = types[i];
+    var cfg = UH_CONFIG[t];
+    var dot = document.getElementById('uh-dot-' + t);
+    var tsEl = document.getElementById('uh-ts-' + t);
+    var card = document.getElementById('uhcard-' + t);
+    var ts = localStorage.getItem(cfg.tsKey);
+
+    if (ts) {
+      totalSynced++;
+      if (dot) { dot.className = 'upload-hub-status-dot synced'; }
+      if (tsEl) { tsEl.textContent = '\ud83d\udfe2 ' + ts; }
+      if (card) { card.classList.add('synced'); }
+
+      if (t.indexOf('bank-') === 0) {
+        try {
+          var raw = localStorage.getItem(cfg.key);
+          if (raw) {
+            var d = JSON.parse(raw);
+            if (d.transactions) totalTxns += d.transactions.length;
+          }
+        } catch(e) {}
+      }
+    } else {
+      if (dot) { dot.className = 'upload-hub-status-dot'; }
+      if (tsEl) { tsEl.textContent = ''; }
+      if (card) { card.classList.remove('synced'); }
+    }
+  }
+
+  // Summary bar
+  var sumEl = document.getElementById('upload-hub-summary');
+  if (sumEl) {
+    var attSubjects = 0;
+    try { var ar = JSON.parse(localStorage.getItem('fp_attendance_synced')||'[]'); attSubjects = ar.length; } catch(e){}
+    var ttSlots = 0;
+    try { var tr = JSON.parse(localStorage.getItem('fp_timetable_synced')||'[]'); ttSlots = tr.length; } catch(e){}
+
+    sumEl.innerHTML =
+      '<div class="upload-hub-stat"><div class="upload-hub-stat-val">' + totalSynced + '<span style="font-size:12px;color:var(--text3)">/5</span></div><div class="upload-hub-stat-lbl">Synced</div></div>' +
+      '<div class="upload-hub-stat"><div class="upload-hub-stat-val">' + attSubjects + '</div><div class="upload-hub-stat-lbl">Subjects</div></div>' +
+      '<div class="upload-hub-stat"><div class="upload-hub-stat-val">' + ttSlots + '</div><div class="upload-hub-stat-lbl">TT Slots</div></div>' +
+      '<div class="upload-hub-stat"><div class="upload-hub-stat-val">' + totalTxns + '</div><div class="upload-hub-stat-lbl">Txns</div></div>';
+  }
+
+  // Last sync line in header
+  var lastEl = document.getElementById('upload-hub-last-sync');
+  if (lastEl) {
+    var lines = [];
+    var attTs = localStorage.getItem('fp_attendance_synced_ts');
+    var ttTs  = localStorage.getItem('fp_timetable_synced_ts');
+    if (attTs) lines.push('Att: ' + attTs);
+    if (ttTs)  lines.push('TT: ' + ttTs);
+    lastEl.textContent = lines.join('\n');
+  }
+}
+
+// Call uhRefreshUI when upload page is visited — hooked via goPage's page-show logic
+function initUploadHub() {
+  uhRefreshUI();
+}
 
 </script>
 
