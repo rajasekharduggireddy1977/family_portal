@@ -4354,6 +4354,48 @@ body.dash-active #aura-canvas{ display:block; }
 .tceb-cgpa{text-align:center;padding:9px 13px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:13px;flex-shrink:0;}
 .tceb-cgpa-num{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:#a78bfa;}
 .tceb-cgpa-lbl{font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:.8px;}
+/* Attendance Status Card — full redesign */
+.tc-attstat-header{padding:20px 20px 10px;display:flex;align-items:flex-start;gap:14px;}
+.tc-attstat-ring{position:relative;width:80px;height:80px;flex-shrink:0;}
+.tc-attstat-svg{width:80px;height:80px;transform:rotate(-90deg);}
+.tc-attstat-bg{fill:none;stroke:rgba(255,255,255,.05);stroke-width:8;}
+.tc-attstat-path{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);}
+.tc-attstat-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.tc-attstat-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;line-height:1;}
+.tc-attstat-lbl{font-family:'DM Mono',monospace;font-size:7px;color:rgba(140,158,220,.4);letter-spacing:.5px;margin-top:2px;}
+.tc-attstat-meta{flex:1;}
+.tc-attstat-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:-.3px;}
+.tc-attstat-sub{font-family:'DM Mono',monospace;font-size:9px;color:#a78bfa;text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;}
+.tc-attstat-pills{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.tc-attstat-pill{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid;}
+
+/* Weekly Severity Swiper */
+.tc-wsev{padding:0 0 4px;}
+.tc-wsev-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 8px;}
+.tc-wsev-title{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.4);text-transform:uppercase;letter-spacing:1.5px;}
+.tc-wsev-legend{display:flex;gap:10px;align-items:center;}
+.tc-wsev-leg{display:flex;gap:4px;align-items:center;font-family:'DM Mono',monospace;font-size:8px;color:rgba(140,158,220,.45);}
+.tc-wsev-dot{width:6px;height:6px;border-radius:2px;}
+.tc-wsev-outer{overflow:hidden;position:relative;}
+.tc-wsev-track{display:flex;transition:transform .38s cubic-bezier(.77,0,.18,1);}
+.tc-wsev-day{min-width:100%;padding:0 20px 14px;box-sizing:border-box;}
+.tc-wsev-dayhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.tc-wsev-dayname{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:.5px;}
+.tc-wsev-daynav{display:flex;gap:8px;align-items:center;}
+.tc-wsev-navbtn{width:26px;height:26px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:rgba(200,210,240,.5);transition:all .12s;}
+.tc-wsev-navbtn:active{transform:scale(.9);background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.3);color:#a78bfa;}
+.tc-wsev-dots{display:flex;gap:4px;}
+.tc-wsev-pip{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .2s;}
+.tc-wsev-pip.active{background:#a78bfa;width:12px;border-radius:3px;}
+.tc-wsev-subj{display:flex;flex-direction:column;gap:7px;}
+.tc-wsev-row{display:flex;align-items:center;gap:9px;}
+.tc-wsev-time{font-family:'DM Mono',monospace;font-size:9px;color:rgba(140,158,220,.38);width:28px;flex-shrink:0;}
+.tc-wsev-bar{flex:1;height:22px;border-radius:7px;display:flex;align-items:center;padding:0 9px;position:relative;overflow:hidden;}
+.tc-wsev-bar::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.1);border-radius:7px 7px 0 0;pointer-events:none;}
+.tc-wsev-subname{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+.tc-wsev-pct{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;flex-shrink:0;margin-left:4px;}
+.tc-wsev-empty{padding:16px 0;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,210,240,.2);text-align:center;}
+
 /* Subject bars */
 .tc-subj-deck{padding:0 20px 14px;display:flex;flex-direction:column;gap:10px;}
 .tc-sd-row{display:flex;flex-direction:column;gap:4px;}
@@ -4455,13 +4497,13 @@ body.dash-active #aura-canvas{ display:block; }
 /* Section divider */
 .tc-divider{height:1px;margin:2px 20px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);}
 
-/* Entrance animation */
+/* Entrance animation — only fires once when panel first becomes active */
 @keyframes auraRise{from{opacity:0;transform:translateY(20px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
-.aura-panel .tc{animation:auraRise .42s cubic-bezier(.4,0,.2,1) both;}
-.aura-panel .tc:nth-child(1){animation-delay:.04s;}
-.aura-panel .tc:nth-child(2){animation-delay:.1s;}
-.aura-panel .tc:nth-child(3){animation-delay:.16s;}
-.aura-panel .tc:nth-child(4){animation-delay:.22s;}
+.aura-panel.aura-first-enter .tc{animation:auraRise .42s cubic-bezier(.4,0,.2,1) both;}
+.aura-panel.aura-first-enter .tc:nth-child(1){animation-delay:.04s;}
+.aura-panel.aura-first-enter .tc:nth-child(2){animation-delay:.1s;}
+.aura-panel.aura-first-enter .tc:nth-child(3){animation-delay:.16s;}
+.aura-panel.aura-first-enter .tc:nth-child(4){animation-delay:.22s;}
 
 /* Touch feedback */
 .aura-press:active{opacity:.8;transform:scale(.97);}
@@ -4853,26 +4895,35 @@ body.dash-active #aura-canvas{ display:block; }
 
           <!-- ▸ PANEL 2: EDUCATION -->
           <div class="aura-panel" id="aura-p2">
-            <div class="tc tc-edu">
-              <div class="tc-edu-banner">
-                <div class="tceb-eyebrow">Education · KLU B.Tech</div>
-                <div class="tceb-row">
-                  <div>
-                    <div class="tceb-name">Josritha</div>
-                    <div class="tceb-course">B.Tech · Sem 5 · Vijayawada</div>
+
+            <!-- CARD 1: Attendance Status -->
+            <div class="tc tc-edu" id="aura-attstat-card">
+              <div class="tc-attstat-header" id="aura-attstat-header"></div>
+              <div class="tc-divider"></div>
+              <div class="tc-wsev">
+                <div class="tc-wsev-hd">
+                  <div class="tc-wsev-title">Weekly Severity</div>
+                  <div class="tc-wsev-legend">
+                    <div class="tc-wsev-leg"><div class="tc-wsev-dot" style="background:var(--green);"></div>safe</div>
+                    <div class="tc-wsev-leg"><div class="tc-wsev-dot" style="background:var(--gold);"></div>risk</div>
+                    <div class="tc-wsev-leg"><div class="tc-wsev-dot" style="background:var(--red);"></div>crit</div>
                   </div>
-                  <div class="tceb-cgpa"><div class="tceb-cgpa-num">9.24</div><div class="tceb-cgpa-lbl">CGPA</div></div>
+                </div>
+                <div class="tc-wsev-outer" id="aura-wsev-outer">
+                  <div class="tc-wsev-track" id="aura-wsev-track"></div>
                 </div>
               </div>
               <div class="tc-divider"></div>
               <div class="tc-subj-deck" id="aura-subj-bars"></div>
             </div>
+
+            <!-- CARD 2: Today's Classes -->
             <div class="tc tc-edu">
-              <div class="tc-att-ring-row" id="aura-att-ring-row"></div>
-              <div class="tc-divider"></div>
               <div class="tc-sec-hd"><div class="tc-sec-title">Today's Classes</div><div class="tc-sec-action" onclick="goPage('members')">Timetable →</div></div>
               <div id="aura-today-classes"></div>
             </div>
+
+            <!-- CARD 3: SGPA trend -->
             <div class="tc tc-edu" id="aura-sgpa-card">
               <div class="tc-sec-hd" style="padding-top:16px;">
                 <div class="tc-sec-title">SGPA Trend · Sems 1–3</div>
@@ -4880,6 +4931,7 @@ body.dash-active #aura-canvas{ display:block; }
               </div>
               <div id="aura-sgpa-bars" style="display:flex;align-items:flex-end;gap:10px;padding:10px 20px 16px;"></div>
             </div>
+
             <div class="aura-btn aura-btn-edu aura-press" onclick="goPage('members')">Full Academic Report →</div>
             <div style="height:8px;"></div>
           </div>
@@ -9226,8 +9278,15 @@ function auraGoSlide(idx) {
   track.style.transition = 'transform .5s cubic-bezier(.77,0,.18,1)';
   track.style.transform = 'translateX(' + (-idx * vw) + 'px)';
   var newP = document.getElementById(_auraSlides[idx]);
-  if (newP) { newP.classList.add('aura-panel-active'); newP.scrollTop = 0; }
-  // Also reset page scroll so new panel starts at top
+  if (newP) {
+    newP.classList.add('aura-panel-active');
+    newP.scrollTop = 0;
+    if (!newP._auraVisited) {
+      newP._auraVisited = true;
+      newP.classList.add('aura-first-enter');
+      setTimeout(function(){ newP.classList.remove('aura-first-enter'); }, 700);
+    }
+  }
   var pg = document.getElementById('page-dashboard');
   if (pg) pg.scrollTop = 0;
   var cats = document.querySelectorAll('.aura-cat');
@@ -9576,23 +9635,120 @@ function auraRenderHealth() {
 }
 
 /* ── Education Panel ── */
+var _wsevCur = 0;
+var _wsevDays = ['MON','TUE','WED','THU','FRI','SAT'];
+
+function auraWsevGoDay(idx, tt, attBySubj) {
+  _wsevCur = idx;
+  var track = document.getElementById('aura-wsev-track');
+  if (track) track.style.transform = 'translateX(' + (-idx * 100) + '%)';
+  var pips = document.querySelectorAll('.tc-wsev-pip');
+  for (var pi=0; pi<pips.length; pi++) pips[pi].classList.toggle('active', pi===idx);
+}
+
+
 function auraRenderEducation() {
   var attRaw = localStorage.getItem('fp_attendance_synced');
+  var attFallback = (typeof ATTENDANCE !== 'undefined') ? ATTENDANCE : [];
+  var att = attFallback;
   var subjects = [];
   var totalPres = 0; var totalCls = 0;
+  var attBySubj = {};
 
   if (attRaw) {
-    try {
-      var att = JSON.parse(attRaw);
-      // Each row in the JSON = one subject+type slot. Show every unique code as its own bar.
-      for (var i=0; i<att.length; i++) {
-        var a = att[i];
-        totalPres += a.present; totalCls += a.total;
-        var pct = a.total>0 ? Math.round(a.present/a.total*100):100;
-        var label = (a.subject||'');
-        // Append type if it is Lab/Tutorial/Seminar to distinguish from Lecture
-        if (a.type && a.type !== 'Lecture') label += ' (' + a.type + ')';
-        label = label
+    try { att = JSON.parse(attRaw); } catch(e){ att = attFallback; }
+  }
+
+  for (var i=0; i<att.length; i++) {
+    var a = att[i];
+    totalPres += a.present; totalCls += a.total;
+    var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
+    var label = (a.subject||'');
+    if (a.type && a.type !== 'Lecture') label += ' (' + a.type + ')';
+    label = label
+      .replace('MATHEMATICAL OPTIMIZATION','MATH OPT')
+      .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
+      .replace('COMPUTER NETWORKS','COMP NETWORKS')
+      .replace('DESIGN AND ANALYSIS OF ALGORITHMS','ALGO DESIGN')
+      .replace('AWS CERTIFIED CLOUD PRACTITIONER','AWS CLOUD')
+      .replace('GLOBAL LOGIC BUILDING CONTEST PRACTICUM','GLOBAL LOGIC')
+      .replace('CLOUD INFRASTRUCTURE AND SERVICES','CLOUD INFRA')
+      .replace('ADVANCED DATA STRUCTURES','ADV DATA STRUCT')
+      .replace('DESIGN THINKING AND INNOVATION','DT & INNOVATION')
+      .replace('ENGLISH FOR PROFESSIONAL COMMUNICATION','ENG COMM')
+      .replace('PROBABILITY AND STATISTICS','PROB & STATS');
+    var key = a.code || (a.subject+'|'+a.type);
+    attBySubj[key] = { name: label, pct: pct, subject: a.subject||'' };
+    subjects.push({ name:label, pct:pct });
+  }
+  subjects.sort(function(a,b){ return a.pct-b.pct; });
+
+  // ── Attendance Status Header ──
+  var overallPct = totalCls>0 ? Math.round(totalPres/totalCls*100) : 0;
+  var ringCirc = 220;
+  var ringOffset = Math.round(ringCirc * (1 - overallPct/100));
+  var ringColor = overallPct<75?'var(--red)':overallPct<80?'var(--gold)':'var(--green)';
+  var safeCount = subjects.filter(function(s){return s.pct>=80;}).length;
+  var riskCount = subjects.filter(function(s){return s.pct>=75 && s.pct<80;}).length;
+  var critCount = subjects.filter(function(s){return s.pct<75;}).length;
+  var pillsHtml = '';
+  if (safeCount>0) pillsHtml += '<div class="tc-attstat-pill" style="color:var(--green);border-color:rgba(62,207,142,.3);background:rgba(62,207,142,.08);">\u2713 '+safeCount+' safe</div>';
+  if (riskCount>0) pillsHtml += '<div class="tc-attstat-pill" style="color:var(--gold);border-color:rgba(240,180,41,.3);background:rgba(240,180,41,.08);">\u26a0 '+riskCount+' at risk</div>';
+  if (critCount>0) pillsHtml += '<div class="tc-attstat-pill" style="color:var(--red);border-color:rgba(255,79,79,.3);background:rgba(255,79,79,.08);">\u2715 '+critCount+' critical</div>';
+  if (subjects.length>0) pillsHtml += '<div class="tc-attstat-pill" style="color:rgba(200,210,240,.5);border-color:rgba(255,255,255,.1);">'+subjects.length+' subj</div>';
+
+  var headerEl = document.getElementById('aura-attstat-header');
+  if (headerEl) headerEl.innerHTML = '<div class="tc-attstat-ring">'
+    + '<svg class="tc-attstat-svg" viewBox="0 0 80 80"><circle class="tc-attstat-bg" cx="40" cy="40" r="35"/>'
+    + '<circle class="tc-attstat-path" cx="40" cy="40" r="35" stroke="'+ringColor+'" stroke-dasharray="'+ringCirc+'" stroke-dashoffset="'+ringOffset+'"/>'
+    + '</svg>'
+    + '<div class="tc-attstat-center"><div class="tc-attstat-num" style="color:'+ringColor+';">'+overallPct+'%</div><div class="tc-attstat-lbl">OVERALL</div></div>'
+    + '</div>'
+    + '<div class="tc-attstat-meta">'
+    + '<div class="tc-attstat-name">Josritha</div>'
+    + '<div class="tc-attstat-sub">KL University \xb7 2 Mar \u2013 7 Mar</div>'
+    + '<div class="tc-attstat-pills">'+pillsHtml+'</div>'
+    + '</div>';
+
+  // ── Weekly Severity Swiper ──
+  var ttRaw = localStorage.getItem('fp_timetable_synced');
+  var tt = [];
+  try { if (ttRaw) tt = JSON.parse(ttRaw); } catch(e){}
+  var DAY_MAP = {'MON':'MONDAY','TUE':'TUESDAY','WED':'WEDNESDAY','THU':'THURSDAY','FRI':'FRIDAY','SAT':'SATURDAY'};
+
+  var pipsHtml = '';
+  for (var di=0; di<_wsevDays.length; di++) pipsHtml += '<div class="tc-wsev-pip'+(di===_wsevCur?' active':'')+'" onclick="auraWsevGoDay('+di+')"></div>';
+
+  var slidesHtml = '';
+  for (var di=0; di<_wsevDays.length; di++) {
+    var dkey = _wsevDays[di];
+    var fullDay = DAY_MAP[dkey];
+    var dayCls = tt.filter(function(c){ return c.day === fullDay; });
+    dayCls.sort(function(a,b){ return (a.time||'').localeCompare(b.time||''); });
+    var slidePrev = di > 0 ? di-1 : 0;
+    var slideNext = di < _wsevDays.length-1 ? di+1 : _wsevDays.length-1;
+    var navHtml = '<div class="tc-wsev-daynav">'
+      + '<div class="tc-wsev-dots">'+pipsHtml+'</div>'
+      + '<div class="tc-wsev-navbtn" onclick="auraWsevGoDay('+slidePrev+')">&#8249;</div>'
+      + '<div class="tc-wsev-navbtn" onclick="auraWsevGoDay('+slideNext+')">&#8250;</div>'
+      + '</div>';
+
+    var subjHtml = '';
+    if (dayCls.length === 0) {
+      subjHtml = '<div class="tc-wsev-empty">No classes</div>';
+    } else {
+      for (var ci2=0; ci2<dayCls.length; ci2++) {
+        var cc3 = dayCls[ci2];
+        var matchedAtt = null;
+        for (var ak in attBySubj) {
+          if (attBySubj[ak].subject && cc3.subject && attBySubj[ak].subject.toUpperCase() === cc3.subject.toUpperCase()) {
+            matchedAtt = attBySubj[ak]; break;
+          }
+        }
+        var spct = matchedAtt ? matchedAtt.pct : null;
+        var bclr = spct === null ? 'rgba(255,255,255,.06)' : spct < 75 ? 'rgba(255,79,79,.18)' : spct < 80 ? 'rgba(240,180,41,.18)' : 'rgba(62,207,142,.15)';
+        var tclr = spct === null ? 'rgba(200,210,240,.5)' : spct < 75 ? 'var(--red)' : spct < 80 ? 'var(--gold)' : 'var(--green)';
+        var shortName = (cc3.subject||'')
           .replace('MATHEMATICAL OPTIMIZATION','MATH OPT')
           .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
           .replace('COMPUTER NETWORKS','COMP NETWORKS')
@@ -9601,63 +9757,71 @@ function auraRenderEducation() {
           .replace('GLOBAL LOGIC BUILDING CONTEST PRACTICUM','GLOBAL LOGIC')
           .replace('CLOUD INFRASTRUCTURE AND SERVICES','CLOUD INFRA')
           .replace('ADVANCED DATA STRUCTURES','ADV DATA STRUCT')
-          .replace('DESIGN THINKING AND INNOVATION','DT & INNOVATION')
+          .replace('DESIGN THINKING AND INNOVATION','DT & INNOV')
           .replace('ENGLISH FOR PROFESSIONAL COMMUNICATION','ENG COMM')
           .replace('PROBABILITY AND STATISTICS','PROB & STATS');
-        subjects.push({ name:label, pct:pct });
+        var typeLabel = (cc3.type && cc3.type !== 'Lecture') ? ' <span style="opacity:.5;font-size:8px;">'+cc3.type+'</span>' : '';
+        subjHtml += '<div class="tc-wsev-row">'
+          + '<div class="tc-wsev-time">'+(cc3.time||'')+'</div>'
+          + '<div class="tc-wsev-bar" style="background:'+bclr+';">'
+          + '<div class="tc-wsev-subname">'+shortName+typeLabel+'</div>'
+          + (spct!==null?'<div class="tc-wsev-pct" style="color:'+tclr+';">'+spct+'%</div>':'')
+          + '</div></div>';
       }
-      subjects.sort(function(a,b){ return a.pct-b.pct; });
-    } catch(e){}
+    }
+    slidesHtml += '<div class="tc-wsev-day">'
+      + '<div class="tc-wsev-dayhead">'
+      + '<div class="tc-wsev-dayname">'+dkey+'</div>'
+      + navHtml
+      + '</div>'
+      + '<div class="tc-wsev-subj">'+subjHtml+'</div>'
+      + '</div>';
   }
 
-  // Subject bars — all subjects sorted worst first
+  var trackEl = document.getElementById('aura-wsev-track');
+  if (trackEl) {
+    trackEl.innerHTML = slidesHtml;
+    trackEl.style.transform = 'translateX(' + (-_wsevCur * 100) + '%)';
+    var outer = document.getElementById('aura-wsev-outer');
+    if (outer && !outer._wsevSwipe) {
+      outer._wsevSwipe = true;
+      var wsx0 = 0;
+      outer.addEventListener('touchstart', function(e){ wsx0 = e.touches[0].clientX; }, {passive:true});
+      outer.addEventListener('touchend', function(e){
+        var dx = e.changedTouches[0].clientX - wsx0;
+        if (Math.abs(dx) > 40) {
+          if (dx < 0 && _wsevCur < _wsevDays.length-1) auraWsevGoDay(_wsevCur+1);
+          else if (dx > 0 && _wsevCur > 0) auraWsevGoDay(_wsevCur-1);
+        }
+      }, {passive:true});
+    }
+  }
+
+  // ── Subject bars ──
   var barsHtml = '';
   if (subjects.length === 0) {
-    barsHtml = '<div style="padding:14px 20px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);text-align:center;">No attendance data — upload via Sync Hub</div>';
+    barsHtml = '<div style="padding:14px 0 4px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);text-align:center;">No attendance data \u2014 upload via Sync Hub</div>';
   }
-  var showSubjs = subjects;
-  for (var s=0; s<showSubjs.length; s++) {
-    var sb = showSubjs[s];
+  for (var s=0; s<subjects.length; s++) {
+    var sb = subjects[s];
     var c = sb.pct < 75 ? 'linear-gradient(90deg,var(--red),#ff8080)' : sb.pct < 80 ? 'linear-gradient(90deg,var(--orange,#fb923c),#fbbf24)' : 'linear-gradient(90deg,var(--green),#86efac)';
     var tc2 = sb.pct < 75 ? 'var(--red)' : sb.pct < 80 ? 'var(--orange,#fb923c)' : 'var(--green)';
     barsHtml += '<div class="tc-sd-row">'
-      + '<div class="tc-sd-top"><div class="tc-sd-name">'+sb.name+'</div><div class="tc-sd-pct" style="color:'+tc2+'">'+sb.pct+'%</div></div>'
+      + '<div class="tc-sd-top"><div class="tc-sd-name">'+sb.name+'</div><div class="tc-sd-pct" style="color:'+tc2+';">'+sb.pct+'%</div></div>'
       + '<div class="tc-sd-track"><div class="tc-sd-fill" style="width:'+sb.pct+'%;background:'+c+';"></div><div class="tc-sd-marker"></div></div>'
       + '</div>';
   }
   var barsEl = document.getElementById('aura-subj-bars');
   if (barsEl) barsEl.innerHTML = barsHtml;
 
-  // Overall ring
-  var overallPct = totalCls>0 ? Math.round(totalPres/totalCls*100) : 70;
-  var ringCirc = 232; // 2*PI*37
-  var ringOffset = Math.round(ringCirc * (1 - overallPct/100));
-  var ringColor = overallPct<75?'var(--red)':overallPct<80?'var(--orange,#fb923c)':'var(--green)';
-  var critCount = subjects.filter(function(s2){return s2.pct<75;}).length;
-  var rowEl = document.getElementById('aura-att-ring-row');
-  if (rowEl) rowEl.innerHTML = '<div class="tc-att-ring">'
-    + '<svg class="tc-att-svg" viewBox="0 0 86 86"><circle class="tc-att-bg" cx="43" cy="43" r="37"/>'
-    + '<circle class="tc-att-path" cx="43" cy="43" r="37" stroke="'+ringColor+'" stroke-dasharray="'+ringCirc+'" stroke-dashoffset="'+ringOffset+'"/>'
-    + '</svg>'
-    + '<div class="tc-att-center"><div class="tc-att-num" style="color:'+ringColor+'">'+overallPct+'%</div><div class="tc-att-lbl">OVERALL</div></div>'
-    + '</div>'
-    + '<div class="tc-att-info">'
-    + '<div class="tc-att-title">Attendance ' + (overallPct<75?'Risk':'Status') + '</div>'
-    + '<div class="tc-att-desc">' + (critCount>0 ? '<strong style="color:var(--red)">'+critCount+' subject'+(critCount>1?'s':'')+' below 75%</strong><br>Minimum 75% required.' : 'On track. Keep attending!') + '</div>'
-    + '<div class="tc-att-btns"><div class="tc-att-btn tc-att-primary" onclick="goPage(\'members\')">Timetable</div><div class="tc-att-btn tc-att-sec" onclick="goPage(\'upload\')">Upload</div></div>'
-    + '</div>';
-
-  // Today's classes — reads same key as academics page
+  // ── Today's Classes ──
   var DAYS7 = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
   var todayDay = DAYS7[new Date().getDay()];
-  var ttRaw = localStorage.getItem('fp_timetable_synced');
   var classHtml = '';
   try {
-    var tt = ttRaw ? JSON.parse(ttRaw) : [];
     if (tt.length > 0) {
       var todayC = tt.filter(function(c){return c.day===todayDay;});
       var displayDay = todayDay;
-      // If no classes today (weekend or no-class day) find next weekday with classes
       if (todayC.length === 0) {
         var wdays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
         for (var wd=0; wd<wdays.length; wd++) {
@@ -9674,37 +9838,35 @@ function auraRenderEducation() {
           classHtml = '<div style="padding:6px 20px 2px;font-family:\'DM Mono\',monospace;font-size:9px;color:rgba(240,180,41,.5);letter-spacing:1px;">NEXT: ' + displayDay + '</div>';
         }
         for (var ci=0; ci<todayC.length; ci++) {
-          var cc = todayC[ci];
-          var sp2 = (cc.time||'').split(':'); var cMin = parseInt(sp2[0]||0)*60+parseInt(sp2[1]||0);
+          var cc2 = todayC[ci];
+          var sp2 = (cc2.time||'').split(':'); var cMin = parseInt(sp2[0]||0)*60+parseInt(sp2[1]||0);
           var isNow2 = displayDay===todayDay && nowMin2>=cMin && nowMin2<cMin+60;
           var isDone = displayDay===todayDay && nowMin2 >= cMin+60;
           var dotC = isDone?'rgba(140,158,220,.25)':isNow2?'#a78bfa':'var(--gold)';
           var isLast2 = ci === todayC.length-1;
           classHtml += '<div class="tc-tl-row">'
-            + '<div class="tc-tl-ts" style="color:'+(isDone?'rgba(140,158,220,.28)':'')+';">'+cc.time+'</div>'
-            + '<div class="tc-tl-col"><div class="tc-tl-dot" style="background:'+dotC+';'+(isNow2?'box-shadow:0 0 8px #a78bfa;animation:auraPulse 1.4s infinite;':'')+'"></div>'
-            + (!isLast2?'<div class="tc-tl-wire"></div>':'')+'</div>'
+            + '<div class="tc-tl-ts" style="color:'+(isDone?'rgba(140,158,220,.28)':'')+';">'+cc2.time+'</div>'
+            + '<div class="tc-tl-col"><div class="tc-tl-dot" style="background:'+dotC+';'+(isNow2?'box-shadow:0 0 8px #a78bfa;animation:auraPulse 1.4s infinite;':'')+'">'
+            + '</div>'+(!isLast2?'<div class="tc-tl-wire"></div>':'')+'</div>'
             + '<div class="tc-tl-body">'
-            + '<div class="tc-tl-name" style="color:'+(isDone?'rgba(200,210,240,.4)':'')+';">'+(cc.subject||'').split(' ').slice(0,4).join(' ')+'</div>'
-            + '<div class="tc-tl-meta">'+(cc.room||'')+'  '+( cc.type||'')+'</div>'
+            + '<div class="tc-tl-name" style="color:'+(isDone?'rgba(200,210,240,.4)':'')+';">'+(cc2.subject||'').split(' ').slice(0,4).join(' ')+'</div>'
+            + '<div class="tc-tl-meta">'+(cc2.room||'')+' '+(cc2.type||'')+'</div>'
             + (isNow2?'<div class="tc-tl-tag" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);">NOW</div>':'')
             + '</div></div>';
         }
       }
     }
   } catch(e){}
-  if (!classHtml) classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No timetable — upload via Sync Hub</div>';
+  if (!classHtml) classHtml = '<div style="padding:12px 20px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;color:rgba(200,210,240,.4);">No timetable \u2014 upload via Sync Hub</div>';
   var classEl = document.getElementById('aura-today-classes');
   if (classEl) classEl.innerHTML = classHtml;
 
-  // SGPA Semester Trend
-  var sgpaSems = [
-    { lbl:'Sem 1', val:9.26 }, { lbl:'Sem 2', val:9.29 }, { lbl:'Sem 3', val:9.17 }
-  ];
-  var sgpaMax = 10; var sgpaHtml = '';
+  // ── SGPA Trend ──
+  var sgpaSems = [{ lbl:'Sem 1', val:9.26 }, { lbl:'Sem 2', val:9.29 }, { lbl:'Sem 3', val:9.17 }];
+  var sgpaHtml = '';
   for (var si=0; si<sgpaSems.length; si++) {
     var sg = sgpaSems[si];
-    var sh = Math.round(sg.val/sgpaMax*60);
+    var sh = Math.round(sg.val/10*60);
     var sc2 = sg.val >= 9.2 ? 'var(--green)' : sg.val >= 9.0 ? 'var(--gold)' : 'var(--red)';
     sgpaHtml += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">'
       + '<div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:800;color:'+sc2+';">'+sg.val+'</div>'
@@ -9716,7 +9878,6 @@ function auraRenderEducation() {
   if (sgpaEl) sgpaEl.innerHTML = sgpaHtml;
 }
 
-/* ── Finance Panel ── */
 function auraRenderFinance() {
   var bankRaw = localStorage.getItem('fp_bank_stmt_icici');
   var txns = []; var closing = 0; var totalCr = 0; var totalDr = 0; var period = ''; var txnCount = 0;
@@ -9829,7 +9990,6 @@ function auraRenderFinance() {
   var txnEl = document.getElementById('aura-txn-list');
   if (txnEl) txnEl.innerHTML = txnHtml;
 }
-
 /* ── Family Panel ── */
 function auraRenderFamily() {
   var members = [
