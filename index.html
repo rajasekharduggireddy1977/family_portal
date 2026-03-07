@@ -5842,11 +5842,11 @@ const WIDGET_DEFS = {
   finance:    { id:'finance',    icon:'💳', name:'Finance Sync',          desc:'Google Sheets transaction feed with spend summary' },
   bank_txns:  { id:'bank_txns',  icon:'🏦', name:'Bank Transactions',    desc:'Multi-bank statement viewer from scraped JSON data' },
 };
-const DEFAULT_WIDGETS=['hero','att_risk','ai_briefing2','priority','family','grocery','timeline','bank_txns','vehicle','health_pulse','bills','finance','emergency','actions'];
+const DEFAULT_WIDGETS=['hero','att_severity','ai_briefing2','priority','family','grocery','timeline','bank_txns','vehicle','health_pulse','bills','emergency','actions'];
 let widgetOrder=[...DEFAULT_WIDGETS];
 let editMode=false;
 
-const WIDGET_VERSION = 'v8';
+const WIDGET_VERSION = 'v9';
 function loadWidgetOrder() {
   try {
     const ver = localStorage.getItem('fp_widgets_ver');
