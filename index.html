@@ -9320,7 +9320,7 @@ function auraRenderGreeting() {
 
 /* ── Alerts ── */
 function auraRenderAlerts() {
-  // Attendance — Edu badge
+  // Attendance — Edu badge (dedupe by code, same as Members page)
   var attRaw = localStorage.getItem('fp_attendance_synced');
   var critCount = 0;
   if (attRaw) {
@@ -9328,7 +9328,8 @@ function auraRenderAlerts() {
       var att = JSON.parse(attRaw);
       var seen = {};
       for (var i=0; i<att.length; i++) {
-        var a = att[i]; var key = a.subject+'|'+a.type;
+        var a = att[i];
+        var key = a.code || (a.subject+'|'+a.type);
         if (seen[key]) continue; seen[key]=1;
         var pct = a.total>0 ? Math.round(a.present/a.total*100) : 100;
         if (pct < 75) critCount++;
@@ -9576,18 +9577,21 @@ function auraRenderEducation() {
   if (attRaw) {
     try {
       var att = JSON.parse(attRaw);
-      var seen = {}; var grouped = {};
+      // Dedupe by code — same logic as Members/academics page
+      var seen = {};
+      var deduped = [];
       for (var i=0; i<att.length; i++) {
-        var a = att[i]; var key = a.subject;
-        if (!grouped[key]) grouped[key] = { subject:a.subject, present:0, total:0 };
-        grouped[key].present += a.present; grouped[key].total += a.total;
+        var a = att[i];
+        var key = a.code || (a.subject+'|'+a.type);
+        if (!seen[key]) { seen[key]=true; deduped.push(a); }
       }
-      for (var sk in grouped) {
-        var g = grouped[sk];
-        var pct = g.total>0 ? Math.round(g.present/g.total*100):100;
-        totalPres += g.present; totalCls += g.total;
-        // Shorten subject name
-        var shortName = g.subject.replace('MATHEMATICAL OPTIMIZATION','MATH OPTIMIZATION')
+      totalPres = att.reduce(function(s,x){ return s+x.present; },0);
+      totalCls  = att.reduce(function(s,x){ return s+x.total; },0);
+      for (var j=0; j<deduped.length; j++) {
+        var d = deduped[j];
+        var pct = d.total>0 ? Math.round(d.present/d.total*100):100;
+        var shortName = d.subject
+          .replace('MATHEMATICAL OPTIMIZATION','MATH OPTIMIZATION')
           .replace('FULL STACK APPLICATION DEVELOPMENT','FULL STACK DEV')
           .replace('COMPUTER NETWORKS','COMP NETWORKS')
           .replace('DESIGN AND ANALYSIS OF ALGORITHMS','ALGO DESIGN')
@@ -9611,7 +9615,7 @@ function auraRenderEducation() {
 
   // Subject bars (show worst 5)
   var barsHtml = '';
-  var showSubjs = subjects.slice(0, 5);
+  var showSubjs = subjects; // show all subjects
   for (var s=0; s<showSubjs.length; s++) {
     var sb = showSubjs[s];
     var c = sb.pct < 75 ? 'linear-gradient(90deg,var(--red),#ff8080)' : sb.pct < 80 ? 'linear-gradient(90deg,var(--orange,#fb923c),#fbbf24)' : 'linear-gradient(90deg,var(--green),#86efac)';
